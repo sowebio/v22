@@ -1,0 +1,27 @@
+
+.ui-folder .ui-folder-header {
+    font-size: 40px;
+    color: white;
+    display: flex;
+    cursor: pointer;
+    position: relative;
+    margin: 5px 5px 5px 5px;
+    padding: 8px 5px 0px 5px;
+    font-size: 100%;
+    width: 100px;
+    height: 35px;
+}
+
+.ui-folder .ui-folder-content {
+    border-top: 0;
+    overflow: hidden;
+    position : absolute;
+    top : 0px;
+    width:100px;
+    left : 130px;
+    z-index : 1;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
