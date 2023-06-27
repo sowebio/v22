@@ -16,7 +16,7 @@ package body Breadcrumb is
       New_Button   : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
    begin
       Element_Name := "Button_" & From_UTF_8 (Depth'Image).Delete (1, 1);
-      Left_String  := From_UTF_8 (Integer'Image (120 * (Depth + 1)));
+      Left_String  := From_UTF_8 (Integer'Image (150 * (Depth + 1)));
       Gnoga.Gui.Element.Common.Button_Access (New_Button).Create (View, Content);
       View.Add_Element (Element_Name, New_Button);
       New_Button.Dynamic;
