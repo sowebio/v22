@@ -320,7 +320,9 @@ procedure application1 is
       --------------------------------------------------------------------------
       App.Menu_Accordion.Accordion.Create (App.Top_Panel);
       App.Menu_Accordion.Accordion.Create_Section ("Logo");
+      App.Menu_Accordion.Accordion.Style ("width", "140px");
       App.Menu_Accordion.Cards.Create (App.Menu_Accordion.Accordion);
+      App.Menu_Accordion.Cards.Style ("width", "140px");
 
       App.Menu_Accordion.Widget (1).Create (App.Menu_Accordion.Cards);
       App.Menu_Accordion.Widget (2).Create (App.Menu_Accordion.Cards);
@@ -329,6 +331,7 @@ procedure application1 is
       App.Menu_Accordion.Cards.Add_Class ("accordion_content");
       App.Menu_Accordion.Cards.Style ("overflow", "hidden");
       App.Menu_Accordion.Cards.Style ("padding", "0");
+      App.Menu_Accordion.Cards.Style ("box-sizing", "border-box");
 
       App.Menu_Accordion.Button (1).Create (App.Menu_Accordion.Widget (1), "Contrats");
       App.Menu_Accordion.Button (1).On_Click_Handler (On_Contrats'Unrestricted_Access);
@@ -362,11 +365,14 @@ procedure application1 is
       --------------------------------------------------------------------------
       App.User_Panel.Accordion.Create (Parent => App.Top_Panel);
       App.User_Panel.Accordion.Create_Section ("Utilisateur");
+      App.User_Panel.Accordion.Style ("width", "135px");
       App.User_Panel.Deck_User.Create (App.User_Panel.Accordion);
+      App.User_Panel.Deck_User.Style ("width", "135px");
 
       App.User_Panel.Deck_User.Add_Class ("accordion_content");
       App.User_Panel.Deck_User.Style ("overflow", "hidden");
       App.User_Panel.Deck_User.Style ("padding", "0");
+      App.User_Panel.Deck_User.Style ("box-sizing", "border-box");
 
       App.User_Panel.Button (1).Create (App.User_Panel.Deck_User, "Aide en ligne");
       App.User_Panel.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
@@ -571,7 +577,7 @@ procedure application1 is
       App.Gestion_Folder.Widget (5).Create (App.Gestion_Folder.Folder);
 
       --  --  --  Button Intervalles SEPA
-      App.Gestion_Folder.Button (17).Create (App.Gestion_Folder.Widget (5), "Intervalles_SEPA");
+      App.Gestion_Folder.Button (17).Create (App.Gestion_Folder.Widget (5), "Intervalles SEPA");
       App.Gestion_Folder.Button (17).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
 
       --  --  --  Button Natures
@@ -661,7 +667,7 @@ procedure application1 is
       App.Main_Frame.Cards.Style ("top", "0px");
       App.Main_Frame.Cards.Style ("left", "120px");
       App.Top_Panel.Add_Class ("element_top_left border");
-      App.Top_Panel.Style ("height", "120px");
+      App.Top_Panel.Style ("height", "52px");
       App.Bottom_Panel.Add_Class ("element_bottom_left border");
       App.Bottom_Panel.Style ("height", "50px");
       App.Bottom_Panel.Style ("z-index", "2");
