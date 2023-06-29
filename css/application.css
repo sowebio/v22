@@ -100,3 +100,87 @@ button:hover {
     color: silver !important;
     background: grey !important;
 }
+
+.logo-container {
+    height: 100%;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+}
+
+.breadcrumb-container {
+    height: 100%;
+    width: calc(100% - 275px);
+    display: flex;
+    align-items: center;
+    float: left;
+}
+
+.user-container {
+    height: 100%;
+    width: 135px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+}
+
+.navigation-bar {
+    z-index: 10;
+    width: 100%;
+    position: fixed;
+    background-color: #636480;
+}
+
+.tool-bar {
+    width: 140px;
+    height: calc(100% - 90px);
+    float: left;
+    background-color: #3d3e4d;
+    position: fixed;
+    top: 52px;
+}
+
+.content-container {
+    width: calc(100% - 140px);
+    height: calc(100% - 90px);
+    float: right;
+    overflow: scroll;
+    padding-top: 52px;
+}
+
+@media screen and (max-width: 700px) {
+    .logo-container {
+        width: 100%;
+    }
+
+    .breadcrumb-container {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .user-container {
+        width: 100%;
+    }
+    
+    .tool-bar {
+        top: 140px;
+        height: calc(100% - 180px);
+    }
+
+    .content-container {
+        padding-top: 140px;
+        height: calc(100% - 180px);
+    }
+
+    .ui-accordion .ui-accordion-content {
+        width: 100%;
+    }
+    
+    button {
+        max-width: none;
+        width: calc(100% - 4px);
+    }
+}

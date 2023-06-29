@@ -28,8 +28,8 @@ procedure application1 is
 
    --  Accordion Left
    type Menu_Accordion_Type is new Gnoga.Types.Connection_Data_Type with record
-      Accordion           : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Accordion_Type;
-      Cards               : aliased Gnoga.Gui.View.Card.Card_View_Type;
+      Accordion : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Accordion_Type;
+      Cards     : aliased Gnoga.Gui.View.Card.Card_View_Type;
 
       Name_Accueil        : UXString := "Name_Accueil_1";
       Name_Contrats       : UXString := "Name_Contrats";
@@ -40,18 +40,18 @@ procedure application1 is
    end record;
 
    type Menu_Folder_Type is new Gnoga.Types.Connection_Data_Type with record
-      Cards                 : aliased Gnoga.Gui.View.Card.Card_View_Type;
+      Cards : aliased Gnoga.Gui.View.Card.Card_View_Type;
 
       Name_Accueil          : UXString := "Name_Accueil_2";
       Name_Standard         : UXString := "Name_Standard";
       Name_Contrats_Gestion : UXString := "Name_Contrats_Gestion_2";
 
-      Widget                : aliased Widget_Set (1 .. 3);
+      Widget : aliased Widget_Set (1 .. 3);
    end record;
 
    type Main_Frame_Type is new Gnoga.Types.Connection_Data_Type with record
-      Main_Deck                  : aliased Gnoga.Gui.View.Docker.Docker_View_Type;
-      Cards                      : aliased Gnoga.Gui.View.Card.Card_View_Type;
+      Main_Deck : aliased Gnoga.Gui.View.Docker.Docker_View_Type;
+      Cards     : aliased Gnoga.Gui.View.Card.Card_View_Type;
 
       Name_Accueil               : UXString := "Name_Accueil_3";
       Name_Contrats_Tab          : UXString := "Name_Contrats_Tab";
@@ -69,7 +69,7 @@ procedure application1 is
       Accordion : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Accordion_Type;
       Deck_User : aliased Gnoga.Gui.View.View_Type;
 
-      Button    : aliased Button_Set (1 .. 5);
+      Button : aliased Button_Set (1 .. 5);
    end record;
 
    --  Folders
@@ -91,16 +91,33 @@ procedure application1 is
    end record;
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
-      My_Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
-      My_Docker : Gnoga.Gui.View.Docker.Docker_View_Type;
+      Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      View   : aliased Gnoga.Gui.View.View_Type;
 
-      Top_Panel : aliased Gnoga.Gui.View.View_Type;
+      Navigation_Bar : Gnoga.Gui.Element.Common.DIV_Type;
+      Tool_Bar       : Gnoga.Gui.Element.Common.DIV_Type;
+      Content        : Gnoga.Gui.Element.Common.DIV_Type;
+      Bottom_Bar     : Gnoga.Gui.Element.Common.DIV_Type;
 
-      Bottom_Panel       : aliased Gnoga.Gui.View.View_Type;
-      Button_Msg_Statut  : aliased Gnoga.Gui.Element.Common.DIV_Type;
-      Button_Infos_Perma : aliased Gnoga.Gui.Element.Common.DIV_Type;
+      Status    : Gnoga.Gui.Element.Common.DIV_Type;
+      Permanent : Gnoga.Gui.Element.Common.DIV_Type;
 
-      My_Exit : aliased Gnoga.Gui.Element.Common.Button_Type;
+      App_Icon : Gnoga.Gui.Element.Common.IMG_Type;
+
+      User_Button : Gnoga.Gui.Element.Common.DIV_Type;
+      User_Icon   : Gnoga.Gui.Element.Common.IMG_Type;
+      User_Name   : Gnoga.Gui.Element.Common.P_Type;
+
+      Navigation_App : Gnoga.Gui.Element.Common.DIV_Type;
+      Navigation_Breadcrumb : Gnoga.Gui.View.View_Type;
+      Navigation_User : Gnoga.Gui.Element.Common.DIV_Type;
+
+      Tool_Browse : Gnoga.Gui.Element.Common.DIV_Type;
+      Browse_Buttons : aliased Button_Set (1 .. 3);
+
+      Tool_Edit : Gnoga.Gui.Element.Common.DIV_Type;
+
+      Exit_Button : Gnoga.Gui.Element.Common.Button_Type;
 
       Menu_Accordion : aliased Menu_Accordion_Type;
       Menu_Folder    : aliased Menu_Folder_Type;
@@ -133,7 +150,7 @@ procedure application1 is
       App.Main_Frame.Cards.Show_Card (App.Main_Frame.Name_Accueil);
       Current_Depth :=
         Breadcrumb.Update_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
+          (View => App.Navigation_Breadcrumb, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
            Current_Depth => Current_Depth, Depth => 0);
    end On_Main;
 
@@ -145,7 +162,7 @@ procedure application1 is
       App.Menu_Folder.Cards.Show_Card (App.Menu_Folder.Name_Standard);
       Current_Depth :=
         Breadcrumb.Update_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Contrats'Unrestricted_Access, Content => "Contrats",
+          (View => App.Navigation_Breadcrumb, Handler => On_Contrats'Unrestricted_Access, Content => "Contrats",
            Current_Depth => Current_Depth, Depth => 1);
    end On_Contrats;
 
@@ -157,7 +174,7 @@ procedure application1 is
       App.Menu_Folder.Cards.Show_Card (App.Menu_Folder.Name_Standard);
       Current_Depth :=
         Breadcrumb.Update_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Administration'Unrestricted_Access, Content => "Administration",
+       (View => App.Navigation_Breadcrumb, Handler => On_Administration'Unrestricted_Access, Content => "Administration",
            Current_Depth => Current_Depth, Depth => 1);
    end On_Administration;
 
@@ -169,7 +186,7 @@ procedure application1 is
       App.Menu_Folder.Cards.Show_Card (App.Menu_Folder.Name_Contrats_Gestion);
       Current_Depth :=
         Breadcrumb.Update_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Contrats_Gestion'Unrestricted_Access, Content => "Gestion",
+          (View => App.Navigation_Breadcrumb, Handler => On_Contrats_Gestion'Unrestricted_Access, Content => "Gestion",
            Current_Depth => Current_Depth, Depth => 2);
    end On_Contrats_Gestion;
 
@@ -179,10 +196,10 @@ procedure application1 is
    begin
       App.Menu_Folder.Cards.Show_Card (App.Menu_Folder.Name_Standard);
       App.Main_Frame.Cards.Show_Card (App.Main_Frame.Name_Administration_Utils);
-      Current_Depth :=
-        Breadcrumb.Update_Breadcrumb
-          (View => App.Top_Panel, Handler => On_Administration_Utils'Unrestricted_Access, Content => "Utilisateurs",
-           Current_Depth => Current_Depth, Depth => 2);
+Current_Depth :=
+  Breadcrumb.Update_Breadcrumb
+    (View => App.Navigation_Breadcrumb, Handler => On_Administration_Utils'Unrestricted_Access, Content => "Utilisateurs",
+     Current_Depth => Current_Depth, Depth => 2);
    end On_Administration_Utils;
 
    procedure On_Administration_Emails (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
@@ -193,7 +210,7 @@ procedure application1 is
       App.Main_Frame.Cards.Show_Card (App.Main_Frame.Name_Administration_Emails);
       Current_Depth :=
         Breadcrumb.Update_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Administration_Emails'Unrestricted_Access, Content => "Emails",
+          (View => App.Navigation_Breadcrumb, Handler => On_Administration_Emails'Unrestricted_Access, Content => "Emails",
            Current_Depth => Current_Depth, Depth => 2);
    end On_Administration_Emails;
 
@@ -203,10 +220,10 @@ procedure application1 is
    begin
       App.Menu_Folder.Cards.Show_Card (App.Menu_Folder.Name_Standard);
       App.Main_Frame.Cards.Show_Card (App.Main_Frame.Name_Administration_Gen);
-      Current_Depth :=
-        Breadcrumb.Update_Breadcrumb
-          (View => App.Top_Panel, Handler => On_Administration_Gen'Unrestricted_Access, Content => "Gen. Requêtes",
-           Current_Depth => Current_Depth, Depth => 2);
+Current_Depth :=
+  Breadcrumb.Update_Breadcrumb
+    (View => App.Navigation_Breadcrumb, Handler => On_Administration_Gen'Unrestricted_Access, Content => "Gen. Requêtes",
+     Current_Depth => Current_Depth, Depth => 2);
    end On_Administration_Gen;
 
    procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
@@ -227,8 +244,8 @@ procedure application1 is
    --  On_Connect
    -----------------------------------------------------------------------------
    procedure On_Connect
-     (Main_Window : in out Gnoga.Gui.Window.Window_Type'Class;
-      Connection  :        access Gnoga.Application.Multi_Connect.Connection_Holder_Type)
+     (Screen     : in out Gnoga.Gui.Window.Window_Type'Class;
+      Connection :        access Gnoga.Application.Multi_Connect.Connection_Holder_Type)
    is
       pragma Unreferenced (Connection);
       App : constant App_Access := new App_Data;
@@ -304,34 +321,137 @@ procedure application1 is
       end Widget_Create_Administration_Gen;
 
    begin
-      App.My_Window := Main_Window'Unchecked_Access;
-      Main_Window.Connection_Data (App);
-
-      App.My_Docker.Create (Main_Window);
-
-      App.My_Docker.Visible (False);
-      App.Top_Panel.Create (App.My_Docker);
-      App.My_Docker.Top_Dock (App.Top_Panel'Unchecked_Access);
-      App.Bottom_Panel.Create (App.My_Docker);
-      App.My_Docker.Bottom_Dock (App.Bottom_Panel'Unchecked_Access);
+      Screen.Connection_Data (App);
+      App.View.Create (Screen);
 
       --------------------------------------------------------------------------
-      --  Top Left Menu
+      --  Containers
       --------------------------------------------------------------------------
-      App.Menu_Accordion.Accordion.Create (App.Top_Panel);
+      App.View.Style ("width", "100%");
+      App.View.Style ("height", "100%");
+
+      App.Navigation_Bar.Create (App.View);
+      App.Navigation_Bar.Class_Name ("navigation-bar");
+
+      App.Tool_Bar.Create (App.View);
+      App.Tool_Bar.Class_Name ("tool-bar");
+
+      App.Content.Create (App.View);
+      App.Content.Class_Name ("content-container");
+      App.Content.Put_HTML ("<p>Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum. Et eveniet recusandae ut totam voluptatem ut nihil asperiores. Aut laudantium maxime aut suscipit maiores et voluptates internos ab autem beatae aut sunt eveniet. Ut nesciunt consequatur sed quos rerum et illo maxime? Cum facilis quod et cumque voluptatem non totam Quis non rerum error ad architecto illo in autem suscipit. Et dolorum distinctio aut inventore consectetur sed natus fugiat? Id laudantium aspernatur id quisquam consequatur non molestiae aliquam et perspiciatis molestias? Id dolorem exercitationem hic pariatur voluptatem sed enim autem aut officiis omnis ut voluptatem vero sed magni expedita id iste libero. Aut omnis vero aut quia quasi aut internos eaque et quaerat facilis. Est corporis dolorem ut quia debitis hic alias voluptatum et molestias sint. Ut voluptatem optio a quam corporis et incidunt libero vel aspernatur ratione non recusandae maxime ex consectetur alias. Non dolorem doloribus ea praesentium beatae eum molestiae dolorem eos minima officiis vel voluptates quod sit debitis quia. Quo dolore delectus non perspiciatis recusandae eos quod pariatur qui dolore labore. Eum accusantium beatae est accusamus quidem est voluptatum inventore! </p><p>Aut facere delectus qui voluptatum exercitationem qui earum porro. Est galisum excepturi ex porro suscipit sit beatae voluptatem aut pariatur animi rem eaque ipsam aut omnis architecto nam reiciendis consequatur. Ut exercitationem Quis ea cupiditate veritatis non ipsam eligendi. Et cupiditate molestias et vero dolorem ut dicta voluptatem et atque fuga est nihil aperiam! Qui voluptatem dolore ut dolore exercitationem vel magni harum qui eligendi temporibus sit voluptatum perferendis. Non nulla esse 33 totam sunt et corrupti earum in mollitia odio sed ipsum architecto quo repellendus vero. Et soluta sint est explicabo aliquid rem expedita quasi et corrupti dolor rem fugiat quos. Ut galisum consectetur ut illo expedita in accusamus voluptate a galisum corrupti aut similique possimus aut omnis adipisci. Qui pariatur amet eum voluptas assumenda eum tempore nihil? Ea facere architecto ut harum autem vel sunt fuga aut aspernatur quae ut enim similique. Ut Quis quas ea voluptas culpa sit adipisci earum et sint mollitia qui omnis consequatur. </p><p>Ut cumque reprehenderit aut accusamus esse et iusto modi ut maiores suscipit. Aut fugiat temporibus et porro omnis est tenetur velit cum fugit expedita! Vel Quis aliquid et nihil eligendi eum tempore repellat est odit consectetur aut velit dolores. Sed earum quia est fuga beatae sit reiciendis quasi qui nobis sint et accusamus voluptate aut porro quis. Et voluptates exercitationem quo nostrum ducimus et quod voluptatem aut culpa atque. Qui accusantium consectetur sit blanditiis enim ut quaerat natus id possimus quae non nisi quod qui velit inventore ea excepturi autem. Cum repudiandae dolorem aut exercitationem unde sed quia modi. Qui debitis minima est facilis deserunt aut dolor laborum At voluptas consectetur et Quis laboriosam sed ducimus voluptatibus id internos voluptate. Ut laborum deleniti et esse omnis eos aspernatur modi et voluptatem necessitatibus ab reprehenderit repellendus. Et veritatis ipsam vel culpa laborum ut maxime omnis 33 galisum dignissimos sed sint rerum qui voluptatem dolore! 33 similique nulla ut libero facere id deserunt odio non molestias accusantium sed facilis cupiditate id quas soluta rem error odit. </p><p>Est amet consequatur et eaque explicabo ex doloribus deleniti est voluptates labore. Non ullam incidunt eos necessitatibus quod a officia velit ut labore voluptatem cum eveniet placeat qui voluptatem voluptatum At sunt expedita. Et autem doloribus At dolorem dolorum et aperiam excepturi. Qui repellendus galisum cum aperiam velit ex molestiae dolores. Aut doloribus illo eum voluptas enim est maxime rerum ea magni sunt qui labore beatae et nostrum accusamus. Est soluta voluptatem est nisi fuga ad quasi omnis rem dolore accusamus quo rerum quisquam sed quae molestiae. Qui laboriosam molestiae aut quidem iste cum alias facere non doloremque culpa. Qui vitae sint vel earum distinctio est ullam officiis eum repellendus error. Ut officiis adipisci et veniam eius vel corporis nisi quo dignissimos dolore quo sunt eius. Aut adipisci reiciendis sed sequi ipsum et dolores porro sit nisi molestias sit sunt culpa aut voluptas quibusdam. Quo corporis omnis et reiciendis debitis est harum repellendus aut dolorem voluptas eum dolor rerum et ullam voluptatum. A vero iste non ducimus consequatur sit nihil praesentium eos voluptate ipsum ea sunt cupiditate aut assumenda odit. Ea labore laudantium in consequatur corporis est internos saepe et sint architecto rem necessitatibus expedita. Sit error voluptas est eius aspernatur ut deleniti illo? </p><p>In dolorem quis et unde pariatur aut sint consequatur in exercitationem galisum 33 consequatur minus quo iure nulla. Qui magni natus eos enim mollitia non internos numquam est quis ducimus qui explicabo galisum. Est laudantium iste et autem magni in minima possimus in amet doloremque quo reiciendis corporis. Qui error sapiente in optio facere in tempora omnis. Qui eius corrupti eos quas dolorum non fuga consequatur. Quo commodi omnis ea fuga similique qui velit dolorum. Sit beatae necessitatibus sit nulla dolor ut commodi consequuntur aut voluptatem numquam. Sit inventore cupiditate eum velit Quis et sint aspernatur et veritatis eius et consectetur neque est debitis possimus. </p><p>Vel galisum doloribus et fuga delectus non recusandae laudantium qui temporibus eius. Aut magnam tempora qui nulla necessitatibus ut voluptate repudiandae non tenetur velit aut natus neque vel dolorum animi. Et quaerat architecto et quae quos sed rerum quae qui omnis voluptatem? Sit rerum distinctio et necessitatibus ipsa hic officia numquam. Sed fugiat repudiandae est amet voluptatem 33 cupiditate rerum a expedita quibusdam. Et soluta quasi qui magnam neque non exercitationem earum ut consequuntur atque? Eos soluta quibusdam et voluptatibus enim rem numquam galisum id corrupti sequi qui nihil galisum eum reiciendis velit ut perferendis atque? Et consequatur laborum eum dolor sint ut maiores dolores et reiciendis quia et nisi itaque et assumenda consectetur qui quasi totam. </p><p>Aut impedit aspernatur quo dolores veritatis nam amet reiciendis et expedita rerum hic corporis esse! Ut ducimus quam ad deleniti fugit id internos neque quo dolor nisi ea facilis autem aut nulla natus. Qui nihil neque et dolorum velit eos illo voluptatem et recusandae quis et harum dolore aut iste autem non laudantium eveniet. Sed delectus voluptates et voluptatibus necessitatibus ut ullam dicta ut tenetur atque qui culpa atque. Aut Quis explicabo in pariatur delectus et tenetur modi hic dolores sint vel reiciendis veritatis aut pariatur similique et soluta omnis! Aut eligendi cupiditate et voluptatem dolore qui facilis tempore ut obcaecati itaque qui consequatur sint. Et cupiditate repellendus hic quibusdam optio est neque dolores sit odit nostrum et odio dolor. Ab reiciendis vero et tempore officiis est architecto similique sit sequi voluptatibus et reprehenderit sequi et temporibus labore eum cupiditate natus? Quo accusamus officiis id autem sunt eum deserunt omnis non atque minima non aperiam temporibus et cumque alias! Vel laborum distinctio ut rerum voluptatem qui obcaecati neque ut delectus dignissimos. Sed consequatur deleniti et accusantium asperiores et galisum inventore qui rerum dolores At esse magnam ab perspiciatis adipisci eos quisquam veritatis. </p>");
+
+      App.Bottom_Bar.Create (App.View);
+      App.Bottom_Bar.Style ("height", "40px");
+      App.Bottom_Bar.Style ("width", "100%");
+      App.Bottom_Bar.Style ("background-color", "#262635");
+      App.Bottom_Bar.Style ("position", "fixed");
+      App.Bottom_Bar.Style ("bottom", "0");
+
+      --------------------------------------------------------------------------
+      --  Bottom details
+      --------------------------------------------------------------------------
+      App.Status.Create (App.Bottom_Bar, "Message de statut");
+      App.Status.Style ("float", "left");
+      App.Status.Style ("align-items", "center");
+      App.Status.Style ("padding-left", "8px");
+      App.Status.Style ("color", "white");
+      App.Status.Style ("height", "100%");
+      App.Status.Style ("display", "flex");
+
+      App.Permanent.Create (App.Bottom_Bar, "Informations permanentes");
+      App.Permanent.Style ("float", "right");
+      App.Permanent.Style ("align-items", "center");
+      App.Permanent.Style ("padding-right", "8px");
+      App.Permanent.Style ("color", "white");
+      App.Permanent.Style ("height", "100%");
+      App.Permanent.Style ("display", "flex");
+
+      --------------------------------------------------------------------------
+      --  Navigation bar
+      --------------------------------------------------------------------------
+      App.Navigation_App.Create (App.Navigation_Bar);
+      App.Navigation_App.Class_Name ("logo-container");
+      App.App_Icon.Create (App.Navigation_App, URL_Source => "/css/icons/home.png");
+      App.App_Icon.Style ("width", "40px");
+      App.App_Icon.Style ("height", "40px");
+
+      --  App.User_Button.Create (App.Navigation_Bar);
+      --  App.User_Button.Style ("display", "flex");
+      --  App.User_Button.Style ("float", "right");
+      --  App.User_Name.Create (App.User_Button, "Nom utilisateur");
+      --  App.User_Icon.Create (App.User_Button, URL_Source => "/css/icons/home.png");
+      --  App.User_Icon.Style ("width", "40px");
+      --  App.User_Icon.Style ("height", "40px");
+      --  App.User_Icon.Style ("padding", "5px");
+
+      App.Navigation_Breadcrumb.Create (App.Navigation_Bar);
+      App.Navigation_Breadcrumb.Class_Name ("breadcrumb-container");
+
+      Current_Depth := -1;
+      -- ne se réinitialise pas lors d'un refresh de la page si affectation "Current_Depth = -1" placée avant le "begin"
+      Current_Depth :=
+        Breadcrumb.Add_To_Breadcrumb
+          (View         => App.Navigation_Breadcrumb, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
+           Current_Depth => Current_Depth, Depth => 0);
+
+
+      App.Navigation_User.Create (App.Navigation_Bar);
+      App.Navigation_User.Class_Name ("user-container");
+      App.User_Panel.Accordion.Create (Parent => App.Navigation_User);
+      App.User_Panel.Accordion.Create_Section ("Utilisateur");
+      App.User_Panel.Accordion.Style ("margin", "0");
+      App.User_Panel.Accordion.Style ("padding", "0");
+      App.User_Panel.Accordion.Style ("width", "100%");
+      App.User_Panel.Accordion.Style ("display", "block");
+      App.User_Panel.Accordion.Style ("height", "48px");
+      App.User_Panel.Accordion.Style ("border-radius", "0");
+
+      App.User_Panel.Deck_User.Create (App.User_Panel.Accordion);
+      App.User_Panel.Deck_User.Add_Class ("accordion_content");
+      App.User_Panel.Deck_User.Style ("overflow", "hidden");
+      App.User_Panel.Deck_User.Style ("padding", "0");
+      App.User_Panel.Deck_User.Style ("box-sizing", "border-box");
+
+      App.User_Panel.Button (1).Create (App.User_Panel.Deck_User, "Aide en ligne");
+      App.User_Panel.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+
+      App.User_Panel.Button (2).Create (App.User_Panel.Deck_User, "Droits d'accès");
+      App.User_Panel.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+
+      App.User_Panel.Button (3).Create (App.User_Panel.Deck_User, "Connecté depuis");
+      App.User_Panel.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+
+      App.User_Panel.Button (4).Create (App.User_Panel.Deck_User, "Connexion précédente");
+      App.User_Panel.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+
+      App.User_Panel.Button (5).Create (App.User_Panel.Deck_User, "À propos de");
+      App.User_Panel.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+
+      App.User_Panel.Accordion.Render_Accordion (True);
+
+      --------------------------------------------------------------------------
+      --  Main_Frame
+      --------------------------------------------------------------------------
+      --  App.Main_Frame.Main_Deck.Create (App.View);
+      --  App.Window.Fill_Dock (App.Main_Frame.Main_Deck'Unchecked_Access);
+
+      --------------------------------------------------------------------------
+      --  Left Menu
+      --------------------------------------------------------------------------
+      App.Menu_Accordion.Accordion.Create (Parent => App.Tool_Bar);
       App.Menu_Accordion.Accordion.Create_Section ("Logo");
-      App.Menu_Accordion.Accordion.Style ("width", "140px");
+      App.Menu_Accordion.Accordion.Style ("width", "100%");
+
       App.Menu_Accordion.Cards.Create (App.Menu_Accordion.Accordion);
-      App.Menu_Accordion.Cards.Style ("width", "140px");
+      App.Menu_Accordion.Cards.Add_Class ("accordion_content");
+      App.Menu_Accordion.Cards.Style ("width", "100%");
+      App.Menu_Accordion.Cards.Style ("overflow", "hidden");
+      App.Menu_Accordion.Cards.Style ("padding", "0");
+      App.Menu_Accordion.Cards.Style ("box-sizing", "border-box");
 
       App.Menu_Accordion.Widget (1).Create (App.Menu_Accordion.Cards);
       App.Menu_Accordion.Widget (2).Create (App.Menu_Accordion.Cards);
       App.Menu_Accordion.Widget (3).Create (App.Menu_Accordion.Cards);
-
-      App.Menu_Accordion.Cards.Add_Class ("accordion_content");
-      App.Menu_Accordion.Cards.Style ("overflow", "hidden");
-      App.Menu_Accordion.Cards.Style ("padding", "0");
-      App.Menu_Accordion.Cards.Style ("box-sizing", "border-box");
 
       App.Menu_Accordion.Button (1).Create (App.Menu_Accordion.Widget (1), "Contrats");
       App.Menu_Accordion.Button (1).On_Click_Handler (On_Contrats'Unrestricted_Access);
@@ -359,326 +479,260 @@ procedure application1 is
         (Name => App.Menu_Accordion.Name_Administration, Card => App.Menu_Accordion.Widget (3)'Access);
 
       App.Menu_Accordion.Accordion.Render_Accordion (True);
-
-      --------------------------------------------------------------------------
-      --  Top Right Menu
-      --------------------------------------------------------------------------
-      App.User_Panel.Accordion.Create (Parent => App.Top_Panel);
-      App.User_Panel.Accordion.Create_Section ("Utilisateur");
-      App.User_Panel.Accordion.Style ("width", "135px");
-      App.User_Panel.Deck_User.Create (App.User_Panel.Accordion);
-      App.User_Panel.Deck_User.Style ("width", "135px");
-
-      App.User_Panel.Deck_User.Add_Class ("accordion_content");
-      App.User_Panel.Deck_User.Style ("overflow", "hidden");
-      App.User_Panel.Deck_User.Style ("padding", "0");
-      App.User_Panel.Deck_User.Style ("box-sizing", "border-box");
-
-      App.User_Panel.Button (1).Create (App.User_Panel.Deck_User, "Aide en ligne");
-      App.User_Panel.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.User_Panel.Button (2).Create (App.User_Panel.Deck_User, "Droits d'accès");
-      App.User_Panel.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.User_Panel.Button (3).Create (App.User_Panel.Deck_User, "Connecté depuis");
-      App.User_Panel.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.User_Panel.Button (4).Create (App.User_Panel.Deck_User, "Connexion précédente");
-      App.User_Panel.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.User_Panel.Button (5).Create (App.User_Panel.Deck_User, "À propos de");
-      App.User_Panel.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.User_Panel.Accordion.Render_Accordion (True);
-
-      --------------------------------------------------------------------------
-      --  Bottom menu
-      --------------------------------------------------------------------------
-      App.Button_Msg_Statut.Create (App.Bottom_Panel, "Messages de statuts");
-      App.Button_Infos_Perma.Create (App.Bottom_Panel, "Informations permanentes");
-
-      --------------------------------------------------------------------------
-      --  Main_Frame
-      --------------------------------------------------------------------------
-      App.Main_Frame.Main_Deck.Create (App.My_Docker);
-      App.My_Docker.Fill_Dock (App.Main_Frame.Main_Deck'Unchecked_Access);
-
-      --------------------------------------------------------------------------
-      --  Left Menu
-      --------------------------------------------------------------------------
-      App.Menu_Folder.Cards.Create (App.Main_Frame.Main_Deck);
-      App.Main_Frame.Main_Deck.Left_Dock (App.Menu_Folder.Cards'Unchecked_Access);
-
-      App.Menu_Folder.Widget (1).Create (App.Menu_Folder.Cards);
-      App.Menu_Folder.Widget (2).Create (App.Menu_Folder.Cards);
-      App.Menu_Folder.Widget (3).Create (App.Menu_Folder.Cards);
-
-      --------------------------------------------------------
-
-      App.Stdr_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (2));
-
-      --  --  --  Folder Fichier
-
-      App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
-      App.Stdr_Folder.Widget (1).Create (App.Stdr_Folder.Folder);
-
-      --  --  --  Button Créer
-
-      App.Stdr_Folder.Button (1).Create (App.Stdr_Folder.Widget (1), "Créer");
-      App.Stdr_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Modifier
-      App.Stdr_Folder.Button (2).Create (App.Stdr_Folder.Widget (1), "Modifier");
-      App.Stdr_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Supprimer
-      App.Stdr_Folder.Button (3).Create (App.Stdr_Folder.Widget (1), "Supprimer");
-      App.Stdr_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Exporter
-      App.Stdr_Folder.Button (4).Create (App.Stdr_Folder.Widget (1), "Exporter");
-      App.Stdr_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Importer
-      App.Stdr_Folder.Button (5).Create (App.Stdr_Folder.Widget (1), "Importer");
-      App.Stdr_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Imprimer
-      App.Stdr_Folder.Button (6).Create (App.Stdr_Folder.Widget (1), "Imprimer");
-      App.Stdr_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Éditer
-
-      App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
-      App.Stdr_Folder.Widget (2).Create (App.Stdr_Folder.Folder);
-
-      --  --  --  Button Copier
-      App.Stdr_Folder.Button (7).Create (App.Stdr_Folder.Widget (2), "Copier");
-      App.Stdr_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Coller
-      App.Stdr_Folder.Button (8).Create (App.Stdr_Folder.Widget (2), "Coller");
-      App.Stdr_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Afficher
-
-      App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
-      App.Stdr_Folder.Widget (3).Create (App.Stdr_Folder.Folder);
-
-      --  --  --  Button Précédent
-      App.Stdr_Folder.Button (9).Create (App.Stdr_Folder.Widget (3), "Précédent");
-      App.Stdr_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Suivant
-      App.Stdr_Folder.Button (10).Create (App.Stdr_Folder.Widget (3), "Suivant");
-      App.Stdr_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Rechercher
-      App.Stdr_Folder.Button (11).Create (App.Stdr_Folder.Widget (3), "Rechercher");
-      App.Stdr_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.Stdr_Folder.Folder.Render_Folder (True);
-
-      --------------------------------------------------------------------------
-
-      App.Gestion_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (3));
-
-      --  --  --  Folder Fichier
-
-      App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
-      App.Gestion_Folder.Widget (1).Create (App.Gestion_Folder.Folder);
-
-      --  --  --  Button Créer
-      App.Gestion_Folder.Button (1).Create (App.Gestion_Folder.Widget (1), "Créer");
-      App.Gestion_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Modifier
-      App.Gestion_Folder.Button (2).Create (App.Gestion_Folder.Widget (1), "Modifier");
-      App.Gestion_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Supprimer
-      App.Gestion_Folder.Button (3).Create (App.Gestion_Folder.Widget (1), "Supprimer");
-      App.Gestion_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Exporter
-      App.Gestion_Folder.Button (4).Create (App.Gestion_Folder.Widget (1), "Exporter");
-      App.Gestion_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Importer
-      App.Gestion_Folder.Button (5).Create (App.Gestion_Folder.Widget (1), "Importer");
-      App.Gestion_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Imprimer
-      App.Gestion_Folder.Button (6).Create (App.Gestion_Folder.Widget (1), "Imprimer");
-      App.Gestion_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Éditer
-
-      App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
-      App.Gestion_Folder.Widget (2).Create (App.Gestion_Folder.Folder);
-
-      --  --  --  Button Copier
-      App.Gestion_Folder.Button (7).Create (App.Gestion_Folder.Widget (2), "Copier");
-      App.Gestion_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Coller
-      App.Gestion_Folder.Button (8).Create (App.Gestion_Folder.Widget (2), "Coller");
-      App.Gestion_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Afficher
-
-      App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
-      App.Gestion_Folder.Widget (3).Create (App.Gestion_Folder.Folder);
-
-      --  --  --  Button Précédent
-      App.Gestion_Folder.Button (9).Create (App.Gestion_Folder.Widget (3), "Précédent");
-      App.Gestion_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Suivant
-      App.Gestion_Folder.Button (10).Create (App.Gestion_Folder.Widget (3), "Suivant");
-      App.Gestion_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Rechercher
-      App.Gestion_Folder.Button (11).Create (App.Gestion_Folder.Widget (3), "Rechercher");
-      App.Gestion_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.Gestion_Folder.Line.Create (App.Gestion_Folder.Widget (3));
-      App.Gestion_Folder.Line.Style ("border-bottom", "2px solid black");
-
-      --  --  --  Button Lister
-      App.Gestion_Folder.Button (12).Create (App.Gestion_Folder.Widget (3), "Lister");
-      App.Gestion_Folder.Button (12).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Lister Factures
-      App.Gestion_Folder.Button (13).Create (App.Gestion_Folder.Widget (3), "Lister Factures");
-      App.Gestion_Folder.Button (13).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Lister SEPA
-      App.Gestion_Folder.Button (14).Create (App.Gestion_Folder.Widget (3), "Lister SEPA");
-      App.Gestion_Folder.Button (14).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Valider
-
-      App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>V</span>alider", Name => "Valider");
-      App.Gestion_Folder.Widget (4).Create (App.Gestion_Folder.Folder);
-
-      --  --  --  Button Factures
-      App.Gestion_Folder.Button (15).Create (App.Gestion_Folder.Widget (4), "Factures");
-      App.Gestion_Folder.Button (15).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button SEPA
-      App.Gestion_Folder.Button (16).Create (App.Gestion_Folder.Widget (4), "SEPA");
-      App.Gestion_Folder.Button (16).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Folder Préférences
-
-      App.Gestion_Folder.Folder.Create_Section
-        (Content => "<span class='rouge'>P</span>références", Name => "Preferences");
-      App.Gestion_Folder.Widget (5).Create (App.Gestion_Folder.Folder);
-
-      --  --  --  Button Intervalles SEPA
-      App.Gestion_Folder.Button (17).Create (App.Gestion_Folder.Widget (5), "Intervalles SEPA");
-      App.Gestion_Folder.Button (17).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      --  --  --  Button Natures
-      App.Gestion_Folder.Button (18).Create (App.Gestion_Folder.Widget (5), "Natures");
-      App.Gestion_Folder.Button (18).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-
-      App.Gestion_Folder.Widget (1).Style ("top", "5px");
-      App.Gestion_Folder.Widget (2).Style ("top", "45px");
-      App.Gestion_Folder.Widget (3).Style ("top", "85px");
-      App.Gestion_Folder.Widget (4).Style ("top", "125px");
-      App.Gestion_Folder.Widget (5).Style ("top", "165px");
-
-      App.Gestion_Folder.Folder.Position (Gnoga.Gui.Element.Absolute);
-
-      App.Gestion_Folder.Folder.Render_Folder (True);
-
-      App.Menu_Folder.Cards.Add_Card
-        (Name => App.Menu_Folder.Name_Accueil, Card => App.Menu_Folder.Widget (1)'Access, Show => True);
-
-      App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Standard, Card => App.Menu_Folder.Widget (2)'Access);
-
-      App.Menu_Folder.Cards.Add_Card
-        (Name => App.Menu_Folder.Name_Contrats_Gestion, Card => App.Menu_Folder.Widget (3)'Access);
-
+      --  App.Menu_Folder.Cards.Create (App.Main_Frame.Main_Deck);
+      --  App.Main_Frame.Main_Deck.Left_Dock (App.Menu_Folder.Cards'Unchecked_Access);
+      --
+      --  App.Menu_Folder.Widget (1).Create (App.Menu_Folder.Cards);
+      --  App.Menu_Folder.Widget (2).Create (App.Menu_Folder.Cards);
+      --  App.Menu_Folder.Widget (3).Create (App.Menu_Folder.Cards);
+      --
+      --  --------------------------------------------------------
+      --
+      --  App.Stdr_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (2));
+      --
+      --  --  --  --  Folder Fichier
+      --
+      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
+      --  App.Stdr_Folder.Widget (1).Create (App.Stdr_Folder.Folder);
+      --
+      --  --  --  --  Button Créer
+      --
+      --  App.Stdr_Folder.Button (1).Create (App.Stdr_Folder.Widget (1), "Créer");
+      --  App.Stdr_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Modifier
+      --  App.Stdr_Folder.Button (2).Create (App.Stdr_Folder.Widget (1), "Modifier");
+      --  App.Stdr_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Supprimer
+      --  App.Stdr_Folder.Button (3).Create (App.Stdr_Folder.Widget (1), "Supprimer");
+      --  App.Stdr_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Exporter
+      --  App.Stdr_Folder.Button (4).Create (App.Stdr_Folder.Widget (1), "Exporter");
+      --  App.Stdr_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Importer
+      --  App.Stdr_Folder.Button (5).Create (App.Stdr_Folder.Widget (1), "Importer");
+      --  App.Stdr_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Imprimer
+      --  App.Stdr_Folder.Button (6).Create (App.Stdr_Folder.Widget (1), "Imprimer");
+      --  App.Stdr_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Éditer
+      --
+      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
+      --  App.Stdr_Folder.Widget (2).Create (App.Stdr_Folder.Folder);
+      --
+      --  --  --  --  Button Copier
+      --  App.Stdr_Folder.Button (7).Create (App.Stdr_Folder.Widget (2), "Copier");
+      --  App.Stdr_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Coller
+      --  App.Stdr_Folder.Button (8).Create (App.Stdr_Folder.Widget (2), "Coller");
+      --  App.Stdr_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Afficher
+      --
+      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
+      --  App.Stdr_Folder.Widget (3).Create (App.Stdr_Folder.Folder);
+      --
+      --  --  --  --  Button Précédent
+      --  App.Stdr_Folder.Button (9).Create (App.Stdr_Folder.Widget (3), "Précédent");
+      --  App.Stdr_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Suivant
+      --  App.Stdr_Folder.Button (10).Create (App.Stdr_Folder.Widget (3), "Suivant");
+      --  App.Stdr_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Rechercher
+      --  App.Stdr_Folder.Button (11).Create (App.Stdr_Folder.Widget (3), "Rechercher");
+      --  App.Stdr_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  App.Stdr_Folder.Folder.Render_Folder (True);
+      --
+      --  --------------------------------------------------------------------------
+      --
+      --  App.Gestion_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (3));
+      --
+      --  --  --  --  Folder Fichier
+      --
+      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
+      --  App.Gestion_Folder.Widget (1).Create (App.Gestion_Folder.Folder);
+      --
+      --  --  --  --  Button Créer
+      --  App.Gestion_Folder.Button (1).Create (App.Gestion_Folder.Widget (1), "Créer");
+      --  App.Gestion_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Modifier
+      --  App.Gestion_Folder.Button (2).Create (App.Gestion_Folder.Widget (1), "Modifier");
+      --  App.Gestion_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Supprimer
+      --  App.Gestion_Folder.Button (3).Create (App.Gestion_Folder.Widget (1), "Supprimer");
+      --  App.Gestion_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Exporter
+      --  App.Gestion_Folder.Button (4).Create (App.Gestion_Folder.Widget (1), "Exporter");
+      --  App.Gestion_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Importer
+      --  App.Gestion_Folder.Button (5).Create (App.Gestion_Folder.Widget (1), "Importer");
+      --  App.Gestion_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Imprimer
+      --  App.Gestion_Folder.Button (6).Create (App.Gestion_Folder.Widget (1), "Imprimer");
+      --  App.Gestion_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Éditer
+      --
+      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
+      --  App.Gestion_Folder.Widget (2).Create (App.Gestion_Folder.Folder);
+      --
+      --  --  --  --  Button Copier
+      --  App.Gestion_Folder.Button (7).Create (App.Gestion_Folder.Widget (2), "Copier");
+      --  App.Gestion_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Coller
+      --  App.Gestion_Folder.Button (8).Create (App.Gestion_Folder.Widget (2), "Coller");
+      --  App.Gestion_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Afficher
+      --
+      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
+      --  App.Gestion_Folder.Widget (3).Create (App.Gestion_Folder.Folder);
+      --
+      --  --  --  --  Button Précédent
+      --  App.Gestion_Folder.Button (9).Create (App.Gestion_Folder.Widget (3), "Précédent");
+      --  App.Gestion_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Suivant
+      --  App.Gestion_Folder.Button (10).Create (App.Gestion_Folder.Widget (3), "Suivant");
+      --  App.Gestion_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Rechercher
+      --  App.Gestion_Folder.Button (11).Create (App.Gestion_Folder.Widget (3), "Rechercher");
+      --  App.Gestion_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  App.Gestion_Folder.Line.Create (App.Gestion_Folder.Widget (3));
+      --  App.Gestion_Folder.Line.Style ("border-bottom", "2px solid black");
+      --
+      --  --  --  --  Button Lister
+      --  App.Gestion_Folder.Button (12).Create (App.Gestion_Folder.Widget (3), "Lister");
+      --  App.Gestion_Folder.Button (12).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Lister Factures
+      --  App.Gestion_Folder.Button (13).Create (App.Gestion_Folder.Widget (3), "Lister Factures");
+      --  App.Gestion_Folder.Button (13).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Lister SEPA
+      --  App.Gestion_Folder.Button (14).Create (App.Gestion_Folder.Widget (3), "Lister SEPA");
+      --  App.Gestion_Folder.Button (14).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Valider
+      --
+      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>V</span>alider", Name => "Valider");
+      --  App.Gestion_Folder.Widget (4).Create (App.Gestion_Folder.Folder);
+      --
+      --  --  --  --  Button Factures
+      --  App.Gestion_Folder.Button (15).Create (App.Gestion_Folder.Widget (4), "Factures");
+      --  App.Gestion_Folder.Button (15).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button SEPA
+      --  App.Gestion_Folder.Button (16).Create (App.Gestion_Folder.Widget (4), "SEPA");
+      --  App.Gestion_Folder.Button (16).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Folder Préférences
+      --
+      --  App.Gestion_Folder.Folder.Create_Section
+      --    (Content => "<span class='rouge'>P</span>références", Name => "Preferences");
+      --  App.Gestion_Folder.Widget (5).Create (App.Gestion_Folder.Folder);
+      --
+      --  --  --  --  Button Intervalles SEPA
+      --  App.Gestion_Folder.Button (17).Create (App.Gestion_Folder.Widget (5), "Intervalles SEPA");
+      --  App.Gestion_Folder.Button (17).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  --  --  --  Button Natures
+      --  App.Gestion_Folder.Button (18).Create (App.Gestion_Folder.Widget (5), "Natures");
+      --  App.Gestion_Folder.Button (18).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      --
+      --  App.Gestion_Folder.Widget (1).Style ("top", "5px");
+      --  App.Gestion_Folder.Widget (2).Style ("top", "45px");
+      --  App.Gestion_Folder.Widget (3).Style ("top", "85px");
+      --  App.Gestion_Folder.Widget (4).Style ("top", "125px");
+      --  App.Gestion_Folder.Widget (5).Style ("top", "165px");
+      --
+      --  App.Gestion_Folder.Folder.Position (Gnoga.Gui.Element.Absolute);
+      --
+      --  App.Gestion_Folder.Folder.Render_Folder (True);
+      --
+      --  App.Menu_Folder.Cards.Add_Card
+      --    (Name => App.Menu_Folder.Name_Accueil, Card => App.Menu_Folder.Widget (1)'Access, Show => True);
+      --
+      --  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Standard, Card => App.Menu_Folder.Widget (2)'Access);
+      --
+      --  App.Menu_Folder.Cards.Add_Card
+      --    (Name => App.Menu_Folder.Name_Contrats_Gestion, Card => App.Menu_Folder.Widget (3)'Access);
+
+      App.Exit_Button.Create (App.Content, "Stopper exécution");
+      App.Exit_Button.Style ("width", "140px");
+      App.Exit_Button.On_Click_Handler (On_Exit'Unrestricted_Access);
       --------------------------------------------------------------------------
       --  Main_FrameView
       --------------------------------------------------------------------------
-      App.Main_Frame.Cards.Create (App.Main_Frame.Main_Deck);
-      App.Main_Frame.Main_Deck.Fill_Dock (App.Main_Frame.Cards'Unchecked_Access);
-
-      Widget_Create_Accueil (App.Main_Frame.Widget (1), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Accueil, Card => App.Main_Frame.Widget (1)'Access, Show => True);
+      --  App.Main_Frame.Cards.Create (App.Main_Frame.Main_Deck);
+      --  App.Main_Frame.Main_Deck.Fill_Dock (App.Main_Frame.Cards'Unchecked_Access);
       --
-      Widget_Create_Contrats_Tab (App.Main_Frame.Widget (2), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Contrats_Tab, Card => App.Main_Frame.Widget (2)'Access);
+      --  Widget_Create_Accueil (App.Main_Frame.Widget (1), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Accueil, Card => App.Main_Frame.Widget (1)'Access, Show => True);
+      --  --
+      --  Widget_Create_Contrats_Tab (App.Main_Frame.Widget (2), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Contrats_Tab, Card => App.Main_Frame.Widget (2)'Access);
+      --  --
+      --  Widget_Create_Contrats_Gestion (App.Main_Frame.Widget (3), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Contrats_Gestion, Card => App.Main_Frame.Widget (3)'Access);
       --
-      Widget_Create_Contrats_Gestion (App.Main_Frame.Widget (3), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Contrats_Gestion, Card => App.Main_Frame.Widget (3)'Access);
-
-      App.Form_View_Gestion.Create
-        (Parent  => App.Main_Frame.Widget (3), ID => "",
-         Strings => Simple_Form.All_Fields (Form_Gestion_Row_Names, ","));
-
-      Widget_Create_Administration_Tab (App.Main_Frame.Widget (4), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Administration_Tab, Card => App.Main_Frame.Widget (4)'Access);
-
-      Widget_Create_Administration_Utils (App.Main_Frame.Widget (5), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Administration_Utils, Card => App.Main_Frame.Widget (5)'Access);
-
-      Widget_Create_Administration_Emails (App.Main_Frame.Widget (6), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Administration_Emails, Card => App.Main_Frame.Widget (6)'Access);
-
-      Widget_Create_Administration_Gen (App.Main_Frame.Widget (7), App.Main_Frame.Cards);
-      App.Main_Frame.Cards.Add_Card
-        (Name => App.Main_Frame.Name_Administration_Gen, Card => App.Main_Frame.Widget (7)'Access);
-
-      --------------------------------------------------------------------------
-      --  Breadcrumb + Main button
-      --------------------------------------------------------------------------
-      Current_Depth := -1;
-      -- ne se réinitialise pas lors d'un refresh de la page si affectation "Current_Depth = -1" placée avant le "begin"
-      Current_Depth :=
-        Breadcrumb.Add_To_Breadcrumb
-          (View         => App.Top_Panel, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
-           Current_Depth => Current_Depth, Depth => 0);
-
-      --------------------------------------------------------------------------
-
-      App.My_Exit.Create (App.Bottom_Panel, "Stopper l'exécution");
-      App.My_Exit.On_Click_Handler (On_Exit'Unrestricted_Access);
+      --  App.Form_View_Gestion.Create
+      --    (Parent  => App.Main_Frame.Widget (3), ID => "",
+      --     Strings => Simple_Form.All_Fields (Form_Gestion_Row_Names, ","));
+      --
+      --  Widget_Create_Administration_Tab (App.Main_Frame.Widget (4), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Administration_Tab, Card => App.Main_Frame.Widget (4)'Access);
+      --
+      --  Widget_Create_Administration_Utils (App.Main_Frame.Widget (5), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Administration_Utils, Card => App.Main_Frame.Widget (5)'Access);
+      --
+      --  Widget_Create_Administration_Emails (App.Main_Frame.Widget (6), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Administration_Emails, Card => App.Main_Frame.Widget (6)'Access);
+      --
+      --  Widget_Create_Administration_Gen (App.Main_Frame.Widget (7), App.Main_Frame.Cards);
+      --  App.Main_Frame.Cards.Add_Card
+      --    (Name => App.Main_Frame.Name_Administration_Gen, Card => App.Main_Frame.Widget (7)'Access);
 
       --------------------------------------------------------------------------
       --  Style
       --------------------------------------------------------------------------
-      App.User_Panel.Accordion.Add_Class ("element_top_right border");
-      App.Main_Frame.Main_Deck.Style ("top", "180px");
-      App.Main_Frame.Main_Deck.Style ("left", "0px");
-      App.Menu_Folder.Cards.Add_Class ("element_top_left border");
-      App.Menu_Folder.Cards.Style ("width", "120px");
-      App.Main_Frame.Cards.Style ("position", "absolute");
-      App.Main_Frame.Cards.Style ("top", "0px");
-      App.Main_Frame.Cards.Style ("left", "120px");
-      App.Top_Panel.Add_Class ("element_top_left border");
-      App.Top_Panel.Style ("height", "52px");
-      App.Bottom_Panel.Add_Class ("element_bottom_left border");
-      App.Bottom_Panel.Style ("height", "50px");
-      App.Bottom_Panel.Style ("z-index", "2");
-      App.Button_Msg_Statut.Add_Class ("element_bottom_left");
-      App.Button_Infos_Perma.Add_Class ("element_bottom_right");
+      --  App.User_Panel.Accordion.Add_Class ("element_top_right border");
+      --  App.Main_Frame.Main_Deck.Style ("top", "180px");
+      --  App.Main_Frame.Main_Deck.Style ("left", "0px");
+      --  App.Main_Frame.Cards.Style ("position", "absolute");
+      --  App.Main_Frame.Cards.Style ("top", "0px");
+      --  App.Main_Frame.Cards.Style ("left", "120px");
+
+      --  App.Menu_Folder.Cards.Add_Class ("element_top_left border");
+      --  App.Menu_Folder.Cards.Style ("width", "120px");
+
       App.Menu_Accordion.Cards.Style ("height", "auto");
       App.Menu_Accordion.Widget (1).Style ("height", "auto");
       App.Menu_Accordion.Widget (2).Style ("height", "auto");
       App.Menu_Accordion.Widget (3).Style ("height", "auto");
-      App.My_Docker.Visible;
-
    end On_Connect;
 
    procedure On_Post_Request

@@ -21,9 +21,8 @@ package body Breadcrumb is
       View.Add_Element (Element_Name, New_Button);
       New_Button.Dynamic;
       New_Button.On_Click_Handler (Handler);
-      New_Button.Style ("position", "absolute");
-      New_Button.Style ("top", "0px");
       New_Button.Style ("left", Left_String & "px");
+      New_Button.Style ("width", "130px");
       return Current_Depth;
    end Add_To_Breadcrumb;
 
