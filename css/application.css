@@ -1,21 +1,13 @@
-a.active {
-    background-color: #303030 !important;
-}
 
-.navbar {
-    background-color: black;
-    height: 40px;
-}
-
-.accordion_content {
+.accordion-content {
     border-top: 0;
     overflow: hidden;
     z-index: 1;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     position: absolute;
+    padding: 0 !important;
 }
-
 
 button {
     display: block;
@@ -31,7 +23,6 @@ button {
     min-height: 48px;
     border-radius: 6px;
 }
-
 
 button:hover {
     cursor: pointer;
@@ -66,35 +57,6 @@ button:hover {
     color: red;
 }
 
-.element_top_left {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 1;
-}
-
-.element_top_right {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-}
-
-.element_bottom_left {
-    position: absolute;
-    bottom: 0px;
-    left: 0px;
-}
-
-.element_bottom_right {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-}
-
-._border {
-    border: medium solid black;
-}
-
 .unclickable {
     pointer-events: none !important;
     color: silver !important;
@@ -127,6 +89,15 @@ button:hover {
     float: right;
 }
 
+.user-accordion {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: block;
+    height: 48px;
+    border-radius: 0;
+}
+
 .navigation-bar {
     z-index: 10;
     width: 100%;
@@ -143,12 +114,48 @@ button:hover {
     top: 52px;
 }
 
+.tool-browse {
+    width: 100%;
+    height: 50%;
+}
+
+.tool-edit {
+    width: 100%;
+    height: 50%;
+}
+
 .content-container {
     width: calc(100% - 140px);
     height: calc(100% - 90px);
     float: right;
     overflow: scroll;
     padding-top: 52px;
+}
+
+.bottom-bar {
+    height: 40px;
+    width: 100%;
+    background-color: #262635;
+    position: fixed;
+    bottom: 0;
+}
+
+.bottom-bar-status {
+    height: 100%;
+    float: left;
+    align-items: center;
+    padding-left: 8px;
+    color: white;
+    display: flex;
+}
+
+.bottom-bar-permanent {
+    height: 100%;
+    float: right;
+    align-items: center;
+    padding-right: 8px;
+    color: white;
+    display: flex;
 }
 
 @media screen and (max-width: 700px) {
