@@ -188,10 +188,13 @@ procedure application1 is
    begin
       if (App.Is_Navigation_Browse_Opened) then
          App.Navigation_Browse_View.Display ("none");
+         App.App_Icon.Remove_Class ("active-icon");
       else
          On_Main (Object);
+         App.App_Icon.Add_Class ("active-icon");
          App.Navigation_Browse_View.Display ("inherit");
          App.Navigation_User_Buttons.Display ("none");
+         App.User_Icon.Remove_Class ("active-icon");
          App.Is_Navigation_User_Opened := False;
       end if;
       App.Is_Navigation_Browse_Opened := not App.Is_Navigation_Browse_Opened;
@@ -202,9 +205,12 @@ procedure application1 is
    begin
       if (App.Is_Navigation_User_Opened) then
          App.Navigation_User_Buttons.Display ("none");
+         App.User_Icon.Remove_Class ("active-icon");
       else
+         App.User_Icon.Add_Class ("active-icon");
          App.Navigation_User_Buttons.Display ("inherit");
          App.Navigation_Browse_View.Display ("none");
+         App.App_Icon.Remove_Class ("active-icon");
          App.Is_Navigation_Browse_Opened := False;
       end if;
       App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
