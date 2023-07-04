@@ -2,23 +2,25 @@
 button {
     display: block;
     cursor: pointer;
-    border: 1px solid #666666;
-    background: #555555 url("images/ui-bg_glass_20_555555_1x400.png") 50% 50% repeat-x;
+    border: 2px solid #0000;
+    background: #26253688;
     font-weight: bold;
     font-size: 100%;
-    margin: 2px;
     color: white;
-    width: calc(100% - 4px);
+    width: 100%;
     max-width: 140px;
     min-height: 48px;
-    border-radius: 6px;
+    box-sizing: border-box;
 }
 
 button:hover {
-    cursor: pointer;
-    border: 1px solid #59b4d4;
+    border: 2px solid #80b8ff;
+    background: #161526ff;
+}
+
+button:active {
+    border: 2px solid #80b8ff;
     background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x;
-    font-weight: bold;
 }
 
 .submit {
@@ -60,7 +62,6 @@ button:hover {
 .breadcrumb-container {
     height: 40px;
     width: calc(100% - 275px);
-    overflow: scroll;
     display: flex;
     align-items: center;
     float: left;
@@ -150,23 +151,28 @@ button:hover {
 
 .top-icon:hover {
     border-radius: 8px;
-    background-color: #7b7caf;
+    background-color: #26253633;
 }
 
 .top-icon:active {
     border-radius: 8px;
-    background-color: #9fa0cb;
+    background-color: #26253660;
+}
+
+.active-icon {
+    border-radius: 8px;
+    background-color: #26253660 !important;
 }
 
 .navigation-user-buttons {
-    background-color: black;
+    background-color: #3d3e4d;
     position: absolute;
     top: 40px;
     right: 0px;
 }
 
 .navigation-browse-buttons {
-    background-color: black;
+    background-color: #3d3e4d;
     position: absolute;
     width: 140px;
     top: 40px;
@@ -215,7 +221,6 @@ button:hover {
     
     button {
         max-width: none;
-        width: calc(100% - 4px);
     }
 
     .navigation-user-buttons {
