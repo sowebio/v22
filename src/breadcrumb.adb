@@ -3,13 +3,18 @@ with Gnoga.Gui.Element; use Gnoga.Gui.Element;
 
 package body Breadcrumb is
 
-   function Add_To_Breadcrumb
-     (View          : in out Gnoga.Gui.View.View_Type;
-      Handler       : in     Gnoga.Gui.Base.Action_Event;
-      Content       : in     UXString := "";
-      Current_Depth : in     Integer;
-      Depth         : in     Integer  := 0)
-      return Integer
+   function Create return Breadcrumb_Type is
+      Result : Breadcrumb_Type;
+   begin
+      return Result;
+   end Create;
+
+   procedure Add
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type;
+      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Content  : in     UXString := "";
+      Depth    : in     Integer  := 0)
    is
       Left_String  : UXString                                            := "";
       Element_Name : UXString                                            := "";
@@ -23,51 +28,48 @@ package body Breadcrumb is
       New_Button.On_Click_Handler (Handler);
       New_Button.Style ("left", Left_String & "px");
       New_Button.Style ("width", "130px");
-      return Current_Depth;
-   end Add_To_Breadcrumb;
+      New_Button.Style ("height", "40px");
+      New_Button.Style ("min-height", "40px");
+      New_Button.Style ("margin", "0");
+      Instance.Current_Depth := Depth;
+   end Add;
 
-   function Remove_From_Breadcrumb
-     (View          : in out Gnoga.Gui.View.View_Type;
-      Current_Depth : in     Integer)
-      return Integer
+   procedure Remove
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type)
    is
       Element_Name : UXString := "";
    begin
-      Element_Name := "Button_" & From_UTF_8 (Current_Depth'Image).Delete (1, 1);
+      Element_Name := "Button_" & From_UTF_8 (Instance.Current_Depth'Image).Delete (1, 1);
       if View.Element (Element_Name) /= null then
          View.Element (Element_Name).Remove;
       end if;
-      return Current_Depth;
-   end Remove_From_Breadcrumb;
+   end Remove;
 
-   function Update_Breadcrumb
-     (View          : in out Gnoga.Gui.View.View_Type;
-      Handler       : in     Gnoga.Gui.Base.Action_Event;
-      Content       : in     UXString := "";
-      Current_Depth : in out Integer;
-      Depth         : in     Integer  := 0)
-      return Integer
+   procedure Update
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type;
+      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Content  : in     UXString := "";
+      Depth    : in     Integer  := 0)
    is
    begin
-      if Current_Depth < Depth then
-         Current_Depth :=
-           Add_To_Breadcrumb
-             (View => View, Handler => Handler, Content => Content, Current_Depth => Current_Depth, Depth => Depth);
+      if Instance.Current_Depth < Depth then
+         Add (Instance, View => View, Handler => Handler, Content => Content, Depth => Depth);
 
-      elsif Current_Depth = Depth then
-         Current_Depth := Remove_From_Breadcrumb (View => View, Current_Depth => Current_Depth);
-         Current_Depth :=
-           Add_To_Breadcrumb
-             (View => View, Handler => Handler, Content => Content, Current_Depth => Current_Depth, Depth => Depth);
+      elsif Instance.Current_Depth = Depth then
+         Remove (Instance, View => View);
+         Add (Instance, View => View, Handler => Handler, Content => Content, Depth => Depth);
 
-      elsif Current_Depth > Depth then
-         while Current_Depth > Depth loop
-            Current_Depth := Remove_From_Breadcrumb (View => View, Current_Depth => Current_Depth);
-            Current_Depth := Current_Depth - 1;
+      elsif Instance.Current_Depth > Depth then
+         while Instance.Current_Depth > Depth loop
+            Remove (Instance, View => View);
+            Instance.Current_Depth := Instance.Current_Depth - 1;
          end loop;
+         Remove (Instance, View => View);
+         Add (Instance, View => View, Handler => Handler, Content => Content, Depth => Depth);
       end if;
-      Current_Depth := Depth;
-      return Current_Depth;
-   end Update_Breadcrumb;
+      Instance.Current_Depth := Depth;
+   end Update;
 
 end Breadcrumb;

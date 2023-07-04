@@ -4,81 +4,24 @@ with Gnoga.Gui.Window;
 with Gnoga.Gui.View; use Gnoga.Gui.View;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
-with Gnoga.Gui.View.Docker;
-with Gnoga.Gui.Plugin.jQueryUI.Widget;
-with Gnoga.Gui.View.Card;
+with Gnoga.Gui.Element.Section;
 with Gnoga.Server.Connection;
 with Gnoga.Types;
 with UXStrings;      use UXStrings;
 with Breadcrumb;
 with Simple_Form;
 with Folders;
+with Menu;
 
 procedure application1 is
 
    use all type Gnoga.String;
 
+   App_Name : constant UXString := "ADA Framework";
+
    type Button_Set is array (Positive range <>) of Gnoga.Gui.Element.Common.Button_Type;
 
    type Widget_Set is array (Positive range <>) of aliased Gnoga.Gui.View.View_Type;
-
-   -----------------------------------------------------------------------------
-   --  Data
-   -----------------------------------------------------------------------------
-   type Browse_Type is new Gnoga.Types.Connection_Data_Type with record
-      Contract : Gnoga.Gui.Element.Common.Button_Type;
-      Administration : Gnoga.Gui.Element.Common.Button_Type;
-      Contract_Management : Gnoga.Gui.Element.Common.Button_Type;
-      Administration_Users : Gnoga.Gui.Element.Common.Button_Type;
-      Administration_Emails : Gnoga.Gui.Element.Common.Button_Type;
-      Administration_Gen : Gnoga.Gui.Element.Common.Button_Type;
-   end record;
-
-   --  Accordion Left
-   type Menu_Accordion_Type is new Gnoga.Types.Connection_Data_Type with record
-      Accordion : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Accordion_Type;
-      Cards     : aliased Gnoga.Gui.View.Card.Card_View_Type;
-
-      Name_Accueil        : UXString := "Name_Accueil_1";
-      Name_Contrats       : UXString := "Name_Contrats";
-      Name_Administration : UXString := "Name_Administration";
-
-      Widget : aliased Widget_Set (1 .. 3);
-      Button : aliased Button_Set (1 .. 6);
-   end record;
-
-   type Menu_Folder_Type is new Gnoga.Types.Connection_Data_Type with record
-      Cards : aliased Gnoga.Gui.View.Card.Card_View_Type;
-
-      Name_Accueil          : UXString := "Name_Accueil_2";
-      Name_Standard         : UXString := "Name_Standard";
-      Name_Contrats_Gestion : UXString := "Name_Contrats_Gestion_2";
-
-      Widget : aliased Widget_Set (1 .. 3);
-   end record;
-
-   type Main_Frame_Type is new Gnoga.Types.Connection_Data_Type with record
-      Main_Deck : aliased Gnoga.Gui.View.Docker.Docker_View_Type;
-      Cards     : aliased Gnoga.Gui.View.Card.Card_View_Type;
-
-      Name_Accueil               : UXString := "Name_Accueil_3";
-      Name_Contrats_Tab          : UXString := "Name_Contrats_Tab";
-      Name_Contrats_Gestion      : UXString := "Name_Contrats_Gestion_3";
-      Name_Administration_Tab    : UXString := "Name_Administration_Tab";
-      Name_Administration_Utils  : UXString := "Name_Administration_Utils";
-      Name_Administration_Emails : UXString := "Name_Administration_Emails";
-      Name_Administration_Gen    : UXString := "Name_Administration_Gen";
-
-      Widget : aliased Widget_Set (1 .. 7);
-   end record;
-
-   --  Accordion Right
-   type User_Panel_Type is new Gnoga.Types.Connection_Data_Type with record
-      Accordion : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Accordion_Type;
-      Deck_User : aliased Gnoga.Gui.View.View_Type;
-
-      Button : aliased Button_Set (1 .. 5);
-   end record;
 
    --  Folders
    type Stdr_Folder_Type is new Gnoga.Types.Connection_Data_Type with record
@@ -100,38 +43,41 @@ procedure application1 is
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
       Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
-      View   : aliased Gnoga.Gui.View.View_Type;
+      View   : Gnoga.Gui.View.View_Type;
 
       Navigation_Bar : Gnoga.Gui.Element.Common.DIV_Type;
       Tool_Bar       : Gnoga.Gui.Element.Common.DIV_Type;
       Content        : Gnoga.Gui.Element.Common.DIV_Type;
       Bottom_Bar     : Gnoga.Gui.Element.Common.DIV_Type;
 
+      Content_Header : Gnoga.Gui.Element.Section.Section_Type;
+      Content_Text   : Gnoga.Gui.Element.Common.P_Type;
+
       Status    : Gnoga.Gui.Element.Common.DIV_Type;
       Permanent : Gnoga.Gui.Element.Common.DIV_Type;
 
       App_Icon : Gnoga.Gui.Element.Common.IMG_Type;
 
-      User_Button : Gnoga.Gui.Element.Common.DIV_Type;
-      User_Icon   : Gnoga.Gui.Element.Common.IMG_Type;
-      User_Name   : Gnoga.Gui.Element.Common.P_Type;
+      User_Icon      : Gnoga.Gui.Element.Common.IMG_Type;
+      User_Name      : Gnoga.Gui.Element.Common.P_Type;
+      User_Name_Text : UXString := "User Name";
 
-      Navigation_App : Gnoga.Gui.Element.Common.DIV_Type;
-      Navigation_Breadcrumb : Gnoga.Gui.View.View_Type;
-      Navigation_User : Gnoga.Gui.Element.Common.DIV_Type;
+      User_Buttons                : Button_Set (1 .. 5);
+      Is_Navigation_User_Opened   : Boolean := False;
+      Is_Navigation_Browse_Opened : Boolean := False;
 
-      Tool_Browse : Gnoga.Gui.Element.Common.DIV_Type;
-      Browse : aliased Browse_Type;
+      Navigation_App          : Gnoga.Gui.Element.Common.DIV_Type;
+      Navigation_Breadcrumb   : Gnoga.Gui.View.View_Type;
+      Navigation_User         : Gnoga.Gui.Element.Common.DIV_Type;
+      Navigation_Browse_View  : Gnoga.Gui.View.View_Type;
+      Navigation_User_Buttons : Gnoga.Gui.Element.Common.DIV_Type;
 
-      Tool_Edit : Gnoga.Gui.Element.Common.DIV_Type;
+      BC : Breadcrumb.Breadcrumb_Type;
 
       Exit_Button : Gnoga.Gui.Element.Common.Button_Type;
 
-      Menu_Folder    : aliased Menu_Folder_Type;
-      Main_Frame     : aliased Main_Frame_Type;
-      User_Panel     : aliased User_Panel_Type;
-      Stdr_Folder    : aliased Stdr_Folder_Type;
-      Gestion_Folder : aliased Gestion_Folder_Type;
+      Stdr_Folder    : Stdr_Folder_Type;
+      Gestion_Folder : Gestion_Folder_Type;
 
       Form_View_Gestion : Simple_Form.Form_View_Type;
    end record;
@@ -142,95 +88,127 @@ procedure application1 is
      "tacite reconduction,contrat actif,nature du contrat,prix HT,TVA,prix TTC,prochaine date de facturation," &
      "prochaine date d'échéance,note publique,note privée,référence proposition";
 
-   Current_Depth : Integer;
-
    Last_Parameters : Gnoga.Types.Data_Map_Type;
+
+   Lorem_Ipsum : constant UXString :=
+     50 *
+     "Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum.";
 
    -----------------------------------------------------------------------------
    --  Handlers
    -----------------------------------------------------------------------------
-   procedure Hide_Browse_Buttons (App : App_Access) is
-   begin
-      App.Browse.Contract.Display ("none");
-      App.Browse.Administration.Display ("none");
-      App.Browse.Contract_Management.Display ("none");
-      App.Browse.Administration_Users.Display ("none");
-      App.Browse.Administration_Emails.Display ("none");
-      App.Browse.Administration_Gen.Display ("none");
-   end Hide_Browse_Buttons;
-
-   procedure On_Contract_Management (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-      pragma Unreferenced (Object);
-   begin
-      Hide_Browse_Buttons (App);
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Contract_Management'Unrestricted_Access, Content => "Gestion",
-         Current_Depth => Current_Depth, Depth => 2);
-   end On_Contract_Management;
-
-   procedure On_Administration_Users (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-      pragma Unreferenced (Object);
-   begin
-      Hide_Browse_Buttons (App);
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Administration_Users'Unrestricted_Access, Content => "Utilisateurs",
-         Current_Depth => Current_Depth, Depth => 2);
-   end On_Administration_Users;
-
-   procedure On_Administration_Emails (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-      pragma Unreferenced (Object);
-   begin
-      Hide_Browse_Buttons (App);
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Administration_Emails'Unrestricted_Access, Content => "Emails",
-         Current_Depth => Current_Depth, Depth => 2);
-   end On_Administration_Emails;
-
-   procedure On_Administration_Gen (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-      pragma Unreferenced (Object);
-   begin
-      Hide_Browse_Buttons (App);
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Administration_Gen'Unrestricted_Access, Content => "Gen. Requêtes",
-         Current_Depth => Current_Depth, Depth => 2);
-   end On_Administration_Gen;
-
+   ID_Contract : constant Integer := 100;
    procedure On_Contract (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Hide_Browse_Buttons (App);
-      App.Browse.Contract_Management.Display ("inherit");
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Contract'Unrestricted_Access, Content => "Contrats",
-         Current_Depth => Current_Depth, Depth => 1);
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract'Unrestricted_Access, ID_Contract);
+      App.Content_Header.Text ("Contrats");
+      App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract;
 
+   ID_Contract_Stats : constant Integer := 101;
+   procedure On_Contract_Stats (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract_Stats'Unrestricted_Access,
+         ID_Contract_Stats);
+      App.Content_Header.Text ("Statistiques");
+      App.Content_Text.Text (Lorem_Ipsum);
+   end On_Contract_Stats;
+
+   ID_Contract_Management : constant Integer := 102;
+   procedure On_Contract_Management (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract_Management'Unrestricted_Access,
+         ID_Contract_Management);
+      App.Content_Header.Text ("Gestion");
+      App.Content_Text.Text (Lorem_Ipsum);
+   end On_Contract_Management;
+
+   ID_Administration_Users : constant Integer := 201;
+   procedure On_Administration_Users (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Users'Unrestricted_Access,
+         ID_Administration_Users);
+      App.Content_Header.Text ("Utilisateurs");
+      App.Content_Text.Text (Lorem_Ipsum);
+   end On_Administration_Users;
+
+   ID_Administration_Emails : constant Integer := 202;
+   procedure On_Administration_Emails (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Emails'Unrestricted_Access,
+         ID_Administration_Emails);
+      App.Content_Header.Text ("Emails");
+      App.Content_Text.Text (Lorem_Ipsum);
+   end On_Administration_Emails;
+
+   ID_Administration_Gen : constant Integer := 203;
+   procedure On_Administration_Gen (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Gen'Unrestricted_Access,
+         ID_Administration_Gen);
+      App.Content_Header.Text ("Générer des requêtes");
+      App.Content_Text.Text (Lorem_Ipsum);
+   end On_Administration_Gen;
+
+   ID_Administration : constant Integer := 200;
    procedure On_Administration (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Hide_Browse_Buttons (App);
-      App.Browse.Administration_Users.Display ("inherit");
-      App.Browse.Administration_Emails.Display ("inherit");
-      App.Browse.Administration_Gen.Display ("inherit");
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Administration'Unrestricted_Access, Content => "Administration",
-         Current_Depth => Current_Depth, Depth => 1);
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration'Unrestricted_Access,
+         ID_Administration);
+      App.Content_Header.Text ("Administration");
+      App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration;
 
+   ID_Main : constant Integer := 0;
    procedure On_Main (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Hide_Browse_Buttons (App);
-      App.Browse.Contract.Display ("inherit");
-      App.Browse.Administration.Display ("inherit");
-      Current_Depth := Breadcrumb.Update_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
-         Current_Depth => Current_Depth, Depth => 0);
+      Menu.Notify_Click
+        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Main'Unrestricted_Access, ID_Main);
+      App.Content_Header.Text (App_Name);
+      App.Content_Text.Text (Lorem_Ipsum);
    end On_Main;
+
+   procedure On_Logo (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if (App.Is_Navigation_Browse_Opened) then
+         App.Navigation_Browse_View.Display ("none");
+      else
+         On_Main (Object);
+         App.Navigation_Browse_View.Display ("inherit");
+         App.Navigation_User_Buttons.Display ("none");
+         App.Is_Navigation_User_Opened := False;
+      end if;
+      App.Is_Navigation_Browse_Opened := not App.Is_Navigation_Browse_Opened;
+   end On_Logo;
+
+   procedure On_User (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if (App.Is_Navigation_User_Opened) then
+         App.Navigation_User_Buttons.Display ("none");
+      else
+         App.Navigation_User_Buttons.Display ("inherit");
+         App.Navigation_Browse_View.Display ("none");
+         App.Is_Navigation_Browse_Opened := False;
+      end if;
+      App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
+   end On_User;
 
    procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
    begin
@@ -344,8 +322,6 @@ procedure application1 is
 
       App.Content.Create (App.View);
       App.Content.Class_Name ("content-container");
-      App.Content.Put_HTML ("<p>Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum. Et eveniet recusandae ut totam voluptatem ut nihil asperiores. Aut laudantium maxime aut suscipit maiores et voluptates internos ab autem beatae aut sunt eveniet. Ut nesciunt consequatur sed quos rerum et illo maxime? Cum facilis quod et cumque voluptatem non totam Quis non rerum error ad architecto illo in autem suscipit. Et dolorum distinctio aut inventore consectetur sed natus fugiat? Id laudantium aspernatur id quisquam consequatur non molestiae aliquam et perspiciatis molestias? Id dolorem exercitationem hic pariatur voluptatem sed enim autem aut officiis omnis ut voluptatem vero sed magni expedita id iste libero. Aut omnis vero aut quia quasi aut internos eaque et quaerat facilis. Est corporis dolorem ut quia debitis hic alias voluptatum et molestias sint. Ut voluptatem optio a quam corporis et incidunt libero vel aspernatur ratione non recusandae maxime ex consectetur alias. Non dolorem doloribus ea praesentium beatae eum molestiae dolorem eos minima officiis vel voluptates quod sit debitis quia. Quo dolore delectus non perspiciatis recusandae eos quod pariatur qui dolore labore. Eum accusantium beatae est accusamus quidem est voluptatum inventore! </p><p>Aut facere delectus qui voluptatum exercitationem qui earum porro. Est galisum excepturi ex porro suscipit sit beatae voluptatem aut pariatur animi rem eaque ipsam aut omnis architecto nam reiciendis consequatur. Ut exercitationem Quis ea cupiditate veritatis non ipsam eligendi. Et cupiditate molestias et vero dolorem ut dicta voluptatem et atque fuga est nihil aperiam! Qui voluptatem dolore ut dolore exercitationem vel magni harum qui eligendi temporibus sit voluptatum perferendis. Non nulla esse 33 totam sunt et corrupti earum in mollitia odio sed ipsum architecto quo repellendus vero. Et soluta sint est explicabo aliquid rem expedita quasi et corrupti dolor rem fugiat quos. Ut galisum consectetur ut illo expedita in accusamus voluptate a galisum corrupti aut similique possimus aut omnis adipisci. Qui pariatur amet eum voluptas assumenda eum tempore nihil? Ea facere architecto ut harum autem vel sunt fuga aut aspernatur quae ut enim similique. Ut Quis quas ea voluptas culpa sit adipisci earum et sint mollitia qui omnis consequatur. </p><p>Ut cumque reprehenderit aut accusamus esse et iusto modi ut maiores suscipit. Aut fugiat temporibus et porro omnis est tenetur velit cum fugit expedita! Vel Quis aliquid et nihil eligendi eum tempore repellat est odit consectetur aut velit dolores. Sed earum quia est fuga beatae sit reiciendis quasi qui nobis sint et accusamus voluptate aut porro quis. Et voluptates exercitationem quo nostrum ducimus et quod voluptatem aut culpa atque. Qui accusantium consectetur sit blanditiis enim ut quaerat natus id possimus quae non nisi quod qui velit inventore ea excepturi autem. Cum repudiandae dolorem aut exercitationem unde sed quia modi. Qui debitis minima est facilis deserunt aut dolor laborum At voluptas consectetur et Quis laboriosam sed ducimus voluptatibus id internos voluptate. Ut laborum deleniti et esse omnis eos aspernatur modi et voluptatem necessitatibus ab reprehenderit repellendus. Et veritatis ipsam vel culpa laborum ut maxime omnis 33 galisum dignissimos sed sint rerum qui voluptatem dolore! 33 similique nulla ut libero facere id deserunt odio non molestias accusantium sed facilis cupiditate id quas soluta rem error odit. </p><p>Est amet consequatur et eaque explicabo ex doloribus deleniti est voluptates labore. Non ullam incidunt eos necessitatibus quod a officia velit ut labore voluptatem cum eveniet placeat qui voluptatem voluptatum At sunt expedita. Et autem doloribus At dolorem dolorum et aperiam excepturi. Qui repellendus galisum cum aperiam velit ex molestiae dolores. Aut doloribus illo eum voluptas enim est maxime rerum ea magni sunt qui labore beatae et nostrum accusamus. Est soluta voluptatem est nisi fuga ad quasi omnis rem dolore accusamus quo rerum quisquam sed quae molestiae. Qui laboriosam molestiae aut quidem iste cum alias facere non doloremque culpa. Qui vitae sint vel earum distinctio est ullam officiis eum repellendus error. Ut officiis adipisci et veniam eius vel corporis nisi quo dignissimos dolore quo sunt eius. Aut adipisci reiciendis sed sequi ipsum et dolores porro sit nisi molestias sit sunt culpa aut voluptas quibusdam. Quo corporis omnis et reiciendis debitis est harum repellendus aut dolorem voluptas eum dolor rerum et ullam voluptatum. A vero iste non ducimus consequatur sit nihil praesentium eos voluptate ipsum ea sunt cupiditate aut assumenda odit. Ea labore laudantium in consequatur corporis est internos saepe et sint architecto rem necessitatibus expedita. Sit error voluptas est eius aspernatur ut deleniti illo? </p><p>In dolorem quis et unde pariatur aut sint consequatur in exercitationem galisum 33 consequatur minus quo iure nulla. Qui magni natus eos enim mollitia non internos numquam est quis ducimus qui explicabo galisum. Est laudantium iste et autem magni in minima possimus in amet doloremque quo reiciendis corporis. Qui error sapiente in optio facere in tempora omnis. Qui eius corrupti eos quas dolorum non fuga consequatur. Quo commodi omnis ea fuga similique qui velit dolorum. Sit beatae necessitatibus sit nulla dolor ut commodi consequuntur aut voluptatem numquam. Sit inventore cupiditate eum velit Quis et sint aspernatur et veritatis eius et consectetur neque est debitis possimus. </p><p>Vel galisum doloribus et fuga delectus non recusandae laudantium qui temporibus eius. Aut magnam tempora qui nulla necessitatibus ut voluptate repudiandae non tenetur velit aut natus neque vel dolorum animi. Et quaerat architecto et quae quos sed rerum quae qui omnis voluptatem? Sit rerum distinctio et necessitatibus ipsa hic officia numquam. Sed fugiat repudiandae est amet voluptatem 33 cupiditate rerum a expedita quibusdam. Et soluta quasi qui magnam neque non exercitationem earum ut consequuntur atque? Eos soluta quibusdam et voluptatibus enim rem numquam galisum id corrupti sequi qui nihil galisum eum reiciendis velit ut perferendis atque? Et consequatur laborum eum dolor sint ut maiores dolores et reiciendis quia et nisi itaque et assumenda consectetur qui quasi totam. </p><p>Aut impedit aspernatur quo dolores veritatis nam amet reiciendis et expedita rerum hic corporis esse! Ut ducimus quam ad deleniti fugit id internos neque quo dolor nisi ea facilis autem aut nulla natus. Qui nihil neque et dolorum velit eos illo voluptatem et recusandae quis et harum dolore aut iste autem non laudantium eveniet. Sed delectus voluptates et voluptatibus necessitatibus ut ullam dicta ut tenetur atque qui culpa atque. Aut Quis explicabo in pariatur delectus et tenetur modi hic dolores sint vel reiciendis veritatis aut pariatur similique et soluta omnis! Aut eligendi cupiditate et voluptatem dolore qui facilis tempore ut obcaecati itaque qui consequatur sint. Et cupiditate repellendus hic quibusdam optio est neque dolores sit odit nostrum et odio dolor. Ab reiciendis vero et tempore officiis est architecto similique sit sequi voluptatibus et reprehenderit sequi et temporibus labore eum cupiditate natus? Quo accusamus officiis id autem sunt eum deserunt omnis non atque minima non aperiam temporibus et cumque alias! Vel laborum distinctio ut rerum voluptatem qui obcaecati neque ut delectus dignissimos. Sed consequatur deleniti et accusantium asperiores et galisum inventore qui rerum dolores At esse magnam ab perspiciatis adipisci eos quisquam veritatis. </p>");
-
       App.Bottom_Bar.Create (App.View);
       App.Bottom_Bar.Class_Name ("bottom-bar");
 
@@ -363,73 +339,55 @@ procedure application1 is
       --------------------------------------------------------------------------
       App.Navigation_App.Create (App.Navigation_Bar);
       App.Navigation_App.Class_Name ("logo-container");
-      App.Navigation_App.On_Click_Handler (On_Main'Unrestricted_Access);
       App.App_Icon.Create (App.Navigation_App, URL_Source => "/css/icons/home.png");
-      App.App_Icon.Style ("width", "40px");
-      App.App_Icon.Style ("height", "40px");
+      App.App_Icon.Class_Name ("top-icon");
+      App.App_Icon.On_Click_Handler (On_Logo'Unrestricted_Access);
 
       App.Navigation_Breadcrumb.Create (App.Navigation_Bar);
       App.Navigation_Breadcrumb.Class_Name ("breadcrumb-container");
 
-      Current_Depth := 0;
-      --  Doesn't reset when refresh if "Current_Depth = -1" placed before begin ???
-      Current_Depth := Breadcrumb.Add_To_Breadcrumb
-        (View => App.Navigation_Breadcrumb, Handler => On_Main'Unrestricted_Access, Content => "Accueil",
-         Current_Depth => Current_Depth, Depth => 0);
+      App.Navigation_Browse_View.Create (App.Navigation_Bar);
+      App.Navigation_Browse_View.Class_Name ("navigation-browse-buttons");
+
+      App.Navigation_User_Buttons.Create (App.Navigation_Bar);
+      App.Navigation_User_Buttons.Class_Name ("navigation-user-buttons");
+
+      App.BC := Menu.Init_Breadcrumb (App.Navigation_Breadcrumb);
 
       App.Navigation_User.Create (App.Navigation_Bar);
       App.Navigation_User.Class_Name ("user-container");
-      App.User_Panel.Accordion.Create (Parent => App.Navigation_User);
-      App.User_Panel.Accordion.Class_Name ("user-accordion");
-      App.User_Panel.Accordion.Create_Section ("Utilisateur");
-      App.User_Panel.Deck_User.Create (App.User_Panel.Accordion);
-      App.User_Panel.Deck_User.Add_Class ("accordion-content");
+      App.User_Name.Create (App.Navigation_User, App.User_Name_Text);
+      App.User_Name.Class_Name ("user-name");
+      App.User_Icon.Create (App.Navigation_User, URL_Source => "/css/icons/user.png");
+      App.User_Icon.Class_Name ("top-icon");
+      App.User_Icon.On_Click_Handler (On_User'Unrestricted_Access);
 
-      App.User_Panel.Button (1).Create (App.User_Panel.Deck_User, "Aide en ligne");
-      App.User_Panel.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      App.User_Panel.Button (2).Create (App.User_Panel.Deck_User, "Droits d'accès");
-      App.User_Panel.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      App.User_Panel.Button (3).Create (App.User_Panel.Deck_User, "Connecté depuis");
-      App.User_Panel.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      App.User_Panel.Button (4).Create (App.User_Panel.Deck_User, "Connexion précédente");
-      App.User_Panel.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      App.User_Panel.Button (5).Create (App.User_Panel.Deck_User, "À propos de");
-      App.User_Panel.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (1).Create (App.Navigation_User_Buttons, "Aide en ligne");
+      App.User_Buttons (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (2).Create (App.Navigation_User_Buttons, "Droits d'accès");
+      App.User_Buttons (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (3).Create (App.Navigation_User_Buttons, "Connecté depuis");
+      App.User_Buttons (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (4).Create (App.Navigation_User_Buttons, "Connexion précédente");
+      App.User_Buttons (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (5).Create (App.Navigation_User_Buttons, "À propos de");
+      App.User_Buttons (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
 
-      App.User_Panel.Accordion.Render_Accordion (True);
+      App.Content_Header.Create (App.Content, Gnoga.Gui.Element.Section.H1);
+      App.Content_Header.Class_Name ("content-header");
+
+      App.Content_Text.Create (App.Content);
+
+      On_Main (App.View);
 
       --------------------------------------------------------------------------
       --  Tool bar
       --------------------------------------------------------------------------
-      App.Tool_Browse.Create (App.Tool_Bar);
-      App.Tool_Browse.Class_Name ("tool-browse");
 
-      App.Tool_Edit.Create (App.Tool_Bar);
-      App.Tool_Edit.Class_Name ("tool-edit");
-
-      App.Browse.Contract.Create (App.Tool_Browse, "Contrats");
-      App.Browse.Contract.On_Click_Handler (On_Contract'Unrestricted_Access);
-      App.Browse.Administration.Create (App.Tool_Browse, "Administration");
-      App.Browse.Administration.On_Click_Handler (On_Administration'Unrestricted_Access);
-      App.Browse.Contract_Management.Create (App.Tool_Browse, "Gestion");
-      App.Browse.Contract_Management.On_Click_Handler (On_Contract_Management'Unrestricted_Access);
-      App.Browse.Administration_Users.Create (App.Tool_Browse, "Utilisateurs");
-      App.Browse.Administration_Users.On_Click_Handler (On_Administration_Users'Unrestricted_Access);
-      App.Browse.Administration_Emails.Create (App.Tool_Browse, "Emails");
-      App.Browse.Administration_Emails.On_Click_Handler (On_Administration_Emails'Unrestricted_Access);
-      App.Browse.Administration_Gen.Create (App.Tool_Browse, "Gen. Requêtes");
-      App.Browse.Administration_Gen.On_Click_Handler (On_Administration_Gen'Unrestricted_Access);
-
-      Hide_Browse_Buttons (App);
-      App.Browse.Contract.Display ("inherit");
-      App.Browse.Administration.Display ("inherit");
-
-      --  --------------------------------------------------------
-      --
       --  App.Stdr_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (2));
       --
-      --  --  --  --  Folder Fichier
-      --
+      --  --  --  Folder Fichier
+
       --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
       --  App.Stdr_Folder.Widget (1).Create (App.Stdr_Folder.Folder);
       --
@@ -538,8 +496,8 @@ procedure application1 is
       --
       --  --  --  --  Folder Afficher
       --
-      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
-      --  App.Gestion_Folder.Widget (3).Create (App.Gestion_Folder.Folder);
+   --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
+   --  App.Gestion_Folder.Widget (3).Create (App.Gestion_Folder.Folder);
       --
       --  --  --  --  Button Précédent
       --  App.Gestion_Folder.Button (9).Create (App.Gestion_Folder.Widget (3), "Précédent");
@@ -605,10 +563,9 @@ procedure application1 is
       --
       --  App.Gestion_Folder.Folder.Render_Folder (True);
       --
-      --  App.Menu_Folder.Cards.Add_Card
-      --    (Name => App.Menu_Folder.Name_Accueil, Card => App.Menu_Folder.Widget (1)'Access, Show => True);
+      --  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Accueil, Card => App.Menu_Folder.Widget (1)'Access, Show => True);
       --
-      --  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Standard, Card => App.Menu_Folder.Widget (2)'Access);
+--  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Standard, Card => App.Menu_Folder.Widget (2)'Access);
       --
       --  App.Menu_Folder.Cards.Add_Card
       --    (Name => App.Menu_Folder.Name_Contrats_Gestion, Card => App.Menu_Folder.Widget (3)'Access);
@@ -617,55 +574,9 @@ procedure application1 is
       App.Exit_Button.Style ("width", "140px");
       App.Exit_Button.On_Click_Handler (On_Exit'Unrestricted_Access);
 
-      --------------------------------------------------------------------------
-      --  Main_FrameView
-      --------------------------------------------------------------------------
-      --  App.Main_Frame.Cards.Create (App.Main_Frame.Main_Deck);
-      --  App.Main_Frame.Main_Deck.Fill_Dock (App.Main_Frame.Cards'Unchecked_Access);
-      --
-      --  Widget_Create_Accueil (App.Main_Frame.Widget (1), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Accueil, Card => App.Main_Frame.Widget (1)'Access, Show => True);
-      --  --
-      --  Widget_Create_Contrats_Tab (App.Main_Frame.Widget (2), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Contrats_Tab, Card => App.Main_Frame.Widget (2)'Access);
-      --  --
-      --  Widget_Create_Contrats_Gestion (App.Main_Frame.Widget (3), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Contrats_Gestion, Card => App.Main_Frame.Widget (3)'Access);
-      --
-      --  App.Form_View_Gestion.Create
-      --    (Parent  => App.Main_Frame.Widget (3), ID => "",
-      --     Strings => Simple_Form.All_Fields (Form_Gestion_Row_Names, ","));
-      --
-      --  Widget_Create_Administration_Tab (App.Main_Frame.Widget (4), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Administration_Tab, Card => App.Main_Frame.Widget (4)'Access);
-      --
-      --  Widget_Create_Administration_Utils (App.Main_Frame.Widget (5), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Administration_Utils, Card => App.Main_Frame.Widget (5)'Access);
-      --
-      --  Widget_Create_Administration_Emails (App.Main_Frame.Widget (6), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Administration_Emails, Card => App.Main_Frame.Widget (6)'Access);
-      --
-      --  Widget_Create_Administration_Gen (App.Main_Frame.Widget (7), App.Main_Frame.Cards);
-      --  App.Main_Frame.Cards.Add_Card
-      --    (Name => App.Main_Frame.Name_Administration_Gen, Card => App.Main_Frame.Widget (7)'Access);
+      App.Navigation_User_Buttons.Display ("none");
+      App.Navigation_Browse_View.Display ("none");
 
-      --------------------------------------------------------------------------
-      --  Style
-      --------------------------------------------------------------------------
-      --  App.Main_Frame.Main_Deck.Style ("top", "180px");
-      --  App.Main_Frame.Main_Deck.Style ("left", "0px");
-      --  App.Main_Frame.Cards.Style ("position", "absolute");
-      --  App.Main_Frame.Cards.Style ("top", "0px");
-      --  App.Main_Frame.Cards.Style ("left", "120px");
-
-      --  App.Menu_Folder.Cards.Add_Class ("element_top_left border");
-      --  App.Menu_Folder.Cards.Style ("width", "120px");
    end On_Connect;
 
    procedure On_Post_Request
@@ -703,11 +614,25 @@ procedure application1 is
    end Results;
 
 begin
-   Gnoga.Application.Title ("application-test");
+   Gnoga.Application.Title (App_Name);
    Gnoga.Application.HTML_On_Close ("Server closed.");
    Gnoga.Application.Multi_Connect.Initialize;
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Event => On_Connect'Unrestricted_Access, Path => "default");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Results'Unrestricted_Access, "/result");
+
+   Menu.Create_Parent (App_Name, ID_Main, On_Main'Unrestricted_Access);
+
+   Menu.Add_Child (ID_Main, "Contrats", ID_Contract, On_Contract'Unrestricted_Access);
+   Menu.Add_Child (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
+   Menu.Add_Child (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
+
+   Menu.Add_Child (ID_Main, "Administration", ID_Administration, On_Administration'Unrestricted_Access);
+   Menu.Add_Child
+     (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
+   Menu.Add_Child (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
+   Menu.Add_Child
+     (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
+
    Gnoga.Server.Connection.On_Post_Handler (On_Post'Unrestricted_Access);
    Gnoga.Server.Connection.On_Post_Request_Handler (On_Post_Request'Unrestricted_Access);
    Gnoga.Application.Multi_Connect.Message_Loop;
