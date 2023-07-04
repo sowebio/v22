@@ -4,25 +4,28 @@ with UXStrings; use UXStrings;
 
 package Breadcrumb is
 
-   function Add_To_Breadcrumb
-     (View          : in out Gnoga.Gui.View.View_Type;
-      Handler       : in     Gnoga.Gui.Base.Action_Event;
-      Content       : in     UXString := "";
-      Current_Depth : in     Integer;
-      Depth         : in     Integer  := 0)
-      return Integer;
+   type Breadcrumb_Type is record
+      Current_Depth : Integer := 0;
+   end record;
 
-   function Remove_From_Breadcrumb
-     (View         : in out Gnoga.Gui.View.View_Type;
-      Current_Depth : in     Integer)
-      return Integer;
+   function Create return Breadcrumb_Type;
 
-   function Update_Breadcrumb
-     (View          : in out Gnoga.Gui.View.View_Type;
-      Handler       : in     Gnoga.Gui.Base.Action_Event;
-      Content       : in     UXString := "";
-      Current_Depth : in out Integer;
-      Depth         : in     Integer  := 0)
-      return Integer;
+   procedure Add
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type;
+      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Content  : in     UXString := "";
+      Depth    : in     Integer  := 0);
+
+   procedure Remove
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type);
+
+   procedure Update
+     (Instance : in out Breadcrumb_Type;
+      View     : in out Gnoga.Gui.View.View_Type;
+      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Content  : in     UXString := "";
+      Depth    : in     Integer  := 0);
 
 end Breadcrumb;
