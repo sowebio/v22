@@ -66,6 +66,7 @@ procedure application1 is
       User_Icon      : Gnoga.Gui.Element.Common.IMG_Type;
       User_Name      : Gnoga.Gui.Element.Common.P_Type;
       User_Name_Text : UXString := "User Name";
+      User_Last_Connection_Time : UXString := "00h00 le 00-00-00";
 
       User_Buttons                : Button_Set (1 .. 5);
       Is_Navigation_User_Opened   : Boolean := False;
@@ -217,18 +218,41 @@ procedure application1 is
       App : constant App_Access := App_Access (Object.Connection_Data);
       pragma Unreferenced (App);
    begin
-      --  Need window here, but no references... Raises error currently Location Menu Status
-      --  App.Help_Popup.Launch (App.Window.all, URL => "https://google.com/search?&q=How+to+use+a+software+%3F");
-      Object.jQuery_Execute
-        ("on_help_gnoga = open(""https://google.com/search?&q=How+to+use+a+software+%3F"", ""_blank"")");
+      Object.jQuery_Execute ("on_help_gnoga = open(""https://google.com/search?&q=How+to+use+a+software+%3F"", ""_blank"")");
    end On_Help;
 
-   -- procedure On_User_Access_Rights => App.User_Access_Rights.Open;
-
-   procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+   procedure On_User_Access_Rights (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Gnoga.Log (Object.jQuery_Execute ("text()"));
-   end On_Simple_Button;
+      -- TODO: Add code to close user buttons container + Module for user buttons management
+      App.User_Access_Rights.Open;
+   end On_User_Access_Rights;
+
+   procedure On_User_Connected_Since (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      -- TODO: Add code to close user buttons container + Module for user buttons management
+      App.User_Connected_Since.Open;
+   end On_User_Connected_Since;
+
+   procedure On_User_Last_Connection (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      -- TODO: Add code to close user buttons container + Module for user buttons management
+      App.User_Last_Connection.Open;
+   end On_User_Last_Connection;
+
+   procedure On_User_About (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      -- TODO: Add code to close user buttons container + Module for user buttons management
+      App.User_About.Open;
+   end On_User_About;
+
+   --  procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+   --  begin
+   --     Gnoga.Log (Object.jQuery_Execute ("text()"));
+   --  end On_Simple_Button;
 
    -----------------------------------------------------------------------------
    --  On_Exit
@@ -327,6 +351,14 @@ procedure application1 is
       App.Window := Screen'Unchecked_Access;
       App.View.Create (Screen);
 
+      App.User_Access_Rights.Create (App.View, "Droits d accès", Content => "Droits d'accès", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
+      App.User_Access_Rights.Close;
+      App.User_Connected_Since.Create (App.View, "Connecté depuis", Content => "Connecté depuis 00j00h00m00s", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
+      App.User_Connected_Since.Close;
+      App.User_Last_Connection.Create (App.View, "Connection précédente", Content => "Connection précédente à " & App.User_Last_Connection_Time, Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
+      App.User_Last_Connection.Close;
+      App.User_About.Create (App.View, "À propos de", Content => "Application de gestion, Sowebio", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
+      App.User_About.Close;
       --------------------------------------------------------------------------
       --  Containers
       --------------------------------------------------------------------------
@@ -382,13 +414,13 @@ procedure application1 is
       App.User_Buttons (1).Create (App.Navigation_User_Buttons, "Aide en ligne");
       App.User_Buttons (1).On_Click_Handler (On_Help'Unrestricted_Access);
       App.User_Buttons (2).Create (App.Navigation_User_Buttons, "Droits d'accès");
-      App.User_Buttons (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (2).On_Click_Handler (On_User_Access_Rights'Unrestricted_Access);
       App.User_Buttons (3).Create (App.Navigation_User_Buttons, "Connecté depuis");
-      App.User_Buttons (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (3).On_Click_Handler (On_User_Connected_Since'Unrestricted_Access);
       App.User_Buttons (4).Create (App.Navigation_User_Buttons, "Connection précédente");
-      App.User_Buttons (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (4).On_Click_Handler (On_User_Last_Connection'Unrestricted_Access);
       App.User_Buttons (5).Create (App.Navigation_User_Buttons, "À propos de");
-      App.User_Buttons (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (5).On_Click_Handler (On_User_About'Unrestricted_Access);
 
       App.Content_Header.Create (App.Content, Gnoga.Gui.Element.Section.H1);
       App.Content_Header.Class_Name ("content-header");
@@ -400,18 +432,13 @@ procedure application1 is
       App.Menu_Content.Set_Root (App_Name, ID_Main, On_Main'Unrestricted_Access);
 
       App.Menu_Content.Add_Child (ID_Main, "Contrats", ID_Contract, On_Contract'Unrestricted_Access);
-      App.Menu_Content.Add_Child
-        (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
-      App.Menu_Content.Add_Child
-        (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
+      App.Menu_Content.Add_Child (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
+      App.Menu_Content.Add_Child (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
 
       App.Menu_Content.Add_Child (ID_Main, "Administration", ID_Administration, On_Administration'Unrestricted_Access);
-      App.Menu_Content.Add_Child
-        (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
-      App.Menu_Content.Add_Child
-        (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
-      App.Menu_Content.Add_Child
-        (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
+      App.Menu_Content.Add_Child (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
+      App.Menu_Content.Add_Child (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
+      App.Menu_Content.Add_Child (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
 
       App.Menu_Content.Set_Menu (ID_Main);
 
@@ -651,7 +678,7 @@ procedure application1 is
 begin
    Gnoga.Application.Title (App_Name);
    Gnoga.Application.HTML_On_Close ("Server closed.");
-   Gnoga.Application.Multi_Connect.Initialize;
+   Gnoga.Application.Multi_Connect.Initialize (Boot => "boot_jqueryui.html");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Event => On_Connect'Unrestricted_Access, Path => "default");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Results'Unrestricted_Access, "/result");
 
