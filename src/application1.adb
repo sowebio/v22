@@ -1,6 +1,9 @@
 with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Base; use Gnoga.Gui.Base;
 with Gnoga.Gui.Window;
+with Gnoga.Gui.Plugin;
+with Gnoga.Gui.Plugin.jQueryUI;
+with Gnoga.Gui.Plugin.jQueryUI.Widget;
 with Gnoga.Gui.View; use Gnoga.Gui.View;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
@@ -8,7 +11,6 @@ with Gnoga.Gui.Element.Section;
 with Gnoga.Server.Connection;
 with Gnoga.Types;
 with UXStrings;      use UXStrings;
-with Breadcrumb;
 with Simple_Form;
 with Folders;
 with Menu;
@@ -42,8 +44,11 @@ procedure application1 is
    end record;
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
-      Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
-      View   : Gnoga.Gui.View.View_Type;
+      Window     : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      Help_Popup : Gnoga.Gui.Window.Window_Type;
+      View       : Gnoga.Gui.View.View_Type;
+
+      Menu_Content : Menu.Menu_Type;
 
       Navigation_Bar : Gnoga.Gui.Element.Common.DIV_Type;
       Tool_Bar       : Gnoga.Gui.Element.Common.DIV_Type;
@@ -72,7 +77,10 @@ procedure application1 is
       Navigation_Browse_View  : Gnoga.Gui.View.View_Type;
       Navigation_User_Buttons : Gnoga.Gui.Element.Common.DIV_Type;
 
-      BC : Breadcrumb.Breadcrumb_Type;
+      User_Access_Rights   : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
+      User_Connected_Since : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
+      User_Last_Connection : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
+      User_About           : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
 
       Exit_Button : Gnoga.Gui.Element.Common.Button_Type;
 
@@ -91,18 +99,17 @@ procedure application1 is
    Last_Parameters : Gnoga.Types.Data_Map_Type;
 
    Lorem_Ipsum : constant UXString :=
-     50 *
+     80 *
      "Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum.";
 
    -----------------------------------------------------------------------------
-   --  Handlers
+   --  Browser Handlers
    -----------------------------------------------------------------------------
    ID_Contract : constant Integer := 100;
    procedure On_Contract (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract'Unrestricted_Access, ID_Contract);
+      App.Menu_Content.Notify_Click (ID_Contract);
       App.Content_Header.Text ("Contrats");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract;
@@ -111,9 +118,7 @@ procedure application1 is
    procedure On_Contract_Stats (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract_Stats'Unrestricted_Access,
-         ID_Contract_Stats);
+      App.Menu_Content.Notify_Click (ID_Contract_Stats);
       App.Content_Header.Text ("Statistiques");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract_Stats;
@@ -122,9 +127,7 @@ procedure application1 is
    procedure On_Contract_Management (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Contract_Management'Unrestricted_Access,
-         ID_Contract_Management);
+      App.Menu_Content.Notify_Click (ID_Contract_Management);
       App.Content_Header.Text ("Gestion");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract_Management;
@@ -133,9 +136,7 @@ procedure application1 is
    procedure On_Administration_Users (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Users'Unrestricted_Access,
-         ID_Administration_Users);
+      App.Menu_Content.Notify_Click (ID_Administration_Users);
       App.Content_Header.Text ("Utilisateurs");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Users;
@@ -144,9 +145,7 @@ procedure application1 is
    procedure On_Administration_Emails (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Emails'Unrestricted_Access,
-         ID_Administration_Emails);
+      App.Menu_Content.Notify_Click (ID_Administration_Emails);
       App.Content_Header.Text ("Emails");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Emails;
@@ -155,9 +154,7 @@ procedure application1 is
    procedure On_Administration_Gen (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration_Gen'Unrestricted_Access,
-         ID_Administration_Gen);
+      App.Menu_Content.Notify_Click (ID_Administration_Gen);
       App.Content_Header.Text ("Générer des requêtes");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Gen;
@@ -166,9 +163,7 @@ procedure application1 is
    procedure On_Administration (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Administration'Unrestricted_Access,
-         ID_Administration);
+      App.Menu_Content.Notify_Click (ID_Administration);
       App.Content_Header.Text ("Administration");
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration;
@@ -177,8 +172,7 @@ procedure application1 is
    procedure On_Main (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Menu.Notify_Click
-        (App.Navigation_Browse_View, App.Navigation_Breadcrumb, App.BC, On_Main'Unrestricted_Access, ID_Main);
+      App.Menu_Content.Notify_Click (ID_Main);
       App.Content_Header.Text (App_Name);
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Main;
@@ -190,7 +184,7 @@ procedure application1 is
          App.Navigation_Browse_View.Display ("none");
          App.App_Icon.Remove_Class ("active-icon");
       else
-         On_Main (Object);
+         App.Menu_Content.Set_Menu (ID_Main);
          App.App_Icon.Add_Class ("active-icon");
          App.Navigation_Browse_View.Display ("inherit");
          App.Navigation_User_Buttons.Display ("none");
@@ -200,6 +194,9 @@ procedure application1 is
       App.Is_Navigation_Browse_Opened := not App.Is_Navigation_Browse_Opened;
    end On_Logo;
 
+   -----------------------------------------------------------------------------
+   --  User Handlers
+   -----------------------------------------------------------------------------
    procedure On_User (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -216,11 +213,26 @@ procedure application1 is
       App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
    end On_User;
 
+   procedure On_Help (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      pragma Unreferenced (App);
+   begin
+      --  Need window here, but no references... Raises error currently Location Menu Status
+      --  App.Help_Popup.Launch (App.Window.all, URL => "https://google.com/search?&q=How+to+use+a+software+%3F");
+      Object.jQuery_Execute
+        ("on_help_gnoga = open(""https://google.com/search?&q=How+to+use+a+software+%3F"", ""_blank"")");
+   end On_Help;
+
+   -- procedure On_User_Access_Rights => App.User_Access_Rights.Open;
+
    procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
    begin
       Gnoga.Log (Object.jQuery_Execute ("text()"));
    end On_Simple_Button;
 
+   -----------------------------------------------------------------------------
+   --  On_Exit
+   -----------------------------------------------------------------------------
    procedure On_Exit (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       pragma Unreferenced (Object);
    begin
@@ -312,6 +324,7 @@ procedure application1 is
 
    begin
       Screen.Connection_Data (App);
+      App.Window := Screen'Unchecked_Access;
       App.View.Create (Screen);
 
       --------------------------------------------------------------------------
@@ -358,8 +371,6 @@ procedure application1 is
       App.Navigation_User_Buttons.Create (App.Navigation_Bar);
       App.Navigation_User_Buttons.Class_Name ("navigation-user-buttons");
 
-      App.BC := Menu.Init_Breadcrumb (App.Navigation_Breadcrumb);
-
       App.Navigation_User.Create (App.Navigation_Bar);
       App.Navigation_User.Class_Name ("user-container");
       App.User_Name.Create (App.Navigation_User, App.User_Name_Text);
@@ -369,12 +380,12 @@ procedure application1 is
       App.User_Icon.On_Click_Handler (On_User'Unrestricted_Access);
 
       App.User_Buttons (1).Create (App.Navigation_User_Buttons, "Aide en ligne");
-      App.User_Buttons (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
+      App.User_Buttons (1).On_Click_Handler (On_Help'Unrestricted_Access);
       App.User_Buttons (2).Create (App.Navigation_User_Buttons, "Droits d'accès");
       App.User_Buttons (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
       App.User_Buttons (3).Create (App.Navigation_User_Buttons, "Connecté depuis");
       App.User_Buttons (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      App.User_Buttons (4).Create (App.Navigation_User_Buttons, "Connexion précédente");
+      App.User_Buttons (4).Create (App.Navigation_User_Buttons, "Connection précédente");
       App.User_Buttons (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
       App.User_Buttons (5).Create (App.Navigation_User_Buttons, "À propos de");
       App.User_Buttons (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
@@ -384,7 +395,25 @@ procedure application1 is
 
       App.Content_Text.Create (App.Content);
 
-      On_Main (App.View);
+      App.Menu_Content := Menu.Create (App.Navigation_Browse_View, App.Navigation_Breadcrumb);
+
+      App.Menu_Content.Set_Root (App_Name, ID_Main, On_Main'Unrestricted_Access);
+
+      App.Menu_Content.Add_Child (ID_Main, "Contrats", ID_Contract, On_Contract'Unrestricted_Access);
+      App.Menu_Content.Add_Child
+        (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
+      App.Menu_Content.Add_Child
+        (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
+
+      App.Menu_Content.Add_Child (ID_Main, "Administration", ID_Administration, On_Administration'Unrestricted_Access);
+      App.Menu_Content.Add_Child
+        (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
+      App.Menu_Content.Add_Child
+        (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
+      App.Menu_Content.Add_Child
+        (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
+
+      App.Menu_Content.Set_Menu (ID_Main);
 
       --------------------------------------------------------------------------
       --  Tool bar
@@ -625,19 +654,6 @@ begin
    Gnoga.Application.Multi_Connect.Initialize;
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Event => On_Connect'Unrestricted_Access, Path => "default");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Results'Unrestricted_Access, "/result");
-
-   Menu.Create_Parent (App_Name, ID_Main, On_Main'Unrestricted_Access);
-
-   Menu.Add_Child (ID_Main, "Contrats", ID_Contract, On_Contract'Unrestricted_Access);
-   Menu.Add_Child (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
-   Menu.Add_Child (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
-
-   Menu.Add_Child (ID_Main, "Administration", ID_Administration, On_Administration'Unrestricted_Access);
-   Menu.Add_Child
-     (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
-   Menu.Add_Child (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
-   Menu.Add_Child
-     (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
 
    Gnoga.Server.Connection.On_Post_Handler (On_Post'Unrestricted_Access);
    Gnoga.Server.Connection.On_Post_Request_Handler (On_Post_Request'Unrestricted_Access);
