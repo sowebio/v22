@@ -47,7 +47,7 @@ private
       On_Open : Gnoga.Gui.Base.Action_Event;
    end record;
 
-   Max_Menu_Count : constant Integer := 50;
+   Max_Menu_Count : constant Integer := 20;
 
    type Menu_Table_Type is array (1 .. Max_Menu_Count) of Data_Type;
 

@@ -10,12 +10,12 @@ package body Breadcrumb is
       Element_Name : UXString := "";
    begin
       Element_Name := "Button_" & From_UTF_8 (Instance.Current_Depth'Image).Delete (1, 1);
-      if Instance.Parent.Element (Element_Name) /= null then
-         Instance.Parent.Element (Element_Name).Remove;
+      if Instance.Parent.all.Element (Element_Name) /= null then
+         Instance.Parent.all.Element (Element_Name).Remove;
       end if;
       Element_Name := "Icon_" & From_UTF_8 (Instance.Current_Depth'Image).Delete (1, 1);
-      if Instance.Parent.Element (Element_Name) /= null then
-         Instance.Parent.Element (Element_Name).Remove;
+      if Instance.Parent.all.Element (Element_Name) /= null then
+         Instance.Parent.all.Element (Element_Name).Remove;
       end if;
    end Remove_Last;
 
@@ -52,7 +52,7 @@ package body Breadcrumb is
          New_Icon.Style ("width", "40px");
          New_Icon.Margin (Left => "-4px", Right => "-4px");
          New_Icon.Dynamic;
-         Instance.Parent.Add_Element (Icon_Name, New_Icon);
+         Instance.Parent.all.Add_Element (Icon_Name, New_Icon);
       end if;
       Gnoga.Gui.Element.Common.Button_Access (New_Button).Create (Instance.Parent.all, Content);
       New_Button.On_Click_Handler (Handler);
@@ -61,7 +61,7 @@ package body Breadcrumb is
       New_Button.Style ("min-height", "40px");
       New_Button.Style ("margin", "0");
       New_Button.Dynamic;
-      Instance.Parent.Add_Element (Button_Name, New_Button);
+      Instance.Parent.all.Add_Element (Button_Name, New_Button);
       Instance.Current_Depth := Depth;
    end Add;
 
