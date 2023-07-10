@@ -14,6 +14,7 @@ with UXStrings;      use UXStrings;
 with Simple_Form;
 with Folders;
 with Menu;
+with User_Menu;
 
 procedure application1 is
 
@@ -66,7 +67,6 @@ procedure application1 is
       User_Icon      : Gnoga.Gui.Element.Common.IMG_Type;
       User_Name      : Gnoga.Gui.Element.Common.P_Type;
       User_Name_Text : UXString := "User Name";
-      User_Last_Connection_Time : UXString := "00h00 le 00-00-00";
 
       User_Buttons                : Button_Set (1 .. 5);
       Is_Navigation_User_Opened   : Boolean := False;
@@ -76,7 +76,7 @@ procedure application1 is
       Navigation_Breadcrumb   : Gnoga.Gui.View.View_Type;
       Navigation_User         : Gnoga.Gui.Element.Common.DIV_Type;
       Navigation_Browse_View  : Gnoga.Gui.View.View_Type;
-      Navigation_User_Buttons : Gnoga.Gui.Element.Common.DIV_Type;
+      Navigation_User_Buttons : Gnoga.Gui.View.View_Type;
 
       User_Access_Rights   : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
       User_Connected_Since : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
@@ -214,41 +214,6 @@ procedure application1 is
       App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
    end On_User;
 
-   procedure On_Help (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-      pragma Unreferenced (App);
-   begin
-      Object.jQuery_Execute ("on_help_gnoga = open(""https://google.com/search?&q=How+to+use+a+software+%3F"", ""_blank"")");
-   end On_Help;
-
-   procedure On_User_Access_Rights (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      -- TODO: Add code to close user buttons container + Module for user buttons management
-      App.User_Access_Rights.Open;
-   end On_User_Access_Rights;
-
-   procedure On_User_Connected_Since (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      -- TODO: Add code to close user buttons container + Module for user buttons management
-      App.User_Connected_Since.Open;
-   end On_User_Connected_Since;
-
-   procedure On_User_Last_Connection (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      -- TODO: Add code to close user buttons container + Module for user buttons management
-      App.User_Last_Connection.Open;
-   end On_User_Last_Connection;
-
-   procedure On_User_About (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      -- TODO: Add code to close user buttons container + Module for user buttons management
-      App.User_About.Open;
-   end On_User_About;
-
    --  procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
    --  begin
    --     Gnoga.Log (Object.jQuery_Execute ("text()"));
@@ -275,90 +240,11 @@ procedure application1 is
    is
       pragma Unreferenced (Connection);
       App : constant App_Access := new App_Data;
-
-      --  procedure Widget_Create_Accueil
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Accueil");
-      --  end Widget_Create_Accueil;
-      --
-      --  procedure Widget_Create_Contrats_Tab
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Contrats Tableau de bord");
-      --  end Widget_Create_Contrats_Tab;
-      --
-      --  procedure Widget_Create_Contrats_Gestion
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Contrats Gestion");
-      --  end Widget_Create_Contrats_Gestion;
-      --
-      --  procedure Widget_Create_Administration_Tab
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Administration Tableau de bord");
-      --  end Widget_Create_Administration_Tab;
-      --
-      --  procedure Widget_Create_Administration_Utils
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Administration Utilisateurs");
-      --  end Widget_Create_Administration_Utils;
-      --
-      --  procedure Widget_Create_Administration_Emails
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Administration Emails");
-      --  end Widget_Create_Administration_Emails;
-      --
-      --  procedure Widget_Create_Administration_Gen
-      --    (View   : in out Gnoga.Gui.View.View_Type;
-      --     Parent : in out Gnoga.Gui.Base.Base_Type'Class;
-      --     ID     : in     Gnoga.String := "")
-      --  is
-      --  begin
-      --     Gnoga.Gui.View.View_Type (View).Create (Parent, ID);
-      --     View.Put_Line ("Administration Génération de requêtes");
-      --  end Widget_Create_Administration_Gen;
-
    begin
       Screen.Connection_Data (App);
       App.Window := Screen'Unchecked_Access;
       App.View.Create (Screen);
 
-      App.User_Access_Rights.Create (App.View, "Droits d accès", Content => "Droits d'accès", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
-      App.User_Access_Rights.Close;
-      App.User_Connected_Since.Create (App.View, "Connecté depuis", Content => "Connecté depuis 00j00h00m00s", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
-      App.User_Connected_Since.Close;
-      App.User_Last_Connection.Create (App.View, "Connection précédente", Content => "Connection précédente à " & App.User_Last_Connection_Time, Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
-      App.User_Last_Connection.Close;
-      App.User_About.Create (App.View, "À propos de", Content => "Application de gestion, Sowebio", Height => 240, Width => 240, Position_My => "top", Position_At => "center top+5%");
-      App.User_About.Close;
       --------------------------------------------------------------------------
       --  Containers
       --------------------------------------------------------------------------
@@ -411,17 +297,6 @@ procedure application1 is
       App.User_Icon.Class_Name ("top-icon");
       App.User_Icon.On_Click_Handler (On_User'Unrestricted_Access);
 
-      App.User_Buttons (1).Create (App.Navigation_User_Buttons, "Aide en ligne");
-      App.User_Buttons (1).On_Click_Handler (On_Help'Unrestricted_Access);
-      App.User_Buttons (2).Create (App.Navigation_User_Buttons, "Droits d'accès");
-      App.User_Buttons (2).On_Click_Handler (On_User_Access_Rights'Unrestricted_Access);
-      App.User_Buttons (3).Create (App.Navigation_User_Buttons, "Connecté depuis");
-      App.User_Buttons (3).On_Click_Handler (On_User_Connected_Since'Unrestricted_Access);
-      App.User_Buttons (4).Create (App.Navigation_User_Buttons, "Connection précédente");
-      App.User_Buttons (4).On_Click_Handler (On_User_Last_Connection'Unrestricted_Access);
-      App.User_Buttons (5).Create (App.Navigation_User_Buttons, "À propos de");
-      App.User_Buttons (5).On_Click_Handler (On_User_About'Unrestricted_Access);
-
       App.Content_Header.Create (App.Content, Gnoga.Gui.Element.Section.H1);
       App.Content_Header.Class_Name ("content-header");
 
@@ -441,6 +316,8 @@ procedure application1 is
       App.Menu_Content.Add_Child (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
 
       App.Menu_Content.Set_Menu (ID_Main);
+
+      User_Menu.Create (App.Navigation_User_Buttons);
 
       --------------------------------------------------------------------------
       --  Tool bar
@@ -681,6 +558,12 @@ begin
    Gnoga.Application.Multi_Connect.Initialize (Boot => "boot_jqueryui.html");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Event => On_Connect'Unrestricted_Access, Path => "default");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Results'Unrestricted_Access, "/result");
+
+   User_Menu.Add_Web ("Aide en ligne", "https://google.com");
+   User_Menu.Add_Dialog ("Droits d accès", "Ajouter les droits d'accès ici");
+   User_Menu.Add_Dialog ("Connecté depuis...", "Ajouter durée de la connection");
+   User_Menu.Add_Dialog ("Connection précédente", "Ajouter la date de la dernière connection");
+   User_Menu.Add_Web ("À propos de...", "http://gnoga.com");
 
    Gnoga.Server.Connection.On_Post_Handler (On_Post'Unrestricted_Access);
    Gnoga.Server.Connection.On_Post_Request_Handler (On_Post_Request'Unrestricted_Access);

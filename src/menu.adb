@@ -103,7 +103,7 @@ package body Menu is
       Root.Unique_Id                         := Unique_Id;
       Instance.Menu_Table (Instance.Next_Id) := Root;
       Instance.Next_Id                       := Instance.Next_Id + 1;
-      Instance.Breadcrumb_Content.Add (Root.On_Open, Root.Name);
+      Instance.Breadcrumb_Content.Update (Root.On_Open, Root.Name);
    end Set_Root;
 
    procedure Add_Child
@@ -146,6 +146,7 @@ package body Menu is
    is
    begin
       Instance.Get_Data (Unique_Id).On_Open (Instance.Parent.all);
+      --  Instance.Notify_Click (Unique_Id);
    end Set_Menu;
 
 end Menu;
