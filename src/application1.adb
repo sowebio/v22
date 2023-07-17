@@ -2,8 +2,6 @@ with Gnoga.Application.Multi_Connect;
 with Gnoga.Gui.Base; use Gnoga.Gui.Base;
 with Gnoga.Gui.Window;
 with Gnoga.Gui.Plugin;
-with Gnoga.Gui.Plugin.jQueryUI;
-with Gnoga.Gui.Plugin.jQueryUI.Widget;
 with Gnoga.Gui.View; use Gnoga.Gui.View;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
@@ -12,9 +10,9 @@ with Gnoga.Server.Connection;
 with Gnoga.Types;
 with UXStrings;      use UXStrings;
 with Simple_Form;
-with Folders;
 with Menu;
 with User_Menu;
+with Crud;
 
 procedure application1 is
 
@@ -22,37 +20,14 @@ procedure application1 is
 
    App_Name : constant UXString := "ADA Framework";
 
-   type Button_Set is array (Positive range <>) of Gnoga.Gui.Element.Common.Button_Type;
-
-   type Widget_Set is array (Positive range <>) of aliased Gnoga.Gui.View.View_Type;
-
-   --  Folders
-   type Stdr_Folder_Type is new Gnoga.Types.Connection_Data_Type with record
-      Folder : aliased Folders.Folder_Type;
-
-      Widget : aliased Widget_Set (1 .. 3);
-      Button : aliased Button_Set (1 .. 11);
-   end record;
-
-   --  Folders
-   type Gestion_Folder_Type is new Gnoga.Types.Connection_Data_Type with record
-      Folder : aliased Folders.Folder_Type;
-
-      Widget : aliased Widget_Set (1 .. 5);
-      Button : aliased Button_Set (1 .. 18);
-
-      Line : aliased Gnoga.Gui.Element.Common.DIV_Type;
-   end record;
-
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
-      Window     : Gnoga.Gui.Window.Pointer_To_Window_Class;
-      Help_Popup : Gnoga.Gui.Window.Window_Type;
-      View       : Gnoga.Gui.View.View_Type;
+      Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      View   : Gnoga.Gui.View.View_Type;
 
       Menu_Content : Menu.Menu_Type;
 
       Navigation_Bar : Gnoga.Gui.Element.Common.DIV_Type;
-      Tool_Bar       : Gnoga.Gui.Element.Common.DIV_Type;
+      Tool_Bar       : Gnoga.Gui.View.View_Type;
       Content        : Gnoga.Gui.Element.Common.DIV_Type;
       Bottom_Bar     : Gnoga.Gui.Element.Common.DIV_Type;
 
@@ -66,9 +41,8 @@ procedure application1 is
 
       User_Icon      : Gnoga.Gui.Element.Common.IMG_Type;
       User_Name      : Gnoga.Gui.Element.Common.P_Type;
-      User_Name_Text : UXString := "User Name";
+      User_Name_Text : UXString := "Nom d'utilisateur";
 
-      User_Buttons                : Button_Set (1 .. 5);
       Is_Navigation_User_Opened   : Boolean := False;
       Is_Navigation_Browse_Opened : Boolean := False;
 
@@ -78,15 +52,9 @@ procedure application1 is
       Navigation_Browse_View  : Gnoga.Gui.View.View_Type;
       Navigation_User_Buttons : Gnoga.Gui.View.View_Type;
 
-      User_Access_Rights   : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
-      User_Connected_Since : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
-      User_Last_Connection : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
-      User_About           : aliased Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
+      Crud_Instance : Crud.Crud_Type;
 
       Exit_Button : Gnoga.Gui.Element.Common.Button_Type;
-
-      Stdr_Folder    : Stdr_Folder_Type;
-      Gestion_Folder : Gestion_Folder_Type;
 
       Form_View_Gestion : Simple_Form.Form_View_Type;
    end record;
@@ -106,7 +74,7 @@ procedure application1 is
    -----------------------------------------------------------------------------
    --  Browser Handlers
    -----------------------------------------------------------------------------
-   ID_Contract : constant Integer := 100;
+   ID_Contract : Integer;
    procedure On_Contract (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -115,7 +83,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract;
 
-   ID_Contract_Stats : constant Integer := 101;
+   ID_Contract_Stats : Integer;
    procedure On_Contract_Stats (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -124,7 +92,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract_Stats;
 
-   ID_Contract_Management : constant Integer := 102;
+   ID_Contract_Management : Integer;
    procedure On_Contract_Management (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -133,7 +101,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Contract_Management;
 
-   ID_Administration_Users : constant Integer := 201;
+   ID_Administration_Users : Integer;
    procedure On_Administration_Users (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -142,7 +110,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Users;
 
-   ID_Administration_Emails : constant Integer := 202;
+   ID_Administration_Emails : Integer;
    procedure On_Administration_Emails (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -151,7 +119,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Emails;
 
-   ID_Administration_Gen : constant Integer := 203;
+   ID_Administration_Gen : Integer;
    procedure On_Administration_Gen (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -160,7 +128,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration_Gen;
 
-   ID_Administration : constant Integer := 200;
+   ID_Administration : Integer;
    procedure On_Administration (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -169,7 +137,7 @@ procedure application1 is
       App.Content_Text.Text (Lorem_Ipsum);
    end On_Administration;
 
-   ID_Main : constant Integer := 0;
+   ID_Main : Integer;
    procedure On_Main (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -214,10 +182,105 @@ procedure application1 is
       App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
    end On_User;
 
-   --  procedure On_Simple_Button (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+   --  procedure On_Button_Click (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
    --  begin
    --     Gnoga.Log (Object.jQuery_Execute ("text()"));
-   --  end On_Simple_Button;
+   --  end On_Button_Click;
+
+   -----------------------------------------------------------------------------
+   --  CRUD Handlers
+   -----------------------------------------------------------------------------
+   ID_Crud_File : Integer;
+
+   ID_Crud_File_Create : Integer;
+   procedure On_Crud_File_Create (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Create));
+   end On_Crud_File_Create;
+
+   ID_Crud_File_Edit : Integer;
+   procedure On_Crud_File_Edit (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Edit));
+   end On_Crud_File_Edit;
+
+   ID_Crud_File_Delete : Integer;
+   procedure On_Crud_File_Delete (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Delete));
+   end On_Crud_File_Delete;
+
+   ID_Crud_File_Export : Integer;
+   procedure On_Crud_File_Export (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Export));
+   end On_Crud_File_Export;
+
+   ID_Crud_File_Import : Integer;
+   procedure On_Crud_File_Import (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Import));
+   end On_Crud_File_Import;
+
+   ID_Crud_File_Print : Integer;
+   procedure On_Crud_File_Print (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_File_Print));
+   end On_Crud_File_Print;
+
+   ID_Crud_Edit : Integer;
+
+   ID_Crud_Edit_Copy : Integer;
+   procedure On_Crud_Edit_Copy (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_Edit_Copy));
+   end On_Crud_Edit_Copy;
+
+   ID_Crud_Edit_Paste : Integer;
+   procedure On_Crud_Edit_Paste (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_Edit_Paste));
+   end On_Crud_Edit_Paste;
+
+   ID_Crud_Show : Integer;
+
+   ID_Crud_Show_Previous : Integer;
+   procedure On_Crud_Show_Previous (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_Show_Previous));
+   end On_Crud_Show_Previous;
+
+   ID_Crud_Show_Next : Integer;
+   procedure On_Crud_Show_Next (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_Show_Next));
+   end On_Crud_Show_Next;
+
+   ID_Crud_Show_Search : Integer;
+   procedure On_Crud_Show_Search (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log (Crud.Menu_Name (ID_Crud_Show_Search));
+   end On_Crud_Show_Search;
+
+   -----------------------------------------------------------------------------
+   --  Tool Bar retract button
+   -----------------------------------------------------------------------------
+   procedure On_Tool_Bar_Expand (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Crud_Instance.Notify_Resize;
+   end On_Tool_Bar_Expand;
 
    -----------------------------------------------------------------------------
    --  On_Exit
@@ -242,6 +305,7 @@ procedure application1 is
       App : constant App_Access := new App_Data;
    begin
       Screen.Connection_Data (App);
+      Screen.Buffer_Connection (True);
       App.Window := Screen'Unchecked_Access;
       App.View.Create (Screen);
 
@@ -303,18 +367,6 @@ procedure application1 is
       App.Content_Text.Create (App.Content);
 
       App.Menu_Content := Menu.Create (App.Navigation_Browse_View, App.Navigation_Breadcrumb);
-
-      App.Menu_Content.Set_Root (App_Name, ID_Main, On_Main'Unrestricted_Access);
-
-      App.Menu_Content.Add_Child (ID_Main, "Contrats", ID_Contract, On_Contract'Unrestricted_Access);
-      App.Menu_Content.Add_Child (ID_Contract, "Gestion", ID_Contract_Management, On_Contract_Management'Unrestricted_Access);
-      App.Menu_Content.Add_Child (ID_Contract, "Statistiques", ID_Contract_Stats, On_Contract_Stats'Unrestricted_Access);
-
-      App.Menu_Content.Add_Child (ID_Main, "Administration", ID_Administration, On_Administration'Unrestricted_Access);
-      App.Menu_Content.Add_Child (ID_Administration, "Utilisateurs", ID_Administration_Users, On_Administration_Users'Unrestricted_Access);
-      App.Menu_Content.Add_Child (ID_Administration, "Emails", ID_Administration_Emails, On_Administration_Emails'Unrestricted_Access);
-      App.Menu_Content.Add_Child (ID_Administration, "Gén. requêtes", ID_Administration_Gen, On_Administration_Gen'Unrestricted_Access);
-
       App.Menu_Content.Set_Menu (ID_Main);
 
       User_Menu.Create (App.Navigation_User_Buttons);
@@ -322,192 +374,10 @@ procedure application1 is
       --------------------------------------------------------------------------
       --  Tool bar
       --------------------------------------------------------------------------
+      App.Crud_Instance.Create (App.Tool_Bar, On_Tool_Bar_Expand'Unrestricted_Access);
+      App.Window.On_Character_Handler (Crud.On_Shortcut_Pressed'Unrestricted_Access);
 
-      --  App.Stdr_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (2));
-      --
-      --  --  --  Folder Fichier
-
-      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
-      --  App.Stdr_Folder.Widget (1).Create (App.Stdr_Folder.Folder);
-      --
-      --  --  --  --  Button Créer
-      --
-      --  App.Stdr_Folder.Button (1).Create (App.Stdr_Folder.Widget (1), "Créer");
-      --  App.Stdr_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Modifier
-      --  App.Stdr_Folder.Button (2).Create (App.Stdr_Folder.Widget (1), "Modifier");
-      --  App.Stdr_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Supprimer
-      --  App.Stdr_Folder.Button (3).Create (App.Stdr_Folder.Widget (1), "Supprimer");
-      --  App.Stdr_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Exporter
-      --  App.Stdr_Folder.Button (4).Create (App.Stdr_Folder.Widget (1), "Exporter");
-      --  App.Stdr_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Importer
-      --  App.Stdr_Folder.Button (5).Create (App.Stdr_Folder.Widget (1), "Importer");
-      --  App.Stdr_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Imprimer
-      --  App.Stdr_Folder.Button (6).Create (App.Stdr_Folder.Widget (1), "Imprimer");
-      --  App.Stdr_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Éditer
-      --
-      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
-      --  App.Stdr_Folder.Widget (2).Create (App.Stdr_Folder.Folder);
-      --
-      --  --  --  --  Button Copier
-      --  App.Stdr_Folder.Button (7).Create (App.Stdr_Folder.Widget (2), "Copier");
-      --  App.Stdr_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Coller
-      --  App.Stdr_Folder.Button (8).Create (App.Stdr_Folder.Widget (2), "Coller");
-      --  App.Stdr_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Afficher
-      --
-      --  App.Stdr_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
-      --  App.Stdr_Folder.Widget (3).Create (App.Stdr_Folder.Folder);
-      --
-      --  --  --  --  Button Précédent
-      --  App.Stdr_Folder.Button (9).Create (App.Stdr_Folder.Widget (3), "Précédent");
-      --  App.Stdr_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Suivant
-      --  App.Stdr_Folder.Button (10).Create (App.Stdr_Folder.Widget (3), "Suivant");
-      --  App.Stdr_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Rechercher
-      --  App.Stdr_Folder.Button (11).Create (App.Stdr_Folder.Widget (3), "Rechercher");
-      --  App.Stdr_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  App.Stdr_Folder.Folder.Render_Folder (True);
-      --
-      --  --------------------------------------------------------------------------
-      --
-      --  App.Gestion_Folder.Folder.Create_Folder (App.Menu_Folder.Widget (3));
-      --
-      --  --  --  --  Folder Fichier
-      --
-      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>F</span>ichier", Name => "Fichier");
-      --  App.Gestion_Folder.Widget (1).Create (App.Gestion_Folder.Folder);
-      --
-      --  --  --  --  Button Créer
-      --  App.Gestion_Folder.Button (1).Create (App.Gestion_Folder.Widget (1), "Créer");
-      --  App.Gestion_Folder.Button (1).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Modifier
-      --  App.Gestion_Folder.Button (2).Create (App.Gestion_Folder.Widget (1), "Modifier");
-      --  App.Gestion_Folder.Button (2).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Supprimer
-      --  App.Gestion_Folder.Button (3).Create (App.Gestion_Folder.Widget (1), "Supprimer");
-      --  App.Gestion_Folder.Button (3).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Exporter
-      --  App.Gestion_Folder.Button (4).Create (App.Gestion_Folder.Widget (1), "Exporter");
-      --  App.Gestion_Folder.Button (4).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Importer
-      --  App.Gestion_Folder.Button (5).Create (App.Gestion_Folder.Widget (1), "Importer");
-      --  App.Gestion_Folder.Button (5).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Imprimer
-      --  App.Gestion_Folder.Button (6).Create (App.Gestion_Folder.Widget (1), "Imprimer");
-      --  App.Gestion_Folder.Button (6).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Éditer
-      --
-      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>É</span>diter", Name => "Editer");
-      --  App.Gestion_Folder.Widget (2).Create (App.Gestion_Folder.Folder);
-      --
-      --  --  --  --  Button Copier
-      --  App.Gestion_Folder.Button (7).Create (App.Gestion_Folder.Widget (2), "Copier");
-      --  App.Gestion_Folder.Button (7).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Coller
-      --  App.Gestion_Folder.Button (8).Create (App.Gestion_Folder.Widget (2), "Coller");
-      --  App.Gestion_Folder.Button (8).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Afficher
-      --
-   --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>A</span>fficher", Name => "Afficher");
-   --  App.Gestion_Folder.Widget (3).Create (App.Gestion_Folder.Folder);
-      --
-      --  --  --  --  Button Précédent
-      --  App.Gestion_Folder.Button (9).Create (App.Gestion_Folder.Widget (3), "Précédent");
-      --  App.Gestion_Folder.Button (9).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Suivant
-      --  App.Gestion_Folder.Button (10).Create (App.Gestion_Folder.Widget (3), "Suivant");
-      --  App.Gestion_Folder.Button (10).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Rechercher
-      --  App.Gestion_Folder.Button (11).Create (App.Gestion_Folder.Widget (3), "Rechercher");
-      --  App.Gestion_Folder.Button (11).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  App.Gestion_Folder.Line.Create (App.Gestion_Folder.Widget (3));
-      --  App.Gestion_Folder.Line.Style ("border-bottom", "2px solid black");
-      --
-      --  --  --  --  Button Lister
-      --  App.Gestion_Folder.Button (12).Create (App.Gestion_Folder.Widget (3), "Lister");
-      --  App.Gestion_Folder.Button (12).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Lister Factures
-      --  App.Gestion_Folder.Button (13).Create (App.Gestion_Folder.Widget (3), "Lister Factures");
-      --  App.Gestion_Folder.Button (13).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Lister SEPA
-      --  App.Gestion_Folder.Button (14).Create (App.Gestion_Folder.Widget (3), "Lister SEPA");
-      --  App.Gestion_Folder.Button (14).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Valider
-      --
-      --  App.Gestion_Folder.Folder.Create_Section (Content => "<span class='rouge'>V</span>alider", Name => "Valider");
-      --  App.Gestion_Folder.Widget (4).Create (App.Gestion_Folder.Folder);
-      --
-      --  --  --  --  Button Factures
-      --  App.Gestion_Folder.Button (15).Create (App.Gestion_Folder.Widget (4), "Factures");
-      --  App.Gestion_Folder.Button (15).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button SEPA
-      --  App.Gestion_Folder.Button (16).Create (App.Gestion_Folder.Widget (4), "SEPA");
-      --  App.Gestion_Folder.Button (16).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Folder Préférences
-      --
-      --  App.Gestion_Folder.Folder.Create_Section
-      --    (Content => "<span class='rouge'>P</span>références", Name => "Preferences");
-      --  App.Gestion_Folder.Widget (5).Create (App.Gestion_Folder.Folder);
-      --
-      --  --  --  --  Button Intervalles SEPA
-      --  App.Gestion_Folder.Button (17).Create (App.Gestion_Folder.Widget (5), "Intervalles SEPA");
-      --  App.Gestion_Folder.Button (17).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  --  --  --  Button Natures
-      --  App.Gestion_Folder.Button (18).Create (App.Gestion_Folder.Widget (5), "Natures");
-      --  App.Gestion_Folder.Button (18).On_Click_Handler (On_Simple_Button'Unrestricted_Access);
-      --
-      --  App.Gestion_Folder.Widget (1).Style ("top", "5px");
-      --  App.Gestion_Folder.Widget (2).Style ("top", "45px");
-      --  App.Gestion_Folder.Widget (3).Style ("top", "85px");
-      --  App.Gestion_Folder.Widget (4).Style ("top", "125px");
-      --  App.Gestion_Folder.Widget (5).Style ("top", "165px");
-      --
-      --  App.Gestion_Folder.Folder.Position (Gnoga.Gui.Element.Absolute);
-      --
-      --  App.Gestion_Folder.Folder.Render_Folder (True);
-      --
-      --  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Accueil, Card => App.Menu_Folder.Widget (1)'Access, Show => True);
-      --
---  App.Menu_Folder.Cards.Add_Card (Name => App.Menu_Folder.Name_Standard, Card => App.Menu_Folder.Widget (2)'Access);
-      --
-      --  App.Menu_Folder.Cards.Add_Card
-      --    (Name => App.Menu_Folder.Name_Contrats_Gestion, Card => App.Menu_Folder.Widget (3)'Access);
+      --  App.Window.jQuery_Execute ("keydown( function( e ) {if( e.target.nodeName == ""INPUT"" || e.target.nodeName == ""TEXTAREA"" ) return; if( e.target.isContentEditable ) return; }");
 
       App.Exit_Button.Create (App.Content, "Stopper exécution");
       App.Exit_Button.Style ("width", "140px");
@@ -515,6 +385,7 @@ procedure application1 is
 
       App.Navigation_User_Buttons.Display ("none");
       App.Navigation_Browse_View.Display ("none");
+      Screen.Buffer_Connection (False);
 
    end On_Connect;
 
@@ -559,11 +430,42 @@ begin
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Event => On_Connect'Unrestricted_Access, Path => "default");
    Gnoga.Application.Multi_Connect.On_Connect_Handler (Results'Unrestricted_Access, "/result");
 
+   ID_Main := Menu.Set_Root (App_Name, On_Main'Unrestricted_Access);
+
+   ID_Contract            := Menu.Add_Child (ID_Main, "Contrats", On_Contract'Unrestricted_Access);
+   ID_Contract_Management := Menu.Add_Child (ID_Contract, "Gestion", On_Contract_Management'Unrestricted_Access);
+   ID_Contract_Stats      := Menu.Add_Child (ID_Contract, "Statistiques", On_Contract_Stats'Unrestricted_Access);
+
+   ID_Administration       := Menu.Add_Child (ID_Main, "Administration", On_Administration'Unrestricted_Access);
+   ID_Administration_Users :=
+     Menu.Add_Child (ID_Administration, "Utilisateurs", On_Administration_Users'Unrestricted_Access);
+   ID_Administration_Emails :=
+     Menu.Add_Child (ID_Administration, "Emails", On_Administration_Emails'Unrestricted_Access);
+   ID_Administration_Gen :=
+     Menu.Add_Child (ID_Administration, "Gén. requêtes", On_Administration_Gen'Unrestricted_Access);
+
    User_Menu.Add_Web ("Aide en ligne", "https://google.com");
-   User_Menu.Add_Dialog ("Droits d accès", "Ajouter les droits d'accès ici");
+   User_Menu.Add_Dialog ("Droits d\'accès", "Ajouter les droits d'accès");
    User_Menu.Add_Dialog ("Connecté depuis...", "Ajouter durée de la connection");
    User_Menu.Add_Dialog ("Connection précédente", "Ajouter la date de la dernière connection");
    User_Menu.Add_Web ("À propos de...", "http://gnoga.com");
+
+   ID_Crud_File        := Crud.Add_Root ("Fichier", "css/icons/file.png");
+   ID_Crud_File_Create := Crud.Add_Child ("Créer", ID_Crud_File, On_Crud_File_Create'Unrestricted_Access);
+   ID_Crud_File_Edit   := Crud.Add_Child ("Modifier", ID_Crud_File, On_Crud_File_Edit'Unrestricted_Access);
+   ID_Crud_File_Delete := Crud.Add_Child ("Supprimer", ID_Crud_File, On_Crud_File_Delete'Unrestricted_Access);
+   ID_Crud_File_Export := Crud.Add_Child ("Exporter", ID_Crud_File, On_Crud_File_Export'Unrestricted_Access);
+   ID_Crud_File_Import := Crud.Add_Child ("Importer", ID_Crud_File, On_Crud_File_Import'Unrestricted_Access);
+   ID_Crud_File_Print  := Crud.Add_Child ("Imprimer", ID_Crud_File, On_Crud_File_Print'Unrestricted_Access);
+
+   ID_Crud_Edit       := Crud.Add_Root ("Éditer", "css/icons/edit.png");
+   ID_Crud_Edit_Copy  := Crud.Add_Child ("Copier", ID_Crud_Edit, On_Crud_Edit_Copy'Unrestricted_Access);
+   ID_Crud_Edit_Paste := Crud.Add_Child ("Coller", ID_Crud_Edit, On_Crud_Edit_Paste'Unrestricted_Access);
+
+   ID_Crud_Show          := Crud.Add_Root ("Afficher", "css/icons/browse.png");
+   ID_Crud_Show_Previous := Crud.Add_Child ("Précédent", ID_Crud_Show, On_Crud_Show_Previous'Unrestricted_Access);
+   ID_Crud_Show_Next     := Crud.Add_Child ("Suivant", ID_Crud_Show, On_Crud_Show_Next'Unrestricted_Access);
+   ID_Crud_Show_Search   := Crud.Add_Child ("Rechercher", ID_Crud_Show, On_Crud_Show_Search'Unrestricted_Access);
 
    Gnoga.Server.Connection.On_Post_Handler (On_Post'Unrestricted_Access);
    Gnoga.Server.Connection.On_Post_Request_Handler (On_Post_Request'Unrestricted_Access);
