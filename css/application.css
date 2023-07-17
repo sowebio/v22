@@ -61,7 +61,6 @@ button:active {
 
 .breadcrumb-container {
     height: 40px;
-    width: calc(100% - 275px);
     display: flex;
     align-items: center;
     float: left;
@@ -92,7 +91,7 @@ button:active {
 }
 
 .tool-bar {
-    width: 140px;
+    width: 42px;
     height: calc(100% - 80px);
     float: left;
     background-color: #3d3e4d;
@@ -111,7 +110,7 @@ button:active {
 }
 
 .content-container {
-    width: calc(100% - 140px);
+    width: calc(100% - 42px);
     height: calc(100% - 80px);
     float: right;
     overflow: scroll;
@@ -193,11 +192,37 @@ button:active {
     justify-content: center;
 }
 
+.shortcut {
+    color: #ff8080;
+}
+
+.tools-text {
+}
+
+.tools-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 16px;
+    float: left;
+}
+
+.force-collapse {
+    width: 42px !important;
+}
+
+.force-expand {
+    width: 140px !important;
+}
+
 @media screen and (max-width: 700px) {
 
     .logo-container {
         width: 50%;
     }    
+
+    .shortcut {
+        color: white;
+    }
 
     .user-container {
         width: 50%;
@@ -211,14 +236,10 @@ button:active {
 
 @media screen and (max-width: 550px) {
 
-    .tool-bar {
-        width: 60px;
+    .tools-text {
+        display: none;
     }
 
-    .content-container {
-        width: calc(100% - 60px);
-    }
-    
     button {
         max-width: none;
     }

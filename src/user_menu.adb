@@ -23,7 +23,7 @@ package body User_Menu is
       Cancel_Handler : Gnoga.Gui.Base.Action_Event;
    end record;
 
-   Max_Menu_Count : constant Integer := 5;
+   Max_Menu_Count : constant Integer := 50;
    Menu_Table     : array (1 .. Max_Menu_Count) of Data_Type;
    Next_Id        : Integer          := 1;
 
@@ -47,8 +47,7 @@ package body User_Menu is
       Dialog : constant Gnoga.Gui.Plugin.jQueryUI.Widget.Pointer_To_Dialog_Class :=
         new Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
    begin
-      Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Access (Dialog).Create
-        (Object, Data.Title, Data.Content, Height => 240, Width => 240);
+      Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Access (Dialog).Create (Object, Data.Title, Data.Content);
    end Launch_Dialog;
 
    procedure Click_Handler (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
