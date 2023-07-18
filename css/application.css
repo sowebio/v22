@@ -245,7 +245,7 @@ button:active {
         display: none;
     }
 
-    button {
+    button:not(.ui-button) {
         max-width: none;
     }
 
