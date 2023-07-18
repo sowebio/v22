@@ -14,7 +14,7 @@ with Menu;
 with User_Menu;
 with Crud;
 
-procedure application1 is
+procedure Framework is
 
    use all type Gnoga.String;
 
@@ -445,7 +445,7 @@ begin
      Menu.Add_Child (ID_Administration, "Gén. requêtes", On_Administration_Gen'Unrestricted_Access);
 
    User_Menu.Add_Web ("Aide en ligne", "https://google.com");
-   User_Menu.Add_Dialog ("Droits d\'accès", "Ajouter les droits d'accès");
+   User_Menu.Add_Dialog ("Droits d'accès", "Ajouter les droits d'accès");
    User_Menu.Add_Dialog ("Connecté depuis...", "Ajouter durée de la connection");
    User_Menu.Add_Dialog ("Connection précédente", "Ajouter la date de la dernière connection");
    User_Menu.Add_Web ("À propos de...", "http://gnoga.com");
@@ -473,4 +473,4 @@ begin
 exception
    when E : others =>
       Gnoga.Log (E);
-end application1;
+end Framework;
