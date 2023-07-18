@@ -1,5 +1,5 @@
 
-button {
+button:not(.ui-button) {
     display: block;
     cursor: pointer;
     border: 2px solid #0000;
@@ -15,12 +15,17 @@ button {
 
 button:hover {
     border: 2px solid #80b8ff;
-    background: #161526ff;
+    background: #161526;
 }
 
 button:active {
     border: 2px solid #80b8ff;
     background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x;
+}
+
+.focused-button {
+    border: 2px solid #80b8ff !important;
+    background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
 }
 
 .submit {
@@ -164,14 +169,14 @@ button:active {
 }
 
 .navigation-user-buttons {
-    background-color: #3d3e4d;
+    background-color: #636480;
     position: absolute;
     top: 40px;
     right: 0px;
 }
 
 .navigation-browse-buttons {
-    background-color: #3d3e4d;
+    background-color: #636480;
     position: absolute;
     width: 140px;
     top: 40px;

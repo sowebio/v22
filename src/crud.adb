@@ -72,7 +72,7 @@ package body Crud is
       if Selected_Menu /= Parent_Id then
          for Index in 1 .. (Next_Id - 1) loop
             declare
-               Data        : constant Data_Type                                  := Menu_Table (Index);
+               Data : constant Data_Type := Menu_Table (Index);
                Button : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
                Button_Name : constant UXString := "Crud_" & From_UTF_8 (Index'Image).Delete (1, 1);
             begin
@@ -230,24 +230,25 @@ package body Crud is
       Show_With_Code (Menu_Table (Unique_Id).Shortcut_Id);
    end Menu_Shortcut;
 
-   procedure Update_Shortcuts is
-   begin
-      for Index in Menu_Table'Range loop
-         declare
-            Data : constant Data_Type := Menu_Table (Index);
-         begin
-            Active_Shortcuts (Data.Shortcut_Id) := Data.Active;
-         end;
-      end loop;
-      -- for elm in menu_table
-      -- used_shortcut [elm.shortcut_id] = True
-      -- used_shortcut [elm.shortcut_id].handler = ...
-   end Update_Shortcuts;
+   --  procedure Update_Shortcuts is
+   --  begin
+   --     for Index in Menu_Table'Range loop
+   --        declare
+   --           Data : constant Data_Type := Menu_Table (Index);
+   --        begin
+   --           Active_Shortcuts (Data.Shortcut_Id) := Data.Active;
+   --        end;
+   --     end loop;
+   --     -- for elm in menu_table
+   --     -- used_shortcut [elm.shortcut_id] = True
+   --     -- used_shortcut [elm.shortcut_id].handler = ...
+   --  end Update_Shortcuts;
 
    procedure On_Shortcut_Pressed
      (Object : in out Gnoga.Gui.Base.Base_Type'Class;
       Key    : in     Character)
    is
+      pragma Unreferenced (Object);
       Char_Code : constant Integer := Code (Key);
    begin
       if Char_Code >= 1 and then Char_Code <= 26 then
@@ -284,8 +285,6 @@ package body Crud is
             Instance.Parent.Element (Button_Name).Inner_HTML (Data.Name);
          end if;
       end loop;
-      --  Reset every toolbar buttons to use smt like this:
-      --  "<img class=""tools-icon"" src=""css/icons/left_panel_close.png""><span class=""tools-text"">Fermer</span>"
    end Show_Tools_Text;
 
    procedure Create
@@ -311,10 +310,11 @@ package body Crud is
 
       Gnoga.Gui.View.View_Access (Container).Create (Instance.Parent.all);
       Instance.Parent.Add_Element ("tools-container", Container);
-      Container.Style ("width", "140px");
+      Container.Class_Name ("tools-container");
+      Container.Style ("transform", "translate(100%)");
       Container.Style ("position", "absolute");
       Container.Style ("background-color", "#262635");
-      Container.Style ("right", "-140px");
+      Container.Style ("right", "0");
       Container.Style ("top", "0");
       Container.Dynamic;
 

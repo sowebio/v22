@@ -32,6 +32,19 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    function Value is new Integer_Value (Integer);
 
+   function Replace_All (Text : UXString; To_Replace : Unicode_Character; Replacement : UXString) return UXString is
+      Result : UXString := "";
+   begin
+      for Index in 1 .. Text.Length loop
+         if Text.Element (Index) = To_Replace then
+            Result := Result & Replacement;
+         else
+            Result := Result & Text.Element (Index);
+         end if;
+      end loop;
+      return Result;
+   end Replace_All;
+
    procedure Launch_Web
      (Object : in out Gnoga.Gui.Base.Base_Type'Class;
       Data   :        Data_Type)
@@ -47,7 +60,8 @@ package body User_Menu is
       Dialog : constant Gnoga.Gui.Plugin.jQueryUI.Widget.Pointer_To_Dialog_Class :=
         new Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Type;
    begin
-      Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Access (Dialog).Create (Object, Data.Title, Data.Content);
+      Gnoga.Log (Replace_All (Data.Title, ''', "\'"));
+      Gnoga.Gui.Plugin.jQueryUI.Widget.Dialog_Access (Dialog).Create (Object, Replace_All (Data.Title, ''', "\'"), Data.Content);
    end Launch_Dialog;
 
    procedure Click_Handler (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
