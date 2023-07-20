@@ -1,5 +1,7 @@
 with Gnoga.Gui.Base;
 with Gnoga.Gui.View;
+with Gnoga.Gui.Element;
+with Gnoga.Gui.Element.Common;
 with UXStrings; use UXStrings;
 with Breadcrumb;
 
@@ -34,6 +36,8 @@ private
 
    type Menu_Type is tagged record
       Parent             : Gnoga.Gui.View.View_Access;
+      Icon               : Gnoga.Gui.Element.Common.IMG_Access;
+      Is_Menu_Opened     : Boolean := False;
       Breadcrumb_Parent  : Gnoga.Gui.View.View_Access;
       Breadcrumb_Content : Breadcrumb.Breadcrumb_Type;
    end record;

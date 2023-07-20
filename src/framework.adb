@@ -182,6 +182,18 @@ procedure Framework is
       App.Is_Navigation_User_Opened := not App.Is_Navigation_User_Opened;
    end On_User;
 
+   procedure On_Confirm (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log ("Confirmed");
+   end On_Confirm;
+
+   procedure On_Cancel (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      pragma Unreferenced (Object);
+   begin
+      Gnoga.Log ("Cancelled");
+   end On_Cancel;
+
    --  procedure On_Button_Click (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
    --  begin
    --     Gnoga.Log (Object.jQuery_Execute ("text()"));
@@ -190,6 +202,18 @@ procedure Framework is
    -----------------------------------------------------------------------------
    --  CRUD Handlers
    -----------------------------------------------------------------------------
+   procedure On_Crud_Ugly_But_Necessary_Callback (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Crud.Notify_Root_Clicked (App.Crud_Instance, Object);
+   end On_Crud_Ugly_But_Necessary_Callback;
+
+   procedure On_Key_Pressed (Object : in out Gnoga.Gui.Base.Base_Type'Class; Char : Character) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Crud.Notify_Key_Pressed (App.Crud_Instance, Char);
+   end On_Key_Pressed;
+
    ID_Crud_File : Integer;
 
    ID_Crud_File_Create : Integer;
@@ -274,7 +298,7 @@ procedure Framework is
    end On_Crud_Show_Search;
 
    -----------------------------------------------------------------------------
-   --  Tool Bar retract button
+   --  Tool Bar expand button
    -----------------------------------------------------------------------------
    procedure On_Tool_Bar_Expand (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
@@ -307,6 +331,7 @@ procedure Framework is
       Screen.Connection_Data (App);
       Screen.Buffer_Connection (True);
       App.Window := Screen'Unchecked_Access;
+      App.Window.On_Character_Handler (On_Key_Pressed'Unrestricted_Access);
       App.View.Create (Screen);
 
       --------------------------------------------------------------------------
@@ -361,6 +386,11 @@ procedure Framework is
       App.User_Icon.Class_Name ("top-icon");
       App.User_Icon.On_Click_Handler (On_User'Unrestricted_Access);
 
+      User_Menu.Create (App.Navigation_User_Buttons);
+
+      --------------------------------------------------------------------------
+      --  Content
+      --------------------------------------------------------------------------
       App.Content_Header.Create (App.Content, Gnoga.Gui.Element.Section.H1);
       App.Content_Header.Class_Name ("content-header");
 
@@ -369,13 +399,11 @@ procedure Framework is
       App.Menu_Content := Menu.Create (App.Navigation_Browse_View, App.Navigation_Breadcrumb);
       App.Menu_Content.Set_Menu (ID_Main);
 
-      User_Menu.Create (App.Navigation_User_Buttons);
-
       --------------------------------------------------------------------------
       --  Tool bar
       --------------------------------------------------------------------------
-      App.Crud_Instance.Create (App.Tool_Bar, On_Tool_Bar_Expand'Unrestricted_Access);
-      App.Window.On_Character_Handler (Crud.On_Shortcut_Pressed'Unrestricted_Access);
+      App.Crud_Instance.Create (App.Tool_Bar, On_Tool_Bar_Expand'Unrestricted_Access, On_Crud_Ugly_But_Necessary_Callback'Unrestricted_Access);
+      --App.Window.On_Character_Handler (Crud.On_Shortcut_Pressed'Unrestricted_Access);
 
       --  App.Window.jQuery_Execute ("keydown( function( e ) {if( e.target.nodeName == ""INPUT"" || e.target.nodeName == ""TEXTAREA"" ) return; if( e.target.isContentEditable ) return; }");
 
@@ -445,7 +473,7 @@ begin
      Menu.Add_Child (ID_Administration, "Gén. requêtes", On_Administration_Gen'Unrestricted_Access);
 
    User_Menu.Add_Web ("Aide en ligne", "https://google.com");
-   User_Menu.Add_Dialog ("Droits d'accès", "Ajouter les droits d'accès");
+   User_Menu.Add_Dialog ("Droits d'accès", "Ajouter les droits d'accès", Confirm_Text => "Confirmer", Confirm_Handler => On_Confirm'Unrestricted_Access, Cancel_Text => "Annuler", Cancel_Handler => On_Cancel'Unrestricted_Access);
    User_Menu.Add_Dialog ("Connecté depuis...", "Ajouter durée de la connection");
    User_Menu.Add_Dialog ("Connection précédente", "Ajouter la date de la dernière connection");
    User_Menu.Add_Web ("À propos de...", "http://gnoga.com");
