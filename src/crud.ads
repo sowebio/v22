@@ -1,8 +1,8 @@
-with Gnoga.Gui.Base;
+with Gnoga.Gui.Base; use Gnoga.Gui.Base;
 with Gnoga.Gui.View;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
-with UXStrings; use UXStrings;
+with UXStrings;      use UXStrings;
 
 package Crud is
 
@@ -11,14 +11,15 @@ package Crud is
    procedure Create
      (Instance  : in out Crud_Type;
       Parent    : in out Gnoga.Gui.View.View_Type;
-      On_Resize :        Gnoga.Gui.Base.Action_Event);
+      On_Resize :        Gnoga.Gui.Base.Action_Event;
+      On_Click  :        Gnoga.Gui.Base.Action_Event);
 
       --  Default CRUD
    procedure Create_From_Base (Parent : in out Gnoga.Gui.View.View_Type);
 
    procedure On_Shortcut_Pressed
-     (Object : in out Gnoga.Gui.Base.Base_Type'Class;
-      Key    : in     Character);
+     (Instance : in out Crud_Type;
+      Key      : in     Character);
 
    function Add_Root
      (Name     : UXString;
@@ -28,7 +29,7 @@ package Crud is
    function Add_Child
      (Name      : UXString;
       Parent_Id : Integer;
-      Handler   : Gnoga.Gui.Base.Action_Event)
+      Handler   : Gnoga.Gui.Base.Action_Event := null)
       return Integer;
 
    procedure Add_Delimiter (Parent_Id : Integer);
@@ -46,29 +47,28 @@ package Crud is
 
 --private
 
-   function Find_Shortcut
-     (Parent_Id : Integer;
-      Name      : UXString)
-      return Unicode_Character;
-      --  need boolean array to know which shortcuts can be used
-      --  should be updated a lot
-
-   function Remove_Shortcut_Marker
-     (Text : UXString)
-      return UXString;
-
    procedure Show_With_Code (Code : Integer);
 
-   procedure Notify_Click (Unique_Id : Integer);
-
+   procedure Notify_Root_Clicked
+     (Instance : in out Crud_Type;
+      Object   : in out Gnoga.Gui.Base.Base_Type'Class);
+   procedure Notify_Key_Pressed
+     (Instance : in out Crud_Type;
+      Key      :        Character);
    procedure Notify_Resize (Instance : in out Crud_Type);
 
 private
 
+   type Shortcut_Array is array (1 .. 26) of Boolean;
+   Max_Menu_Count : constant Integer := 50;
+   type Active_Array is array (1 .. Max_Menu_Count) of Boolean;
+
    type Crud_Type is tagged record
+      Active_Shortcuts       : Shortcut_Array := (others => False);
+      Active_Menu            : Active_Array   := (others => False);
       Parent                 : Gnoga.Gui.View.View_Access;
       Expand_Collapse_Button : Gnoga.Gui.Element.Common.Button_Access;
-      Is_Menu_Expanded       : Boolean := False;
+      Is_Menu_Expanded       : Boolean        := False;
    end record;
 
 end Crud;

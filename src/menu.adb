@@ -1,5 +1,4 @@
 with Gnoga.Gui.Element; use Gnoga.Gui.Element;
-with Gnoga.Gui.Element.Common;
 
 package body Menu is
 
