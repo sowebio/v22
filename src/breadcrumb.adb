@@ -50,7 +50,7 @@ package body Breadcrumb is
            (Instance.Parent.all, URL_Source => "/css/icons/chevron.png");
          New_Icon.Style ("height", "40px");
          New_Icon.Style ("width", "40px");
-         New_Icon.Margin (Left => "-4px", Right => "-4px");
+         New_Icon.Margin (Left => "-8px", Right => "-8px");
          New_Icon.Dynamic;
          Instance.Parent.all.Add_Element (Icon_Name, New_Icon);
       end if;
