@@ -18,8 +18,8 @@ button:hover {
 }
 
 button:active {
-    border: 2px solid #80b8ff;
-    background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x;
+    border: 2px solid #80b8ff !important;
+    background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
 }
 
 .focused-button {
@@ -28,8 +28,7 @@ button:active {
 }
 
 .toolbar-selected {
-    border: 2px solid #80b8ff !important;
-    background: #161526 !important;
+    background: #000016 !important;
 }
 
 .submit {
@@ -123,7 +122,8 @@ button:active {
     height: calc(100% - 80px);
     float: right;
     overflow: scroll;
-    padding-top: 40px;
+    top: 40px;
+    position: relative;
 }
 
 .bottom-bar {
