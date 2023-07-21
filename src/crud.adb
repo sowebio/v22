@@ -69,6 +69,9 @@ package body Crud is
       if Parent.Element (Button_Name) /= null then
          Parent.Element (Button_Name).Remove;
       end if;
+      if Parent.Element ("Delimiter" & Button_Name) /= null then
+         Parent.Element ("Delimiter" & Button_Name).Remove;
+      end if;
    end Remove_Button;
 
    procedure Open_Root
@@ -107,8 +110,24 @@ package body Crud is
                Button_Name : constant UXString := "Crud_" & From_UTF_8 (Index'Image).Delete (1, 1);
             begin
                if Data.Parent_Id = Parent_Id then
+                  if Data.Delimiter_Above then
+                     declare
+                        Delimiter : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.View.View_Type;
+                     begin
+                        Gnoga.Gui.View.View_Access (Delimiter).Create (Instance.Tools_Container.all);
+                        Delimiter.Style ("width", "100%");
+                        Delimiter.Style ("height", "2px");
+                        Delimiter.Style ("background-color", "#636480");
+                        Instance.Tools_Container.Add_Element ("Delimiter" & Button_Name, Delimiter);
+                     end;
+                  end if;
                   Gnoga.Gui.Element.Common.Button_Access (Button).Create (Instance.Tools_Container.all, Data.Name);
                   Button.Dynamic;
+
+                  if not Data.Clickable then
+                     Button.Class_Name ("unclickable");
+                  end if;
+
                   Button.On_Click_Handler (Data.Handler);
                   Instance.Tools_Container.Add_Element (Button_Name, Button);
                end if;
@@ -133,7 +152,7 @@ package body Crud is
                if Button_Id = Instance.Current_Root then
                   Button.Class_Name ("toolbar-selected");
                else
-                  Button.Class_Name ("");
+                  Button.Remove_Class ("toolbar-selected");
                end if;
             end;
          end if;
@@ -314,6 +333,11 @@ package body Crud is
                Gnoga.Gui.Element.Common.Button_Access (Button).Create
                  (Instance.Tools_Roots_Container.all, Text);
                Button.Dynamic;
+
+               if not Data.Clickable then
+                  Button.Class_Name ("unclickable");
+               end if;
+
                Button.Style ("display", "flex");
                Button.Style ("align-items", "center");
                Button.jQuery_Execute ("data('gnoga_id', " & From_UTF_8 (Data_Id'Image) & " )");
@@ -365,25 +389,25 @@ package body Crud is
       return Instance.Next_Id - 1;
    end Add_Child;
 
-   procedure Add_Delimiter (Parent_Id : Integer) is
+   procedure Add_Delimiter_Above (Instance : in out Crud_Type; Unique_Id : Integer) is
    begin
       --  Figure out what to put in here (div with bg color ?)
-      null;
-   end Add_Delimiter;
+      if Instance.Menu_Table (Unique_Id).Parent_Id /= Root_Parent_Id then
+         Instance.Menu_Table (Unique_Id).Delimiter_Above := True;
+      end if;
+   end Add_Delimiter_Above;
 
    -----------------------------------------------------------------------------
    --  Setters
    -----------------------------------------------------------------------------
-   procedure Set_Unclickable (Unique_Id : Integer) is
+   procedure Set_Unclickable (Instance : in out Crud_Type; Unique_Id : Integer) is
    begin
-      --  Gray style (css class ?), no handler accepted or null handler
-      null;
+      Instance.Menu_Table (Unique_Id).Clickable := False;
    end Set_Unclickable;
 
-   procedure Set_Clickable (Unique_Id : Integer) is
+   procedure Set_Clickable (Instance : in out Crud_Type; Unique_Id : Integer) is
    begin
-      --  Handler should be accessible, default style
-      null;
+      Instance.Menu_Table (Unique_Id).Clickable := True;
    end Set_Clickable;
 
    -----------------------------------------------------------------------------

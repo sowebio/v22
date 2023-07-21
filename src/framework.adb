@@ -83,6 +83,9 @@ procedure Framework is
       ID_Crud_Preferences_SEPA : Integer;
       ID_Crud_Preferences_Service : Integer;
 
+      ID_Crud_Security : Integer;
+      ID_Crud_Security_Bug : Integer;
+
       Exit_Button : Gnoga.Gui.Element.Common.Button_Type;
 
       Form_View_Gestion : Simple_Form.Form_View_Type;
@@ -263,10 +266,14 @@ procedure Framework is
         App.Crud_Instance.Add_Child ("Supprimer", App.ID_Crud_File, On_Crud_File_Delete'Unrestricted_Access);
       App.ID_Crud_File_Export :=
         App.Crud_Instance.Add_Child ("Exporter", App.ID_Crud_File, On_Crud_File_Export'Unrestricted_Access);
+      App.Crud_Instance.Add_Delimiter_Above (App.ID_Crud_File_Export);
+      App.Crud_Instance.Set_Unclickable (App.ID_Crud_File_Export);
       App.ID_Crud_File_Import :=
         App.Crud_Instance.Add_Child ("Importer", App.ID_Crud_File, On_Crud_File_Import'Unrestricted_Access);
+      App.Crud_Instance.Set_Unclickable (App.ID_Crud_File_Import);
       App.ID_Crud_File_Print :=
         App.Crud_Instance.Add_Child ("Imprimer", App.ID_Crud_File, On_Crud_File_Print'Unrestricted_Access);
+      App.Crud_Instance.Add_Delimiter_Above (App.ID_Crud_File_Print);
 
       App.ID_Crud_Edit_Copy :=
         App.Crud_Instance.Add_Child ("Copier", App.ID_Crud_Edit, On_Crud_Edit_Copy'Unrestricted_Access);
@@ -352,10 +359,13 @@ procedure Framework is
       Load_Default_Crud_Roots (Object);
       App.ID_Crud_Validate := App.Crud_Instance.Add_Root ("Valider", "/css/icons/checklist.png");
       App.ID_Crud_Preferences := App.Crud_Instance.Add_Root ("Préférences", "/css/icons/settings.png");
+      App.ID_Crud_Security := App.Crud_Instance.Add_Root ("Sécurité", "/css/icons/security.png");
+      App.Crud_Instance.Set_Unclickable (App.ID_Crud_Security);
 
       Load_Default_Crud_Childs (Object);
 
       App.ID_Crud_Show_List := App.Crud_Instance.Add_Child ("Lister", App.ID_Crud_Show, On_Crud_Show_List'Unrestricted_Access);
+      App.Crud_Instance.Add_Delimiter_Above (App.ID_Crud_Show_List);
       App.ID_Crud_Show_List_Bill := App.Crud_Instance.Add_Child ("Lister Factures", App.ID_Crud_Show, On_Crud_Show_List_Bill'Unrestricted_Access);
       App.ID_Crud_Show_List_SEPA := App.Crud_Instance.Add_Child ("Lister SEPA", App.ID_Crud_Show, On_Crud_Show_List_SEPA'Unrestricted_Access);
 
@@ -368,6 +378,8 @@ procedure Framework is
         App.Crud_Instance.Add_Child ("Intervalles SEPA", App.ID_Crud_Preferences, On_Crud_Preferences_SEPA'Unrestricted_Access);
       App.ID_Crud_Preferences_Service :=
         App.Crud_Instance.Add_Child ("Type de Prestation", App.ID_Crud_Preferences, On_Crud_Preferences_Service'Unrestricted_Access);
+
+      App.ID_Crud_Security_Bug := App.Crud_Instance.Add_Child ("Ne devrait pas être affiché...", App.ID_Crud_Security);
 
       App.Crud_Instance.Load;
 

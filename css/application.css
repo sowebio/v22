@@ -54,8 +54,8 @@ button:active {
 
 .unclickable {
     pointer-events: none !important;
-    color: silver !important;
-    background: grey !important;
+    filter: grayscale(100%);
+    background: #545454 !important;
 }
 
 .logo-container {
