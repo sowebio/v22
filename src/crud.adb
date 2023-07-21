@@ -79,10 +79,7 @@ package body Crud is
         Gnoga.Gui.Element.Common.Button_Access
           (Instance.Tools_Roots_Container.Element ("Crud_" & From_UTF_8 (Parent_Id'Image).Delete (1, 1)));
       Will_Open       : constant Boolean := not (Instance.Is_Opened and then (Instance.Current_Root = Parent_Id));
-      Vertical_Offset : Integer := Clicked_Button.Offset_From_Top - Instance.Parent.Offset_From_Top;
-
-      Tools_Container_Height : Integer := 0;
-      Parent_Height : Integer := 0;
+      Vertical_Offset : constant Integer := Clicked_Button.Offset_From_Top - Instance.Parent.Offset_From_Top;
    begin
       for Index in 1 .. (Instance.Next_Id - 1) loop
          Instance.Active_Shortcuts (Instance.Menu_Table (Index).Shortcut_Id) := False;
@@ -117,11 +114,6 @@ package body Crud is
                end if;
             end;
          end loop;
-         Tools_Container_Height := Instance.Tools_Container.Height;
-         Parent_Height := Instance.Parent.Height;
-         if Vertical_Offset + Tools_Container_Height > Parent_Height then
-            Vertical_Offset := Parent_Height - Tools_Container_Height;
-         end if;
          Instance.Tools_Container.all.Style ("max-height", "calc(100% -" & From_UTF_8 (Vertical_Offset'Image) & "px)");
          Instance.Tools_Container.all.Top (Vertical_Offset);
          Instance.Is_Opened := True;
@@ -311,7 +303,7 @@ package body Crud is
       Instance.Parent.Add_Element ("tools-roots-container", Root_Container);
       Root_Container.Style ("width", "100%");
       Gnoga.Log ("calc(100% -" & Instance.Expand_Collapse_Button.Minimum_Height & ")");
-      Root_Container.Style ("height", "calc(100% - " & Instance.Expand_Collapse_Button.Minimum_Height & " - 10px)");
+      Root_Container.Style ("height", "calc(100% - " & Instance.Expand_Collapse_Button.Minimum_Height & " - 8px)");
       Root_Container.Style ("overflow", "scroll");
       Root_Container.Dynamic;
       Instance.Tools_Roots_Container := Gnoga.Gui.View.View_Access (Root_Container);

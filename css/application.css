@@ -8,7 +8,7 @@ button:not(.ui-button) {
     color: white;
     width: 100%;
     max-width: 140px;
-    min-height: 48px;
+    min-height: 42px;
     box-sizing: border-box;
 }
 
@@ -124,6 +124,8 @@ button:active {
     overflow: scroll;
     top: 40px;
     position: relative;
+    box-sizing: border-box;
+    padding: 8px;
 }
 
 .bottom-bar {
@@ -153,7 +155,6 @@ button:active {
 }
 
 .top-icon {
-    width: 40px;
     height: 40px;
 }
 
@@ -177,6 +178,8 @@ button:active {
     position: absolute;
     top: 40px;
     right: 0px;
+    max-height: calc(100vh - 100%);
+    overflow:scroll;
 }
 
 .navigation-browse-buttons {
@@ -185,6 +188,8 @@ button:active {
     width: 140px;
     top: 40px;
     left: 0;
+    max-height: calc(100vh - 100%);
+    overflow: scroll;
 }
 
 .user-name {

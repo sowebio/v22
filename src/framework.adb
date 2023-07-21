@@ -249,7 +249,7 @@ procedure Framework is
    begin
       App.ID_Crud_File        := App.Crud_Instance.Add_Root ("Fichier", "/css/icons/file.png");
       App.ID_Crud_Edit      := App.Crud_Instance.Add_Root ("Éditer", "/css/icons/edit.png");
-      App.ID_Crud_Show          := App.Crud_Instance.Add_Root ("Afficher", "/css/icons/search.png");
+      App.ID_Crud_Show          := App.Crud_Instance.Add_Root ("Afficher", "/css/icons/browse.png");
    end Load_Default_Crud_Roots;
 
    procedure Load_Default_Crud_Childs (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
