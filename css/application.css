@@ -228,6 +228,28 @@ button:active {
     width: 140px !important;
 }
 
+.tools-container {
+    transform: translate(100%);
+    position: absolute;
+    background-color: #262635;
+    right: 0;
+    top: 0;
+    overflow: scroll;
+}
+
+.tools-roots-container {
+    width: 100%;
+    overflow: scroll;
+}
+
+.expand-collapse-button {
+    position: absolute;
+    display: flex !important;
+    align-items: center;
+    right: 0;
+    bottom: 0;
+}
+
 @media screen and (max-width: 700px) {
     .logo-container {
         width: 50%;

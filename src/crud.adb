@@ -277,23 +277,13 @@ package body Crud is
         (Parent, "<img class=""tools-icon"" src=""css/icons/left_panel_open.png"">");
       Collapse_Button.Dynamic;
       Instance.Expand_Collapse_Button := Gnoga.Gui.Element.Common.Button_Access (Collapse_Button);
-      Instance.Expand_Collapse_Button.Style ("position", "absolute");
-      Instance.Expand_Collapse_Button.Style ("display", "flex");
-      Instance.Expand_Collapse_Button.Style ("align-items", "center");
-      Instance.Expand_Collapse_Button.Style ("right", "0");
-      Instance.Expand_Collapse_Button.Style ("bottom", "0");
+      Instance.Expand_Collapse_Button.Class_Name ("expand-collapse-button");
       Instance.Expand_Collapse_Button.On_Click_Handler (On_Resize);
       Instance.Parent := Parent'Unrestricted_Access;
 
       Gnoga.Gui.View.View_Access (Container).Create (Instance.Parent.all);
       Instance.Parent.Add_Element ("tools-container", Container);
       Container.Class_Name ("tools-container");
-      Container.Style ("transform", "translate(100%)");
-      Container.Style ("position", "absolute");
-      Container.Style ("background-color", "#262635");
-      Container.Style ("right", "0");
-      Container.Style ("top", "0");
-      Container.Style ("overflow", "scroll");
       Container.Dynamic;
       Container.jQuery_Execute ("data('gnoga_is_opened', false)");
       Container.jQuery_Execute ("data('gnoga_root_id', -1)");
@@ -301,10 +291,8 @@ package body Crud is
 
       Gnoga.Gui.View.View_Access (Root_Container).Create (Instance.Parent.all);
       Instance.Parent.Add_Element ("tools-roots-container", Root_Container);
-      Root_Container.Style ("width", "100%");
-      Gnoga.Log ("calc(100% -" & Instance.Expand_Collapse_Button.Minimum_Height & ")");
+      Root_Container.Class_Name ("tools-roots-container");
       Root_Container.Style ("height", "calc(100% - " & Instance.Expand_Collapse_Button.Minimum_Height & " - 8px)");
-      Root_Container.Style ("overflow", "scroll");
       Root_Container.Dynamic;
       Instance.Tools_Roots_Container := Gnoga.Gui.View.View_Access (Root_Container);
 
