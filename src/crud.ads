@@ -33,14 +33,14 @@ package Crud is
       Handler   :        Gnoga.Gui.Base.Action_Event := null)
       return Integer;
 
-   procedure Add_Delimiter (Parent_Id : Integer);
+   procedure Add_Delimiter_Above (Instance : in out Crud_Type; Unique_Id : Integer);
 
    -----------------------------------------------------------------------------
    --  Setters
    -----------------------------------------------------------------------------
-   procedure Set_Unclickable (Unique_Id : Integer);
+   procedure Set_Unclickable (Instance : in out Crud_Type; Unique_Id : Integer);
 
-   procedure Set_Clickable (Unique_Id : Integer);
+   procedure Set_Clickable (Instance : in out Crud_Type; Unique_Id : Integer);
 
    -----------------------------------------------------------------------------
    --  Getters
@@ -80,6 +80,9 @@ private
       Parent_Id : Integer  := Root_Parent_Id;
       Icon_SRC  : UXString := "";
       Name      : UXString;
+      Clickable : Boolean := True;
+
+      Delimiter_Above : Boolean := False;
 
       Handler     : Gnoga.Gui.Base.Action_Event;
       Shortcut_Id : Integer;
