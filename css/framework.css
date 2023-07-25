@@ -1,0 +1,71 @@
+/* Button styling */
+.framework-button {
+    display: block;
+    cursor: pointer;
+    border: 2px solid #0000;
+    background: #26253688;
+    font-weight: bold;
+    font-size: 13px;
+    color: white;
+    width: 100%;
+    max-width: 140px;
+    min-height: 42px;
+    box-sizing: border-box;
+}
+
+.framework-button:hover {
+    border: 2px solid #80b8ff;
+    background: #161526;
+}
+
+.framework-button:active {
+    border: 2px solid #80b8ff !important;
+    background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
+}
+
+.unclickable {
+    pointer-events: none !important;
+    filter: grayscale(100%);
+    background: #545454 !important;
+}
+
+
+/* Content styling */
+.content-container {
+    width: calc(100% - 42px);
+    height: calc(100% - 80px);
+    float: right;
+    overflow: scroll;
+    top: 40px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 8px;
+}
+
+.content-header {
+    display: flex;
+    justify-content: center;
+}
+
+
+/* Responsive layout */
+@media screen and (max-width: 700px) {
+    .header-app-parent {
+        width: 50%;
+        justify-content: left;
+    }
+
+    .header-user-parent {
+        width: 50%;
+        justify-content: right;
+    }
+
+    .header-breadcrumb-parent {
+        display: none;
+    }
+    
+    .shortcut {
+        color: white;
+    }
+}
+

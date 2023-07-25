@@ -1,0 +1,29 @@
+/* Container styling */
+.footer {
+    height: 40px;
+    width: 100%;
+    background-color: #262635;
+    position: fixed;
+    bottom: 0;
+}
+
+
+/* Footer data styling */
+.state-text-parent {
+    height: 100%;
+    float: left;
+    align-items: center;
+    padding-left: 8px;
+    color: white;
+    display: flex;
+}
+
+.permanent-text-parent {
+    height: 100%;
+    float: right;
+    align-items: center;
+    padding-right: 8px;
+    color: white;
+    display: flex;
+}
+

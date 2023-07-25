@@ -1,32 +1,31 @@
 with Gnoga.Gui.Base;
 with Gnoga.Gui.View;
+
 with UXStrings; use UXStrings;
 
 package Breadcrumb is
 
-   type Breadcrumb_Type is tagged private;
+   package View renames Gnoga.Gui.View;
+   package Base renames Gnoga.Gui.Base;
 
-   function Create
-     (View : in out Gnoga.Gui.View.View_Type)
-      return Breadcrumb_Type;
+   type Breadcrumb_Data is tagged record
+      Parent        : View.View_Access;
+      Current_Depth : Integer := 0;
+   end record;
+   type Breadcrumb_Type is new Breadcrumb_Data with null record;
 
-   procedure Add
+   procedure Create
      (Instance : in out Breadcrumb_Type;
-      Handler  : in     Gnoga.Gui.Base.Action_Event;
-      Content  : in     UXString := "";
-      Depth    : in     Integer  := 0);
+      Parent   : in out View.View_Type);
+      --  Should be called every time a user connects
 
    procedure Update
      (Instance : in out Breadcrumb_Type;
-      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Handler  : in     Base.Action_Event;
       Content  : in     UXString := "";
       Depth    : in     Integer  := 0);
+      --  Set new last element in instancied breadcrumb
 
 private
-
-   type Breadcrumb_Type is tagged record
-      Parent        : Gnoga.Gui.View.View_Access;
-      Current_Depth : Integer := 0;
-   end record;
 
 end Breadcrumb;

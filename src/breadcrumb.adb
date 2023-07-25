@@ -1,89 +1,96 @@
-with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Element; use Gnoga.Gui.Element;
+with Gnoga.Gui.Element.Common;
 
 package body Breadcrumb is
+
+   package Element renames Gnoga.Gui.Element;
+   package Common renames Gnoga.Gui.Element.Common;
 
    -----------------------------------------------------------------------------
    --  Utils
    -----------------------------------------------------------------------------
-   procedure Remove_Last (Instance : in out Breadcrumb_Type) is
-      Element_Name : UXString := "";
+   function To_UXString
+     (Value : Integer)
+      return UXString
+   is
    begin
-      Element_Name := "Button_" & From_UTF_8 (Instance.Current_Depth'Image).Delete (1, 1);
+      return From_UTF_8 (Value'Image).Delete (1, 1);
+   end To_UXString;
+
+   procedure Remove_Last (Instance : in out Breadcrumb_Type) is
+      Element_Name  : UXString          := "";
+      Element_Index : constant UXString := To_UXString (Instance.Current_Depth);
+   begin
+      Element_Name := "Button_" & Element_Index;
       if Instance.Parent.all.Element (Element_Name) /= null then
          Instance.Parent.all.Element (Element_Name).Remove;
       end if;
-      Element_Name := "Icon_" & From_UTF_8 (Instance.Current_Depth'Image).Delete (1, 1);
+      Element_Name := "Icon_" & Element_Index;
       if Instance.Parent.all.Element (Element_Name) /= null then
          Instance.Parent.all.Element (Element_Name).Remove;
       end if;
    end Remove_Last;
 
-   -----------------------------------------------------------------------------
-   --  API
-   -----------------------------------------------------------------------------
-   function Create
-     (View : in out Gnoga.Gui.View.View_Type)
-      return Breadcrumb_Type
-   is
-      Result : Breadcrumb_Type;
-   begin
-      Result.Parent := View'Unrestricted_Access;
-      return Result;
-   end Create;
-
    procedure Add
      (Instance : in out Breadcrumb_Type;
-      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Handler  : in     Base.Action_Event;
       Content  : in     UXString := "";
       Depth    : in     Integer  := 0)
    is
-      Button_Name : UXString;
-      Icon_Name   : UXString;
-      New_Button  : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
-      New_Icon    : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.IMG_Type;
+      Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
+      Icon   : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
    begin
-      Button_Name := "Button_" & From_UTF_8 (Depth'Image).Delete (1, 1);
-      Icon_Name   := "Icon_" & From_UTF_8 (Depth'Image).Delete (1, 1);
       if Depth > 0 then
-         Gnoga.Gui.Element.Common.IMG_Access (New_Icon).Create
-           (Instance.Parent.all, URL_Source => "/css/icons/chevron.png");
-         New_Icon.Style ("height", "40px");
-         New_Icon.Style ("width", "40px");
-         New_Icon.Margin (Left => "-8px", Right => "-8px");
-         New_Icon.Dynamic;
-         Instance.Parent.all.Add_Element (Icon_Name, New_Icon);
+         Common.IMG_Access (Icon).Create (Instance.Parent.all);
+         Common.IMG_Access (Icon).URL_Source ("/css/icons/chevron.png");
+         Icon.Style ("height", "40px");
+         Icon.Style ("width", "40px");
+         Icon.Margin (Left => "-8px", Right => "-8px");
+         Icon.Dynamic;
+         Instance.Parent.all.Add_Element ("Icon_" & To_UXString (Depth), Icon);
       end if;
-      Gnoga.Gui.Element.Common.Button_Access (New_Button).Create (Instance.Parent.all, Content);
-      New_Button.On_Click_Handler (Handler);
-      New_Button.Style ("width", "auto");
-      New_Button.Style ("height", "40px");
-      New_Button.Style ("min-height", "40px");
-      New_Button.Style ("margin", "0");
-      New_Button.Dynamic;
-      Instance.Parent.all.Add_Element (Button_Name, New_Button);
+      Common.Button_Access (Button).Create (Instance.Parent.all, Content);
+      Button.On_Click_Handler (Handler);
+      Button.Class_Name ("framework-button");
+      Button.Style ("width", "auto");
+      Button.Style ("height", "40px");
+      Button.Style ("min-height", "40px");
+      Button.Style ("margin", "0");
+      Button.Dynamic;
+      Instance.Parent.all.Add_Element ("Button_" & To_UXString (Depth), Button);
       Instance.Current_Depth := Depth;
    end Add;
 
+   -----------------------------------------------------------------------------
+   --  API
+   -----------------------------------------------------------------------------
+   procedure Create
+     (Instance : in out Breadcrumb_Type;
+      Parent   : in out View.View_Type)
+   is
+   begin
+      Instance.Parent := Parent'Unrestricted_Access;
+   end Create;
+
    procedure Update
      (Instance : in out Breadcrumb_Type;
-      Handler  : in     Gnoga.Gui.Base.Action_Event;
+      Handler  : in     Base.Action_Event;
       Content  : in     UXString := "";
       Depth    : in     Integer  := 0)
    is
    begin
       if Instance.Current_Depth < Depth then
-         Instance.Add (Handler => Handler, Content => Content, Depth => Depth);
+         Instance.Add (Handler, Content, Depth);
       elsif Instance.Current_Depth = Depth then
          Instance.Remove_Last;
-         Instance.Add (Handler => Handler, Content => Content, Depth => Depth);
+         Instance.Add (Handler, Content, Depth);
       elsif Instance.Current_Depth > Depth then
          while Instance.Current_Depth > Depth loop
             Instance.Remove_Last;
             Instance.Current_Depth := Instance.Current_Depth - 1;
          end loop;
          Instance.Remove_Last;
-         Instance.Add (Handler => Handler, Content => Content, Depth => Depth);
+         Instance.Add (Handler, Content, Depth);
       end if;
       Instance.Current_Depth := Depth;
    end Update;

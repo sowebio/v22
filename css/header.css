@@ -1,0 +1,85 @@
+/* Container styling */
+.header {
+    z-index: 10;
+    width: 100%;
+    position: fixed;
+    background-color: #636480;
+}
+
+
+/* App panel styling */
+.header-app-parent {
+    height: 100%;
+    width: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: left;
+}
+
+.header-icon {
+    height: 40px;
+}
+
+.header-icon:hover {
+    border-radius: 8px;
+    background-color: #26253633;
+}
+
+.header-icon:active {
+    border-radius: 8px;
+    background-color: #26253660;
+}
+
+.header-icon-active {
+    border-radius: 8px;
+    background-color: #26253660 !important;
+}
+
+.header-app-browse-parent {
+    background-color: #636480;
+    position: absolute;
+    width: 140px;
+    top: 40px;
+    left: 0;
+    max-height: calc(100vh - 100%);
+    overflow: scroll;
+}
+
+
+/* Breadcrumb styling */
+.header-breadcrumb-parent {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    float: left;
+}
+
+
+/* User panel styling */
+.header-user-parent {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+}
+
+.header-user-name {
+    color: white;
+    padding-right: 6px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    height: 0;
+}
+
+.header-user-browse-parent {
+    background-color: #636480;
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    max-height: calc(100vh - 100%);
+    overflow:scroll;
+}
+

@@ -1,16 +1,27 @@
 with Ada.Wide_Wide_Characters.Unicode;
 with GNAT.Case_Util;
-with Gnoga.Gui.Element;     use Gnoga.Gui.Element;
 with UXStrings.Conversions; use UXStrings.Conversions;
 
-package body Crud is
+package body CRUD is
+
+   package Element renames Gnoga.Gui.Element;
+   package Common renames Gnoga.Gui.Element.Common;
 
    CRUD_Error : exception;
 
    -----------------------------------------------------------------------------
    --  Conversions
    -----------------------------------------------------------------------------
+
    function Value is new Integer_Value (Integer);
+
+   function To_UXString
+     (Value : Integer)
+      return UXString
+   is
+   begin
+      return From_UTF_8 (Value'Image).Delete (1, 1);
+   end To_UXString;
 
    function Code
      (Char : Unicode_Character)
@@ -37,9 +48,9 @@ package body Crud is
       return Boolean
    is
       First_Lower : constant Unicode_Character := 'a';
-      Last_Lower : constant Unicode_Character := 'z';
+      Last_Lower  : constant Unicode_Character := 'z';
       First_Upper : constant Unicode_Character := 'A';
-      Last_Upper : constant Unicode_Character := 'Z';
+      Last_Upper  : constant Unicode_Character := 'Z';
    begin
       return (Char in First_Lower .. Last_Lower) or else (Char in First_Upper .. Last_Upper);
    end Is_Alpha;
@@ -49,9 +60,9 @@ package body Crud is
       return Boolean
    is
       First_Lower : constant Character := 'a';
-      Last_Lower : constant Character := 'z';
+      Last_Lower  : constant Character := 'z';
       First_Upper : constant Character := 'A';
-      Last_Upper : constant Character := 'Z';
+      Last_Upper  : constant Character := 'Z';
    begin
       return (Char in First_Lower .. Last_Lower) or else (Char in First_Upper .. Last_Upper);
    end Is_Alpha;
@@ -59,28 +70,72 @@ package body Crud is
    -----------------------------------------------------------------------------
    --  Utils
    -----------------------------------------------------------------------------
+
+   function Button_Name (Index : Integer) return UXString is
+   begin
+      return "Crud_" & To_UXString (Index);
+   end Button_Name;
+
+   function Delimiter_Name (Index : Integer) return UXString is
+   begin
+      return "Delimiter_" & To_UXString (Index);
+   end Delimiter_Name;
+
+   function HTML_Icon
+     (Instance  : in out Crud_Type;
+      Unique_Id :        Integer)
+      return UXString
+   is
+      Data : constant Data_Type := Instance.Menu_Table (Unique_Id);
+   begin
+      return "<img class=""crud-icon"" src=""" & Data.Icon_SRC & """>";
+   end HTML_Icon;
+
+   function HTML_Complete
+     (Instance  : in out Crud_Type;
+      Unique_Id :        Integer;
+      Name      :        UXString;
+      Shortcut  :        Unicode_Character)
+      return UXString
+   is
+      Result : UXString           := "";
+      Data   : constant Data_Type := Instance.Menu_Table (Unique_Id);
+      Marked : Boolean            := False;
+   begin
+      if Data.Parent_Id = Root_Parent_Id then
+         Result := Result & HTML_Icon (Instance, Unique_Id);
+      end if;
+      Result := Result & "<span>";
+      for Index in 1 .. Name.Length loop
+         if Name (Index) = Shortcut and then not Marked then
+            Result := Result & "<span class=""crud-shortcut"">" & Name (Index) & "</span>";
+            Marked := True;
+         elsif Name (Index) /= Force_Shortcut_Char then
+            Result := Result & Name (Index);
+         end if;
+      end loop;
+      return Result & "</span>";
+   end HTML_Complete;
+
    procedure Remove_Button
-     (Parent  : Gnoga.Gui.View.View_Access;
+     (Parent  : View.View_Access;
       Data_Id : Integer)
    is
-      Button_Name : UXString := "";
    begin
-      Button_Name := "Crud_" & From_UTF_8 (Data_Id'Image).Delete (1, 1);
-      if Parent.Element (Button_Name) /= null then
-         Parent.Element (Button_Name).Remove;
+      if Parent.Element (Button_Name (Data_Id)) /= null then
+         Parent.Element (Button_Name (Data_Id)).Remove;
       end if;
-      if Parent.Element ("Delimiter" & Button_Name) /= null then
-         Parent.Element ("Delimiter" & Button_Name).Remove;
+      if Parent.Element (Delimiter_Name (Data_Id)) /= null then
+         Parent.Element (Delimiter_Name (Data_Id)).Remove;
       end if;
    end Remove_Button;
 
-   procedure Open_Root
+   procedure Open_Element
      (Instance  : in out Crud_Type;
       Parent_Id :        Integer)
    is
-      Clicked_Button : constant Gnoga.Gui.Element.Common.Button_Access :=
-        Gnoga.Gui.Element.Common.Button_Access
-          (Instance.Tools_Roots_Container.Element ("Crud_" & From_UTF_8 (Parent_Id'Image).Delete (1, 1)));
+      Clicked_Button : constant Common.Button_Access :=
+        Common.Button_Access (Instance.Elements_Parent.Element (Button_Name (Parent_Id)));
       Will_Open       : constant Boolean := not (Instance.Is_Opened and then (Instance.Current_Root = Parent_Id));
       Vertical_Offset : constant Integer := Clicked_Button.Offset_From_Top - Instance.Parent.Offset_From_Top;
    begin
@@ -91,7 +146,7 @@ package body Crud is
             Instance.Active_Shortcuts (Instance.Menu_Table (Index).Shortcut_Id) := True;
             Instance.Active_Menu (Index)                                        := True;
          else
-            Remove_Button (Instance.Tools_Container, Index);
+            Remove_Button (Instance.Sub_Elements_Parent, Index);
          end if;
       end loop;
 
@@ -105,125 +160,83 @@ package body Crud is
       if Will_Open then
          for Index in 1 .. (Instance.Next_Id - 1) loop
             declare
-               Data        : constant Data_Type                                  := Instance.Menu_Table (Index);
-               Button : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
-               Button_Name : constant UXString := "Crud_" & From_UTF_8 (Index'Image).Delete (1, 1);
+               Data        : constant Data_Type                        := Instance.Menu_Table (Index);
+               Button      : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
             begin
                if Data.Parent_Id = Parent_Id then
                   if Data.Delimiter_Above then
                      declare
-                        Delimiter : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.View.View_Type;
+                        Delimiter : constant Element.Pointer_To_Element_Class := new View.View_Type;
                      begin
-                        Gnoga.Gui.View.View_Access (Delimiter).Create (Instance.Tools_Container.all);
-                        Delimiter.Style ("width", "100%");
-                        Delimiter.Style ("height", "2px");
-                        Delimiter.Style ("background-color", "#636480");
-                        Instance.Tools_Container.Add_Element ("Delimiter" & Button_Name, Delimiter);
+                        View.View_Access (Delimiter).Create (Instance.Sub_Elements_Parent.all);
+                        Delimiter.Class_Name ("crud-delimiter");
+                        Instance.Sub_Elements_Parent.Add_Element (Delimiter_Name (Index), Delimiter);
                      end;
                   end if;
-                  Gnoga.Gui.Element.Common.Button_Access (Button).Create (Instance.Tools_Container.all, Data.Name);
+                  Common.Button_Access (Button).Create (Instance.Sub_Elements_Parent.all, Data.Name);
+                  Button.Class_Name ("framework-button");
                   Button.Dynamic;
 
                   if not Data.Clickable then
-                     Button.Class_Name ("unclickable");
+                     Button.Add_Class ("unclickable");
                   end if;
 
                   Button.On_Click_Handler (Data.Handler);
-                  Instance.Tools_Container.Add_Element (Button_Name, Button);
+                  Instance.Sub_Elements_Parent.Add_Element (Button_Name (Index), Button);
                end if;
             end;
          end loop;
-         Instance.Tools_Container.all.Style ("max-height", "calc(100% -" & From_UTF_8 (Vertical_Offset'Image) & "px)");
-         Instance.Tools_Container.all.Top (Vertical_Offset);
-         Instance.Is_Opened := True;
+         Instance.Sub_Elements_Parent.all.Style ("max-height", "calc(100% - " & To_UXString (Vertical_Offset) & "px)");
+         Instance.Sub_Elements_Parent.all.Top (Vertical_Offset);
+         Instance.Is_Opened    := True;
          Instance.Current_Root := Parent_Id;
       else
-         Instance.Is_Opened := False;
+         Instance.Is_Opened    := False;
          Instance.Current_Root := Root_Parent_Id;
       end if;
 
       for Button_Id in 1 .. (Instance.Next_Id - 1) loop
          if Instance.Menu_Table (Button_Id).Parent_Id = Root_Parent_Id then
             declare
-               Button : constant Gnoga.Gui.Element.Common.Button_Access :=
-                 Gnoga.Gui.Element.Common.Button_Access
-                   (Instance.Tools_Roots_Container.Element ("Crud_" & From_UTF_8 (Button_Id'Image).Delete (1, 1)));
+               Button : constant Common.Button_Access :=
+                 Common.Button_Access (Instance.Elements_Parent.Element (Button_Name (Button_Id)));
             begin
                if Button_Id = Instance.Current_Root then
-                  Button.Class_Name ("toolbar-selected");
+                  Button.Add_Class ("crud-selected-button");
                else
-                  Button.Remove_Class ("toolbar-selected");
+                  Button.Remove_Class ("crud-selected-button");
                end if;
             end;
          end if;
       end loop;
-   end Open_Root;
+   end Open_Element;
 
-   function HTML_Icon
-     (Instance  : in out Crud_Type;
-      Unique_Id :        Integer)
-      return UXString
-   is
-      Data : constant Data_Type := Instance.Menu_Table (Unique_Id);
-   begin
-      return From_UTF_8 ("<img class=""tools-icon"" src=""") & Data.Icon_SRC & From_UTF_8 (""">");
-   end HTML_Icon;
-
-   function Complete_Name
-     (Instance  : in out Crud_Type;
-      Unique_Id :        Integer;
-      Name      :        UXString;
-      Shortcut  :        Unicode_Character)
-      return UXString
-   is
-      Result : UXString           := "";
-      Data   : constant Data_Type := Instance.Menu_Table (Unique_Id);
-      Marked : Boolean := False;
-   begin
-      if Data.Parent_Id = Root_Parent_Id then
-         Result := Result & HTML_Icon (Instance, Unique_Id);
-      end if;
-      Result := Result & From_UTF_8 ("<span>");
-      for Index in 1 .. Name.Length loop
-         if Name (Index) = Shortcut and then not Marked then
-            Result := Result & From_UTF_8 ("<span class=""shortcut"">") & Name (Index) & From_UTF_8 ("</span>");
-            Marked := True;
-         elsif Name (Index) /= Force_Shortcut_Char then
-            Result := Result & Name (Index);
-         end if;
-      end loop;
-      return Result & From_UTF_8 ("</span>");
-   end Complete_Name;
-
-   procedure Hide_Tools_Text (Instance : in out Crud_Type) is
-      Button_Name : UXString := "";
+   procedure Hide_Elements_Text (Instance : in out Crud_Type) is
       Data        : Data_Type;
    begin
       for Index in 1 .. (Instance.Next_Id - 1) loop
          Data := Instance.Menu_Table (Index);
          if Data.Parent_Id = Root_Parent_Id then
-            Button_Name := "Crud_" & From_UTF_8 (Index'Image).Delete (1, 1);
-            Instance.Tools_Roots_Container.Element (Button_Name).Inner_HTML (HTML_Icon (Instance, Index));
+            Instance.Elements_Parent.Element (Button_Name (Index)).Inner_HTML (HTML_Icon (Instance, Index));
          end if;
       end loop;
-   end Hide_Tools_Text;
+   end Hide_Elements_Text;
 
-   procedure Show_Tools_Text (Instance : in out Crud_Type) is
-      Button_Name : UXString := "";
+   procedure Show_Elements_Text (Instance : in out Crud_Type) is
       Data        : Data_Type;
    begin
       for Index in 1 .. (Instance.Next_Id - 1) loop
          Data := Instance.Menu_Table (Index);
          if Data.Parent_Id = Root_Parent_Id then
-            Button_Name := "Crud_" & From_UTF_8 (Index'Image).Delete (1, 1);
-            Instance.Tools_Roots_Container.Element (Button_Name).Inner_HTML (Data.Name);
+            Instance.Elements_Parent.Element (Button_Name (Index)).Inner_HTML (Data.Name);
          end if;
       end loop;
-   end Show_Tools_Text;
+   end Show_Elements_Text;
 
    -----------------------------------------------------------------------------
    --  Shortcuts
    -----------------------------------------------------------------------------
+
    function Is_Shortcut_Available
      (Instance  : in out Crud_Type;
       Parent_Id :        Integer;
@@ -282,66 +295,67 @@ package body Crud is
    -----------------------------------------------------------------------------
    --  API
    -----------------------------------------------------------------------------
+
    procedure Create
      (Instance  : in out Crud_Type;
-      Parent    : in out Gnoga.Gui.View.View_Type;
-      On_Resize :        Gnoga.Gui.Base.Action_Event;
-      On_Click  :        Gnoga.Gui.Base.Action_Event)
+      Parent    : in out View.View_Type;
+      On_Resize :        Base.Action_Event;
+      On_Click  :        Base.Action_Event)
    is
-      Collapse_Button : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
-      Container       : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.View.View_Type;
-      Root_Container  : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.View.View_Type;
+      Extend_Shrink_Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
+      Container            : constant Element.Pointer_To_Element_Class := new View.View_Type;
+      Root_Container       : constant Element.Pointer_To_Element_Class := new View.View_Type;
    begin
-      Gnoga.Gui.Element.Common.Button_Access (Collapse_Button).Create
-        (Parent, "<img class=""tools-icon"" src=""css/icons/left_panel_open.png"">");
-      Collapse_Button.Dynamic;
-      Instance.Expand_Collapse_Button := Gnoga.Gui.Element.Common.Button_Access (Collapse_Button);
-      Instance.Expand_Collapse_Button.Class_Name ("expand-collapse-button");
-      Instance.Expand_Collapse_Button.On_Click_Handler (On_Resize);
+      Common.Button_Access (Extend_Shrink_Button).Create
+        (Parent, "<img class=""crud-icon"" src=""css/icons/left_panel_open.png"">");
+      Extend_Shrink_Button.Dynamic;
+      Instance.Extend_Shrink_Button := Common.Button_Access (Extend_Shrink_Button);
+      Instance.Extend_Shrink_Button.Class_Name ("framework-button");
+      Instance.Extend_Shrink_Button.Add_Class ("crud-extend-shrink-button");
+      Instance.Extend_Shrink_Button.On_Click_Handler (On_Resize);
       Instance.Parent := Parent'Unrestricted_Access;
 
-      Gnoga.Gui.View.View_Access (Container).Create (Instance.Parent.all);
-      Instance.Parent.Add_Element ("tools-container", Container);
-      Container.Class_Name ("tools-container");
+      View.View_Access (Container).Create (Instance.Parent.all);
+      Instance.Parent.Add_Element ("subelements", Container);
+      Container.Class_Name ("crud-sub-elements-parent");
       Container.Dynamic;
       Container.jQuery_Execute ("data('gnoga_is_opened', false)");
       Container.jQuery_Execute ("data('gnoga_root_id', -1)");
-      Instance.Tools_Container := Gnoga.Gui.View.View_Access (Container);
+      Instance.Sub_Elements_Parent := View.View_Access (Container);
 
-      Gnoga.Gui.View.View_Access (Root_Container).Create (Instance.Parent.all);
-      Instance.Parent.Add_Element ("tools-roots-container", Root_Container);
-      Root_Container.Class_Name ("tools-roots-container");
-      Root_Container.Style ("height", "calc(100% - " & Instance.Expand_Collapse_Button.Minimum_Height & " - 8px)");
+      View.View_Access (Root_Container).Create (Instance.Parent.all);
+      Instance.Parent.Add_Element ("elements", Root_Container);
+      Root_Container.Class_Name ("crud-elements-parent");
+      Root_Container.Style ("height", "calc(100% - " & Instance.Extend_Shrink_Button.Minimum_Height & " - 8px)");
       Root_Container.Dynamic;
-      Instance.Tools_Roots_Container := Gnoga.Gui.View.View_Access (Root_Container);
+      Instance.Elements_Parent := View.View_Access (Root_Container);
 
       Instance.On_Click := On_Click;
    end Create;
 
    procedure Load (Instance : in out Crud_Type) is
+      Data : Data_Type;
    begin
       Instance.Is_Opened := False;
       for Data_Id in 1 .. (Instance.Next_Id - 1) loop
+         Data := Instance.Menu_Table (Data_Id);
          declare
-            Button_Name : UXString;
-            Data        : constant Data_Type                                  := Instance.Menu_Table (Data_Id);
-            Button : constant Gnoga.Gui.Element.Pointer_To_Element_Class := new Gnoga.Gui.Element.Common.Button_Type;
+            Button      : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
             Text : constant UXString := (if Instance.Is_Expanded then Data.Name else HTML_Icon (Instance, Data_Id));
          begin
             if Data.Parent_Id = Root_Parent_Id then
-               Button_Name := "Crud_" & From_UTF_8 (Data_Id'Image).Delete (1, 1);
-               Gnoga.Gui.Element.Common.Button_Access (Button).Create
-                 (Instance.Tools_Roots_Container.all, Text);
+               Common.Button_Access (Button).Create (Instance.Elements_Parent.all, Text);
+               Button.Class_Name ("framework-button");
                Button.Dynamic;
 
                if not Data.Clickable then
-                  Button.Class_Name ("unclickable");
+                  Button.Add_Class ("unclickable");
                end if;
 
                Button.Style ("display", "flex");
                Button.Style ("align-items", "center");
-               Button.jQuery_Execute ("data('gnoga_id', " & From_UTF_8 (Data_Id'Image) & " )");
-               Instance.Tools_Roots_Container.Add_Element (Button_Name, Button);
+               Button.jQuery_Execute ("data('gnoga_id', " & To_UXString (Data_Id) & " )");
+               Instance.Elements_Parent.Add_Element (Button_Name (Data_Id), Button);
                Button.On_Click_Handler (Instance.On_Click);
             end if;
          end;
@@ -351,47 +365,51 @@ package body Crud is
    procedure Clear (Instance : in out Crud_Type) is
    begin
       for Index in 1 .. (Instance.Next_Id - 1) loop
-         Remove_Button (Instance.Tools_Container, Index);
-         Remove_Button (Instance.Tools_Roots_Container, Index);
+         Remove_Button (Instance.Sub_Elements_Parent, Index);
+         Remove_Button (Instance.Elements_Parent, Index);
       end loop;
       Instance.Next_Id := 1;
    end Clear;
 
-   function Add_Root
+   function Add_Element
      (Instance : in out Crud_Type;
       Name     :        UXString;
-      Icon_SRC :        UXString := "")
+      Icon_SRC :        UXString)
       return Integer
    is
    begin
       Instance.Menu_Table (Instance.Next_Id).Icon_SRC := Icon_SRC;
-      return Add_Child (Instance, Name, Root_Parent_Id);
-   end Add_Root;
+      return Add_Sub_Element (Instance, Name, Root_Parent_Id);
+   end Add_Element;
 
-   function Add_Child
+   function Add_Sub_Element
      (Instance  : in out Crud_Type;
       Name      :        UXString;
       Parent_Id :        Integer;
-      Handler   :        Gnoga.Gui.Base.Action_Event := null)
+      Handler   :        Base.Action_Event := null)
       return Integer
    is
       Shortcut    : constant Unicode_Character := Find_Shortcut (Instance, Parent_Id, Name);
       Shortcut_Id : constant Integer           := Code (Shortcut);
    begin
-      Instance.Menu_Table (Instance.Next_Id).Parent_Id   := Parent_Id;
-      Instance.Menu_Table (Instance.Next_Id).Name        := Complete_Name (Instance, Instance.Next_Id, Name, Shortcut);
-      Instance.Menu_Table (Instance.Next_Id).Handler     := Handler;
-      Instance.Menu_Table (Instance.Next_Id).Shortcut_Id := Shortcut_Id;
-      Instance.Active_Menu (Instance.Next_Id) := (Parent_Id = Root_Parent_Id);
-      Instance.Active_Shortcuts (Shortcut_Id) := (Parent_Id = Root_Parent_Id);
+      Instance.Menu_Table (Instance.Next_Id).Parent_Id       := Parent_Id;
+      Instance.Menu_Table (Instance.Next_Id).Name := HTML_Complete (Instance, Instance.Next_Id, Name, Shortcut);
+      Instance.Menu_Table (Instance.Next_Id).Handler         := Handler;
+      Instance.Menu_Table (Instance.Next_Id).Shortcut_Id     := Shortcut_Id;
+      Instance.Menu_Table (Instance.Next_Id).Clickable       := True;
+      Instance.Menu_Table (Instance.Next_Id).Delimiter_Above := False;
+      Instance.Active_Menu (Instance.Next_Id)                := (Parent_Id = Root_Parent_Id);
+      Instance.Active_Shortcuts (Shortcut_Id)                := (Parent_Id = Root_Parent_Id);
 
       Instance.Next_Id := Instance.Next_Id + 1;
       return Instance.Next_Id - 1;
-   end Add_Child;
+   end Add_Sub_Element;
 
-   procedure Add_Delimiter_Above (Instance : in out Crud_Type; Unique_Id : Integer) is
+   procedure Add_Delimiter_Above
+     (Instance  : in out Crud_Type;
+      Unique_Id :        Integer)
+   is
    begin
-      --  Figure out what to put in here (div with bg color ?)
       if Instance.Menu_Table (Unique_Id).Parent_Id /= Root_Parent_Id then
          Instance.Menu_Table (Unique_Id).Delimiter_Above := True;
       end if;
@@ -400,73 +418,57 @@ package body Crud is
    -----------------------------------------------------------------------------
    --  Setters
    -----------------------------------------------------------------------------
-   procedure Set_Unclickable (Instance : in out Crud_Type; Unique_Id : Integer) is
-   begin
-      Instance.Menu_Table (Unique_Id).Clickable := False;
-   end Set_Unclickable;
 
-   procedure Set_Clickable (Instance : in out Crud_Type; Unique_Id : Integer) is
-   begin
-      Instance.Menu_Table (Unique_Id).Clickable := True;
-   end Set_Clickable;
-
-   -----------------------------------------------------------------------------
-   --  Getters
-   -----------------------------------------------------------------------------
-   function Menu_Name
+   procedure Set_Unclickable
      (Instance  : in out Crud_Type;
       Unique_Id :        Integer)
-      return UXString
    is
+      Sub_Elm : constant Element.Pointer_To_Element_Class := Instance.Sub_Elements_Parent.Element (Button_Name (Unique_Id));
+      Elm : constant Element.Pointer_To_Element_Class := Instance.Elements_Parent.Element (Button_Name (Unique_Id));
    begin
-      return Instance.Menu_Table (Unique_Id).Name;
-   end Menu_Name;
+      Instance.Menu_Table (Unique_Id).Clickable := False;
+      if Elm /= null then
+         Elm.Add_Class ("unclickable");
+      elsif Sub_Elm /= null then
+         Sub_Elm.Add_Class ("unclickable");
+      end if;
+   end Set_Unclickable;
+
+   procedure Set_Clickable
+     (Instance  : in out Crud_Type;
+      Unique_Id :        Integer)
+   is
+      Sub_Elm : constant Element.Pointer_To_Element_Class := Instance.Sub_Elements_Parent.Element (Button_Name (Unique_Id));
+      Elm : constant Element.Pointer_To_Element_Class := Instance.Elements_Parent.Element (Button_Name (Unique_Id));
+   begin
+      Instance.Menu_Table (Unique_Id).Clickable := True;
+      if Elm /= null then
+         Elm.Remove_Class ("unclickable");
+      elsif Sub_Elm /= null then
+         Sub_Elm.Remove_Class ("unclickable");
+      end if;
+   end Set_Clickable;
 
    -----------------------------------------------------------------------------
    --  Callbacks
    -----------------------------------------------------------------------------
-   procedure On_Key_Pressed
-     (Instance : in out Crud_Type;
-      Key      : in     Character)
-   is
-      Char_Code : constant Integer := Code (Key);
-      Data      : Data_Type;
-   begin
-      if Char_Code >= 1 and then Char_Code <= 26 then
-         Gnoga.Log ("Pressed " & From_ASCII (Key) & " (Code:" & From_UTF_8 (Char_Code'Image) & ")");
-         if Instance.Active_Shortcuts (Char_Code) then
-            Gnoga.Log ("Shortcut is active");
-            for Index in 1 .. (Instance.Next_Id - 1) loop
-               Data := Instance.Menu_Table (Index);
-               if Data.Shortcut_Id = Char_Code and then Instance.Active_Menu (Index) then
-                  if Data.Parent_Id = Root_Parent_Id then
-                     Open_Root (Instance, Index);
-                  elsif Data.Handler /= null then
-                     Data.Handler (Instance.Parent.all);
-                  end if;
-                  Gnoga.Log ("handled");
-               end if;
-            end loop;
-         end if;
-      end if;
-   end On_Key_Pressed;
 
-   procedure Notify_Root_Click
+   procedure Notify_Element_Click
      (Instance : in out Crud_Type;
-      Object   : in out Gnoga.Gui.Base.Base_Type'Class)
+      Object   : in out Base.Base_Type'Class)
    is
       Parent_Id : constant Integer := Value (Object.jQuery_Execute ("data('gnoga_id')"));
    begin
-      Open_Root (Instance, Parent_Id);
-   end Notify_Root_Click;
+      Open_Element (Instance, Parent_Id);
+   end Notify_Element_Click;
 
-   procedure Notify_Click
+   procedure Notify_Sub_Element_Click
      (Instance  : in out Crud_Type;
       Unique_Id :        Integer)
    is
    begin
-      Open_Root (Instance, Instance.Menu_Table (Unique_Id).Parent_Id);
-   end Notify_Click;
+      Open_Element (Instance, Instance.Menu_Table (Unique_Id).Parent_Id);
+   end Notify_Sub_Element_Click;
 
    procedure Notify_Key_Pressed
      (Instance : in out Crud_Type;
@@ -486,13 +488,13 @@ package body Crud is
       end Find_Associated_Data;
 
    begin
-      if Is_Alpha (Key) then
-         if Instance.Active_Shortcuts (Code (Key)) then
-            Index := Find_Associated_Data;
-            if Index /= -1 then
-               Data := Instance.Menu_Table (Index);
+      if Is_Alpha (Key) and then Instance.Active_Shortcuts (Code (Key)) then
+         Index := Find_Associated_Data;
+         if Index /= -1 then
+            Data := Instance.Menu_Table (Index);
+            if Data.Clickable then
                if Data.Parent_Id = Root_Parent_Id then
-                  Open_Root (Instance, Index);
+                  Open_Element (Instance, Index);
                else
                   Data.Handler (Instance.Parent.all);
                end if;
@@ -504,19 +506,16 @@ package body Crud is
    procedure Notify_Resize (Instance : in out Crud_Type) is
    begin
       if Instance.Is_Expanded then
-         Instance.Expand_Collapse_Button.Inner_HTML
-           ("<img class=""tools-icon"" src=""css/icons/left_panel_open.png"">");
-         Instance.Parent.Remove_Class ("force-expand");
-         Instance.Parent.Add_Class ("force-collapse");
-         Instance.Hide_Tools_Text;
+         Instance.Extend_Shrink_Button.Inner_HTML ("<img class=""crud-icon"" src=""css/icons/left_panel_open.png"">");
+         Instance.Parent.Remove_Class ("crud-force-extend");
+         Instance.Hide_Elements_Text;
       else
-         Instance.Expand_Collapse_Button.Inner_HTML
-           ("<img class=""tools-icon"" src=""css/icons/left_panel_close.png""><span>Fermer</span>");
-         Instance.Parent.Remove_Class ("force-collapse");
-         Instance.Parent.Add_Class ("force-expand");
-         Instance.Show_Tools_Text;
+         Instance.Extend_Shrink_Button.Inner_HTML
+           ("<img class=""crud-icon"" src=""css/icons/left_panel_close.png""><span>Fermer</span>");
+         Instance.Parent.Add_Class ("crud-force-extend");
+         Instance.Show_Elements_Text;
       end if;
       Instance.Is_Expanded := not Instance.Is_Expanded;
    end Notify_Resize;
 
-end Crud;
+end CRUD;
