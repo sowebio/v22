@@ -4,13 +4,13 @@ package body Header is
 
    package Element renames Gnoga.Gui.Element;
 
-   Menu_Error : exception;
+   Header_Error : exception;
 
-   Root_Parent_Id : constant Integer := -1;
+   Root_Parent_ID : constant Integer := -1;
    Root_Depth     : constant Integer := 0;
 
    type Data_Type is record
-      Parent_Id : Integer  := Root_Parent_Id;
+      Parent_ID : Integer  := Root_Parent_ID;
       Name      : UXString := "";
       Depth     : Integer  := Root_Depth;
       Is_Leaf   : Boolean  := True;
@@ -19,12 +19,12 @@ package body Header is
       On_Open : Base.Action_Event;
    end record;
 
-   Max_Menu_Count : constant Integer := 50;
+   Max_Menu_Amount : constant Integer := 50;
 
-   type Menu_Table_Type is array (1 .. Max_Menu_Count) of Data_Type;
+   type Menu_Table_Type is array (1 .. Max_Menu_Amount) of Data_Type;
 
    Menu_Table : Menu_Table_Type;
-   Next_Index : Integer := 1;
+   Last_Index : Integer := 0;
 
    -----------------------------------------------------------------------------
    --  Utils
@@ -48,30 +48,30 @@ package body Header is
 
    procedure Remove_Button
      (Instance : in out Header_Type;
-      Data_Id  :        Integer)
+      Data_ID  :        Integer)
    is
    begin
-      if Instance.App_Browse_Parent.Element (Button_Name (Data_Id)) /= null then
-         Instance.App_Browse_Parent.Element (Button_Name (Data_Id)).Remove;
+      if Instance.App_Browse_Parent.Element (Button_Name (Data_ID)) /= null then
+         Instance.App_Browse_Parent.Element (Button_Name (Data_ID)).Remove;
       end if;
    end Remove_Button;
 
    procedure Update
      (Instance  : in out Header_Type;
-      Parent_Id :        Integer)
+      Parent_ID :        Integer)
    is
    begin
-      for Data_Id in Menu_Table'Range loop
-         Instance.Remove_Button (Data_Id);
-         if Menu_Table (Data_Id).Parent_Id = Parent_Id then
+      for Data_ID in Menu_Table'Range loop
+         Instance.Remove_Button (Data_ID);
+         if Menu_Table (Data_ID).Parent_ID = Parent_ID then
             declare
-               Data   : constant Data_Type                                  := Menu_Table (Data_Id);
+               Data   : constant Data_Type                                  := Menu_Table (Data_ID);
                Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
             begin
                Common.Button_Access (Button).Create (Instance.App_Browse_Parent.all, Data.Name);
                Button.Class_Name ("framework-button");
                Button.Dynamic;
-               Instance.App_Browse_Parent.Add_Element (Button_Name (Data_Id), Button);
+               Instance.App_Browse_Parent.Add_Element (Button_Name (Data_ID), Button);
                Button.On_Click_Handler (Data.On_Open);
             end;
          end if;
@@ -98,7 +98,6 @@ package body Header is
       User_Name_Parent   : constant Element.Pointer_To_Element_Class := new Common.P_Type;
       User_Icon          : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
       User_Browse_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
-
    begin
       Instance.Parent := Parent'Unrestricted_Access;
 
@@ -154,35 +153,39 @@ package body Header is
    is
       Root : Data_Type;
    begin
-      if Next_Index /= 1 then
-         raise Menu_Error with "Root must be created before childs";
+      if Last_Index /= 0 then
+         raise Header_Error with "Root must be created before childs";
+      elsif Last_Index = Max_Menu_Amount then
+         raise Header_Error with "Too much menus, increase Max_Menu_Amount";
       end if;
+      Last_Index := Last_Index + 1;
       Root.Name               := Name;
       Root.On_Open            := On_Open;
-      Menu_Table (Next_Index) := Root;
-      Next_Index              := Next_Index + 1;
-      return Next_Index - 1;
+      Menu_Table (Last_Index) := Root;
+      return Last_Index;
    end Set_Root;
 
    function Add_Child
-     (Parent_Id : Integer;
+     (Parent_ID : Integer;
       Name      : UXString;
       On_Open   : Base.Action_Event)
       return Integer
    is
       Child : Data_Type;
    begin
-      if Next_Index = Max_Menu_Count then
-         raise Menu_Error with "Too much menus, increase Max_Menu_Count";
+      if Last_Index = 0 then
+         raise Header_Error with "Root must be created before childs";
+      elsif Last_Index = Max_Menu_Amount then
+         raise Header_Error with "Too much menus, increase Max_Menu_Amount";
       end if;
-      Menu_Table (Parent_Id).Is_Leaf := False;
-      Child.Parent_Id                := Parent_Id;
+      Last_Index := Last_Index + 1;
+      Menu_Table (Parent_ID).Is_Leaf := False;
+      Child.Parent_ID                := Parent_ID;
       Child.Name                     := Name;
-      Child.Depth                    := Menu_Table (Parent_Id).Depth + 1;
+      Child.Depth                    := Menu_Table (Parent_ID).Depth + 1;
       Child.On_Open                  := On_Open;
-      Menu_Table (Next_Index)        := Child;
-      Next_Index                     := Next_Index + 1;
-      return Next_Index - 1;
+      Menu_Table (Last_Index)        := Child;
+      return Last_Index;
    end Add_Child;
 
    -----------------------------------------------------------------------------
@@ -191,10 +194,10 @@ package body Header is
 
    procedure Open_Menu
      (Instance  : in out Header_Type;
-      Unique_Id :        Integer)
+      Unique_ID :        Integer)
    is
    begin
-      Instance.Set_Menu (Unique_Id);
+      Instance.Set_Menu (Unique_ID);
       Instance.App_Browse_Parent.Display ("block");
       Instance.App_Icon.Add_Class ("header-icon-active");
       Instance.App_Is_Open := True;
@@ -243,10 +246,10 @@ package body Header is
 
    procedure Set_Menu
      (Instance  : in out Header_Type;
-      Unique_Id :        Integer)
+      Unique_ID :        Integer)
    is
    begin
-      Menu_Table (Unique_Id).On_Open (Instance.Parent.all);
+      Menu_Table (Unique_ID).On_Open (Instance.Parent.all);
    end Set_Menu;
 
    procedure Set_User_Name
@@ -279,23 +282,17 @@ package body Header is
 
    procedure Notify_Menu_Click
      (Instance  : in out Header_Type;
-      Unique_Id :        Integer)
+      Unique_ID :        Integer)
    is
-      Data : constant Data_Type := Menu_Table (Unique_Id);
+      Data : constant Data_Type := Menu_Table (Unique_ID);
    begin
-      Gnoga.Log ("Clicked on " & Data.Name);
       Instance.Breadcrumb_Content.Update (Data.On_Open, Data.Name, Data.Depth);
       if Data.Is_Leaf then
          Instance.Close_Menu;
       else
-         Instance.Update (Unique_Id);
+         Instance.Update (Unique_ID);
       end if;
    end Notify_Menu_Click;
-
-   procedure Notify_User_Menu_Click (Instance : in out Header_Type) is
-   begin
-      Instance.Close_User_Menu;
-   end Notify_User_Menu_Click;
 
    -----------------------------------------------------------------------------
    --  User menu

@@ -70,8 +70,8 @@ package body User_Menu is
 
    procedure Dialog_Confirm_Handler (Object : in out Base.Base_Type'Class) is
       Parent    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
-      Unique_Id : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
-      Data      : constant Data_Type            := Menu_Table (Unique_Id);
+      Unique_ID : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
+      Data      : constant Data_Type            := Menu_Table (Unique_ID);
    begin
       Parent.Close;
       Data.Confirm_Handler (Object);
@@ -79,21 +79,21 @@ package body User_Menu is
 
    procedure Dialog_Cancel_Handler (Object : in out Base.Base_Type'Class) is
       Parent    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
-      Unique_Id : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
-      Data      : constant Data_Type            := Menu_Table (Unique_Id);
+      Unique_ID : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
+      Data      : constant Data_Type            := Menu_Table (Unique_ID);
    begin
       Parent.Close;
       Data.Cancel_Handler (Object);
    end Dialog_Cancel_Handler;
 
    procedure Click_Handler (Object : in out Base.Base_Type'Class) is
-      Button_Id : constant Integer   := Value (Object.jQuery_Execute ("data('gnoga_id')"));
-      Data      : constant Data_Type := Menu_Table (Button_Id);
+      Button_ID : constant Integer   := Value (Object.jQuery_Execute ("data('gnoga_id')"));
+      Data      : constant Data_Type := Menu_Table (Button_ID);
    begin
       if Data.Action = Dialog then
-         Launch_Dialog (Object, Button_Id);
+         Launch_Dialog (Object, Button_ID);
       elsif Data.Action = Web then
-         Launch_Web (Object, Button_Id);
+         Launch_Web (Object, Button_ID);
       end if;
    end Click_Handler;
 
@@ -103,45 +103,46 @@ package body User_Menu is
 
    procedure Launch_Dialog
      (Object    : in out Base.Base_Type'Class;
-      Unique_Id :        Integer)
+      Unique_ID :        Integer)
    is
-      Data         : constant Data_Type                      := Menu_Table (Unique_Id);
+      Data         : constant Data_Type                      := Menu_Table (Unique_ID);
       Dialog_Class : constant Widget.Pointer_To_Dialog_Class := new Widget.Dialog_Type;
       Dialog       : constant Widget.Dialog_Access           := Widget.Dialog_Access (Dialog_Class);
    begin
       Dialog.Create (Object, Replace_All (Data.Title, ''', "\'"), Data.Content, Width => 400, Height => 300);
-      Dialog.jQuery_Execute ("data('gnoga_id', " & To_UXString (Unique_Id) & " )");
+      Dialog.jQuery_Execute ("data('gnoga_id', " & To_UXString (Unique_ID) & " )");
 
       if Data.Cancel_Handler /= null then
-         Common.Button_Access (Dialog.New_Element ("cancel", new Common.Button_Type)).Create
-           (Dialog.all, Data.Cancel_Text);
-         Common.Button_Access (Dialog.Element ("cancel")).On_Click_Handler (Dialog_Cancel_Handler'Unrestricted_Access);
-         Common.Button_Access (Dialog.Element ("cancel")).Class_Name ("ui-button ui-corner-all");
-         jQueryUI.Position
-           (Dialog.Element ("cancel").all, Target => Dialog.all, Using_My => "bottom",
-            At_Target                             => "left+70 bottom-10");
+         declare
+            Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
+         begin
+            Common.Button_Access (Button).Create (Dialog.all, Data.Cancel_Text);
+            Button.On_Click_Handler (Dialog_Cancel_Handler'Unrestricted_Access);
+            Button.Class_Name ("ui-button ui-corner-all");
+            jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
+         end;
       end if;
 
       if Data.Confirm_Handler /= null then
-         Common.Button_Access (Dialog.New_Element ("confirm", new Common.Button_Type)).Create
-           (Dialog.all, Data.Confirm_Text);
-         Common.Button_Access (Dialog.Element ("confirm")).Focus;
-         Common.Button_Access (Dialog.Element ("confirm")).On_Click_Handler
-           (Dialog_Confirm_Handler'Unrestricted_Access);
-         Common.Button_Access (Dialog.Element ("confirm")).Class_Name ("ui-button ui-corner-all");
-         jQueryUI.Position
-           (Dialog.Element ("confirm").all, Target => Dialog.all, Using_My => "bottom",
-            At_Target                              => "right-70 bottom-10");
+         declare
+            Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
+         begin
+            Common.Button_Access (Button).Create (Dialog.all, Data.Confirm_Text);
+            Button.Focus;
+            Button.On_Click_Handler (Dialog_Confirm_Handler'Unrestricted_Access);
+            Button.Class_Name ("ui-button ui-corner-all");
+            jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "right-70 bottom-10");
+         end;
       end if;
 
    end Launch_Dialog;
 
    procedure Launch_Web
-     (Object : in out Base.Base_Type'Class;
-      Unique_Id   :        Integer)
+     (Object    : in out Base.Base_Type'Class;
+      Unique_ID :        Integer)
    is
    begin
-      Object.jQuery_Execute ("gnoga_web = open('" & Menu_Table (Unique_Id).Content & "', '_blank')");
+      Object.jQuery_Execute ("gnoga_web = open('" & Menu_Table (Unique_ID).Content & "', '_blank')");
    end Launch_Web;
 
    -----------------------------------------------------------------------------

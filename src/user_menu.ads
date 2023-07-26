@@ -30,10 +30,10 @@ private
 
    procedure Launch_Dialog
      (Object    : in out Base.Base_Type'Class;
-      Unique_Id :        Integer);
+      Unique_ID :        Integer);
 
    procedure Launch_Web
      (Object : in out Base.Base_Type'Class;
-      Unique_Id   :        Integer);
+      Unique_ID   :        Integer);
 
 end User_Menu;
