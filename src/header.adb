@@ -318,4 +318,10 @@ package body Header is
       User_Menu.Add_Web (Title, URL);
    end Add_Web;
 
+   procedure Add_Button (Title : UXString; On_Click : Base.Action_Event)
+   is
+   begin
+      User_Menu.Add_Button (Title, On_Click);
+   end Add_Button;
+
 end Header;

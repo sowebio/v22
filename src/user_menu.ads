@@ -10,6 +10,11 @@ package User_Menu is
    procedure Create (Parent : in out View.View_Type);
    --  Should be called every time a user connects
 
+   procedure Add_Button
+     (Title : UXString;
+      on_Click : Base.Action_Event);
+   --  Function to create a button with customized click handler
+
    procedure Add_Dialog
      (Title           : UXString;
       Content         : UXString          := "";
@@ -27,6 +32,10 @@ package User_Menu is
    --  Function to create a button on the user menu, which opens a new web page
 
 private
+
+   procedure Launch_Button
+     (Object    : in out Base.Base_Type'Class;
+      Unique_ID :        Integer);
 
    procedure Launch_Dialog
      (Object    : in out Base.Base_Type'Class;

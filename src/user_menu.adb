@@ -12,7 +12,7 @@ package body User_Menu is
    package Widget renames Gnoga.Gui.Plugin.jQueryUI.Widget;
    package Element renames Gnoga.Gui.Element;
 
-   type Action_Type is (Dialog, Web);
+   type Action_Type is (Click, Dialog, Web);
 
    type Data_Type is record
       Button : Common.Button_Access;
@@ -20,6 +20,8 @@ package body User_Menu is
 
       Title   : UXString := "";
       Content : UXString := "";
+
+      Click_Handler : Base.Action_Event;
 
       Confirm_Text    : UXString := "";
       Confirm_Handler : Base.Action_Event;
@@ -30,7 +32,7 @@ package body User_Menu is
 
    Max_Menu_Amount : constant Integer := 50;
    Menu_Table      : array (1 .. Max_Menu_Amount) of Data_Type;
-   Next_Index      : Integer          := 1;
+   Last_Index      : Integer          := 0;
 
    -----------------------------------------------------------------------------
    --  Utils
@@ -90,7 +92,9 @@ package body User_Menu is
       Button_ID : constant Integer   := Value (Object.jQuery_Execute ("data('gnoga_id')"));
       Data      : constant Data_Type := Menu_Table (Button_ID);
    begin
-      if Data.Action = Dialog then
+      if Data.Action = Click then
+         Launch_Button (Object, Button_ID);
+      elsif Data.Action = Dialog then
          Launch_Dialog (Object, Button_ID);
       elsif Data.Action = Web then
          Launch_Web (Object, Button_ID);
@@ -100,6 +104,15 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    --  Launchers
    -----------------------------------------------------------------------------
+
+   procedure Launch_Button
+     (Object    : in out Base.Base_Type'Class;
+      Unique_ID :        Integer)
+   is
+      Data : constant Data_Type := Menu_Table (Unique_ID);
+   begin
+      Data.Click_Handler (Object);
+   end Launch_Button;
 
    procedure Launch_Dialog
      (Object    : in out Base.Base_Type'Class;
@@ -119,7 +132,8 @@ package body User_Menu is
             Common.Button_Access (Button).Create (Dialog.all, Data.Cancel_Text);
             Button.On_Click_Handler (Dialog_Cancel_Handler'Unrestricted_Access);
             Button.Class_Name ("ui-button ui-corner-all");
-            jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
+            jQueryUI.Position
+              (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
          end;
       end if;
 
@@ -131,7 +145,8 @@ package body User_Menu is
             Button.Focus;
             Button.On_Click_Handler (Dialog_Confirm_Handler'Unrestricted_Access);
             Button.Class_Name ("ui-button ui-corner-all");
-            jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "right-70 bottom-10");
+            jQueryUI.Position
+              (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "right-70 bottom-10");
          end;
       end if;
 
@@ -151,7 +166,7 @@ package body User_Menu is
 
    procedure Create (Parent : in out View.View_Type) is
    begin
-      for Index in 1 .. (Next_Index - 1) loop
+      for Index in 1 .. Last_Index loop
          declare
             Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
          begin
@@ -164,6 +179,21 @@ package body User_Menu is
       end loop;
    end Create;
 
+   procedure Add_Button
+     (Title    : UXString;
+      On_Click : Base.Action_Event)
+   is
+      Menu : Data_Type;
+   begin
+      Last_Index := Last_Index + 1;
+
+      Menu.Action        := Click;
+      Menu.Title         := Title;
+      Menu.Click_Handler := On_Click;
+
+      Menu_Table (Last_Index) := Menu;
+   end Add_Button;
+
    procedure Add_Dialog
      (Title           : UXString;
       Content         : UXString          := "";
@@ -174,6 +204,8 @@ package body User_Menu is
    is
       Menu : Data_Type;
    begin
+      Last_Index := Last_Index + 1;
+
       Menu.Action          := Dialog;
       Menu.Title           := Title;
       Menu.Content         := Content;
@@ -182,8 +214,7 @@ package body User_Menu is
       Menu.Confirm_Handler := Confirm_Handler;
       Menu.Cancel_Handler  := Cancel_Handler;
 
-      Menu_Table (Next_Index) := Menu;
-      Next_Index              := Next_Index + 1;
+      Menu_Table (Last_Index) := Menu;
    end Add_Dialog;
 
    procedure Add_Web
@@ -192,12 +223,13 @@ package body User_Menu is
    is
       Menu : Data_Type;
    begin
+      Last_Index := Last_Index + 1;
+
       Menu.Action  := Web;
       Menu.Title   := Title;
       Menu.Content := URL;
 
-      Menu_Table (Next_Index) := Menu;
-      Next_Index              := Next_Index + 1;
+      Menu_Table (Last_Index) := Menu;
    end Add_Web;
 
 end User_Menu;
