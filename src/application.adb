@@ -43,6 +43,8 @@ procedure Application is
    begin
       Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
       Gnoga.Log ("Supprimer");
+
+      Framework.Set_App_Title ("Clicked on delete");
    end On_CRUD_File_Delete;
 
    procedure On_CRUD_File_Export (Object : in out Base.Base_Type'Class) is
@@ -464,8 +466,8 @@ procedure Application is
       Framework.Content_Set_Title (Object, App_Name);
       Framework.Content_Set_Text (Object, Lorem_Ipsum);
 
-      Element.Common.Button_Access (Exit_Button).Create (Framework.Get_Content_Text (Object).all);
-      Framework.Get_Content_Text (Object).all.Add_Element ("Exit button", Exit_Button);
+      Element.Common.Button_Access (Exit_Button).Create (Framework.Content_Parent (Object).all);
+      Framework.Content_Parent (Object).all.Add_Element ("Exit button", Exit_Button);
       Exit_Button.Text ("Stopper exécution");
       Exit_Button.Style ("width", "140px");
       Exit_Button.On_Click_Handler (On_Exit'Unrestricted_Access);
@@ -490,8 +492,6 @@ procedure Application is
 
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
-      Framework.Set_App_Icon (Object, "/css/icons/home.png");
-      Framework.Set_User_Icon (Object, "/css/icons/user.png");
       Framework.Set_User_Name (Object, "User Name");
 
       Framework.Footer_Set_State_Text (Object, "Message de statut");
@@ -500,6 +500,8 @@ procedure Application is
 
 begin
    Framework.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
+   Framework.Set_Browse_Icon ("/css/icons/widget.png");
+   Framework.Set_User_Icon ("/css/icons/user.png");
 
    Framework.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
 

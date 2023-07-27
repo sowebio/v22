@@ -12,23 +12,29 @@ package Framework is
       Title                 : UXString;
       Server_Closed_Content : UXString);
 
-   procedure Set_App_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString);
+   procedure Set_App_Title (Title : UXString);
+   --  Uses Gnoga.Application.Title. As described in gnoga-application.ads, it
+   --  only defines the title for upcoming connections
 
-   procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString);
+   procedure Set_App_Icon (Icon_SRC : UXString);
+   --  Should theorically work but GNOGA refuses to update the icon
+
+   procedure Set_Browse_Icon (Icon_SRC : UXString);
+   --  Set the icon which displays (on click) the menu
+
+   procedure Set_User_Icon (Icon_SRC : UXString);
+   --  Set the user icon which (on click) displays the user menu
 
    procedure Set_User_Name
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString);
+      --  Set user name, displayed next to the user icon
 
       -----------------------------------------------------------------------------
       --  Getters
       -----------------------------------------------------------------------------
 
-   function Get_Content_Text
+   function Content_Parent
      (Object : in out Base.Base_Type'Class)
       return View.View_Access;
 

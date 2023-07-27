@@ -23,6 +23,9 @@ package body Framework is
 
    Header_Dict : Dictionary.Map;
 
+   Browse_Icon_SRC : UXString := "";
+   User_Icon_SRC   : UXString := "";
+
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
       Window    : Gnoga.Gui.Window.Pointer_To_Window_Class;
       Container : View.View_Type;
@@ -179,6 +182,8 @@ package body Framework is
 
       --  Header
       App.Header_Content.Create (App.Header_Parent, On_Logo'Unrestricted_Access, On_User'Unrestricted_Access);
+      App.Header_Content.Set_App_Icon (Browse_Icon_SRC);
+      App.Header_Content.Set_User_Icon (User_Icon_SRC);
 
       --  Footer
       App.Footer_Content.Create (App.Footer_Parent);
@@ -205,22 +210,24 @@ package body Framework is
       On_Custom_Connect := On_User_Connect;
    end Setup;
 
-   procedure Set_App_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString)
-   is
-      App : constant App_Access := App_Access (Object.Connection_Data);
+   procedure Set_App_Title (Title : UXString) is
    begin
-      App.Header_Content.Set_App_Icon (Icon_SRC);
+      Gnoga.Application.Title (Title);
+   end Set_App_Title;
+
+   procedure Set_App_Icon (Icon_SRC : UXString) is
+   begin
+      Gnoga.Application.Favicon (Icon_SRC);
    end Set_App_Icon;
 
-   procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString)
-   is
-      App : constant App_Access := App_Access (Object.Connection_Data);
+   procedure Set_Browse_Icon (Icon_SRC : UXString) is
    begin
-      App.Header_Content.Set_User_Icon (Icon_SRC);
+      Browse_Icon_SRC := Icon_SRC;
+   end Set_Browse_Icon;
+
+   procedure Set_User_Icon (Icon_SRC : UXString) is
+   begin
+      User_Icon_SRC := Icon_SRC;
    end Set_User_Icon;
 
    procedure Set_User_Name
@@ -232,14 +239,14 @@ package body Framework is
       App.Header_Content.Set_User_Name (Name);
    end Set_User_Name;
 
-   function Get_Content_Text
+   function Content_Parent
      (Object : in out Base.Base_Type'Class)
       return View.View_Access
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       return App.Content_Text'Access;
-   end Get_Content_Text;
+   end Content_Parent;
 
    -----------------------------------------------------------------------------
    --  Header
