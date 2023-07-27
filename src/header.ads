@@ -107,6 +107,9 @@ package Header is
    procedure Add_Web (Title : UXString; URL : UXString);
    --  Function to create a button on the user menu, which opens a new web page
 
+   procedure Add_Button (Title : UXString; On_Click : Base.Action_Event);
+   --  Function to create a button with customized click handler
+
 private
 
 end Header;
