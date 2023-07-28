@@ -472,6 +472,16 @@ package body CRUD is
       end if;
    end Set_Clickable;
 
+   procedure Enable_Shortcuts (Instance : in out CRUD_Type) is
+   begin
+      Instance.Are_Shortcuts_Enabled := True;
+   end Enable_Shortcuts;
+
+   procedure Disable_Shortcuts (Instance : in out CRUD_Type) is
+   begin
+      Instance.Are_Shortcuts_Enabled := False;
+   end Disable_Shortcuts;
+
    -----------------------------------------------------------------------------
    --  Callbacks
    -----------------------------------------------------------------------------
@@ -511,15 +521,17 @@ package body CRUD is
       end Find_Associated_Data;
 
    begin
-      if Is_Letter (Key) and then Instance.Active_Shortcuts (Code (Key)) then
-         Index := Find_Associated_Data;
-         if Index /= -1 then
-            Data := Instance.Menu_Table (Index);
-            if Data.Clickable then
-               if Data.Parent_ID = Root_Parent_ID then
-                  Open_Element (Instance, Index);
-               else
-                  Data.Handler (Instance.Parent.all);
+      if Instance.Are_Shortcuts_Enabled then
+         if Is_Letter (Key) and then Instance.Active_Shortcuts (Code (Key)) then
+            Index := Find_Associated_Data;
+            if Index /= -1 then
+               Data := Instance.Menu_Table (Index);
+               if Data.Clickable then
+                  if Data.Parent_ID = Root_Parent_ID then
+                     Open_Element (Instance, Index);
+                  else
+                     Data.Handler (Instance.Parent.all);
+                  end if;
                end if;
             end if;
          end if;
