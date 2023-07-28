@@ -2,14 +2,19 @@ with Gnoga.Gui.Base;
 with Gnoga.Gui.Plugin;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
+with Gnoga.Gui.Element.Form;
+with Gnoga.Gui.View;
 with Gnoga.Application.Multi_Connect;
 with UXStrings; use UXStrings;
 
 with Framework;
 
 procedure Application is
+
    package Base renames Gnoga.Gui.Base;
    package Element renames Gnoga.Gui.Element;
+   package Form renames Gnoga.Gui.Element.Form;
+   package View renames Gnoga.Gui.View;
 
    use all type Gnoga.String;
 
@@ -176,6 +181,97 @@ procedure Application is
    end On_CRUD_Security_Bug;
 
    -----------------------------------------------------------------------------
+   --  Extended CRUD with different behaviour
+   -----------------------------------------------------------------------------
+
+   procedure On_CRUD_New_File_Create (Object : in out Base.Base_Type'Class) is
+      Parent : constant View.View_Access := Framework.Content_Parent (Object);
+      Form_Parent : constant Form.Form_Access := new Form.Form_Type;
+      Edit_Text : constant Element.Pointer_To_Element_Class := new Form.Text_Type;
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
+      Framework.Content_Set_Title (Object, "Statistiques - Fichier");
+      Framework.Content_Clear_Text (Object);
+
+      Form_Parent.Create (Parent.all);
+
+      Form.Text_Access (Edit_Text).Create (Form_Parent.all);
+      Form.Text_Access (Edit_Text).Place_Holder ("Write something here");
+      Form.Text_Access (Edit_Text).Value ("Already written");
+      Edit_Text.On_Focus_In_Handler (Framework.CRUD_Disable_Shortcuts'Unrestricted_Access);
+      Edit_Text.On_Focus_Out_Handler (Framework.CRUD_Enable_Shortcuts'Unrestricted_Access);
+      Parent.Add_Element ("Edit_Text", Edit_Text);
+
+      Framework.CRUD_Set_Unclickable (Object, "File_Create");
+      Framework.CRUD_Set_Clickable (Object, "File_Edit");
+      Framework.CRUD_Set_Clickable (Object, "File_Delete");
+      Framework.CRUD_Set_Clickable (Object, "File_Print");
+   end On_CRUD_New_File_Create;
+
+   procedure On_CRUD_New_File_Edit (Object : in out Base.Base_Type'Class) is
+      Parent : constant View.View_Access := Framework.Content_Parent (Object);
+      Edit_Text : constant Form.Text_Access := Form.Text_Access (Parent.Element ("Edit_Text"));
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
+
+      Edit_Text.Value (Edit_Text.Value & "+");
+   end On_CRUD_New_File_Edit;
+
+   procedure On_CRUD_New_File_Delete (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
+
+      Framework.Content_Set_Title (Object, "Statistiques");
+      Framework.Content_Set_Text (Object, Lorem_Ipsum);
+
+      Framework.CRUD_Set_Clickable (Object, "File_Create");
+      Framework.CRUD_Set_Unclickable (Object, "File_Edit");
+      Framework.CRUD_Set_Unclickable (Object, "File_Delete");
+      Framework.CRUD_Set_Unclickable (Object, "File_Print");
+   end On_CRUD_New_File_Delete;
+
+   procedure On_CRUD_New_File_Export (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Export");
+   end On_CRUD_New_File_Export;
+
+   procedure On_CRUD_New_File_Import (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Import");
+   end On_CRUD_New_File_Import;
+
+   procedure On_CRUD_New_File_Print (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Print");
+      Framework.Print (Object);
+   end On_CRUD_New_File_Print;
+
+   procedure On_CRUD_New_Edit_Copy (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "Edit_Copy");
+   end On_CRUD_New_Edit_Copy;
+
+   procedure On_CRUD_New_Edit_Paste (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "Edit_Paste");
+   end On_CRUD_New_Edit_Paste;
+
+   procedure On_CRUD_New_Show_Previous (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "Show_Previous");
+   end On_CRUD_New_Show_Previous;
+
+   procedure On_CRUD_New_Show_Next (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "Show_Next");
+   end On_CRUD_New_Show_Next;
+
+   procedure On_CRUD_New_Show_Search (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.CRUD_Notify_Sub_Element_Click (Object, "Show_Search");
+   end On_CRUD_New_Show_Search;
+
+   -----------------------------------------------------------------------------
    --  Browser Handlers
    -----------------------------------------------------------------------------
 
@@ -191,12 +287,34 @@ procedure Application is
    begin
       Framework.Header_Notify_Menu_Click (Object, "Contract_Stats");
 
-      Load_Default_CRUD_Roots (Object);
-      Load_Default_CRUD_Childs (Object);
-      Framework.CRUD_Load (Object);
-
       Framework.Content_Set_Title (Object, "Statistiques");
       Framework.Content_Set_Text (Object, Lorem_Ipsum);
+      Framework.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
+      Framework.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
+      Framework.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
+
+      Framework.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
+      Framework.CRUD_Set_Unclickable (Object, "File_Edit");
+      Framework.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_New_File_Delete'Unrestricted_Access);
+      Framework.CRUD_Set_Unclickable (Object, "File_Delete");
+      Framework.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
+      Framework.CRUD_Add_Delimiter_Above (Object, "File_Export");
+      Framework.CRUD_Set_Unclickable (Object, "File_Export");
+      Framework.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
+      Framework.CRUD_Set_Unclickable (Object, "File_Import");
+      Framework.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
+      Framework.CRUD_Add_Delimiter_Above (Object, "File_Print");
+      Framework.CRUD_Set_Unclickable (Object, "File_Print");
+
+      Framework.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_New_Edit_Copy'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
+
+      Framework.CRUD_Add_Sub_Element (Object, "Show_Previous", "Précédent", "Show", On_CRUD_New_Show_Previous'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_New_Show_Search'Unrestricted_Access);
+
+      Framework.CRUD_Load (Object);
    end On_Contract_Stats;
 
    procedure On_Contract_Management (Object : in out Base.Base_Type'Class) is
@@ -471,7 +589,6 @@ procedure Application is
       Exit_Button.Text ("Stopper exécution");
       Exit_Button.Style ("width", "140px");
       Exit_Button.On_Click_Handler (On_Exit'Unrestricted_Access);
-
    end On_App_Menu;
 
    procedure On_Confirm (Object : in out Base.Base_Type'Class) is
@@ -492,7 +609,7 @@ procedure Application is
 
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
-      Framework.Set_User_Name (Object, "User Name");
+      Framework.Set_User_Name (Object, "Nom d'utilisateur");
 
       Framework.Footer_Set_State_Text (Object, "Message de statut");
       Framework.Footer_Set_Permanent_Text (Object, "Informations permanentes");

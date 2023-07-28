@@ -67,6 +67,10 @@ package CRUD is
    --  Set an element or sub-element clickable again, working before and after
    --  load, assuming CRUD was built with Add_Element and Add_Sub_Element
 
+   procedure Enable_Shortcuts (Instance : in out CRUD_Type);
+
+   procedure Disable_Shortcuts (Instance : in out CRUD_Type);
+
    -----------------------------------------------------------------------------
    --  Callbacks
    -----------------------------------------------------------------------------
@@ -122,6 +126,7 @@ private
 
       Current_Root : Integer := Root_Parent_ID;
       Is_Opened    : Boolean := False;
+      Are_Shortcuts_Enabled : Boolean := True;
 
       On_Click : Base.Action_Event;
 

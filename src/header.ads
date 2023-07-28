@@ -19,7 +19,7 @@ package Header is
       User_Is_Open : Boolean := False;
 
       App_Parent        : View.View_Access;
-      App_Icon          : Common.IMG_Access;
+      App_Icon          : aliased Common.IMG_Access;
       App_Browse_Parent : View.View_Access;
 
       Breadcrumb_Parent  : View.View_Access;

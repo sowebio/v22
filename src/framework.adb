@@ -50,6 +50,12 @@ package body Framework is
    end record;
    type App_Access is access all App_Data;
 
+   procedure Print (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Window.Print;
+   end Print;
+
    procedure CRUD_Set
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
@@ -192,7 +198,7 @@ package body Framework is
       App.CRUD_Instance.Create
         (App.CRUD_Parent, On_Tool_Bar_Expand'Unrestricted_Access, On_CRUD_Callback'Unrestricted_Access);
 
-      App.Header_Content.Set_Menu (ID_Main); --  Needs to be called when everything is setup
+      App.Header_Content.Set_Menu (ID_Main); --  Needs to be called when everything is created
 
       On_Custom_Connect (App.Container);
    end On_Connect;
@@ -247,6 +253,12 @@ package body Framework is
    begin
       return App.Content_Text'Access;
    end Content_Parent;
+
+   procedure Clear_Content (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Content_Text.Inner_HTML ("");
+   end Clear_Content;
 
    -----------------------------------------------------------------------------
    --  Header
@@ -376,6 +388,15 @@ package body Framework is
       App.CRUD_Instance.Set_Unclickable (CRUD_Get (Object, Key));
    end CRUD_Set_Unclickable;
 
+   procedure CRUD_Set_Clickable
+     (Object : in out Base.Base_Type'Class;
+      Key    :        UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Set_Clickable (CRUD_Get (Object, Key));
+   end CRUD_Set_Clickable;
+
    procedure CRUD_Notify_Sub_Element_Click
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
@@ -384,6 +405,18 @@ package body Framework is
    begin
       App.CRUD_Instance.Notify_Sub_Element_Click (CRUD_Get (Object, Key));
    end CRUD_Notify_Sub_Element_Click;
+
+   procedure CRUD_Enable_Shortcuts (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      CRUD.Enable_Shortcuts (App.CRUD_Instance);
+   end CRUD_Enable_Shortcuts;
+
+   procedure CRUD_Disable_Shortcuts (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      CRUD.Disable_Shortcuts (App.CRUD_Instance);
+   end CRUD_Disable_Shortcuts;
 
    -----------------------------------------------------------------------------
    --  Content
@@ -398,6 +431,11 @@ package body Framework is
       App.Content_Header.Text (Title);
    end Content_Set_Title;
 
+   procedure Content_Clear_Title (Object : in out Base.Base_Type'Class) is
+   begin
+      Content_Set_Title (Object, "");
+   end Content_Clear_Title;
+
    procedure Content_Set_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString)
@@ -406,6 +444,11 @@ package body Framework is
    begin
       App.Content_Text.Text (Text);
    end Content_Set_Text;
+
+   procedure Content_Clear_Text (Object : in out Base.Base_Type'Class) is
+   begin
+      Content_Set_Text (Object, "");
+   end Content_Clear_Text;
 
    -----------------------------------------------------------------------------
    --  Footer
