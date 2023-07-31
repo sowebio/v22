@@ -1,10 +1,12 @@
 /* Container styling */
 .crud {
+    z-index: 1;
     width: 42px;
+    min-width: 42px;
     height: calc(100% - 80px);
     float: left;
     background-color: #3d3e4d;
-    position: fixed;
+    position: relative;
     top: 40px;
 }
 
@@ -16,6 +18,7 @@
 
 .crud-force-extend {
     width: 140px !important;
+    min-width: 140px !important;
 }
 
 .crud-extend-shrink-button {

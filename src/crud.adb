@@ -388,6 +388,7 @@ package body CRUD is
          Remove_Button (Instance.Elements_Parent, Index);
       end loop;
       Instance.Last_ID := 0;
+      Instance.Is_Opened := False;
    end Clear;
 
    function Add_Element
@@ -546,7 +547,7 @@ package body CRUD is
          Instance.Hide_Elements_Text;
       else
          Instance.Extend_Shrink_Button.Inner_HTML
-           ("<img class=""crud-icon"" src=""css/icons/left_panel_close.png""><span>Fermer</span>");
+           ("<img class=""crud-icon"" src=""css/icons/left_panel_close.png""><span>Réduire</span>");
          Instance.Parent.Add_Class ("crud-force-extend");
          Instance.Show_Elements_Text;
       end if;

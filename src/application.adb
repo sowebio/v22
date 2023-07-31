@@ -18,11 +18,11 @@ procedure Application is
 
    use all type Gnoga.String;
 
-   App_Name : constant UXString := "GNOGA Framework";
+   App_Name : constant UXString := "Framework GNOGA";
 
    Lorem_Ipsum : constant UXString :=
      80 *
-     "Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum.";
+     "Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum. ";
 
    -----------------------------------------------------------------------------
    --  CRUD Handlers
@@ -48,8 +48,6 @@ procedure Application is
    begin
       Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
       Gnoga.Log ("Supprimer");
-
-      Framework.Set_App_Title ("Clicked on delete");
    end On_CRUD_File_Delete;
 
    procedure On_CRUD_File_Export (Object : in out Base.Base_Type'Class) is
@@ -610,6 +608,7 @@ procedure Application is
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
       Framework.Set_User_Name (Object, "Nom d'utilisateur");
+      Framework.Set_User_Icon (Object, "/css/icons/user.png");
 
       Framework.Footer_Set_State_Text (Object, "Message de statut");
       Framework.Footer_Set_Permanent_Text (Object, "Informations permanentes");
@@ -618,22 +617,18 @@ procedure Application is
 begin
    Framework.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
    Framework.Set_Browse_Icon ("/css/icons/widget.png");
-   Framework.Set_User_Icon ("/css/icons/user.png");
+   Framework.Set_Default_User_Icon ("/css/icons/user.png");
 
    Framework.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Contract", "Contrats", "App_Menu", On_Contract'Unrestricted_Access);
-   Framework.Header_Add_Child
-     ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
+   Framework.Header_Add_Child ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
    Framework.Header_Add_Child ("Contract_Stats", "Statistiques", "Contract", On_Contract_Stats'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Administration", "Administration", "App_Menu", On_Administration'Unrestricted_Access);
-   Framework.Header_Add_Child
-     ("Administration_Users", "Utilisateurs", "Administration", On_Administration_Users'Unrestricted_Access);
-   Framework.Header_Add_Child
-     ("Administration_Emails", "Emails", "Administration", On_Administration_Emails'Unrestricted_Access);
-   Framework.Header_Add_Child
-     ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
+   Framework.Header_Add_Child ("Administration_Users", "Utilisateurs", "Administration", On_Administration_Users'Unrestricted_Access);
+   Framework.Header_Add_Child ("Administration_Emails", "Emails", "Administration", On_Administration_Emails'Unrestricted_Access);
+   Framework.Header_Add_Child ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Changelog", "Changelog", "App_Menu", On_Changelog'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_77974a0", "Changelog 77974a0", "Changelog", On_Changelog_77974a0'Unrestricted_Access);

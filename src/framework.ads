@@ -14,9 +14,10 @@ package Framework is
       Title                 : UXString;
       Server_Closed_Content : UXString);
 
-   procedure Set_App_Title (Title : UXString);
-   --  Uses Gnoga.Application.Title. As described in gnoga-application.ads, it
-   --  only defines the title for upcoming connections
+   procedure Set_App_Title
+     (Object : in out Base.Base_Type'Class;
+      Title : UXString);
+   --  Set website title (in tab)
 
    procedure Set_App_Icon (Icon_SRC : UXString);
    --  Should theorically work but GNOGA refuses to update the icon
@@ -24,7 +25,13 @@ package Framework is
    procedure Set_Browse_Icon (Icon_SRC : UXString);
    --  Set the icon which displays (on click) the menu
 
-   procedure Set_User_Icon (Icon_SRC : UXString);
+   procedure Set_Default_User_Icon (Icon_SRC : UXString);
+   --  Set the default user icon which (on click) displays the user menu,
+   --  can be overwritten with Set_User_Icon
+
+   procedure Set_User_Icon
+     (Object : in out Base.Base_Type'Class;
+      Icon_SRC : UXString);
    --  Set the user icon which (on click) displays the user menu
 
    procedure Set_User_Name
@@ -56,9 +63,10 @@ package Framework is
       Cancel_Text  : UXString          := "";
       On_Confirm   : Base.Action_Event := null;
       On_Cancel    : Base.Action_Event := null);
-   --  Function to create a button on the user menu, creating a jQuery dialog.
+   --  Function to create a button on the user menu, creating a jQuery dialog
    --  Two default buttons are available : Cancel and Confirm
-   --  Buttons are not displayed on dialog if corresponding text is empty
+   --  On_Cancel is fired on default exit
+   --  Buttons are not displayed on dialog if corresponding handler is null
 
    procedure Header_Add_Web
      (Title : UXString;
@@ -152,18 +160,18 @@ package Framework is
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString := "");
 
-      -----------------------------------------------------------------------------
-      --  User relative data
-      -----------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
+   --  User relative data
+   -----------------------------------------------------------------------------
 
    procedure Set
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
-      Value  :        Integer);
+      Value  :        UXString);
 
    function Get
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
-      return Integer;
+      return UXString;
 
 end Framework;
