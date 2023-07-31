@@ -16,15 +16,19 @@ package body Framework is
    use all type Gnoga.String;
 
    package Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => UXString, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   package Integer_Dictionary is new Ada.Containers.Hashed_Maps
      (Key_Type => UXString, Element_Type => Integer, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
 
    ID_Main           : Integer;
    On_Custom_Connect : Base.Action_Event;
 
-   Header_Dict : Dictionary.Map;
+   Header_Dict : Integer_Dictionary.Map;
 
    Browse_Icon_SRC : UXString := "";
-   User_Icon_SRC   : UXString := "";
+   User_Icon_SRC : UXString := "";
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
       Window    : Gnoga.Gui.Window.Pointer_To_Window_Class;
@@ -42,8 +46,8 @@ package body Framework is
 
       Footer_Content : Footer.Footer_Type;
 
-      Crud_Dict   : Dictionary.Map;
-      Header_Dict : Dictionary.Map;
+      Crud_Dict   : Integer_Dictionary.Map;
+      Header_Dict : Integer_Dictionary.Map;
       User_Dict   : Dictionary.Map;
 
       CRUD_Instance : CRUD.CRUD_Type;
@@ -164,6 +168,7 @@ package body Framework is
       App.Window := Screen'Unchecked_Access;
       App.Window.On_Character_Handler (On_Key_Pressed'Unrestricted_Access);
       App.Container.Create (Screen);
+      App.Container.Style ("display", "flex");
 
       --  Containers
       App.Container.Style ("width", "100%");
@@ -172,11 +177,11 @@ package body Framework is
       App.Header_Parent.Create (App.Container);
       App.Header_Parent.Class_Name ("header");
 
-      App.Content.Create (App.Container);
-      App.Content.Class_Name ("content-container");
-
       App.CRUD_Parent.Create (App.Container);
       App.CRUD_Parent.Class_Name ("crud");
+
+      App.Content.Create (App.Container);
+      App.Content.Class_Name ("content-container");
 
       App.Footer_Parent.Create (App.Container);
       App.Footer_Parent.Class_Name ("footer");
@@ -216,9 +221,13 @@ package body Framework is
       On_Custom_Connect := On_User_Connect;
    end Setup;
 
-   procedure Set_App_Title (Title : UXString) is
+   procedure Set_App_Title
+     (Object : in out Base.Base_Type'Class;
+      Title : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Gnoga.Application.Title (Title);
+      App.Window.Document.Title (Title);
    end Set_App_Title;
 
    procedure Set_App_Icon (Icon_SRC : UXString) is
@@ -231,9 +240,18 @@ package body Framework is
       Browse_Icon_SRC := Icon_SRC;
    end Set_Browse_Icon;
 
-   procedure Set_User_Icon (Icon_SRC : UXString) is
+   procedure Set_Default_User_Icon (Icon_SRC : UXString) is
    begin
       User_Icon_SRC := Icon_SRC;
+   end Set_Default_User_Icon;
+
+   procedure Set_User_Icon
+     (Object : in out Base.Base_Type'Class;
+      Icon_SRC : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Content.Set_User_Icon (Icon_SRC);
    end Set_User_Icon;
 
    procedure Set_User_Name
@@ -479,7 +497,7 @@ package body Framework is
    procedure Set
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
-      Value  :        Integer)
+      Value  :        UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -489,7 +507,7 @@ package body Framework is
    function Get
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
-      return Integer
+      return UXString
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin

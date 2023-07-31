@@ -29,12 +29,25 @@
     background: #545454 !important;
 }
 
+.framework-link {
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.framework-link:hover {
+    text-decoration: underline;
+}
+
+.framework-link:active {
+    color: #9accff;
+}
 
 /* Content styling */
 .content-container {
-    width: calc(100% - 42px);
+    width: 100%;
     height: calc(100% - 80px);
-    float: right;
     overflow: scroll;
     top: 40px;
     position: relative;
@@ -47,25 +60,24 @@
     font-weight: bold;
     display: flex;
     justify-content: center;
+    margin-bottom: 16px;
 }
 
 
 /* Responsive layout */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 640px) {
     .header-app-parent {
-        width: 50%;
         justify-content: left;
     }
 
     .header-user-parent {
-        width: 50%;
         justify-content: right;
     }
 
     .header-breadcrumb-parent {
         display: none;
     }
-    
+
     .shortcut {
         color: white;
     }

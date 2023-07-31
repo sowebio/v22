@@ -43,19 +43,15 @@ package body Breadcrumb is
       if Depth > 0 then
          Common.IMG_Access (Icon).Create (Instance.Parent.all);
          Common.IMG_Access (Icon).URL_Source ("/css/icons/chevron.png");
-         Icon.Style ("height", "40px");
-         Icon.Style ("width", "40px");
-         Icon.Margin (Left => "-8px", Right => "-8px");
+         Icon.Style ("height", "25px");
+         Icon.Style ("width", "25px");
+         Icon.Style ("margin", "0 -2px");
          Icon.Dynamic;
          Instance.Parent.all.Add_Element ("Icon_" & To_UXString (Depth), Icon);
       end if;
       Common.Button_Access (Button).Create (Instance.Parent.all, Content);
       Button.On_Click_Handler (Handler);
-      Button.Class_Name ("framework-button");
-      Button.Style ("width", "auto");
-      Button.Style ("height", "40px");
-      Button.Style ("min-height", "40px");
-      Button.Style ("margin", "0");
+      Button.Class_Name ("framework-link");
       Button.Dynamic;
       Instance.Parent.all.Add_Element ("Button_" & To_UXString (Depth), Button);
       Instance.Current_Depth := Depth;

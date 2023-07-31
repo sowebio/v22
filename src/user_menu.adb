@@ -71,20 +71,20 @@ package body User_Menu is
    -----------------------------------------------------------------------------
 
    procedure Dialog_Confirm_Handler (Object : in out Base.Base_Type'Class) is
-      Parent    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
-      Unique_ID : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
+      Dialog    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
+      Unique_ID : constant Integer              := Value (Dialog.jQuery_Execute ("data('gnoga_id')"));
       Data      : constant Data_Type            := Menu_Table (Unique_ID);
    begin
-      Parent.Close;
+      Dialog.Remove;
       Data.Confirm_Handler (Object);
    end Dialog_Confirm_Handler;
 
    procedure Dialog_Cancel_Handler (Object : in out Base.Base_Type'Class) is
-      Parent    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
-      Unique_ID : constant Integer              := Value (Parent.jQuery_Execute ("data('gnoga_id')"));
+      Dialog    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
+      Unique_ID : constant Integer              := Value (Dialog.jQuery_Execute ("data('gnoga_id')"));
       Data      : constant Data_Type            := Menu_Table (Unique_ID);
    begin
-      Parent.Close;
+      Dialog.Remove;
       Data.Cancel_Handler (Object);
    end Dialog_Cancel_Handler;
 
@@ -119,10 +119,10 @@ package body User_Menu is
       Unique_ID :        Integer)
    is
       Data         : constant Data_Type                      := Menu_Table (Unique_ID);
-      Dialog_Class : constant Widget.Pointer_To_Dialog_Class := new Widget.Dialog_Type;
+      Dialog_Class : constant Element.Pointer_To_Element_Class := new Widget.Dialog_Type;
       Dialog       : constant Widget.Dialog_Access           := Widget.Dialog_Access (Dialog_Class);
    begin
-      Dialog.Create (Object, Replace_All (Data.Title, ''', "\'"), Data.Content, Width => 400, Height => 300);
+      Dialog.Create (Object.Parent.all, Replace_All (Data.Title, ''', "\'"), Data.Content, Width => 400, Height => 300);
       Dialog.jQuery_Execute ("data('gnoga_id', " & To_UXString (Unique_ID) & " )");
 
       if Data.Cancel_Handler /= null then
@@ -135,6 +135,7 @@ package body User_Menu is
             jQueryUI.Position
               (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
          end;
+
       end if;
 
       if Data.Confirm_Handler /= null then
