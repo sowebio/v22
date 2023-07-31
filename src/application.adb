@@ -397,6 +397,38 @@ procedure Application is
       Framework.Content_Set_Title (Object, "Changelog");
       Framework.Content_Set_Text (Object, "");
    end On_Changelog;
+   procedure On_Changelog_288b385 (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.Header_Notify_Menu_Click (Object, "Changelog_288b385");
+
+      Framework.Content_Set_Title (Object, "Changelog 288b385");
+      Framework.Content_Set_Text (Object, "Breadcrumb now made of 'links', content now resizes when CRUD extends, tweaked icon position and user-ified functions");
+   end On_Changelog_288b385;
+
+   procedure On_Changelog_c40e623 (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.Header_Notify_Menu_Click (Object, "Changelog_c40e623");
+
+      Framework.Content_Set_Title (Object, "Changelog c40e623");
+      Framework.Content_Set_Text (Object, "Added functions, added some forms");
+   end On_Changelog_c40e623;
+
+   procedure On_Changelog_481c98c (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.Header_Notify_Menu_Click (Object, "Changelog_481c98c");
+
+      Framework.Content_Set_Title (Object, "Changelog 481c98c");
+      Framework.Content_Set_Text (Object, "Removed unused files, added functions");
+   end On_Changelog_481c98c;
+
+   procedure On_Changelog_da72bae (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.Header_Notify_Menu_Click (Object, "Changelog_da72bae");
+
+      Framework.Content_Set_Title (Object, "Changelog da72bae");
+      Framework.Content_Set_Text (Object, "Now framework is a framework");
+   end On_Changelog_da72bae;
+
    procedure On_Changelog_77974a0 (Object : in out Base.Base_Type'Class) is
    begin
       Framework.Header_Notify_Menu_Click (Object, "Changelog_77974a0");
@@ -557,6 +589,7 @@ procedure Application is
       Framework.Content_Set_Text (Object, "First files");
    end On_Changelog_1464be2;
 
+
    -----------------------------------------------------------------------------
    --  End of changelog
    -----------------------------------------------------------------------------
@@ -631,6 +664,10 @@ begin
    Framework.Header_Add_Child ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Changelog", "Changelog", "App_Menu", On_Changelog'Unrestricted_Access);
+   Framework.Header_Add_Child ("Changelog_288b385", "Changelog 288b385", "Changelog", On_Changelog_288b385'Unrestricted_Access);
+   Framework.Header_Add_Child ("Changelog_c40e623", "Changelog c40e623", "Changelog", On_Changelog_c40e623'Unrestricted_Access);
+   Framework.Header_Add_Child ("Changelog_481c98c", "Changelog 481c98c", "Changelog", On_Changelog_481c98c'Unrestricted_Access);
+   Framework.Header_Add_Child ("Changelog_da72bae", "Changelog da72bae", "Changelog", On_Changelog_da72bae'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_77974a0", "Changelog 77974a0", "Changelog", On_Changelog_77974a0'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_81b29b4", "Changelog 81b29b4", "Changelog", On_Changelog_81b29b4'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_b744a8d", "Changelog b744a8d", "Changelog", On_Changelog_b744a8d'Unrestricted_Access);
@@ -651,7 +688,6 @@ begin
    Framework.Header_Add_Child ("Changelog_9b69124", "Changelog 9b69124", "Changelog", On_Changelog_9b69124'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_c86f2a6", "Changelog c86f2a6", "Changelog", On_Changelog_c86f2a6'Unrestricted_Access);
    Framework.Header_Add_Child ("Changelog_1464be2", "Changelog 1464be2", "Changelog", On_Changelog_1464be2'Unrestricted_Access);
-
 
    Framework.Header_Add_Web ("Aide en ligne", "https://google.com");
    Framework.Header_Add_Dialog
