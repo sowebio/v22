@@ -101,6 +101,13 @@ package body User_Menu is
       end if;
    end Click_Handler;
 
+   procedure Remove_Dialog (Object : in out Base.Base_Type'Class) is
+      Dialog_Class : constant Element.Pointer_To_Element_Class := View.View_Access (Object.Parent).Element ("dialog");
+      Dialog       : constant Widget.Dialog_Access           := Widget.Dialog_Access (Dialog_Class);
+   begin
+      Dialog.Remove;
+   end Remove_Dialog;
+
    -----------------------------------------------------------------------------
    --  Launchers
    -----------------------------------------------------------------------------
@@ -151,6 +158,9 @@ package body User_Menu is
          end;
       end if;
 
+      Dialog.On_Close_Handler (Remove_Dialog'Unrestricted_Access);
+      View.View_Access (Object.Parent).Add_Element ("dialog", Dialog_Class);
+
    end Launch_Dialog;
 
    procedure Launch_Web
@@ -165,7 +175,7 @@ package body User_Menu is
    --  API
    -----------------------------------------------------------------------------
 
-   procedure Create (Parent : in out View.View_Type) is
+   procedure Display (Parent : in out View.View_Type) is
    begin
       for Index in 1 .. Last_Index loop
          declare
@@ -178,7 +188,7 @@ package body User_Menu is
             Button.jQuery_Execute ("data('gnoga_id', " & To_UXString (Index) & " )");
          end;
       end loop;
-   end Create;
+   end Display;
 
    procedure Add_Button
      (Title    : UXString;
@@ -232,5 +242,10 @@ package body User_Menu is
 
       Menu_Table (Last_Index) := Menu;
    end Add_Web;
+
+   procedure Clear (Parent : in out View.View_Type) is
+   begin
+      Parent.Inner_HTML ("");
+   end Clear;
 
 end User_Menu;
