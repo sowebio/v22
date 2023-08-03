@@ -86,8 +86,6 @@ package body Header is
       Parent           : in out View.View_Type;
       On_Logo, On_User :        Base.Action_Event)
    is
-      Root : constant Data_Type := Menu_Table (1);
-
       App_Parent        : constant View.Pointer_To_View_Class       := new View.View_Type;
       App_Icon          : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
       App_Browse_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
@@ -120,7 +118,7 @@ package body Header is
       Instance.Breadcrumb_Parent.Create (Parent);
       Instance.Breadcrumb_Parent.Class_Name ("header-breadcrumb-parent");
       Instance.Breadcrumb_Content.Create (Instance.Breadcrumb_Parent.all);
-      Instance.Breadcrumb_Content.Update (Root.On_Open, Root.Name);
+      --  Instance.Breadcrumb_Content.Update (Root.On_Open, Root.Name);
 
       --  User icon & user browse menu
       Instance.User_Parent := View.View_Access (User_Parent);
@@ -140,11 +138,14 @@ package body Header is
       Instance.User_Browse_Parent.Create (Instance.User_Parent.all);
       Instance.User_Browse_Parent.Class_Name ("header-user-browse-parent");
 
-      User_Menu.Create (Instance.User_Browse_Parent.all);
-
-      Instance.User_Browse_Parent.Display ("none");
+      --  User_Menu.Display (Instance.User_Browse_Parent.all);
       Instance.App_Browse_Parent.Display ("none");
    end Create;
+
+   procedure Clear (Instance : in out Header_Type) is
+   begin
+      Instance.Breadcrumb_Content.Clear;
+   end Clear;
 
    function Set_Root
      (Name    : UXString;
@@ -199,6 +200,7 @@ package body Header is
    begin
       Instance.Set_Menu (Unique_ID);
       Instance.App_Browse_Parent.Display ("block");
+      Update (Instance, Unique_ID);
       Instance.App_Icon.Add_Class ("header-icon-active");
       Instance.App_Is_Open := True;
    end Open_Menu;
@@ -221,13 +223,13 @@ package body Header is
    procedure Open_User_Menu (Instance : in out Header_Type) is
    begin
       Instance.User_Icon.Add_Class ("header-icon-active");
-      Instance.User_Browse_Parent.Display ("block");
+      User_Menu.Display (Instance.User_Browse_Parent.all);
       Instance.User_Is_Open := True;
    end Open_User_Menu;
 
    procedure Close_User_Menu (Instance : in out Header_Type) is
    begin
-      Instance.User_Browse_Parent.Display ("none");
+      Instance.User_Browse_Parent.Inner_HTML ("");
       Instance.User_Icon.Remove_Class ("header-icon-active");
       Instance.User_Is_Open := False;
    end Close_User_Menu;

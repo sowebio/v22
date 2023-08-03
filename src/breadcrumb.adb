@@ -91,4 +91,14 @@ package body Breadcrumb is
       Instance.Current_Depth := Depth;
    end Update;
 
+   procedure Clear (Instance : in out Breadcrumb_Type) is
+      Index : Integer := Instance.Current_Depth;
+   begin
+      while Index >= 0 loop
+         Instance.Remove_Last;
+         Index := Index - 1;
+      end loop;
+   end Clear;
+
+
 end Breadcrumb;

@@ -23,12 +23,19 @@
     background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
 }
 
+input:invalid {
+    background-color: #ffc0df;
+    outline: 2px solid #ff6080;
+    border-radius: 5px;
+}
+
 .unclickable {
     pointer-events: none !important;
     filter: grayscale(100%);
     background: #545454 !important;
 }
 
+/* Link styling */
 .framework-link {
     background-color: transparent;
     border: none;
@@ -43,26 +50,6 @@
 .framework-link:active {
     color: #9accff;
 }
-
-/* Content styling */
-.content-container {
-    width: 100%;
-    height: calc(100% - 80px);
-    overflow: scroll;
-    top: 40px;
-    position: relative;
-    box-sizing: border-box;
-    padding: 8px;
-}
-
-.content-header {
-    font-size: 20px;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
-}
-
 
 /* Responsive layout */
 @media screen and (max-width: 640px) {
@@ -81,5 +68,10 @@
     .shortcut {
         color: white;
     }
+
+    .content-group {
+        width: 100%;
+    }
+
 }
 

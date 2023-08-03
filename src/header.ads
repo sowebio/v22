@@ -38,6 +38,9 @@ package Header is
       On_Logo, On_User :        Base.Action_Event);
    --  Should be called every time a user connects
 
+   procedure Clear (Instance : in out Header_Type);
+   --  Removes current breadcrumb, waiting for upcoming update
+
    function Set_Root (Name : UXString; On_Open : Base.Action_Event) return Integer;
    --  Set first element in breadcrumb, first button to appear
    --  NOTE: Root must be created before childs, and returned value

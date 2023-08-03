@@ -26,6 +26,9 @@ package Breadcrumb is
       Depth    : in     Integer  := 0);
       --  Set new last element in instancied breadcrumb
 
+   procedure Clear (Instance : in out Breadcrumb_Type);
+   --  Clear every element in breadcrumb
+
 private
 
 end Breadcrumb;

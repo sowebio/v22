@@ -1,9 +1,5 @@
 with Gnoga.Gui.Base;
 with Gnoga.Gui.Plugin;
-with Gnoga.Gui.Element;
-with Gnoga.Gui.Element.Common;
-with Gnoga.Gui.Element.Form;
-with Gnoga.Gui.View;
 with Gnoga.Application.Multi_Connect;
 with UXStrings; use UXStrings;
 
@@ -12,18 +8,13 @@ with Framework;
 procedure Application is
 
    package Base renames Gnoga.Gui.Base;
-   package Element renames Gnoga.Gui.Element;
-   package Form renames Gnoga.Gui.Element.Form;
-   package View renames Gnoga.Gui.View;
 
    use all type Gnoga.String;
 
    App_Name : constant UXString := "Framework GNOGA";
 
    Lorem_Ipsum : constant UXString :=
-     80 *
-     "Lorem ipsum dolor sit amet. Aut consequatur ipsam eos inventore repellat et neque sint id tempora aliquid eos assumenda ullam ut quas nostrum. ";
-
+     10 * "Lorem ipsum dolor sit amet. Quo autem eaque ut sint molestias eos voluptate minus. Sed adipisci laudantium et molestias omnis aut error ducimus eum quia eligendi ut eius aliquid aut voluptas mollitia ut nemo porro. Rem cumque excepturi eos ducimus totam ex consectetur esse. Et incidunt delectus sit omnis pariatur et magnam itaque et eius quibusdam. Qui sint numquam est asperiores rerum ut reprehenderit consequatur aut corrupti voluptate et explicabo voluptas sed molestiae nobis. Est rerum labore et assumenda mollitia ad temporibus cupiditate aut facilis saepe qui ullam enim a quibusdam consectetur nam perferendis voluptate. In quia rerum 33 nihil fuga aut consequuntur omnis cum amet incidunt qui enim cumque cum enim consectetur. Qui aliquam veniam ea asperiores iste qui autem voluptatibus vel perspiciatis autem? Sed consectetur eligendi qui expedita ratione ea molestias laboriosam. Et neque eaque nam dolore dicta est repellat eligendi eos suscipit mollitia. Qui error sequi et saepe fuga eos error molestiae qui voluptatem ipsam aut minus tempore est quos inventore. Qui repellat dignissimos rem nemo repudiandae ex dolorem ipsa ut quidem debitis aut nihil quod aut ipsam consequuntur est minus possimus. Et voluptates officia ad sequi fugiat sed distinctio molestias. Hic nihil assumenda vel officia ullam non adipisci voluptatem vel asperiores autem et internos rerum et iusto nostrum ut voluptas alias. 33 nihil beatae sit Quis possimus sed error velit qui voluptatem tempore qui omnis inventore et eligendi velit est quas praesentium. Et odit quis ut illo cumque a veritatis facere est voluptate expedita qui dicta fuga et nulla magnam in quam ducimus. Sed rerum illum non quam nostrum et assumenda repellendus aut rerum omnis et praesentium galisum. Ut magnam quia et quibusdam inventore rem beatae natus nam repudiandae repellendus! Et obcaecati laboriosam et eius quam est consectetur nihil. Et eius praesentium sed beatae impedit ut voluptas dolorem in cumque quia eum molestiae incidunt et debitis optio. Qui amet sint 33 nulla quod ut asperiores asperiores nam necessitatibus harum aut autem voluptatem cum repellendus iste. Qui internos perspiciatis qui corporis commodi est dolores quia sit fugiat pariatur et earum quae non tempora voluptatem ex perferendis harum. At magni consequatur non inventore sint aut perspiciatis quos cum maiores beatae ab aperiam ullam ea maiores omnis? Aut Quis iste qui consequatur repellendus in quas soluta eum dolores rerum et quasi nulla ea voluptatem iusto? Quo esse illum est officia corrupti sit neque velit qui ducimus dolor. Eum eius consequatur et fugit beatae eum vitae ducimus aut asperiores provident. Sed eligendi corporis et nihil eius id accusantium earum ut obcaecati amet ea obcaecati tempora et voluptate minus et soluta consequuntur. Eos iste quidem aut porro eius et rerum quia qui veritatis beatae. Eum error veritatis ut nihil repellendus rem unde optio sit quam deserunt id quasi distinctio ut commodi repellendus. Sed sint galisum et nihil veniam ex rerum accusantium hic magnam voluptatem eum dolores dicta ut galisum eligendi. Eos sunt neque rem iure maxime cum tempore maxime eos nemo fugit et nobis facilis? Est odit excepturi sed voluptas maiores in galisum suscipit. Et quia itaque ex dolore dicta ut tenetur repudiandae et illum odit. Cum suscipit culpa non voluptatum nesciunt eum error ipsum eum rerum dolores et labore doloremque et deserunt similique. Sit maxime eius hic rerum vitae ab dolorem odio ex natus suscipit. Et obcaecati reprehenderit ut illum nesciunt aut enim dolores id dolorem debitis id quia itaque. ";
    -----------------------------------------------------------------------------
    --  CRUD Handlers
    -----------------------------------------------------------------------------
@@ -109,11 +100,14 @@ procedure Application is
    begin
       Framework.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_File_Create'Unrestricted_Access);
       Framework.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_File_Edit'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
       Framework.CRUD_Add_Delimiter_Above (Object, "File_Export");
       Framework.CRUD_Set_Unclickable (Object, "File_Export");
-      Framework.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
       Framework.CRUD_Set_Unclickable (Object, "File_Import");
       Framework.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_File_Print'Unrestricted_Access);
       Framework.CRUD_Add_Delimiter_Above (Object, "File_Print");
@@ -121,9 +115,11 @@ procedure Application is
       Framework.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_Edit_Copy'Unrestricted_Access);
       Framework.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_Edit_Paste'Unrestricted_Access);
 
-      Framework.CRUD_Add_Sub_Element (Object, "Show_Previous", "Précédent", "Show", On_CRUD_Show_Previous'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Show_Previous", "Précédent", "Show", On_CRUD_Show_Previous'Unrestricted_Access);
       Framework.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_Show_Next'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
    end Load_Default_CRUD_Childs;
 
    ---------------------
@@ -181,24 +177,58 @@ procedure Application is
    -----------------------------------------------------------------------------
    --  Extended CRUD with different behaviour
    -----------------------------------------------------------------------------
+   procedure Update_TTC (Object : in out Base.Base_Type'Class) is
+      Price  : constant Integer := Framework.Content_Group_Number_Get (Object, "Prix HT");
+      TVA    : constant Integer := Framework.Content_Group_Number_Get (Object, "TVA");
+      Result : Integer;
+   begin
+      Result := Price + TVA;
+      Framework.Content_Group_Text_Set (Object, "TTC", From_UTF_8 (Result'Image) & " €");
+   end Update_TTC;
 
    procedure On_CRUD_New_File_Create (Object : in out Base.Base_Type'Class) is
-      Parent : constant View.View_Access := Framework.Content_Parent (Object);
-      Form_Parent : constant Form.Form_Access := new Form.Form_Type;
-      Edit_Text : constant Element.Pointer_To_Element_Class := new Form.Text_Type;
    begin
       Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
       Framework.Content_Set_Title (Object, "Statistiques - Fichier");
       Framework.Content_Clear_Text (Object);
 
-      Form_Parent.Create (Parent.all);
+      Framework.Content_Group_Create (Object, "Spécification du contrat");
+      Framework.Content_Group_Add_Title (Object, "Détails du contrat", "Spécification du contrat");
+      Framework.Content_Group_Selection_Add (Object, "Type de contrat", "Spécification du contrat");
+      Framework.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Standard", Enabled => True);
+      Framework.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Modifié");
+      Framework.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Complexe");
+      Framework.Content_Group_Date_Add (Object, "Date de création", "Spécification du contrat");
+      Framework.Content_Group_Number_Add (Object, "Récurrence", "Spécification du contrat");
+      Framework.Content_Group_Add_Title (Object, "Activité", "Spécification du contrat");
+      Framework.Content_Group_Number_Add (Object, "Durée d'engagement en jours", "Spécification du contrat");
+      Framework.Content_Group_Number_Set (Object, "Durée d'engagement en jours", 30);
+      Framework.Content_Group_Check_Box_Add (Object, "Contrat actif", "Spécification du contrat");
+      Framework.Content_Group_Check_Box_Checked (Object, "Contrat actif", True);
+      Framework.Content_Group_Number_Add (Object, "Durée du contrat en jours", "Spécification du contrat");
+      Framework.Content_Group_Number_Set (Object, "Durée du contrat en jours", 30);
+      Framework.Content_Group_Item_Lock (Object, "Durée du contrat en jours");
 
-      Form.Text_Access (Edit_Text).Create (Form_Parent.all);
-      Form.Text_Access (Edit_Text).Place_Holder ("Write something here");
-      Form.Text_Access (Edit_Text).Value ("Already written");
-      Edit_Text.On_Focus_In_Handler (Framework.CRUD_Disable_Shortcuts'Unrestricted_Access);
-      Edit_Text.On_Focus_Out_Handler (Framework.CRUD_Enable_Shortcuts'Unrestricted_Access);
-      Parent.Add_Element ("Edit_Text", Edit_Text);
+      Framework.Content_Group_Create (Object, "Prix");
+      Framework.Content_Group_Number_Add (Object, "Prix HT", "Prix", Update_TTC'Unrestricted_Access);
+      Framework.Content_Group_Number_Set (Object, "Prix HT", 0);
+      Framework.Content_Group_Number_Add (Object, "TVA", "Prix", Update_TTC'Unrestricted_Access);
+      Framework.Content_Group_Number_Set (Object, "TVA", 0);
+      Framework.Content_Group_Text_Add (Object, "TTC", "Prix");
+
+      Framework.Content_Group_Create (Object, "Agenda");
+      Framework.Content_Group_Date_Add (Object, "Prochaine date de facturation", "Agenda");
+      Framework.Content_Group_Date_Add (Object, "Prochaine date d'échéance", "Agenda");
+
+      Framework.Content_Group_Create (Object, "Autres informations");
+      Framework.Content_Group_Text_Area_Add (Object, "Note publique", "Autres informations");
+      Framework.Content_Group_Text_Area_Add (Object, "Note privée", "Autres informations");
+
+      Framework.Content_Group_Item_Lock (Object, "Prochaine date d'échéance");
+      Framework.Content_Group_Item_Lock (Object, "Note privée");
+      Framework.Content_Group_Item_Lock (Object, "TTC");
+      Framework.Content_Group_Text_Set (Object, "TTC", "Remplissez les données précédentes");
+      Framework.Content_Group_Text_Set (Object, "TTC", "0 €");
 
       Framework.CRUD_Set_Unclickable (Object, "File_Create");
       Framework.CRUD_Set_Clickable (Object, "File_Edit");
@@ -207,12 +237,8 @@ procedure Application is
    end On_CRUD_New_File_Create;
 
    procedure On_CRUD_New_File_Edit (Object : in out Base.Base_Type'Class) is
-      Parent : constant View.View_Access := Framework.Content_Parent (Object);
-      Edit_Text : constant Form.Text_Access := Form.Text_Access (Parent.Element ("Edit_Text"));
    begin
       Framework.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
-
-      Edit_Text.Value (Edit_Text.Value & "+");
    end On_CRUD_New_File_Edit;
 
    procedure On_CRUD_New_File_Delete (Object : in out Base.Base_Type'Class) is
@@ -291,26 +317,36 @@ procedure Application is
       Framework.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
       Framework.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
 
-      Framework.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
       Framework.CRUD_Set_Unclickable (Object, "File_Edit");
-      Framework.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_New_File_Delete'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Delete", "Supprimer", "File", On_CRUD_New_File_Delete'Unrestricted_Access);
       Framework.CRUD_Set_Unclickable (Object, "File_Delete");
-      Framework.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
       Framework.CRUD_Add_Delimiter_Above (Object, "File_Export");
       Framework.CRUD_Set_Unclickable (Object, "File_Export");
-      Framework.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
       Framework.CRUD_Set_Unclickable (Object, "File_Import");
-      Framework.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
       Framework.CRUD_Add_Delimiter_Above (Object, "File_Print");
       Framework.CRUD_Set_Unclickable (Object, "File_Print");
 
       Framework.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_New_Edit_Copy'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
 
-      Framework.CRUD_Add_Sub_Element (Object, "Show_Previous", "Précédent", "Show", On_CRUD_New_Show_Previous'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
-      Framework.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_New_Show_Search'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Show_Previous", "Précédent", "Show", On_CRUD_New_Show_Previous'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
+      Framework.CRUD_Add_Sub_Element
+        (Object, "Show_Search", "Rechercher", "Show", On_CRUD_New_Show_Search'Unrestricted_Access);
 
       Framework.CRUD_Load (Object);
    end On_Contract_Stats;
@@ -387,224 +423,7 @@ procedure Application is
       Framework.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration;
 
-   -----------------------------------------------------------------------------
-   --  Changelog
-   -----------------------------------------------------------------------------
-   procedure On_Changelog (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog");
-
-      Framework.Content_Set_Title (Object, "Changelog");
-      Framework.Content_Set_Text (Object, "");
-   end On_Changelog;
-   procedure On_Changelog_288b385 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_288b385");
-
-      Framework.Content_Set_Title (Object, "Changelog 288b385");
-      Framework.Content_Set_Text (Object, "Breadcrumb now made of 'links', content now resizes when CRUD extends, tweaked icon position and user-ified functions");
-   end On_Changelog_288b385;
-
-   procedure On_Changelog_c40e623 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_c40e623");
-
-      Framework.Content_Set_Title (Object, "Changelog c40e623");
-      Framework.Content_Set_Text (Object, "Added functions, added some forms");
-   end On_Changelog_c40e623;
-
-   procedure On_Changelog_481c98c (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_481c98c");
-
-      Framework.Content_Set_Title (Object, "Changelog 481c98c");
-      Framework.Content_Set_Text (Object, "Removed unused files, added functions");
-   end On_Changelog_481c98c;
-
-   procedure On_Changelog_da72bae (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_da72bae");
-
-      Framework.Content_Set_Title (Object, "Changelog da72bae");
-      Framework.Content_Set_Text (Object, "Now framework is a framework");
-   end On_Changelog_da72bae;
-
-   procedure On_Changelog_77974a0 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_77974a0");
-
-      Framework.Content_Set_Title (Object, "Changelog 77974a0");
-      Framework.Content_Set_Text (Object, "Cleaned code");
-   end On_Changelog_77974a0;
-
-   procedure On_Changelog_81b29b4 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_81b29b4");
-
-      Framework.Content_Set_Title (Object, "Changelog 81b29b4");
-      Framework.Content_Set_Text (Object, "Stable version, with Header, CRUD and Footer separated");
-   end On_Changelog_81b29b4;
-
-   procedure On_Changelog_b744a8d (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_b744a8d");
-
-      Framework.Content_Set_Title (Object, "Changelog b744a8d");
-      Framework.Content_Set_Text (Object, "Added delimiters and unclickable buttons for CRUD");
-   end On_Changelog_b744a8d;
-
-   procedure On_Changelog_24a2a78 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_24a2a78");
-
-      Framework.Content_Set_Title (Object, "Changelog 24a2a78");
-      Framework.Content_Set_Text (Object, "Removed useless log, moved Ada styling to CSS");
-   end On_Changelog_24a2a78;
-
-   procedure On_Changelog_575c406 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_575c406");
-
-      Framework.Content_Set_Title (Object, "Changelog 575c406");
-      Framework.Content_Set_Text (Object, "More scrolling stuff, fix content container scroll");
-   end On_Changelog_575c406;
-
-   procedure On_Changelog_058b918 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_058b918");
-
-      Framework.Content_Set_Title (Object, "Changelog 058b918");
-      Framework.Content_Set_Text (Object, "CRUD can now be specific to some menus, fixed bugs, tweaked icons");
-   end On_Changelog_058b918;
-
-   procedure On_Changelog_a2c0958 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_a2c0958");
-
-      Framework.Content_Set_Title (Object, "Changelog a2c0958");
-      Framework.Content_Set_Text (Object, "Tweaked CRUD");
-   end On_Changelog_a2c0958;
-
-   procedure On_Changelog_d827a26 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_d827a26");
-
-      Framework.Content_Set_Title (Object, "Changelog d827a26");
-      Framework.Content_Set_Text (Object, "Fixed previous fix on buttons");
-   end On_Changelog_d827a26;
-
-   procedure On_Changelog_de74c4e (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_de74c4e");
-
-      Framework.Content_Set_Title (Object, "Changelog de74c4e");
-      Framework.Content_Set_Text (Object, "Fixed various bugs and renamed application1 to Framework");
-   end On_Changelog_de74c4e;
-
-   procedure On_Changelog_4144e4d (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_4144e4d");
-
-      Framework.Content_Set_Title (Object, "Changelog 4144e4d");
-      Framework.Content_Set_Text (Object, "Added bash script to test website overloading");
-   end On_Changelog_4144e4d;
-
-   procedure On_Changelog_77207bc (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_77207bc");
-
-      Framework.Content_Set_Title (Object, "Changelog 77207bc");
-      Framework.Content_Set_Text (Object, "Toolbar now have items, shortcuts handling soon");
-   end On_Changelog_77207bc;
-
-   procedure On_Changelog_266bc83 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_266bc83");
-
-      Framework.Content_Set_Title (Object, "Changelog 266bc83");
-      Framework.Content_Set_Text (Object, "Added user menu");
-   end On_Changelog_266bc83;
-
-   procedure On_Changelog_0deda3d (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_0deda3d");
-
-      Framework.Content_Set_Title (Object, "Changelog 0deda3d");
-      Framework.Content_Set_Text (Object, "Added dialogs for user buttons. Dialogs are opened directly after creation.");
-   end On_Changelog_0deda3d;
-
-   procedure On_Changelog_9eef569 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_9eef569");
-
-      Framework.Content_Set_Title (Object, "Changelog 9eef569");
-      Framework.Content_Set_Text (Object, "Menu and Breadcrumb now use instances, easier to use");
-   end On_Changelog_9eef569;
-
-   procedure On_Changelog_e2cba7c (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_e2cba7c");
-
-      Framework.Content_Set_Title (Object, "Changelog e2cba7c");
-      Framework.Content_Set_Text (Object, "Tweaked button style");
-   end On_Changelog_e2cba7c;
-
-   procedure On_Changelog_5e86ba9 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_5e86ba9");
-
-      Framework.Content_Set_Title (Object, "Changelog 5e86ba9");
-      Framework.Content_Set_Text (Object, "Stable version, with menu management");
-   end On_Changelog_5e86ba9;
-
-   procedure On_Changelog_549626b (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_549626b");
-
-      Framework.Content_Set_Title (Object, "Changelog 549626b");
-      Framework.Content_Set_Text (Object, "Tweaked menu browser");
-   end On_Changelog_549626b;
-
-   procedure On_Changelog_9b69124 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_9b69124");
-
-      Framework.Content_Set_Title (Object, "Changelog 9b69124");
-      Framework.Content_Set_Text (Object, "Started responsive layout");
-   end On_Changelog_9b69124;
-
-   procedure On_Changelog_c86f2a6 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_c86f2a6");
-
-      Framework.Content_Set_Title (Object, "Changelog c86f2a6");
-      Framework.Content_Set_Text (Object, "Tweaked CSS");
-   end On_Changelog_c86f2a6;
-
-   procedure On_Changelog_1464be2 (Object : in out Base.Base_Type'Class) is
-   begin
-      Framework.Header_Notify_Menu_Click (Object, "Changelog_1464be2");
-
-      Framework.Content_Set_Title (Object, "Changelog 1464be2");
-      Framework.Content_Set_Text (Object, "First files");
-   end On_Changelog_1464be2;
-
-
-   -----------------------------------------------------------------------------
-   --  End of changelog
-   -----------------------------------------------------------------------------
-
-   procedure On_Exit (Object : in out Base.Base_Type'Class) is
-      pragma Unreferenced (Object);
-   begin
-      Gnoga.Application.Multi_Connect.End_Application;
-   exception
-      when E : others =>
-         Gnoga.Log (Message => "On_Exit: ", Occurrence => E);
-   end On_Exit;
-
    procedure On_App_Menu (Object : in out Base.Base_Type'Class) is
-      Exit_Button : constant Element.Pointer_To_Element_Class := new Element.Common.Button_Type;
    begin
       Framework.Header_Notify_Menu_Click (Object, "App_Menu");
 
@@ -614,12 +433,6 @@ procedure Application is
 
       Framework.Content_Set_Title (Object, App_Name);
       Framework.Content_Set_Text (Object, Lorem_Ipsum);
-
-      Element.Common.Button_Access (Exit_Button).Create (Framework.Content_Parent (Object).all);
-      Framework.Content_Parent (Object).all.Add_Element ("Exit button", Exit_Button);
-      Exit_Button.Text ("Stopper exécution");
-      Exit_Button.Style ("width", "140px");
-      Exit_Button.On_Click_Handler (On_Exit'Unrestricted_Access);
    end On_App_Menu;
 
    procedure On_Confirm (Object : in out Base.Base_Type'Class) is
@@ -640,63 +453,74 @@ procedure Application is
 
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
-      Framework.Set_User_Name (Object, "Nom d'utilisateur");
+      Framework.Set_User_Name (Object, "");
       Framework.Set_User_Icon (Object, "/css/icons/user.png");
 
       Framework.Footer_Set_State_Text (Object, "Message de statut");
       Framework.Footer_Set_Permanent_Text (Object, "Informations permanentes");
    end On_Connect;
 
+   procedure On_Login (Object : in out Base.Base_Type'Class) is
+   begin
+      null;
+   end On_Login;
+
+   procedure On_Register_Create (Object : in out Base.Base_Type'Class) is
+   begin
+      Framework.Content_Group_Add_Title (Object, "Données utilisateur", Framework.Register_Group_Key);
+      Framework.Content_Group_Text_Add (Object, "Nom", Framework.Register_Group_Key);
+      Framework.Content_Group_Text_Add (Object, "Prénom", Framework.Register_Group_Key);
+      Framework.Content_Group_Phone_Add (Object, "Numéro de téléphone", Framework.Register_Group_Key);
+      Framework.Content_Group_Date_Add (Object, "Date de naissance", Framework.Register_Group_Key);
+      Framework.Content_Group_Text_Add (Object, "Ville", Framework.Register_Group_Key);
+   end On_Register_Create;
+
+   procedure On_Register (Object : in out Base.Base_Type'Class) is
+      Surname : constant UXString := Framework.Content_Group_Text_Get (Object, "Nom");
+      Name    : constant UXString := Framework.Content_Group_Text_Get (Object, "Prénom");
+      Phone   : constant UXString := Framework.Content_Group_Phone_Get (Object, "Numéro de téléphone");
+      Date    : constant UXString := Framework.Content_Group_Date_Get (Object, "Date de naissance");
+      City    : constant UXString := Framework.Content_Group_Text_Get (Object, "Ville");
+   begin
+      Framework.Set (Object, "Surname", Surname);
+      Framework.Set (Object, "Name", Name);
+      Framework.Set (Object, "Phone", Phone);
+      Framework.Set (Object, "Date", Date);
+      Framework.Set (Object, "City", City);
+   end On_Register;
+
 begin
    Framework.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
+   Framework.Setup_Access
+     (On_Login'Unrestricted_Access, On_Register'Unrestricted_Access, On_Register_Create'Unrestricted_Access);
+   Framework.Add_Root_User;
+
    Framework.Set_Browse_Icon ("/css/icons/widget.png");
    Framework.Set_Default_User_Icon ("/css/icons/user.png");
 
    Framework.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Contract", "Contrats", "App_Menu", On_Contract'Unrestricted_Access);
-   Framework.Header_Add_Child ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
+   Framework.Header_Add_Child
+     ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
    Framework.Header_Add_Child ("Contract_Stats", "Statistiques", "Contract", On_Contract_Stats'Unrestricted_Access);
 
    Framework.Header_Add_Child ("Administration", "Administration", "App_Menu", On_Administration'Unrestricted_Access);
-   Framework.Header_Add_Child ("Administration_Users", "Utilisateurs", "Administration", On_Administration_Users'Unrestricted_Access);
-   Framework.Header_Add_Child ("Administration_Emails", "Emails", "Administration", On_Administration_Emails'Unrestricted_Access);
-   Framework.Header_Add_Child ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
-
-   Framework.Header_Add_Child ("Changelog", "Changelog", "App_Menu", On_Changelog'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_288b385", "Changelog 288b385", "Changelog", On_Changelog_288b385'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_c40e623", "Changelog c40e623", "Changelog", On_Changelog_c40e623'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_481c98c", "Changelog 481c98c", "Changelog", On_Changelog_481c98c'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_da72bae", "Changelog da72bae", "Changelog", On_Changelog_da72bae'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_77974a0", "Changelog 77974a0", "Changelog", On_Changelog_77974a0'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_81b29b4", "Changelog 81b29b4", "Changelog", On_Changelog_81b29b4'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_b744a8d", "Changelog b744a8d", "Changelog", On_Changelog_b744a8d'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_24a2a78", "Changelog 24a2a78", "Changelog", On_Changelog_24a2a78'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_575c406", "Changelog 575c406", "Changelog", On_Changelog_575c406'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_058b918", "Changelog 058b918", "Changelog", On_Changelog_058b918'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_a2c0958", "Changelog a2c0958", "Changelog", On_Changelog_a2c0958'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_d827a26", "Changelog d827a26", "Changelog", On_Changelog_d827a26'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_de74c4e", "Changelog de74c4e", "Changelog", On_Changelog_de74c4e'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_4144e4d", "Changelog 4144e4d", "Changelog", On_Changelog_4144e4d'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_77207bc", "Changelog 77207bc", "Changelog", On_Changelog_77207bc'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_266bc83", "Changelog 266bc83", "Changelog", On_Changelog_266bc83'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_0deda3d", "Changelog 0deda3d", "Changelog", On_Changelog_0deda3d'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_9eef569", "Changelog 9eef569", "Changelog", On_Changelog_9eef569'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_e2cba7c", "Changelog e2cba7c", "Changelog", On_Changelog_e2cba7c'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_5e86ba9", "Changelog 5e86ba9", "Changelog", On_Changelog_5e86ba9'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_549626b", "Changelog 549626b", "Changelog", On_Changelog_549626b'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_9b69124", "Changelog 9b69124", "Changelog", On_Changelog_9b69124'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_c86f2a6", "Changelog c86f2a6", "Changelog", On_Changelog_c86f2a6'Unrestricted_Access);
-   Framework.Header_Add_Child ("Changelog_1464be2", "Changelog 1464be2", "Changelog", On_Changelog_1464be2'Unrestricted_Access);
+   Framework.Header_Add_Child
+     ("Administration_Users", "Utilisateurs", "Administration", On_Administration_Users'Unrestricted_Access);
+   Framework.Header_Add_Child
+     ("Administration_Emails", "Emails", "Administration", On_Administration_Emails'Unrestricted_Access);
+   Framework.Header_Add_Child
+     ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
 
    Framework.Header_Add_Web ("Aide en ligne", "https://google.com");
    Framework.Header_Add_Dialog
      ("Droits d'accès", "Ajouter les droits d'accès", "Confirmer", "Annuler", On_Confirm'Unrestricted_Access,
       On_Cancel'Unrestricted_Access);
-   Framework.Header_Add_Dialog ("Connecté depuis...", "Ajouter durée de la connection");
-   Framework.Header_Add_Dialog ("Connection précédente", "Ajouter la date de la dernière connection");
+   Framework.Header_Add_Dialog ("Connecté depuis...", "Ajouter durée de la connexion");
+   Framework.Header_Add_Dialog ("Connexion précédente", "Ajouter la date de la dernière connexion");
    Framework.Header_Add_Web ("À propos de...", "http://gnoga.com");
-   Framework.Header_Add_Button ("Fermer l'application", On_Exit'Unrestricted_Access);
+   Framework.Header_Add_Button ("Se déconnecter", Framework.Disconnect_User'Unrestricted_Access);
 
    Gnoga.Application.Multi_Connect.Message_Loop;
 exception

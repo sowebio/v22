@@ -7,8 +7,8 @@ package User_Menu is
    package View renames Gnoga.Gui.View;
    package Base renames Gnoga.Gui.Base;
 
-   procedure Create (Parent : in out View.View_Type);
-   --  Should be called every time a user connects
+   procedure Display (Parent : in out View.View_Type);
+   --  Should be called every time the menu is opened
 
    procedure Add_Button
      (Title : UXString;
@@ -30,6 +30,8 @@ package User_Menu is
      (Title : UXString;
       URL   : UXString);
    --  Function to create a button on the user menu, which opens a new web page
+
+   procedure Clear (Parent : in out View.View_Type);
 
 private
 
