@@ -3,7 +3,7 @@
     display: block;
     cursor: pointer;
     border: 2px solid #0000;
-    background: #26253688;
+    background: var(--framework-button-color);
     font-weight: bold;
     font-size: 13px;
     color: white;
@@ -14,32 +14,40 @@
 }
 
 .framework-button:hover {
-    border: 2px solid #80b8ff;
-    background: #161526;
+    border: 2px solid var(--framework-hover-border-color);
+    background: var(--framework-hover-color);
 }
 
 .framework-button:active {
-    border: 2px solid #80b8ff !important;
-    background: #0078a3 url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
+    border: 2px solid var(--framework-active-border-color) !important;
+    background: url("images/ui-bg_glass_40_0078a3_1x400.png") 50% 50% repeat-x !important;
 }
 
 input:invalid {
-    background-color: #ffc0df;
-    outline: 2px solid #ff6080;
+    background-color: var(--input-invalid-color);
+    outline: 2px solid var(--input-invalid-border-color);
     border-radius: 5px;
 }
 
-.unclickable {
-    pointer-events: none !important;
+.framework-unclickable {
     filter: grayscale(100%);
-    background: #545454 !important;
+    background: var(--framework-unclickable-color) !important;
+    border: 0px solid !important;
+    cursor: default;
+}
+
+.framework-unclickable:active {
+    filter: grayscale(100%);
+    background: var(--framework-unclickable-color) !important;
+    border: 0px solid !important;
+    cursor: default
 }
 
 /* Link styling */
 .framework-link {
     background-color: transparent;
     border: none;
-    color: white;
+    color: var(--framework-link-color);
     cursor: pointer;
 }
 
@@ -48,7 +56,7 @@ input:invalid {
 }
 
 .framework-link:active {
-    color: #9accff;
+    color: var(--framework-link-active-color);
 }
 
 /* Responsive layout */
@@ -72,6 +80,5 @@ input:invalid {
     .content-group {
         width: 100%;
     }
-
 }
 

@@ -4,7 +4,7 @@
     height: 40px;
     width: 100%;
     position: fixed;
-    background-color: #636480;
+    background-color: var(--header-color);
 }
 
 
@@ -23,21 +23,21 @@
 
 .header-icon:hover {
     border-radius: 8px;
-    background-color: #26253633;
+    background-color: var(--header-icon-hover-color);
 }
 
 .header-icon:active {
     border-radius: 8px;
-    background-color: #26253660;
+    background-color: var(--header-icon-active-color);
 }
 
 .header-icon-active {
     border-radius: 8px;
-    background-color: #26253660 !important;
+    background-color: var(--header-icon-active-color) !important;
 }
 
 .header-app-browse-parent {
-    background-color: #636480;
+    background-color: var(--header-app-browse-color);
     position: absolute;
     width: 140px;
     top: 40px;
@@ -67,7 +67,7 @@
 }
 
 .header-user-name {
-    color: white;
+    color: var(--header-user-name-color);
     padding-right: 6px;
     font-weight: bold;
     display: flex;
@@ -76,11 +76,11 @@
 }
 
 .header-user-browse-parent {
-    background-color: #636480;
+    background-color: var(--header-user-browse-color);
     position: absolute;
     top: 40px;
     right: 0px;
     max-height: calc(100vh - 100%);
-    overflow:scroll;
+    overflow: scroll;
 }
 

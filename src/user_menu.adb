@@ -103,7 +103,7 @@ package body User_Menu is
 
    procedure Remove_Dialog (Object : in out Base.Base_Type'Class) is
       Dialog_Class : constant Element.Pointer_To_Element_Class := View.View_Access (Object.Parent).Element ("dialog");
-      Dialog       : constant Widget.Dialog_Access           := Widget.Dialog_Access (Dialog_Class);
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
    begin
       Dialog.Remove;
    end Remove_Dialog;
@@ -125,9 +125,9 @@ package body User_Menu is
      (Object    : in out Base.Base_Type'Class;
       Unique_ID :        Integer)
    is
-      Data         : constant Data_Type                      := Menu_Table (Unique_ID);
+      Data         : constant Data_Type                        := Menu_Table (Unique_ID);
       Dialog_Class : constant Element.Pointer_To_Element_Class := new Widget.Dialog_Type;
-      Dialog       : constant Widget.Dialog_Access           := Widget.Dialog_Access (Dialog_Class);
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
    begin
       Dialog.Create (Object.Parent.all, Replace_All (Data.Title, ''', "\'"), Data.Content, Width => 400, Height => 300);
       Dialog.jQuery_Execute ("data('gnoga_id', " & To_UXString (Unique_ID) & " )");

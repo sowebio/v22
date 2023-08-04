@@ -14,7 +14,8 @@ procedure Application is
    App_Name : constant UXString := "Framework GNOGA";
 
    Lorem_Ipsum : constant UXString :=
-     10 * "Lorem ipsum dolor sit amet. Quo autem eaque ut sint molestias eos voluptate minus. Sed adipisci laudantium et molestias omnis aut error ducimus eum quia eligendi ut eius aliquid aut voluptas mollitia ut nemo porro. Rem cumque excepturi eos ducimus totam ex consectetur esse. Et incidunt delectus sit omnis pariatur et magnam itaque et eius quibusdam. Qui sint numquam est asperiores rerum ut reprehenderit consequatur aut corrupti voluptate et explicabo voluptas sed molestiae nobis. Est rerum labore et assumenda mollitia ad temporibus cupiditate aut facilis saepe qui ullam enim a quibusdam consectetur nam perferendis voluptate. In quia rerum 33 nihil fuga aut consequuntur omnis cum amet incidunt qui enim cumque cum enim consectetur. Qui aliquam veniam ea asperiores iste qui autem voluptatibus vel perspiciatis autem? Sed consectetur eligendi qui expedita ratione ea molestias laboriosam. Et neque eaque nam dolore dicta est repellat eligendi eos suscipit mollitia. Qui error sequi et saepe fuga eos error molestiae qui voluptatem ipsam aut minus tempore est quos inventore. Qui repellat dignissimos rem nemo repudiandae ex dolorem ipsa ut quidem debitis aut nihil quod aut ipsam consequuntur est minus possimus. Et voluptates officia ad sequi fugiat sed distinctio molestias. Hic nihil assumenda vel officia ullam non adipisci voluptatem vel asperiores autem et internos rerum et iusto nostrum ut voluptas alias. 33 nihil beatae sit Quis possimus sed error velit qui voluptatem tempore qui omnis inventore et eligendi velit est quas praesentium. Et odit quis ut illo cumque a veritatis facere est voluptate expedita qui dicta fuga et nulla magnam in quam ducimus. Sed rerum illum non quam nostrum et assumenda repellendus aut rerum omnis et praesentium galisum. Ut magnam quia et quibusdam inventore rem beatae natus nam repudiandae repellendus! Et obcaecati laboriosam et eius quam est consectetur nihil. Et eius praesentium sed beatae impedit ut voluptas dolorem in cumque quia eum molestiae incidunt et debitis optio. Qui amet sint 33 nulla quod ut asperiores asperiores nam necessitatibus harum aut autem voluptatem cum repellendus iste. Qui internos perspiciatis qui corporis commodi est dolores quia sit fugiat pariatur et earum quae non tempora voluptatem ex perferendis harum. At magni consequatur non inventore sint aut perspiciatis quos cum maiores beatae ab aperiam ullam ea maiores omnis? Aut Quis iste qui consequatur repellendus in quas soluta eum dolores rerum et quasi nulla ea voluptatem iusto? Quo esse illum est officia corrupti sit neque velit qui ducimus dolor. Eum eius consequatur et fugit beatae eum vitae ducimus aut asperiores provident. Sed eligendi corporis et nihil eius id accusantium earum ut obcaecati amet ea obcaecati tempora et voluptate minus et soluta consequuntur. Eos iste quidem aut porro eius et rerum quia qui veritatis beatae. Eum error veritatis ut nihil repellendus rem unde optio sit quam deserunt id quasi distinctio ut commodi repellendus. Sed sint galisum et nihil veniam ex rerum accusantium hic magnam voluptatem eum dolores dicta ut galisum eligendi. Eos sunt neque rem iure maxime cum tempore maxime eos nemo fugit et nobis facilis? Est odit excepturi sed voluptas maiores in galisum suscipit. Et quia itaque ex dolore dicta ut tenetur repudiandae et illum odit. Cum suscipit culpa non voluptatum nesciunt eum error ipsum eum rerum dolores et labore doloremque et deserunt similique. Sit maxime eius hic rerum vitae ab dolorem odio ex natus suscipit. Et obcaecati reprehenderit ut illum nesciunt aut enim dolores id dolorem debitis id quia itaque. ";
+     10 *
+     "Lorem ipsum dolor sit amet. Quo autem eaque ut sint molestias eos voluptate minus. Sed adipisci laudantium et molestias omnis aut error ducimus eum quia eligendi ut eius aliquid aut voluptas mollitia ut nemo porro. Rem cumque excepturi eos ducimus totam ex consectetur esse. Et incidunt delectus sit omnis pariatur et magnam itaque et eius quibusdam. Qui sint numquam est asperiores rerum ut reprehenderit consequatur aut corrupti voluptate et explicabo voluptas sed molestiae nobis. Est rerum labore et assumenda mollitia ad temporibus cupiditate aut facilis saepe qui ullam enim a quibusdam consectetur nam perferendis voluptate. In quia rerum 33 nihil fuga aut consequuntur omnis cum amet incidunt qui enim cumque cum enim consectetur. Qui aliquam veniam ea asperiores iste qui autem voluptatibus vel perspiciatis autem? Sed consectetur eligendi qui expedita ratione ea molestias laboriosam. Et neque eaque nam dolore dicta est repellat eligendi eos suscipit mollitia. Qui error sequi et saepe fuga eos error molestiae qui voluptatem ipsam aut minus tempore est quos inventore. Qui repellat dignissimos rem nemo repudiandae ex dolorem ipsa ut quidem debitis aut nihil quod aut ipsam consequuntur est minus possimus. Et voluptates officia ad sequi fugiat sed distinctio molestias. Hic nihil assumenda vel officia ullam non adipisci voluptatem vel asperiores autem et internos rerum et iusto nostrum ut voluptas alias. 33 nihil beatae sit Quis possimus sed error velit qui voluptatem tempore qui omnis inventore et eligendi velit est quas praesentium. Et odit quis ut illo cumque a veritatis facere est voluptate expedita qui dicta fuga et nulla magnam in quam ducimus. Sed rerum illum non quam nostrum et assumenda repellendus aut rerum omnis et praesentium galisum. Ut magnam quia et quibusdam inventore rem beatae natus nam repudiandae repellendus! Et obcaecati laboriosam et eius quam est consectetur nihil. Et eius praesentium sed beatae impedit ut voluptas dolorem in cumque quia eum molestiae incidunt et debitis optio. Qui amet sint 33 nulla quod ut asperiores asperiores nam necessitatibus harum aut autem voluptatem cum repellendus iste. Qui internos perspiciatis qui corporis commodi est dolores quia sit fugiat pariatur et earum quae non tempora voluptatem ex perferendis harum. At magni consequatur non inventore sint aut perspiciatis quos cum maiores beatae ab aperiam ullam ea maiores omnis? Aut Quis iste qui consequatur repellendus in quas soluta eum dolores rerum et quasi nulla ea voluptatem iusto? Quo esse illum est officia corrupti sit neque velit qui ducimus dolor. Eum eius consequatur et fugit beatae eum vitae ducimus aut asperiores provident. Sed eligendi corporis et nihil eius id accusantium earum ut obcaecati amet ea obcaecati tempora et voluptate minus et soluta consequuntur. Eos iste quidem aut porro eius et rerum quia qui veritatis beatae. Eum error veritatis ut nihil repellendus rem unde optio sit quam deserunt id quasi distinctio ut commodi repellendus. Sed sint galisum et nihil veniam ex rerum accusantium hic magnam voluptatem eum dolores dicta ut galisum eligendi. Eos sunt neque rem iure maxime cum tempore maxime eos nemo fugit et nobis facilis? Est odit excepturi sed voluptas maiores in galisum suscipit. Et quia itaque ex dolore dicta ut tenetur repudiandae et illum odit. Cum suscipit culpa non voluptatum nesciunt eum error ipsum eum rerum dolores et labore doloremque et deserunt similique. Sit maxime eius hic rerum vitae ab dolorem odio ex natus suscipit. Et obcaecati reprehenderit ut illum nesciunt aut enim dolores id dolorem debitis id quia itaque. ";
    -----------------------------------------------------------------------------
    --  CRUD Handlers
    -----------------------------------------------------------------------------
@@ -475,24 +476,50 @@ procedure Application is
       Framework.Content_Group_Text_Add (Object, "Ville", Framework.Register_Group_Key);
    end On_Register_Create;
 
-   procedure On_Register (Object : in out Base.Base_Type'Class) is
+   function On_Register
+     (Object   : in out Base.Base_Type'Class;
+      Identity : in out Framework.User_Data)
+      return Boolean
+   is
       Surname : constant UXString := Framework.Content_Group_Text_Get (Object, "Nom");
       Name    : constant UXString := Framework.Content_Group_Text_Get (Object, "Prénom");
       Phone   : constant UXString := Framework.Content_Group_Phone_Get (Object, "Numéro de téléphone");
       Date    : constant UXString := Framework.Content_Group_Date_Get (Object, "Date de naissance");
       City    : constant UXString := Framework.Content_Group_Text_Get (Object, "Ville");
    begin
-      Framework.Set (Object, "Surname", Surname);
-      Framework.Set (Object, "Name", Name);
-      Framework.Set (Object, "Phone", Phone);
-      Framework.Set (Object, "Date", Date);
-      Framework.Set (Object, "City", City);
+      if Surname = "" then
+         Framework.Set_Register_Error_Message (Object, "Entrez votre nom");
+      else
+         if Name = "" then
+            Framework.Set_Register_Error_Message (Object, "Entrez votre prénom");
+         else
+            if Phone = "" then
+               Framework.Set_Register_Error_Message (Object, "Entrez votre numéro de téléphone");
+            else
+               if Date = "" then
+                  Framework.Set_Register_Error_Message (Object, "Entrez votre date de naissance");
+               else
+                  if City = "" then
+                     Framework.Set_Register_Error_Message (Object, "Entrez votre ville");
+                  else
+                     Framework.Set (Identity, "Surname", Surname);
+                     Framework.Set (Identity, "Name", Name);
+                     Framework.Set (Identity, "Phone", Phone);
+                     Framework.Set (Identity, "Date", Date);
+                     Framework.Set (Identity, "City", City);
+                     return True;
+                  end if;
+               end if;
+            end if;
+         end if;
+      end if;
+      return False;
    end On_Register;
 
 begin
    Framework.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
    Framework.Setup_Access
-     (On_Login'Unrestricted_Access, On_Register'Unrestricted_Access, On_Register_Create'Unrestricted_Access);
+     (On_Login'Unrestricted_Access, On_Register_Create'Unrestricted_Access, On_Register'Unrestricted_Access);
    Framework.Add_Root_User;
 
    Framework.Set_Browse_Icon ("/css/icons/widget.png");

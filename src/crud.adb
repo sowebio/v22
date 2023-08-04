@@ -213,7 +213,8 @@ package body CRUD is
                   Button.Dynamic;
 
                   if not Data.Clickable then
-                     Button.Add_Class ("unclickable");
+                     Button.Add_Class ("framework-unclickable");
+                     Button.On_Click_Handler (null);
                   end if;
                end;
             end if;
@@ -374,7 +375,8 @@ package body CRUD is
                Parent.Add_Element (Button_Name (Data_ID), Button);
 
                if not Data.Clickable then
-                  Button.Add_Class ("unclickable");
+                  Button.Add_Class ("framework-unclickable");
+                  Button.On_Click_Handler (null);
                end if;
             end;
          end if;
@@ -387,7 +389,7 @@ package body CRUD is
          Remove_Button (Instance.Sub_Elements_Parent, Index);
          Remove_Button (Instance.Elements_Parent, Index);
       end loop;
-      Instance.Last_ID := 0;
+      Instance.Last_ID   := 0;
       Instance.Is_Opened := False;
    end Clear;
 
@@ -451,9 +453,11 @@ package body CRUD is
    begin
       Instance.Menu_Table (Unique_ID).Clickable := False;
       if Elm /= null then
-         Elm.Add_Class ("unclickable");
+         Elm.Add_Class ("framework-unclickable");
+         Elm.On_Click_Handler (null);
       elsif Sub_Elm /= null then
-         Sub_Elm.Add_Class ("unclickable");
+         Sub_Elm.Add_Class ("framework-unclickable");
+         Sub_Elm.On_Click_Handler (null);
       end if;
    end Set_Unclickable;
 
@@ -467,9 +471,11 @@ package body CRUD is
    begin
       Instance.Menu_Table (Unique_ID).Clickable := True;
       if Elm /= null then
-         Elm.Remove_Class ("unclickable");
+         Elm.Remove_Class ("framework-unclickable");
+         Elm.On_Click_Handler (Instance.Menu_Table (Unique_ID).Handler);
       elsif Sub_Elm /= null then
-         Sub_Elm.Remove_Class ("unclickable");
+         Sub_Elm.Remove_Class ("framework-unclickable");
+         Sub_Elm.On_Click_Handler (Instance.Menu_Table (Unique_ID).Handler);
       end if;
    end Set_Clickable;
 
