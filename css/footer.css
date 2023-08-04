@@ -2,7 +2,7 @@
 .footer {
     height: 40px;
     width: 100%;
-    background-color: #262635;
+    background-color: var(--footer-color);
     position: fixed;
     bottom: 0;
 }
@@ -14,7 +14,7 @@
     float: left;
     align-items: center;
     padding-left: 8px;
-    color: white;
+    color: var(--footer-state-color);
     display: flex;
 }
 
@@ -23,7 +23,7 @@
     float: right;
     align-items: center;
     padding-right: 8px;
-    color: white;
+    color: var(--footer-permanent-color);
     display: flex;
 }
 

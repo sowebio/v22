@@ -65,7 +65,7 @@ package body Header is
          Instance.Remove_Button (Data_ID);
          if Menu_Table (Data_ID).Parent_ID = Parent_ID then
             declare
-               Data   : constant Data_Type                                  := Menu_Table (Data_ID);
+               Data   : constant Data_Type                        := Menu_Table (Data_ID);
                Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
             begin
                Common.Button_Access (Button).Create (Instance.App_Browse_Parent.all, Data.Name);
@@ -159,7 +159,7 @@ package body Header is
       elsif Last_Index = Max_Menu_Amount then
          raise Header_Error with "Too much menus, increase Max_Menu_Amount";
       end if;
-      Last_Index := Last_Index + 1;
+      Last_Index              := Last_Index + 1;
       Root.Name               := Name;
       Root.On_Open            := On_Open;
       Menu_Table (Last_Index) := Root;
@@ -179,7 +179,7 @@ package body Header is
       elsif Last_Index = Max_Menu_Amount then
          raise Header_Error with "Too much menus, increase Max_Menu_Amount";
       end if;
-      Last_Index := Last_Index + 1;
+      Last_Index                     := Last_Index + 1;
       Menu_Table (Parent_ID).Is_Leaf := False;
       Child.Parent_ID                := Parent_ID;
       Child.Name                     := Name;
@@ -320,7 +320,9 @@ package body Header is
       User_Menu.Add_Web (Title, URL);
    end Add_Web;
 
-   procedure Add_Button (Title : UXString; On_Click : Base.Action_Event)
+   procedure Add_Button
+     (Title    : UXString;
+      On_Click : Base.Action_Event)
    is
    begin
       User_Menu.Add_Button (Title, On_Click);

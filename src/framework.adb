@@ -9,7 +9,6 @@ with Gnoga.Gui.Element.Table;
 with Gnoga.Application.Multi_Connect;
 
 with GNAT.SHA512;
-with Ada.Containers.Hashed_Maps;
 
 with Header;
 with CRUD;
@@ -23,17 +22,6 @@ package body Framework is
 
    package Element renames Gnoga.Gui.Element;
 
-   package Dictionary is new Ada.Containers.Hashed_Maps
-     (Key_Type => UXString, Element_Type => UXString, Hash => UXStrings.Hash, Equivalent_Keys => "=");
-
-   type User_Data is tagged record
-      Email         : UXString;
-      Password_Hash : UXString;
-      User_Name     : UXString;
-
-      Extra : Dictionary.Map;
-   end record;
-
    package User_Dictionary is new Ada.Containers.Hashed_Maps
      (Key_Type => UXString, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
 
@@ -43,7 +31,7 @@ package body Framework is
    ID_Main                   : Integer;
    On_Custom_Connect         : Base.Action_Event;
    On_Custom_Login           : Base.Action_Event;
-   On_Custom_Register        : Base.Action_Event;
+   On_Custom_Register        : Register_Function;
    On_Custom_Register_Create : Base.Action_Event;
 
    Header_Dict : Integer_Dictionary.Map;
@@ -217,7 +205,10 @@ package body Framework is
    end On_Login;
 
    procedure Setup_Login_Form (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
    begin
+      App.Email := "";
+
       Content_Clear_Title (Object);
       Content_Clear_Text (Object);
 
@@ -252,8 +243,7 @@ package body Framework is
       Second_Column.Create (Row.all);
 
       Register_Link.Create (First_Column.all, "Créer un compte...");
-      Register_Link.Class_Name ("framework-link");
-      Register_Link.Style ("color", "#767696");
+      Register_Link.Class_Name ("content-group-link");
       Register_Link.Style ("white-space", "nowrap");
       Register_Link.On_Click_Handler (Setup_Register_Form'Unrestricted_Access);
 
@@ -274,6 +264,7 @@ package body Framework is
       Password  : constant UXString := Content_Group_Password_Get (Object, "Mot de passe");
       Confirmed : constant UXString := Content_Group_Password_Get (Object, "Confirmer le mot de passe");
       Identity  : User_Data;
+      Allowed   : Boolean           := True;
    begin
       Gnoga.Log ("Created an account for " & User_Name & ", Email : " & Email);
 
@@ -286,12 +277,16 @@ package body Framework is
       elsif Email /= "" then
          if Password /= "" then
             if Password = Confirmed then
-               Identities.Insert (Email, Identity);
                App.Email := Email;
                if On_Custom_Register /= null then
-                  On_Custom_Register (Object);
+                  Allowed := On_Custom_Register (Object, Identity);
                end if;
-               Setup_Login_Form (Object);
+               if Allowed then
+                  Setup_Login_Form (Object);
+                  Identities.Insert (Email, Identity);
+               else
+                  App.Email := "";
+               end if;
             else
                Set_Register_Error_Message (Object, "Les mots de passes ne correspondent pas");
             end if;
@@ -304,7 +299,10 @@ package body Framework is
    end On_Register;
 
    procedure Setup_Register_Form (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
    begin
+      App.Email := "";
+
       Content_Clear_Title (Object);
       Content_Clear_Text (Object);
 
@@ -344,8 +342,7 @@ package body Framework is
       Second_Column.Create (Row.all);
 
       Login_Link.Create (First_Column.all, "Se connecter...");
-      Login_Link.Class_Name ("framework-link");
-      Login_Link.Style ("color", "#767696");
+      Login_Link.Class_Name ("content-group-link");
       Login_Link.Style ("white-space", "nowrap");
       Login_Link.On_Click_Handler (Setup_Login_Form'Unrestricted_Access);
 
@@ -419,12 +416,12 @@ package body Framework is
 
    procedure Add_Root_User is
       Identity : User_Data;
-      Email : constant UXString := "root@root";
+      Email    : constant UXString := "root@root";
       Password : constant UXString := "password";
    begin
-      Identity.Email := Email;
+      Identity.Email         := Email;
       Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
-      Identity.User_Name := "Root User";
+      Identity.User_Name     := "Root User";
       Identities.Insert (Email, Identity);
    end Add_Root_User;
 
@@ -443,8 +440,8 @@ package body Framework is
 
    procedure Setup_Access
      (On_User_Login           : Base.Action_Event := null;
-      On_User_Register        : Base.Action_Event := null;
-      On_User_Register_Create : Base.Action_Event := null)
+      On_User_Register_Create : Base.Action_Event := null;
+      On_User_Register        : Register_Function := null)
    is
    begin
       Login_Required            := True;
@@ -1266,6 +1263,24 @@ package body Framework is
    -----------------------------------------------------------------------------
 
    procedure Set
+     (Identity : in out User_Data;
+      Key      :        UXString;
+      Value    :        UXString)
+   is
+   begin
+      Identity.Extra.Insert (Key, Value);
+   end Set;
+
+   function Get
+     (Identity : in out User_Data;
+      Key      :        UXString)
+      return UXString
+   is
+   begin
+      return Identity.Extra.Element (Key);
+   end Get;
+
+   procedure Identity_Set
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
       Value  :        UXString)
@@ -1274,9 +1289,9 @@ package body Framework is
       Identity : User_Data           := Identities.Element (App.Email);
    begin
       Identity.Extra.Insert (Key, Value);
-   end Set;
+   end Identity_Set;
 
-   function Get
+   function Identity_Get
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
       return UXString
@@ -1285,7 +1300,7 @@ package body Framework is
       Identity : constant User_Data  := Identities.Element (App.Email);
    begin
       return Identity.Extra.Element (Key);
-   end Get;
+   end Identity_Get;
 
    -----------------------------------------------------------------------------
 end Framework;

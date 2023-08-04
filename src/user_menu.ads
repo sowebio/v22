@@ -11,9 +11,9 @@ package User_Menu is
    --  Should be called every time the menu is opened
 
    procedure Add_Button
-     (Title : UXString;
+     (Title    : UXString;
       on_Click : Base.Action_Event);
-   --  Function to create a button with customized click handler
+      --  Function to create a button with customized click handler
 
    procedure Add_Dialog
      (Title           : UXString;
@@ -22,14 +22,14 @@ package User_Menu is
       Cancel_Text     : UXString          := "";
       Confirm_Handler : Base.Action_Event := null;
       Cancel_Handler  : Base.Action_Event := null);
-   --  Function to create a button on the user menu, creating a jQuery dialog.
-   --  Two default buttons are available : Cancel and Confirm
-   --  Buttons are not displayed on dialog if corresponding text is empty
+      --  Function to create a button on the user menu, creating a jQuery dialog.
+      --  Two default buttons are available : Cancel and Confirm
+      --  Buttons are not displayed on dialog if corresponding text is empty
 
    procedure Add_Web
      (Title : UXString;
       URL   : UXString);
-   --  Function to create a button on the user menu, which opens a new web page
+      --  Function to create a button on the user menu, which opens a new web page
 
    procedure Clear (Parent : in out View.View_Type);
 
@@ -44,7 +44,7 @@ private
       Unique_ID :        Integer);
 
    procedure Launch_Web
-     (Object : in out Base.Base_Type'Class;
-      Unique_ID   :        Integer);
+     (Object    : in out Base.Base_Type'Class;
+      Unique_ID :        Integer);
 
 end User_Menu;

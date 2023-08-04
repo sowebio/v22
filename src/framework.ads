@@ -3,6 +3,7 @@ with Gnoga.Gui.View;
 with UXStrings; use UXStrings;
 
 with UXStrings.Hash;
+with Ada.Containers.Hashed_Maps;
 
 package Framework is
 
@@ -11,6 +12,17 @@ package Framework is
 
    Register_Group_Key : constant UXString := "Créer un compte";
 
+   package Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => UXString, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   type User_Data is tagged record
+      Email         : UXString;
+      Password_Hash : UXString;
+      User_Name     : UXString;
+
+      Extra : Dictionary.Map;
+   end record;
+
    procedure Print (Object : in out Base.Base_Type'Class);
    --  Call system print on current web view
 
@@ -18,16 +30,25 @@ package Framework is
      (On_User_Connect       : Base.Action_Event;
       Title                 : UXString := "";
       Server_Closed_Content : UXString := "Server closed.");
-   --  Set connection elements
-   --  On_User_Connect is called every time a user launches the webpage
+      --  Set connection elements
+      --  On_User_Connect is called every time a user launches the webpage
+
+   type Register_Function is access function
+     (Object   : in out Base.Base_Type'Class;
+      Instance : in out User_Data)
+      return Boolean;
 
    procedure Setup_Access
      (On_User_Login           : Base.Action_Event := null;
-      On_User_Register        : Base.Action_Event := null;
-      On_User_Register_Create : Base.Action_Event := null);
-   --  Set the webpage accessible only by logging in
-   --  On_User_Register_Create allows to customize the register form,
-   --  using Register_Group_Key
+      On_User_Register_Create : Base.Action_Event := null;
+      On_User_Register        : Register_Function := null);
+      --  Set the webpage accessible only by logging in
+      --  On_User_Register_Create allows to customize the register form,
+      --  using Register_Group_Key, and return a boolean to accept or not form
+
+   procedure Set_Register_Error_Message
+     (Object : in out Base.Base_Type'Class;
+      Error  :        UXString);
 
    procedure Add_Root_User;
    --  Add default user
@@ -385,11 +406,21 @@ package Framework is
       -----------------------------------------------------------------------------
 
    procedure Set
+     (Identity : in out User_Data;
+      Key      :        UXString;
+      Value    :        UXString);
+
+   function Get
+     (Identity : in out User_Data;
+      Key      :        UXString)
+      return UXString;
+
+   procedure Identity_Set
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
       Value  :        UXString);
 
-   function Get
+   function Identity_Get
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
       return UXString;
@@ -404,8 +435,5 @@ private
 
    procedure Setup_Register_Form (Object : in out Base.Base_Type'Class);
    procedure Setup_Register_Buttons (Object : in out Base.Base_Type'Class);
-   procedure Set_Register_Error_Message
-     (Object : in out Base.Base_Type'Class;
-      Error  :        UXString);
 
 end Framework;
