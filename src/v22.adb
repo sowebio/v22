@@ -14,7 +14,7 @@ with Header;
 with CRUD;
 with Footer;
 
-package body Framework is
+package body v22 is
 
    use all type Gnoga.String;
 
@@ -266,8 +266,6 @@ package body Framework is
       Identity  : User_Data;
       Allowed   : Boolean           := True;
    begin
-      Gnoga.Log ("Created an account for " & User_Name & ", Email : " & Email);
-
       Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
       Identity.User_Name     := User_Name;
       Identity.Email         := Email;
@@ -284,6 +282,7 @@ package body Framework is
                if Allowed then
                   Setup_Login_Form (Object);
                   Identities.Insert (Email, Identity);
+                  Gnoga.Log ("Created an account for " & User_Name & ", Email : " & Email);
                else
                   App.Email := "";
                end if;
@@ -436,6 +435,8 @@ package body Framework is
       Gnoga.Application.Multi_Connect.Initialize (Boot => "boot_jqueryui.html");
       Gnoga.Application.Multi_Connect.On_Connect_Handler (On_Connect'Unrestricted_Access);
       On_Custom_Connect := On_User_Connect;
+
+      --  Connection.Connect (Database => "v22", Host => "localhost", User => "dv", Password => "dv160316");
    end Setup;
 
    procedure Setup_Access
@@ -819,8 +820,8 @@ package body Framework is
       Item.Place_Inside_Top_Of (Second_Column.all);
       Item.Style ("width", "100%");
       Item.Style ("box-sizing", "border-box");
-      Item.On_Focus_In_Handler (Framework.CRUD_Disable_Shortcuts'Unrestricted_Access);
-      Item.On_Focus_Out_Handler (Framework.CRUD_Enable_Shortcuts'Unrestricted_Access);
+      Item.On_Focus_In_Handler (CRUD_Disable_Shortcuts'Unrestricted_Access);
+      Item.On_Focus_Out_Handler (CRUD_Enable_Shortcuts'Unrestricted_Access);
       Item.On_Change_Handler (On_Change);
 
       --  Not its true parent, but a lot easier to access
@@ -1302,5 +1303,4 @@ package body Framework is
       return Identity.Extra.Element (Key);
    end Identity_Get;
 
-   -----------------------------------------------------------------------------
-end Framework;
+end v22;

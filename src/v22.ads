@@ -1,3 +1,6 @@
+--  with Gnoga.Server;
+--  with Gnoga.Server.Database;
+--  with Gnoga.Server.Database.MySQL;
 with Gnoga.Gui.Base;
 with Gnoga.Gui.View;
 with UXStrings; use UXStrings;
@@ -5,10 +8,13 @@ with UXStrings; use UXStrings;
 with UXStrings.Hash;
 with Ada.Containers.Hashed_Maps;
 
-package Framework is
+package v22 is
 
    package Base renames Gnoga.Gui.Base;
    package View renames Gnoga.Gui.View;
+
+   --  Connection : aliased Gnoga.Server.Database.MySQL.Connection;
+   --  pragma Linker_Options ("-lmysqlclient");
 
    Register_Group_Key : constant UXString := "Créer un compte";
 
@@ -436,4 +442,4 @@ private
    procedure Setup_Register_Form (Object : in out Base.Base_Type'Class);
    procedure Setup_Register_Buttons (Object : in out Base.Base_Type'Class);
 
-end Framework;
+end v22;

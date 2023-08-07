@@ -32,14 +32,14 @@ input:invalid {
 .framework-unclickable {
     filter: grayscale(100%);
     background: var(--framework-unclickable-color) !important;
-    border: 0px solid !important;
+    border: 2px solid transparent !important;
     cursor: default;
 }
 
 .framework-unclickable:active {
     filter: grayscale(100%);
     background: var(--framework-unclickable-color) !important;
-    border: 0px solid !important;
+    border: 2px solid transparent !important;
     cursor: default
 }
 
