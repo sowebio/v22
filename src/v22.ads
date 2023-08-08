@@ -448,7 +448,6 @@ package v22 is
 
    function Content_List_Add_Item
      (Object : in out Base.Base_Type'Class;
-      On_Click : Base.Action_Event;
       Parent_Key : UXString) return Integer;
 
       -----------------------------------------------------------------------------

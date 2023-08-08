@@ -11,6 +11,9 @@ package body Footer is
       State_Text_Parent     : constant View.Pointer_To_View_Class := new View.View_Type;
       Permanent_Text_Parent : constant View.Pointer_To_View_Class := new View.View_Type;
    begin
+      State_Text_Parent.Dynamic;
+      Permanent_Text_Parent.Dynamic;
+
       Instance.State_Text_Parent := View.View_Access (State_Text_Parent);
       Instance.State_Text_Parent.Create (Parent);
       Instance.State_Text_Parent.Class_Name ("state-text-parent");

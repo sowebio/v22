@@ -99,11 +99,20 @@ package body Header is
    begin
       Instance.Parent := Parent'Unrestricted_Access;
 
+      App_Parent.Dynamic;
+      App_Icon.Dynamic;
+      App_Browse_Parent.Dynamic;
+      Breadcrumb_Parent.Dynamic;
+      User_Parent.Dynamic;
+      User_Name_Parent.Dynamic;
+      User_Icon.Dynamic;
+      User_Browse_Parent.Dynamic;
+
       --  App icon & browse menu
       Instance.App_Parent := View.View_Access (App_Parent);
       Instance.App_Parent.Create (Parent);
-      Instance.App_Parent.Class_Name ("header-app-parent");
 
+      Instance.App_Parent.Class_Name ("header-app-parent");
       Instance.App_Icon := Common.IMG_Access (App_Icon);
       Instance.App_Icon.Create (Instance.App_Parent.all);
       Instance.App_Icon.Class_Name ("header-icon");

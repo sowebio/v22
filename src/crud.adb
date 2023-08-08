@@ -202,6 +202,7 @@ package body CRUD is
                      begin
                         View.View_Access (Delimiter).Create (Instance.Sub_Elements_Parent.all);
                         Delimiter.Class_Name ("crud-delimiter");
+                        Delimiter.Dynamic;
                         Instance.Sub_Elements_Parent.Add_Element (Delimiter_Name (Index), Delimiter);
                      end;
                   end if;
