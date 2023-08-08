@@ -37,7 +37,6 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    --  Utils
    -----------------------------------------------------------------------------
-
    function Value is new Integer_Value (Integer);
 
    function To_UXString
@@ -69,7 +68,6 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    --  Handlers
    -----------------------------------------------------------------------------
-
    procedure Dialog_Confirm_Handler (Object : in out Base.Base_Type'Class) is
       Dialog    : constant Widget.Dialog_Access := Widget.Dialog_Access (Object.Parent);
       Unique_ID : constant Integer              := Value (Dialog.jQuery_Execute ("data('gnoga_id')"));
@@ -111,7 +109,6 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    --  Launchers
    -----------------------------------------------------------------------------
-
    procedure Launch_Button
      (Object    : in out Base.Base_Type'Class;
       Unique_ID :        Integer)
@@ -177,7 +174,6 @@ package body User_Menu is
    -----------------------------------------------------------------------------
    --  API
    -----------------------------------------------------------------------------
-
    procedure Display (Parent : in out View.View_Type) is
    begin
       for Index in 1 .. Last_Index loop
