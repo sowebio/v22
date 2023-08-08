@@ -130,6 +130,7 @@ package body User_Menu is
       Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
    begin
       Dialog.Create (Object.Parent.all, Replace_All (Data.Title, ''', "\'"), Data.Content, Width => 400, Height => 300);
+      Dialog_Class.Dynamic;
       Dialog.jQuery_Execute ("data('gnoga_id', " & To_UXString (Unique_ID) & " )");
 
       if Data.Cancel_Handler /= null then
@@ -138,6 +139,7 @@ package body User_Menu is
          begin
             Common.Button_Access (Button).Create (Dialog.all, Data.Cancel_Text);
             Button.On_Click_Handler (Dialog_Cancel_Handler'Unrestricted_Access);
+            Button.Dynamic;
             Button.Class_Name ("ui-button ui-corner-all");
             jQueryUI.Position
               (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
@@ -150,6 +152,7 @@ package body User_Menu is
             Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
          begin
             Common.Button_Access (Button).Create (Dialog.all, Data.Confirm_Text);
+            Button.Dynamic;
             Button.Focus;
             Button.On_Click_Handler (Dialog_Confirm_Handler'Unrestricted_Access);
             Button.Class_Name ("ui-button ui-corner-all");

@@ -242,6 +242,12 @@ package body v22 is
       Register_Link : constant Element.Common.Button_Access := new Element.Common.Button_Type;
       Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
    begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Register_Link.Dynamic;
+      Submit_Button.Dynamic;
+
       Content_Group_Add_Space (Object, Login_Group_Key);
       Content_Group_Warning_Add (Object, "", "login-error", Login_Group_Key);
 
@@ -340,6 +346,12 @@ package body v22 is
       Login_Link : constant Element.Common.Button_Access := new Element.Common.Button_Type;
       Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
    begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Login_Link.Dynamic;
+      Submit_Button.Dynamic;
+
       Content_Group_Add_Space (Object, Register_Group_Key);
       Content_Group_Warning_Add (Object, "", "register-error", Register_Group_Key);
 
@@ -751,6 +763,11 @@ package body v22 is
       Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
       Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
    begin
+      Parent.Dynamic;
+      Table_Element.Dynamic;
+      Row.Dynamic;
+      Data.Dynamic;
+
       Element.Form.Form_Access (Parent).Create (App.Content_Text);
       Parent.Class_Name ("content-group");
       App.Content_Text.Add_Element (Title, Parent);
@@ -780,6 +797,10 @@ package body v22 is
 
       Span : constant Element.Common.Span_Access := new Element.Common.Span_Type;
    begin
+      Row.Dynamic;
+      Data.Dynamic;
+      Span.Dynamic;
+
       Content_Group_Add_Space (Object, Parent_Key, 8);
       Row.Create (Table.all);
       Data.Create (Row.all, Column_Span => 2);
@@ -800,6 +821,7 @@ package body v22 is
 
       Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
    begin
+      Row.Dynamic;
       Row.Create (Table.all);
       Row.Style ("height", From_UTF_8 (Height'Image) & "px");
    end Content_Group_Add_Space;
@@ -819,6 +841,10 @@ package body v22 is
       First_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
       Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
    begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+
       Row.Create (Table.all);
       First_Column.Create (Row.all, Name);
       Second_Column.Create (Row.all);
@@ -883,6 +909,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Edit_Text : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Type;
    begin
+      Edit_Text.Dynamic;
       Element.Form.Text_Access (Edit_Text).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Edit_Text, Name, Parent_Key, On_Change);
    end Content_Group_Text_Add;
@@ -925,6 +952,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Text_Area : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Area_Type;
    begin
+      Text_Area.Dynamic;
       Element.Form.Text_Area_Access (Text_Area).Create (Form => Parent.all, Name => Name);
       Text_Area.Style ("resize", "vertical");
       Text_Area.Style ("height", "38px");
@@ -970,6 +998,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Check_Box : constant Element.Pointer_To_Element_Class := new Element.Form.Check_Box_Type;
    begin
+      Check_Box.Dynamic;
       Element.Form.Check_Box_Access (Check_Box).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Check_Box, Name, Parent_Key, On_Change);
    end Content_Group_Check_Box_Add;
@@ -1012,6 +1041,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Number : constant Element.Pointer_To_Element_Class := new Element.Form.Number_Type;
    begin
+      Number.Dynamic;
       Element.Form.Number_Access (Number).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Number, Name, Parent_Key, On_Change);
    end Content_Group_Number_Add;
@@ -1054,6 +1084,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Selection : constant Element.Pointer_To_Element_Class := new Element.Form.Selection_Type;
    begin
+      Selection.Dynamic;
       Element.Form.Selection_Access (Selection).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Selection, Name, Parent_Key, On_Change);
    end Content_Group_Selection_Add;
@@ -1097,6 +1128,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Date : constant Element.Pointer_To_Element_Class := new Element.Form.Date_Type;
    begin
+      Date.Dynamic;
       Element.Form.Date_Access (Date).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Date, Name, Parent_Key, On_Change);
    end Content_Group_Date_Add;
@@ -1127,6 +1159,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Email : constant Element.Pointer_To_Element_Class := new Element.Form.Email_Type;
    begin
+      Email.Dynamic;
       Element.Form.Email_Access (Email).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Email, Name, Parent_Key, On_Change);
    end Content_Group_Email_Add;
@@ -1157,6 +1190,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Password : constant Element.Pointer_To_Element_Class := new Element.Form.Password_Type;
    begin
+      Password.Dynamic;
       Element.Form.Password_Access (Password).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Password, Name, Parent_Key, On_Change);
    end Content_Group_Password_Add;
@@ -1187,6 +1221,7 @@ package body v22 is
       Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
       Tel : constant Element.Pointer_To_Element_Class := new Element.Form.Tel_Type;
    begin
+      Tel.Dynamic;
       Element.Form.Tel_Access (Tel).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Tel, Name, Parent_Key, On_Change);
    end Content_Group_Phone_Add;
@@ -1223,6 +1258,10 @@ package body v22 is
       Span_Element : constant Element.Pointer_To_Element_Class := new Element.Common.Span_Type;
       Span : constant Element.Common.Span_Access := Element.Common.Span_Access (Span_Element);
    begin
+      Row.Dynamic;
+      Data.Dynamic;
+      Span_Element.Dynamic;
+
       Row.Create (Table.all);
       Data.Create (Row.all, Column_Span => 2);
       Data.Style ("text-align", "center");
@@ -1261,10 +1300,13 @@ package body v22 is
       Row_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Row_Type;
       Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Row_Element);
    begin
+      Parent.Dynamic;
+      Table_Element.Dynamic;
+      Row_Element.Dynamic;
+
       Parent.Create (App.Content_Text);
       Parent.Class_Name ("content-list");
 
-      Table.Dynamic;
       Table.Create (Parent.all);
       Table.Class_Name ("content-list-table");
       Table.jQuery_Execute ("data('last_index', 0)");
@@ -1286,6 +1328,7 @@ package body v22 is
       Column_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Heading_Type;
       Column : constant Element.Table.Table_Heading_Access := Element.Table.Table_Heading_Access (Column_Element);
    begin
+      Column_Element.Dynamic;
       Column.Create (Row.all, Content => Variable);
    end Content_List_Add_Variable;
 
@@ -1302,6 +1345,7 @@ package body v22 is
 
       Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('last_index')")) + 1;
    begin
+      Row_Element.Dynamic;
       Row.Create (Table.all);
       Row.Class_Name ("content-list-item");
 
@@ -1323,6 +1367,7 @@ package body v22 is
 
       Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
    begin
+      Column.Dynamic;
       Column.Create (Current_Row.all, Content => Value);
    end Content_List_Set_Variable;
 
