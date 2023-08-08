@@ -3,7 +3,7 @@ with Gnoga.Gui.Plugin;
 with Gnoga.Application.Multi_Connect;
 with UXStrings; use UXStrings;
 
-with V22;
+with v22;
 
 procedure Application is
 
@@ -23,7 +23,6 @@ procedure Application is
    --------------------
    --  Default CRUD  --
    --------------------
-
    procedure On_CRUD_File_Create (Object : in out Base.Base_Type'Class) is
    begin
       V22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
@@ -101,14 +100,11 @@ procedure Application is
    begin
       V22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_File_Create'Unrestricted_Access);
       V22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_File_Edit'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
       V22.CRUD_Add_Delimiter_Above (Object, "File_Export");
       V22.CRUD_Set_Unclickable (Object, "File_Export");
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
       V22.CRUD_Set_Unclickable (Object, "File_Import");
       V22.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_File_Print'Unrestricted_Access);
       V22.CRUD_Add_Delimiter_Above (Object, "File_Print");
@@ -119,14 +115,12 @@ procedure Application is
       V22.CRUD_Add_Sub_Element
         (Object, "Show_Previous", "Précédent", "Show", On_CRUD_Show_Previous'Unrestricted_Access);
       V22.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_Show_Next'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
    end Load_Default_CRUD_Childs;
 
    ---------------------
    --  Extended CRUD  --
    ---------------------
-
    procedure On_CRUD_Show_List (Object : in out Base.Base_Type'Class) is
    begin
       V22.CRUD_Notify_Sub_Element_Click (Object, "Show_List");
@@ -191,7 +185,7 @@ procedure Application is
    begin
       V22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
       V22.Content_Set_Title (Object, "Statistiques - Fichier");
-      V22.Content_Clear_Text (Object);
+      v22.Content_Clear_Text (Object);
 
       V22.Content_Group_Create (Object, "Spécification du contrat");
       V22.Content_Group_Add_Title (Object, "Détails du contrat", "Spécification du contrat");
@@ -247,7 +241,7 @@ procedure Application is
       V22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
 
       V22.Content_Set_Title (Object, "Statistiques");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
 
       V22.CRUD_Set_Clickable (Object, "File_Create");
       V22.CRUD_Set_Unclickable (Object, "File_Edit");
@@ -268,7 +262,7 @@ procedure Application is
    procedure On_CRUD_New_File_Print (Object : in out Base.Base_Type'Class) is
    begin
       V22.CRUD_Notify_Sub_Element_Click (Object, "File_Print");
-      V22.Print (Object);
+      v22.Print (Object);
    end On_CRUD_New_File_Print;
 
    procedure On_CRUD_New_Edit_Copy (Object : in out Base.Base_Type'Class) is
@@ -299,13 +293,12 @@ procedure Application is
    -----------------------------------------------------------------------------
    --  Browser Handlers
    -----------------------------------------------------------------------------
-
    procedure On_Contract (Object : in out Base.Base_Type'Class) is
    begin
       V22.Header_Notify_Menu_Click (Object, "Contract");
 
       V22.Content_Set_Title (Object, "Contrats");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Contract;
 
    procedure On_Contract_Stats (Object : in out Base.Base_Type'Class) is
@@ -313,43 +306,36 @@ procedure Application is
       V22.Header_Notify_Menu_Click (Object, "Contract_Stats");
 
       V22.Content_Set_Title (Object, "Statistiques");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
       V22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
       V22.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
       V22.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
 
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
       V22.CRUD_Set_Unclickable (Object, "File_Edit");
       V22.CRUD_Add_Sub_Element
         (Object, "File_Delete", "Supprimer", "File", On_CRUD_New_File_Delete'Unrestricted_Access);
       V22.CRUD_Set_Unclickable (Object, "File_Delete");
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
       V22.CRUD_Add_Delimiter_Above (Object, "File_Export");
       V22.CRUD_Set_Unclickable (Object, "File_Export");
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
       V22.CRUD_Set_Unclickable (Object, "File_Import");
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
       V22.CRUD_Add_Delimiter_Above (Object, "File_Print");
       V22.CRUD_Set_Unclickable (Object, "File_Print");
 
       V22.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_New_Edit_Copy'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
 
       V22.CRUD_Add_Sub_Element
         (Object, "Show_Previous", "Précédent", "Show", On_CRUD_New_Show_Previous'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
       V22.CRUD_Add_Sub_Element
         (Object, "Show_Search", "Rechercher", "Show", On_CRUD_New_Show_Search'Unrestricted_Access);
 
-      V22.CRUD_Load (Object);
+      v22.CRUD_Load (Object);
    end On_Contract_Stats;
 
    procedure On_Contract_Management (Object : in out Base.Base_Type'Class) is
@@ -357,18 +343,18 @@ procedure Application is
       V22.Header_Notify_Menu_Click (Object, "Contract_Management");
 
       V22.Content_Set_Title (Object, "Gestion");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Contract_Management;
 
    procedure On_Administration_Users (Object : in out Base.Base_Type'Class) is
       Parent_Key : constant UXString := "Liste des utilisateurs";
-      Dummy : Integer := 0;
-      Index : Integer := 0;
+      Dummy      : Integer           := 0;
+      Index      : Integer           := 0;
    begin
       V22.Header_Notify_Menu_Click (Object, "Administration_Users");
 
       V22.Content_Set_Title (Object, "Utilisateurs");
-      V22.Content_List_Create (Object, Parent_Key);
+      v22.Content_List_Create (Object, Parent_Key);
       V22.Content_List_Add_Variable (Object, "ID", Parent_Key);
       V22.Content_List_Add_Variable (Object, "Nom d'utilisateur", Parent_Key);
       V22.Content_List_Add_Variable (Object, "Email", Parent_Key);
@@ -382,11 +368,11 @@ procedure Application is
 
       for Data of v22.Identities loop
          Index := Index + 1;
-         Dummy := V22.Content_List_Add_Item (Object, Parent_Key);
-         V22.Content_List_Set_Variable (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
-         V22.Content_List_Set_Variable (Object, Data.User_Name, Dummy, Parent_Key);
-         V22.Content_List_Set_Variable (Object, Data.Email, Dummy, Parent_Key);
-         V22.Content_List_Set_Variable (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
+         Dummy := v22.Content_List_Add_Item (Object, Parent_Key);
+         v22.Content_List_Set_Variable (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
+         v22.Content_List_Set_Variable (Object, Data.User_Name, Dummy, Parent_Key);
+         v22.Content_List_Set_Variable (Object, Data.Email, Dummy, Parent_Key);
+         v22.Content_List_Set_Variable (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
 
          if Data.User_Name /= "Root User" then
             V22.Content_List_Set_Variable (Object, v22.Get (Data, "Surname"), Dummy, Parent_Key);
@@ -403,7 +389,7 @@ procedure Application is
       V22.Header_Notify_Menu_Click (Object, "Administration_Emails");
 
       V22.Content_Set_Title (Object, "Emails");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration_Emails;
 
    procedure On_Administration_Gen (Object : in out Base.Base_Type'Class) is
@@ -427,8 +413,7 @@ procedure Application is
 
       V22.CRUD_Add_Sub_Element
         (Object, "Validate_Bill", "Factures", "Validate", On_CRUD_Validate_Bill'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "Validate_SEPA", "SEPA", "Validate", On_CRUD_Validate_SEPA'Unrestricted_Access);
+      V22.CRUD_Add_Sub_Element (Object, "Validate_SEPA", "SEPA", "Validate", On_CRUD_Validate_SEPA'Unrestricted_Access);
 
       V22.CRUD_Add_Sub_Element
         (Object, "Preferences_SEPA", "Intervalles SEPA", "Preferences", On_CRUD_Preferences_SEPA'Unrestricted_Access);
@@ -440,10 +425,10 @@ procedure Application is
         (Object, "Security_Bug", "Ne devrait pas être affiché...", "Security",
          On_CRUD_Security_Bug'Unrestricted_Access);
 
-      V22.CRUD_Load (Object);
+      v22.CRUD_Load (Object);
 
       V22.Content_Set_Title (Object, "Générer des requêtes");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration_Gen;
 
    procedure On_Administration (Object : in out Base.Base_Type'Class) is
@@ -451,7 +436,7 @@ procedure Application is
       V22.Header_Notify_Menu_Click (Object, "Administration");
 
       V22.Content_Set_Title (Object, "Administration");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration;
 
    procedure On_App_Menu (Object : in out Base.Base_Type'Class) is
@@ -460,10 +445,10 @@ procedure Application is
 
       Load_Default_CRUD_Roots (Object);
       Load_Default_CRUD_Childs (Object);
-      V22.CRUD_Load (Object);
+      v22.CRUD_Load (Object);
 
-      V22.Content_Set_Title (Object, App_Name);
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      v22.Content_Set_Title (Object, App_Name);
+      v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_App_Menu;
 
    procedure On_Confirm (Object : in out Base.Base_Type'Class) is
@@ -481,7 +466,6 @@ procedure Application is
    -----------------------------------------------------------------------------
    --  On_Connect
    -----------------------------------------------------------------------------
-
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
       V22.Set_User_Name (Object, "");
@@ -508,7 +492,7 @@ procedure Application is
 
    function On_Register
      (Object   : in out Base.Base_Type'Class;
-      Identity : in out V22.User_Data)
+      Identity : in out v22.User_Data)
       return Boolean
    is
       Surname : constant UXString := V22.Content_Group_Text_Get (Object, "Nom");
@@ -548,9 +532,9 @@ procedure Application is
 
 begin
    V22.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
-   V22.Setup_Access
+   v22.Setup_Access
      (On_Login'Unrestricted_Access, On_Register_Create'Unrestricted_Access, On_Register'Unrestricted_Access);
-   V22.Add_Root_User;
+   v22.Add_Root_User;
 
    V22.Set_Browse_Icon ("/css/icons/widget.png");
    V22.Set_Default_User_Icon ("/css/icons/user.png");
@@ -558,8 +542,7 @@ begin
    V22.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
 
    V22.Header_Add_Child ("Contract", "Contrats", "App_Menu", On_Contract'Unrestricted_Access);
-   V22.Header_Add_Child
-     ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
+   V22.Header_Add_Child ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
    V22.Header_Add_Child ("Contract_Stats", "Statistiques", "Contract", On_Contract_Stats'Unrestricted_Access);
 
    V22.Header_Add_Child ("Administration", "Administration", "App_Menu", On_Administration'Unrestricted_Access);

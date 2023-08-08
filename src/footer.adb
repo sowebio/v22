@@ -3,7 +3,6 @@ package body Footer is
    -----------------------------------------------------------------------------
    --  API
    -----------------------------------------------------------------------------
-
    procedure Create
      (Instance : in out Footer_Type;
       Parent   : in out View.View_Type)

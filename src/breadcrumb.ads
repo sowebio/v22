@@ -17,14 +17,14 @@ package Breadcrumb is
    procedure Create
      (Instance : in out Breadcrumb_Type;
       Parent   : in out View.View_Type);
-      --  Should be called every time a user connects
+   --  Should be called every time a user connects
 
    procedure Update
      (Instance : in out Breadcrumb_Type;
       Handler  : in     Base.Action_Event;
       Content  : in     UXString := "";
       Depth    : in     Integer  := 0);
-      --  Set new last element in instancied breadcrumb
+   --  Set new last element in instancied breadcrumb
 
    procedure Clear (Instance : in out Breadcrumb_Type);
    --  Clear every element in breadcrumb

@@ -36,7 +36,7 @@ package Header is
      (Instance         : in out Header_Type;
       Parent           : in out View.View_Type;
       On_Logo, On_User :        Base.Action_Event);
-      --  Should be called every time a user connects
+   --  Should be called every time a user connects
 
    procedure Clear (Instance : in out Header_Type);
    --  Removes current breadcrumb, waiting for upcoming update
@@ -45,23 +45,23 @@ package Header is
      (Name    : UXString;
       On_Open : Base.Action_Event)
       return Integer;
-      --  Set first element in breadcrumb, first button to appear
-      --  NOTE: Root must be created before childs, and returned value
-      --  (Parent_ID) allows to create childs for this element
+   --  Set first element in breadcrumb, first button to appear
+   --  NOTE: Root must be created before childs, and returned value
+   --  (Parent_ID) allows to create childs for this element
 
    function Add_Child
      (Parent_ID : Integer;
       Name      : UXString;
       On_Open   : Base.Action_Event)
       return Integer;
-      --  Add child for a given parent
-      --  NOTE: A child always refers to a parent, which can be itself a child...
+   --  Add child for a given parent
+   --  NOTE: A child always refers to a parent, which can be itself a child...
 
-      -----------------------------------------------------------------------------
-      --  Menu relative functions
-      -----------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
+   --  Menu relative functions
+   -----------------------------------------------------------------------------
 
-      --  Breadcrumb navigation menu
+   --  Breadcrumb navigation menu
    procedure Open_Menu
      (Instance  : in out Header_Type;
       Unique_ID :        Integer);
@@ -88,16 +88,16 @@ package Header is
    procedure Notify_Menu_Click
      (Instance  : in out Header_Type;
       Unique_ID :        Integer);
-      --  Callback to place in "On_Open" handlers (given to Add_Child)
+   --  Callback to place in "On_Open" handlers (given to Add_Child)
 
-      -----------------------------------------------------------------------------
-      --  Setters
-      -----------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
+   --  Setters
+   -----------------------------------------------------------------------------
 
    procedure Set_Menu
      (Instance  : in out Header_Type;
       Unique_ID :        Integer);
-      --  Set current menu, updating breadcrumb
+   --  Set current menu, updating breadcrumb
 
    procedure Set_User_Name
      (Instance  : in out Header_Type;
@@ -111,9 +111,9 @@ package Header is
      (Instance : in out Header_Type;
       Icon_SRC :        UXString);
 
-      -----------------------------------------------------------------------------
-      --  User Menu
-      -----------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
+   --  User Menu
+   -----------------------------------------------------------------------------
 
    procedure Add_Dialog
      (Title           : UXString;
@@ -122,19 +122,19 @@ package Header is
       Cancel_Text     : UXString          := "";
       Confirm_Handler : Base.Action_Event := null;
       Cancel_Handler  : Base.Action_Event := null);
-      --  Function to create a button on the user menu, creating a jQuery dialog.
-      --  Two default buttons are available : Cancel and Confirm
-      --  Buttons are not displayed on dialog if corresponding text is empty
+   --  Function to create a button on the user menu, creating a jQuery dialog.
+   --  Two default buttons are available : Cancel and Confirm
+   --  Buttons are not displayed on dialog if corresponding text is empty
 
    procedure Add_Web
      (Title : UXString;
       URL   : UXString);
-      --  Function to create a button on the user menu, which opens a new web page
+   --  Function to create a button on the user menu, which opens a new web page
 
    procedure Add_Button
      (Title    : UXString;
       On_Click : Base.Action_Event);
-      --  Function to create a button with customized click handler
+   --  Function to create a button with customized click handler
 
 private
 

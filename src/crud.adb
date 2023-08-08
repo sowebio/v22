@@ -12,7 +12,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  Conversions
    -----------------------------------------------------------------------------
-
    function Value is new Integer_Value (Integer);
 
    function To_UXString
@@ -70,7 +69,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  Utils
    -----------------------------------------------------------------------------
-
    function Button_Name
      (Index : Integer)
       return UXString
@@ -255,7 +253,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  Shortcuts
    -----------------------------------------------------------------------------
-
    function Is_Shortcut_Available
      (Instance  : in out CRUD_Type;
       Parent_ID :        Integer;
@@ -313,7 +310,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  API
    -----------------------------------------------------------------------------
-
    procedure Create
      (Instance  : in out CRUD_Type;
       Parent    : in out View.View_Type;
@@ -443,7 +439,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  Setters
    -----------------------------------------------------------------------------
-
    procedure Set_Unclickable
      (Instance  : in out CRUD_Type;
       Unique_ID :        Integer)
@@ -493,7 +488,6 @@ package body CRUD is
    -----------------------------------------------------------------------------
    --  Callbacks
    -----------------------------------------------------------------------------
-
    procedure Notify_Element_Click
      (Instance : in out CRUD_Type;
       Object   : in out Base.Base_Type'Class)

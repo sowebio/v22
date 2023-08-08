@@ -14,17 +14,17 @@ package Footer is
    procedure Create
      (Instance : in out Footer_Type;
       Parent   : in out View.View_Type);
-      --  Should be called every time a user connects
+   --  Should be called every time a user connects
 
    procedure Set_State_Text
      (Instance : in out Footer_Type;
       State    :        UXString := "");
-      --  Set user state text
+   --  Set user state text
 
    procedure Set_Permanent_Text
      (Instance : in out Footer_Type;
       State    :        UXString := "");
-      --  Set user permanent text
+   --  Set user permanent text
 
 private
 

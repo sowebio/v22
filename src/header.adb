@@ -29,7 +29,6 @@ package body Header is
    -----------------------------------------------------------------------------
    --  Utils
    -----------------------------------------------------------------------------
-
    function To_UXString
      (Value : Integer)
       return UXString
@@ -127,7 +126,6 @@ package body Header is
       Instance.Breadcrumb_Parent.Create (Parent);
       Instance.Breadcrumb_Parent.Class_Name ("header-breadcrumb-parent");
       Instance.Breadcrumb_Content.Create (Instance.Breadcrumb_Parent.all);
-      --  Instance.Breadcrumb_Content.Update (Root.On_Open, Root.Name);
 
       --  User icon & user browse menu
       Instance.User_Parent := View.View_Access (User_Parent);
@@ -147,7 +145,6 @@ package body Header is
       Instance.User_Browse_Parent.Create (Instance.User_Parent.all);
       Instance.User_Browse_Parent.Class_Name ("header-user-browse-parent");
 
-      --  User_Menu.Display (Instance.User_Browse_Parent.all);
       Instance.App_Browse_Parent.Display ("none");
    end Create;
 
@@ -201,7 +198,6 @@ package body Header is
    -----------------------------------------------------------------------------
    --  Menu relative functions
    -----------------------------------------------------------------------------
-
    procedure Open_Menu
      (Instance  : in out Header_Type;
       Unique_ID :        Integer)
@@ -254,7 +250,6 @@ package body Header is
    -----------------------------------------------------------------------------
    --  Setters
    -----------------------------------------------------------------------------
-
    procedure Set_Menu
      (Instance  : in out Header_Type;
       Unique_ID :        Integer)
@@ -290,7 +285,6 @@ package body Header is
    -----------------------------------------------------------------------------
    --  Callbacks
    -----------------------------------------------------------------------------
-
    procedure Notify_Menu_Click
      (Instance  : in out Header_Type;
       Unique_ID :        Integer)
@@ -308,7 +302,6 @@ package body Header is
    -----------------------------------------------------------------------------
    --  User menu
    -----------------------------------------------------------------------------
-
    procedure Add_Dialog
      (Title           : UXString;
       Content         : UXString          := "";
