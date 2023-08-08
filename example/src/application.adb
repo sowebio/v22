@@ -352,34 +352,33 @@ procedure Application is
       Index      : Integer           := 0;
    begin
       V22.Header_Notify_Menu_Click (Object, "Administration_Users");
-
       V22.Content_Set_Title (Object, "Utilisateurs");
       v22.Content_List_Create (Object, Parent_Key);
-      V22.Content_List_Add_Variable (Object, "ID", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Nom d'utilisateur", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Email", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Hash (25)", Parent_Key);
+      V22.Content_List_Add_Column (Object, "ID", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Nom d'utilisateur", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Email", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Hash (25)", Parent_Key);
 
-      V22.Content_List_Add_Variable (Object, "Nom", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Prénom", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Numéro de téléphone", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Date de naissance", Parent_Key);
-      V22.Content_List_Add_Variable (Object, "Ville", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Nom", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Prénom", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Numéro de téléphone", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Date de naissance", Parent_Key);
+      V22.Content_List_Add_Column (Object, "Ville", Parent_Key);
 
       for Data of v22.Identities loop
          Index := Index + 1;
          Dummy := v22.Content_List_Add_Item (Object, Parent_Key);
-         v22.Content_List_Set_Variable (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
-         v22.Content_List_Set_Variable (Object, Data.User_Name, Dummy, Parent_Key);
-         v22.Content_List_Set_Variable (Object, Data.Email, Dummy, Parent_Key);
-         v22.Content_List_Set_Variable (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.User_Name, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.Email, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
 
          if Data.User_Name /= "Root User" then
-            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Surname"), Dummy, Parent_Key);
-            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Name"), Dummy, Parent_Key);
-            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Phone"), Dummy, Parent_Key);
-            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Date"), Dummy, Parent_Key);
-            V22.Content_List_Set_Variable (Object, v22.Get (Data, "City"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get (Data, "Surname"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get (Data, "Name"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get (Data, "Phone"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get (Data, "Date"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get (Data, "City"), Dummy, Parent_Key);
          end if;
       end loop;
    end On_Administration_Users;

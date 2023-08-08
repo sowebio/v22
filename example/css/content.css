@@ -2,7 +2,7 @@
 .content-container {
     width: 100%;
     height: calc(100% - 80px);
-    overflow: scroll;
+    overflow-y: auto;
     top: 40px;
     position: relative;
     box-sizing: border-box;
