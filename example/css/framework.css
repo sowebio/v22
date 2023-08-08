@@ -40,7 +40,7 @@ input:invalid {
     filter: grayscale(100%);
     background: var(--framework-unclickable-color) !important;
     border: 2px solid transparent !important;
-    cursor: default
+    cursor: default;
 }
 
 /* Link styling */

@@ -429,12 +429,12 @@ package v22 is
      (Object : in out Base.Base_Type'Class;
       Title  :        UXString);
 
-   procedure Content_List_Add_Variable
+   procedure Content_List_Add_Column
      (Object     : in out Base.Base_Type'Class;
       Variable   :        UXString;
       Parent_Key :        UXString);
 
-   procedure Content_List_Set_Variable
+   procedure Content_List_Add_Text
      (Object     : in out Base.Base_Type'Class;
       Value      :        UXString;
       Index      :        Integer;

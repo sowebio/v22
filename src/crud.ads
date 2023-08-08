@@ -26,6 +26,9 @@ package CRUD is
    procedure Load (Instance : in out CRUD_Type);
    --  Load CRUD on screen
 
+   procedure Close_Menu (Instance : in out CRUD_Type);
+   --  Closes sub-element panel
+
    procedure Clear (Instance : in out CRUD_Type);
    --  Clear CRUD from screen
 

@@ -43,25 +43,24 @@ package body v22 is
       Is_Logged : Boolean  := False;
       Email     : UXString := ""; -- As a dictionnary key
 
-      Window    : Gnoga.Gui.Window.Pointer_To_Window_Class;
-      Container : View.View_Type;
-
-      Header_Content : Header.Header_Type;
-
+      Window        : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      Container     : View.View_Type;
       Header_Parent : View.View_Type;
-      CRUD_Parent   : View.View_Type;
-      Content       : View.View_Type;
-      Footer_Parent : View.View_Type;
 
+      CRUD_Parent : View.View_Type;
+
+      Content        : View.View_Type;
       Content_Header : View.View_Type;
       Content_Text   : aliased View.View_Type;
 
-      Footer_Content : Footer.Footer_Type;
+      Footer_Parent : View.View_Type;
 
-      Crud_Dict   : Integer_Dictionary.Map;
       Header_Dict : Integer_Dictionary.Map;
+      CRUD_Dict   : Integer_Dictionary.Map;
 
-      CRUD_Instance : CRUD.CRUD_Type;
+      Header_Instance : Header.Header_Type;
+      CRUD_Instance   : CRUD.CRUD_Type;
+      Footer_Instance : Footer.Footer_Type;
    end record;
    type App_Access is access all App_Data;
 
@@ -88,7 +87,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Crud_Dict.Insert (Key, Value);
+      App.CRUD_Dict.Insert (Key, Value);
    end CRUD_Set;
 
    function CRUD_Get
@@ -98,7 +97,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      return App.Crud_Dict.Element (Key);
+      return App.CRUD_Dict.Element (Key);
    end CRUD_Get;
 
    procedure Header_Set
@@ -124,6 +123,8 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       App.CRUD_Instance.Notify_Element_Click (Object);
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
    end On_CRUD_Callback;
 
    procedure On_Key_Pressed
@@ -133,6 +134,8 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       App.CRUD_Instance.Notify_Key_Pressed (Char);
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
    end On_Key_Pressed;
 
    -----------------------------------------------------------------------------
@@ -142,13 +145,13 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       if App.Is_Logged then
-         if App.Header_Content.Is_Menu_Open then
-            App.Header_Content.Close_Menu;
+         if App.Header_Instance.Is_Menu_Open then
+            App.Header_Instance.Close_Menu;
          else
-            --  The reason why this function is here and not in crud.adb
             App.CRUD_Instance.Clear;
-            App.Header_Content.Open_Menu (ID_Main);
-            App.Header_Content.Close_User_Menu;
+            App.Header_Instance.Open_Menu (ID_Main);
+            App.Header_Instance.Close_User_Menu;
+            App.CRUD_Instance.Close_Menu;
          end if;
       end if;
    end On_Logo;
@@ -157,11 +160,12 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       if App.Is_Logged then
-         if App.Header_Content.Is_User_Menu_Open then
-            App.Header_Content.Close_User_Menu;
+         if App.Header_Instance.Is_User_Menu_Open then
+            App.Header_Instance.Close_User_Menu;
          else
-            App.Header_Content.Open_User_Menu;
-            App.Header_Content.Close_Menu;
+            App.Header_Instance.Open_User_Menu;
+            App.Header_Instance.Close_Menu;
+            App.CRUD_Instance.Close_Menu;
          end if;
       end if;
    end On_User;
@@ -196,8 +200,8 @@ package body v22 is
                if On_Custom_Login /= null then
                   On_Custom_Login (Object);
                end if;
-               App.Header_Content.Set_Menu (ID_Main);
-               App.Header_Content.Set_User_Name (Identity.User_Name);
+               App.Header_Instance.Set_Menu (ID_Main);
+               App.Header_Instance.Set_User_Name (Identity.User_Name);
                App.Is_Logged := True;
             else
                Set_Login_Error_Message (Object, "Mot de passe incorrect");
@@ -410,12 +414,12 @@ package body v22 is
       App.Content_Text.Class_Name ("content-text");
 
       --  Header
-      App.Header_Content.Create (App.Header_Parent, On_Logo'Unrestricted_Access, On_User'Unrestricted_Access);
-      App.Header_Content.Set_App_Icon (Browse_Icon_SRC);
-      App.Header_Content.Set_User_Icon (User_Icon_SRC);
+      App.Header_Instance.Create (App.Header_Parent, On_Logo'Unrestricted_Access, On_User'Unrestricted_Access);
+      App.Header_Instance.Set_App_Icon (Browse_Icon_SRC);
+      App.Header_Instance.Set_User_Icon (User_Icon_SRC);
 
       --  Footer
-      App.Footer_Content.Create (App.Footer_Parent);
+      App.Footer_Instance.Create (App.Footer_Parent);
 
       --  CRUD
       App.CRUD_Instance.Create
@@ -425,7 +429,7 @@ package body v22 is
       if Login_Required then
          Setup_Login_Form (App.Container);
       else
-         App.Header_Content.Set_Menu (ID_Main);
+         App.Header_Instance.Set_Menu (ID_Main);
       end if;
 
       On_Custom_Connect (App.Container);
@@ -489,13 +493,13 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       Setup_Login_Form (Object);
-      App.Header_Content.Set_User_Name ("");
-      App.Header_Content.Clear;
-      App.Header_Content.Close_Menu;
-      App.Header_Content.Close_User_Menu;
-      App.Header_Content.App_Browse_Parent.Inner_HTML ("");
+      App.Header_Instance.Set_User_Name ("");
+      App.Header_Instance.Clear;
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
+      App.Header_Instance.App_Browse_Parent.Inner_HTML ("");
       App.CRUD_Instance.Clear;
-      App.Crud_Dict.Clear;
+      App.CRUD_Dict.Clear;
       App.Is_Logged := False;
    end Disconnect_User;
 
@@ -529,7 +533,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Header_Content.Set_User_Icon (Icon_SRC);
+      App.Header_Instance.Set_User_Icon (Icon_SRC);
    end Set_User_Icon;
 
    procedure Set_User_Name
@@ -538,7 +542,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Header_Content.Set_User_Name (Name);
+      App.Header_Instance.Set_User_Name (Name);
    end Set_User_Name;
 
    -----------------------------------------------------------------------------
@@ -607,11 +611,11 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Header_Content.Notify_Menu_Click (Header_Get (Key));
+      App.Header_Instance.Notify_Menu_Click (Header_Get (Key));
       App.Content_Header.Inner_HTML ("");
       App.Content_Text.Inner_HTML ("");
       App.CRUD_Instance.Clear;
-      App.Crud_Dict.Clear;
+      App.CRUD_Dict.Clear;
    end Header_Notify_Menu_Click;
 
    -----------------------------------------------------------------------------
@@ -1316,7 +1320,7 @@ package body v22 is
       Row.Class_Name ("content-list-header");
    end Content_List_Create;
 
-   procedure Content_List_Add_Variable
+   procedure Content_List_Add_Column
      (Object     : in out Base.Base_Type'Class;
       Variable   :        UXString;
       Parent_Key :        UXString)
@@ -1329,7 +1333,7 @@ package body v22 is
    begin
       Column_Element.Dynamic;
       Column.Create (Row.all, Content => Variable);
-   end Content_List_Add_Variable;
+   end Content_List_Add_Column;
 
    function Content_List_Add_Item
      (Object     : in out Base.Base_Type'Class;
@@ -1354,7 +1358,7 @@ package body v22 is
       return Row_Index;
    end Content_List_Add_Item;
 
-   procedure Content_List_Set_Variable
+   procedure Content_List_Add_Text
      (Object     : in out Base.Base_Type'Class;
       Value      :        UXString;
       Index      :        Integer;
@@ -1370,7 +1374,7 @@ package body v22 is
    begin
       Column.Dynamic;
       Column.Create (Current_Row.all, Content => Value);
-   end Content_List_Set_Variable;
+   end Content_List_Add_Text;
 
    -----------------------------------------------------------------------------
    --  Footer
@@ -1382,7 +1386,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Footer_Content.Set_State_Text (Text);
+      App.Footer_Instance.Set_State_Text (Text);
    end Footer_Set_State_Text;
 
    procedure Footer_Set_Permanent_Text
@@ -1391,7 +1395,7 @@ package body v22 is
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Footer_Content.Set_Permanent_Text (Text);
+      App.Footer_Instance.Set_Permanent_Text (Text);
    end Footer_Set_Permanent_Text;
 
    -----------------------------------------------------------------------------
