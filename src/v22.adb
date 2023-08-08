@@ -7,6 +7,7 @@ with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Element.Form;
 with Gnoga.Gui.Element.Table;
 with Gnoga.Application.Multi_Connect;
+with UXStrings.Conversions; use UXStrings.Conversions;
 
 with GNAT.SHA512;
 
@@ -22,51 +23,57 @@ package body v22 is
 
    package Element renames Gnoga.Gui.Element;
 
-   package User_Dictionary is new Ada.Containers.Hashed_Maps
-     (Key_Type => UXString, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
-
    package Integer_Dictionary is new Ada.Containers.Hashed_Maps
      (Key_Type => UXString, Element_Type => Integer, Hash => UXStrings.Hash, Equivalent_Keys => "=");
 
-   ID_Main                   : Integer;
-   On_Custom_Connect         : Base.Action_Event;
-   On_Custom_Login           : Base.Action_Event;
-   On_Custom_Register        : Register_Function;
+   ID_Main : Integer;
+   On_Custom_Connect : Base.Action_Event;
+   On_Custom_Login : Base.Action_Event;
+   On_Custom_Register : Register_Function;
    On_Custom_Register_Create : Base.Action_Event;
 
    Header_Dict : Integer_Dictionary.Map;
 
    Browse_Icon_SRC : UXString := "";
-   User_Icon_SRC   : UXString := "";
+   User_Icon_SRC : UXString := "";
 
-   Identities     : User_Dictionary.Map;
    Login_Required : Boolean := False;
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
-      Is_Logged : Boolean  := False;
-      Email     : UXString := ""; -- As a dictionnary key
+      Is_Logged : Boolean := False;
+      Email : UXString := ""; -- As a dictionnary key
 
-      Window    : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
       Container : View.View_Type;
 
       Header_Content : Header.Header_Type;
 
       Header_Parent : View.View_Type;
-      CRUD_Parent   : View.View_Type;
-      Content       : View.View_Type;
+      CRUD_Parent : View.View_Type;
+      Content : View.View_Type;
       Footer_Parent : View.View_Type;
 
       Content_Header : View.View_Type;
-      Content_Text   : aliased View.View_Type;
+      Content_Text : aliased View.View_Type;
 
       Footer_Content : Footer.Footer_Type;
 
-      Crud_Dict   : Integer_Dictionary.Map;
+      Crud_Dict : Integer_Dictionary.Map;
       Header_Dict : Integer_Dictionary.Map;
 
       CRUD_Instance : CRUD.CRUD_Type;
    end record;
    type App_Access is access all App_Data;
+
+   function Int_Value is new Integer_Value (Integer);
+
+   function To_UXString
+     (Value : Integer)
+      return UXString
+   is
+   begin
+      return From_UTF_8 (Value'Image).Delete (1, 1);
+   end To_UXString;
 
    procedure Print (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
@@ -76,8 +83,8 @@ package body v22 is
 
    procedure CRUD_Set
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString;
-      Value  :        Integer)
+      Key : UXString;
+      Value : Integer)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -86,7 +93,7 @@ package body v22 is
 
    function CRUD_Get
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
       return Integer
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
@@ -95,7 +102,7 @@ package body v22 is
    end CRUD_Get;
 
    procedure Header_Set
-     (Key   : UXString;
+     (Key : UXString;
       Value : Integer)
    is
    begin
@@ -122,7 +129,7 @@ package body v22 is
 
    procedure On_Key_Pressed
      (Object : in out Base.Base_Type'Class;
-      Char   :        Character)
+      Char : Character)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -179,9 +186,9 @@ package body v22 is
    --  Login form  --
    ------------------
    procedure On_Login (Object : in out Base.Base_Type'Class) is
-      App      : constant App_Access := App_Access (Object.Connection_Data);
-      Email    : constant UXString   := Content_Group_Email_Get (Object, "Adresse mail");
-      Password : constant UXString   := Content_Group_Password_Get (Object, "Mot de passe");
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Email : constant UXString := Content_Group_Email_Get (Object, "Adresse mail");
+      Password : constant UXString := Content_Group_Password_Get (Object, "Mot de passe");
    begin
       if Identities.Contains (Email) then
          declare
@@ -228,8 +235,8 @@ package body v22 is
         App.Content_Text.Element ("Table_" & Login_Group_Key);
       Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
-      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
+      First_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
       Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
 
       Register_Link : constant Element.Common.Button_Access := new Element.Common.Button_Type;
@@ -260,15 +267,15 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
       User_Name : constant UXString := Content_Group_Text_Get (Object, "Nom d'utilisateur");
-      Email     : constant UXString := Content_Group_Email_Get (Object, "Adresse mail");
-      Password  : constant UXString := Content_Group_Password_Get (Object, "Mot de passe");
+      Email : constant UXString := Content_Group_Email_Get (Object, "Adresse mail");
+      Password : constant UXString := Content_Group_Password_Get (Object, "Mot de passe");
       Confirmed : constant UXString := Content_Group_Password_Get (Object, "Confirmer le mot de passe");
-      Identity  : User_Data;
-      Allowed   : Boolean           := True;
+      Identity : User_Data;
+      Allowed : Boolean := True;
    begin
       Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
-      Identity.User_Name     := User_Name;
-      Identity.Email         := Email;
+      Identity.User_Name := User_Name;
+      Identity.Email := Email;
 
       if Identities.Contains (Email) then
          Set_Register_Error_Message (Object, "Cette adresse est déjà associée à un compte. Connectez-vous !");
@@ -326,11 +333,11 @@ package body v22 is
         App.Content_Text.Element ("Table_" & Register_Group_Key);
       Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
-      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
+      First_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
       Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
 
-      Login_Link    : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+      Login_Link : constant Element.Common.Button_Access := new Element.Common.Button_Type;
       Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
    begin
       Content_Group_Add_Space (Object, Register_Group_Key);
@@ -356,8 +363,8 @@ package body v22 is
    -----------------------------------------------------------------------------
 
    procedure On_Connect
-     (Screen     : in out Gnoga.Gui.Window.Window_Type'Class;
-      Connection :        access Gnoga.Application.Multi_Connect.Connection_Holder_Type)
+     (Screen : in out Gnoga.Gui.Window.Window_Type'Class;
+      Connection : access Gnoga.Application.Multi_Connect.Connection_Holder_Type)
    is
       pragma Unreferenced (Connection);
       App : constant App_Access := new App_Data;
@@ -415,18 +422,18 @@ package body v22 is
 
    procedure Add_Root_User is
       Identity : User_Data;
-      Email    : constant UXString := "root@root";
+      Email : constant UXString := "root@root";
       Password : constant UXString := "password";
    begin
-      Identity.Email         := Email;
+      Identity.Email := Email;
       Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
-      Identity.User_Name     := "Root User";
+      Identity.User_Name := "Root User";
       Identities.Insert (Email, Identity);
    end Add_Root_User;
 
    procedure Setup
-     (On_User_Connect       : Base.Action_Event;
-      Title                 : UXString := "";
+     (On_User_Connect : Base.Action_Event;
+      Title : UXString := "";
       Server_Closed_Content : UXString := "Server closed.")
    is
    begin
@@ -440,20 +447,20 @@ package body v22 is
    end Setup;
 
    procedure Setup_Access
-     (On_User_Login           : Base.Action_Event := null;
+     (On_User_Login : Base.Action_Event := null;
       On_User_Register_Create : Base.Action_Event := null;
-      On_User_Register        : Register_Function := null)
+      On_User_Register : Register_Function := null)
    is
    begin
-      Login_Required            := True;
-      On_Custom_Login           := On_User_Login;
-      On_Custom_Register        := On_User_Register;
+      Login_Required := True;
+      On_Custom_Login := On_User_Login;
+      On_Custom_Register := On_User_Register;
       On_Custom_Register_Create := On_User_Register_Create;
    end Setup_Access;
 
    procedure Set_Login_Error_Message
      (Object : in out Base.Base_Type'Class;
-      Error  :        UXString)
+      Error : UXString)
    is
    begin
       Content_Group_Warning_Set (Object, "login-error", Error);
@@ -461,7 +468,7 @@ package body v22 is
 
    procedure Set_Register_Error_Message
      (Object : in out Base.Base_Type'Class;
-      Error  :        UXString)
+      Error : UXString)
    is
    begin
       Content_Group_Warning_Set (Object, "register-error", Error);
@@ -483,7 +490,7 @@ package body v22 is
 
    procedure Set_App_Title
      (Object : in out Base.Base_Type'Class;
-      Title  :        UXString)
+      Title : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -506,8 +513,8 @@ package body v22 is
    end Set_Default_User_Icon;
 
    procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString)
+     (Object : in out Base.Base_Type'Class;
+      Icon_SRC : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -516,7 +523,7 @@ package body v22 is
 
    procedure Set_User_Name
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -528,8 +535,8 @@ package body v22 is
    -----------------------------------------------------------------------------
 
    procedure Header_Set_Root
-     (Key      : UXString;
-      Name     : UXString;
+     (Key : UXString;
+      Name : UXString;
       On_Click : Base.Action_Event)
    is
       Unique_ID : Integer;
@@ -540,10 +547,10 @@ package body v22 is
    end Header_Set_Root;
 
    procedure Header_Add_Child
-     (Key        : UXString;
-      Name       : UXString;
+     (Key : UXString;
+      Name : UXString;
       Parent_Key : UXString;
-      On_Click   : Base.Action_Event)
+      On_Click : Base.Action_Event)
    is
       Unique_ID : Integer;
    begin
@@ -552,12 +559,12 @@ package body v22 is
    end Header_Add_Child;
 
    procedure Header_Add_Dialog
-     (Title        : UXString;
-      Content      : UXString          := "";
-      Confirm_Text : UXString          := "";
-      Cancel_Text  : UXString          := "";
-      On_Confirm   : Base.Action_Event := null;
-      On_Cancel    : Base.Action_Event := null)
+     (Title : UXString;
+      Content : UXString := "";
+      Confirm_Text : UXString := "";
+      Cancel_Text : UXString := "";
+      On_Confirm : Base.Action_Event := null;
+      On_Cancel : Base.Action_Event := null)
    is
    begin
       Header.Add_Dialog (Title, Content, Confirm_Text, Cancel_Text, On_Confirm, On_Cancel);
@@ -565,14 +572,14 @@ package body v22 is
 
    procedure Header_Add_Web
      (Title : UXString;
-      URL   : UXString)
+      URL : UXString)
    is
    begin
       Header.Add_Web (Title, URL);
    end Header_Add_Web;
 
    procedure Header_Add_Button
-     (Title    : UXString;
+     (Title : UXString;
       On_Click : Base.Action_Event)
    is
    begin
@@ -585,7 +592,7 @@ package body v22 is
 
    procedure Header_Notify_Menu_Click
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -607,12 +614,12 @@ package body v22 is
    end CRUD_Load;
 
    procedure CRUD_Add_Element
-     (Object   : in out Base.Base_Type'Class;
-      Key      :        UXString;
-      Name     :        UXString;
-      Icon_SRC :        UXString)
+     (Object : in out Base.Base_Type'Class;
+      Key : UXString;
+      Name : UXString;
+      Icon_SRC : UXString)
    is
-      App       : constant App_Access := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Unique_ID : Integer;
    begin
       Unique_ID := App.CRUD_Instance.Add_Element (Name, Icon_SRC);
@@ -620,13 +627,13 @@ package body v22 is
    end CRUD_Add_Element;
 
    procedure CRUD_Add_Sub_Element
-     (Object     : in out Base.Base_Type'Class;
-      Key        :        UXString;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Click   :        Base.Action_Event)
+     (Object : in out Base.Base_Type'Class;
+      Key : UXString;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Click : Base.Action_Event)
    is
-      App       : constant App_Access := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Unique_ID : Integer;
    begin
       Unique_ID := App.CRUD_Instance.Add_Sub_Element (Name, CRUD_Get (Object, Parent_Key), On_Click);
@@ -635,7 +642,7 @@ package body v22 is
 
    procedure CRUD_Add_Delimiter_Above
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -644,7 +651,7 @@ package body v22 is
 
    procedure CRUD_Set_Unclickable
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -653,7 +660,7 @@ package body v22 is
 
    procedure CRUD_Set_Clickable
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -662,7 +669,7 @@ package body v22 is
 
    procedure CRUD_Notify_Sub_Element_Click
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -702,7 +709,7 @@ package body v22 is
 
    procedure Content_Set_Title
      (Object : in out Base.Base_Type'Class;
-      Title  :        UXString)
+      Title : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -716,7 +723,7 @@ package body v22 is
 
    procedure Content_Set_Text
      (Object : in out Base.Base_Type'Class;
-      Text   :        UXString)
+      Text : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -733,15 +740,15 @@ package body v22 is
    --------------
    procedure Content_Group_Create
      (Object : in out Base.Base_Type'Class;
-      Title  :        UXString)
+      Title : UXString)
    is
-      App    : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent : constant Element.Pointer_To_Element_Class := new Element.Form.Form_Type;
 
       Table_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Type;
-      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
       Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
    begin
       Element.Form.Form_Access (Parent).Create (App.Content_Text);
@@ -759,16 +766,16 @@ package body v22 is
    end Content_Group_Create;
 
    procedure Content_Group_Add_Title
-     (Object     : in out Base.Base_Type'Class;
-      Title      :        UXString;
-      Parent_Key :        UXString)
+     (Object : in out Base.Base_Type'Class;
+      Title : UXString;
+      Parent_Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
-      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
       Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
 
       Span : constant Element.Common.Span_Access := new Element.Common.Span_Type;
@@ -782,14 +789,14 @@ package body v22 is
    end Content_Group_Add_Title;
 
    procedure Content_Group_Add_Space
-     (Object     : in out Base.Base_Type'Class;
-      Parent_Key :        UXString;
-      Height     :        Integer := 8)
+     (Object : in out Base.Base_Type'Class;
+      Parent_Key : UXString;
+      Height : Integer := 8)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
-      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
       Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
    begin
@@ -798,18 +805,18 @@ package body v22 is
    end Content_Group_Add_Space;
 
    procedure Content_Group_Item_Add
-     (Object     : in out Base.Base_Type'Class;
-      Item       :        Element.Pointer_To_Element_Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Item : Element.Pointer_To_Element_Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
-      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
-      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
+      First_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
       Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
    begin
       Row.Create (Table.all);
@@ -830,34 +837,34 @@ package body v22 is
 
    procedure Content_Group_Item_Lock
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
    is
-      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Form         : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
+      Form : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
    begin
       Form.Disabled;
    end Content_Group_Item_Lock;
 
    procedure Content_Group_Item_Unlock
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
    is
-      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Form         : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
+      Form : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
    begin
       Form.Disabled (False);
    end Content_Group_Item_Unlock;
 
    procedure Content_Group_Item_Place_Holder
-     (Object       : in out Base.Base_Type'Class;
-      Name         :        UXString;
-      Place_Holder :        UXString)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Place_Holder : UXString)
    is
-      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Form         : constant Element.Form.Text_Area_Access    := Element.Form.Text_Area_Access (Form_Element);
+      Form : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Form_Element);
    begin
       Form.Place_Holder (Place_Holder);
    end Content_Group_Item_Place_Holder;
@@ -866,15 +873,15 @@ package body v22 is
    --  Edit Text  --
    -----------------
    procedure Content_Group_Text_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Edit_Text      : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Edit_Text : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Type;
    begin
       Element.Form.Text_Access (Edit_Text).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Edit_Text, Name, Parent_Key, On_Change);
@@ -882,24 +889,24 @@ package body v22 is
 
    procedure Content_Group_Text_Set
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString;
-      Text   :        UXString)
+      Name : UXString;
+      Text : UXString)
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Edit_Text_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Edit_Text         : constant Element.Form.Text_Access         := Element.Form.Text_Access (Edit_Text_Element);
+      Edit_Text : constant Element.Form.Text_Access := Element.Form.Text_Access (Edit_Text_Element);
    begin
       Edit_Text.Value (Text);
    end Content_Group_Text_Set;
 
    function Content_Group_Text_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Edit_Text_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Edit_Text         : constant Element.Form.Text_Access         := Element.Form.Text_Access (Edit_Text_Element);
+      Edit_Text : constant Element.Form.Text_Access := Element.Form.Text_Access (Edit_Text_Element);
    begin
       return Edit_Text.Value;
    end Content_Group_Text_Get;
@@ -908,15 +915,15 @@ package body v22 is
    --  Text Area  --
    -----------------
    procedure Content_Group_Text_Area_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Text_Area      : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Area_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Text_Area : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Area_Type;
    begin
       Element.Form.Text_Area_Access (Text_Area).Create (Form => Parent.all, Name => Name);
       Text_Area.Style ("resize", "vertical");
@@ -927,24 +934,24 @@ package body v22 is
 
    procedure Content_Group_Text_Area_Set
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString;
-      Text   :        UXString)
+      Name : UXString;
+      Text : UXString)
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Text_Area_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Text_Area         : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
+      Text_Area : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
    begin
       Text_Area.Value (Text);
    end Content_Group_Text_Area_Set;
 
    function Content_Group_Text_Area_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Text_Area_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Text_Area         : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
+      Text_Area : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
    begin
       return Text_Area.Value;
    end Content_Group_Text_Area_Get;
@@ -953,40 +960,40 @@ package body v22 is
    --  Check Box  --
    -----------------
    procedure Content_Group_Check_Box_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Check_Box      : constant Element.Pointer_To_Element_Class := new Element.Form.Check_Box_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Check_Box : constant Element.Pointer_To_Element_Class := new Element.Form.Check_Box_Type;
    begin
       Element.Form.Check_Box_Access (Check_Box).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Check_Box, Name, Parent_Key, On_Change);
    end Content_Group_Check_Box_Add;
 
    procedure Content_Group_Check_Box_Checked
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Is_Checked :        Boolean)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Is_Checked : Boolean)
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Check_Box_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Check_Box         : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
+      Check_Box : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
    begin
       Check_Box.Checked (Is_Checked);
    end Content_Group_Check_Box_Checked;
 
    function Content_Group_Check_Box_Is_Checked
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return Boolean
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Check_Box_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Check_Box         : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
+      Check_Box : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
    begin
       return Check_Box.Checked;
    end Content_Group_Check_Box_Is_Checked;
@@ -995,15 +1002,15 @@ package body v22 is
    --  Number  --
    --------------
    procedure Content_Group_Number_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Number         : constant Element.Pointer_To_Element_Class := new Element.Form.Number_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Number : constant Element.Pointer_To_Element_Class := new Element.Form.Number_Type;
    begin
       Element.Form.Number_Access (Number).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Number, Name, Parent_Key, On_Change);
@@ -1011,24 +1018,24 @@ package body v22 is
 
    procedure Content_Group_Number_Set
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString;
-      Value  :        Integer)
+      Name : UXString;
+      Value : Integer)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Number_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Number         : constant Element.Form.Number_Access       := Element.Form.Number_Access (Number_Element);
+      Number : constant Element.Form.Number_Access := Element.Form.Number_Access (Number_Element);
    begin
       Number.Value (Value);
    end Content_Group_Number_Set;
 
    function Content_Group_Number_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return Integer
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Number_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Number         : constant Element.Form.Number_Access       := Element.Form.Number_Access (Number_Element);
+      Number : constant Element.Form.Number_Access := Element.Form.Number_Access (Number_Element);
    begin
       return Number.Value;
    end Content_Group_Number_Get;
@@ -1037,41 +1044,41 @@ package body v22 is
    --  Selection  --
    -----------------
    procedure Content_Group_Selection_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Selection      : constant Element.Pointer_To_Element_Class := new Element.Form.Selection_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Selection : constant Element.Pointer_To_Element_Class := new Element.Form.Selection_Type;
    begin
       Element.Form.Selection_Access (Selection).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Selection, Name, Parent_Key, On_Change);
    end Content_Group_Selection_Add;
 
    procedure Content_Group_Selection_Add_Option
-     (Object  : in out Base.Base_Type'Class;
-      Name    :        UXString;
-      Option  :        UXString;
-      Enabled :        Boolean := False)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Option : UXString;
+      Enabled : Boolean := False)
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Selection_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Selection         : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
+      Selection : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
    begin
       Selection.Add_Option (Value => Option, Text => Option, Selected => Enabled);
    end Content_Group_Selection_Add_Option;
 
    function Content_Group_Selection_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Selection_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Selection         : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
+      Selection : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
    begin
       return Selection.Value;
    end Content_Group_Selection_Get;
@@ -1080,15 +1087,15 @@ package body v22 is
    --  Date  --
    ------------
    procedure Content_Group_Date_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Date           : constant Element.Pointer_To_Element_Class := new Element.Form.Date_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Date : constant Element.Pointer_To_Element_Class := new Element.Form.Date_Type;
    begin
       Element.Form.Date_Access (Date).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Date, Name, Parent_Key, On_Change);
@@ -1096,12 +1103,12 @@ package body v22 is
 
    function Content_Group_Date_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Date_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Date         : constant Element.Form.Date_Access         := Element.Form.Date_Access (Date_Element);
+      Date : constant Element.Form.Date_Access := Element.Form.Date_Access (Date_Element);
    begin
       return Date.Value;
    end Content_Group_Date_Get;
@@ -1110,15 +1117,15 @@ package body v22 is
    --  Email  --
    -------------
    procedure Content_Group_Email_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Email          : constant Element.Pointer_To_Element_Class := new Element.Form.Email_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Email : constant Element.Pointer_To_Element_Class := new Element.Form.Email_Type;
    begin
       Element.Form.Email_Access (Email).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Email, Name, Parent_Key, On_Change);
@@ -1126,12 +1133,12 @@ package body v22 is
 
    function Content_Group_Email_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Email_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Email         : constant Element.Form.Email_Access        := Element.Form.Email_Access (Email_Element);
+      Email : constant Element.Form.Email_Access := Element.Form.Email_Access (Email_Element);
    begin
       return Email.Value;
    end Content_Group_Email_Get;
@@ -1140,15 +1147,15 @@ package body v22 is
    --  Password  --
    ----------------
    procedure Content_Group_Password_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Password       : constant Element.Pointer_To_Element_Class := new Element.Form.Password_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Password : constant Element.Pointer_To_Element_Class := new Element.Form.Password_Type;
    begin
       Element.Form.Password_Access (Password).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Password, Name, Parent_Key, On_Change);
@@ -1156,12 +1163,12 @@ package body v22 is
 
    function Content_Group_Password_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App              : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Password_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Password         : constant Element.Form.Password_Access     := Element.Form.Password_Access (Password_Element);
+      Password : constant Element.Form.Password_Access := Element.Form.Password_Access (Password_Element);
    begin
       return Password.Value;
    end Content_Group_Password_Get;
@@ -1170,15 +1177,15 @@ package body v22 is
    --  Phone  --
    -------------
    procedure Content_Group_Phone_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :        UXString;
-      Parent_Key :        UXString;
-      On_Change  :        Base.Action_Event := null)
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Parent_Key : UXString;
+      On_Change : Base.Action_Event := null)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
-      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
-      Tel            : constant Element.Pointer_To_Element_Class := new Element.Form.Tel_Type;
+      Parent : constant Element.Form.Form_Access := Element.Form.Form_Access (Parent_Element);
+      Tel : constant Element.Pointer_To_Element_Class := new Element.Form.Tel_Type;
    begin
       Element.Form.Tel_Access (Tel).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Tel, Name, Parent_Key, On_Change);
@@ -1186,12 +1193,12 @@ package body v22 is
 
    function Content_Group_Phone_Get
      (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
+      Name : UXString)
       return UXString
    is
-      App         : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Tel_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Tel         : constant Element.Form.Tel_Access          := Element.Form.Tel_Access (Tel_Element);
+      Tel : constant Element.Form.Tel_Access := Element.Form.Tel_Access (Tel_Element);
    begin
       return Tel.Value;
    end Content_Group_Phone_Get;
@@ -1200,21 +1207,21 @@ package body v22 is
    --  Warning  --
    ---------------
    procedure Content_Group_Warning_Add
-     (Object     : in out Base.Base_Type'Class;
-      Text       :        UXString;
-      Key        :        UXString;
-      Parent_Key :        UXString)
+     (Object : in out Base.Base_Type'Class;
+      Text : UXString;
+      Key : UXString;
+      Parent_Key : UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
-      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
 
-      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
       Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
 
       Span_Element : constant Element.Pointer_To_Element_Class := new Element.Common.Span_Type;
-      Span         : constant Element.Common.Span_Access       := Element.Common.Span_Access (Span_Element);
+      Span : constant Element.Common.Span_Access := Element.Common.Span_Access (Span_Element);
    begin
       Row.Create (Table.all);
       Data.Create (Row.all, Column_Span => 2);
@@ -1227,15 +1234,97 @@ package body v22 is
 
    procedure Content_Group_Warning_Set
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString;
-      Text   :        UXString)
+      Key : UXString;
+      Text : UXString)
    is
-      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      App : constant App_Access := App_Access (Object.Connection_Data);
       Span_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Key);
-      Span         : constant Element.Common.Span_Access       := Element.Common.Span_Access (Span_Element);
+      Span : constant Element.Common.Span_Access := Element.Common.Span_Access (Span_Element);
    begin
       Span.Text (Text);
    end Content_Group_Warning_Set;
+
+   -----------------------------------------------------------------------------
+   --  Lists
+   -----------------------------------------------------------------------------
+   procedure Content_List_Create
+     (Object : in out Base.Base_Type'Class;
+      Title : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Parent : constant Element.Common.DIV_Access := new Element.Common.DIV_Type;
+
+      Table_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Type;
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
+
+      Row_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Row_Type;
+      Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Row_Element);
+   begin
+      Parent.Create (App.Content_Text);
+      Parent.Class_Name ("content-list");
+
+      Table.Dynamic;
+      Table.Create (Parent.all);
+      Table.Class_Name ("content-list-table");
+      Table.jQuery_Execute ("data('last_index', 0)");
+      App.Content_Text.Add_Element ("List_" & Title, Table_Element);
+
+      Row.Create (Table.all);
+      App.Content_Text.Add_Element ("List_Header_" & Title, Row_Element);
+      Row.Class_Name ("content-list-header");
+   end Content_List_Create;
+
+   procedure Content_List_Add_Variable
+     (Object : in out Base.Base_Type'Class;
+      Variable : UXString;
+      Parent_Key : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Row_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Header_" & Parent_Key);
+      Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Row_Element);
+      Column_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Heading_Type;
+      Column : constant Element.Table.Table_Heading_Access := Element.Table.Table_Heading_Access (Column_Element);
+   begin
+      Column.Create (Row.all, Content => Variable);
+   end Content_List_Add_Variable;
+
+   function Content_List_Add_Item
+     (Object : in out Base.Base_Type'Class;
+      Parent_Key : UXString) return Integer
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
+
+      Row_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Row_Type;
+      Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Row_Element);
+
+      Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('last_index')")) + 1;
+   begin
+      Row.Create (Table.all);
+      Row.Class_Name ("content-list-item");
+
+      App.Content_Text.Add_Element ("List_Header_" & Parent_Key & To_UXString (Row_Index), Row_Element);
+
+      return Row_Index;
+   end Content_List_Add_Item;
+
+   procedure Content_List_Set_Variable
+     (Object : in out Base.Base_Type'Class;
+      Value : UXString;
+      Index : Integer;
+      Parent_Key : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Current_Row_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Header_" & Parent_Key & To_UXString (Index));
+      Current_Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Current_Row_Element);
+
+      Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+   begin
+      Column.Create (Current_Row.all, Content => Value);
+   end Content_List_Set_Variable;
 
    -----------------------------------------------------------------------------
    --  Footer
@@ -1243,7 +1332,7 @@ package body v22 is
 
    procedure Footer_Set_State_Text
      (Object : in out Base.Base_Type'Class;
-      Text   :        UXString := "")
+      Text : UXString := "")
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -1252,7 +1341,7 @@ package body v22 is
 
    procedure Footer_Set_Permanent_Text
      (Object : in out Base.Base_Type'Class;
-      Text   :        UXString := "")
+      Text : UXString := "")
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -1265,8 +1354,8 @@ package body v22 is
 
    procedure Set
      (Identity : in out User_Data;
-      Key      :        UXString;
-      Value    :        UXString)
+      Key : UXString;
+      Value : UXString)
    is
    begin
       Identity.Extra.Insert (Key, Value);
@@ -1274,7 +1363,7 @@ package body v22 is
 
    function Get
      (Identity : in out User_Data;
-      Key      :        UXString)
+      Key : UXString)
       return UXString
    is
    begin
@@ -1283,22 +1372,22 @@ package body v22 is
 
    procedure Identity_Set
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString;
-      Value  :        UXString)
+      Key : UXString;
+      Value : UXString)
    is
-      App      : constant App_Access := App_Access (Object.Connection_Data);
-      Identity : User_Data           := Identities.Element (App.Email);
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Identity : User_Data := Identities.Element (App.Email);
    begin
       Identity.Extra.Insert (Key, Value);
    end Identity_Set;
 
    function Identity_Get
      (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
+      Key : UXString)
       return UXString
    is
-      App      : constant App_Access := App_Access (Object.Connection_Data);
-      Identity : constant User_Data  := Identities.Element (App.Email);
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Identity : constant User_Data := Identities.Element (App.Email);
    begin
       return Identity.Extra.Element (Key);
    end Identity_Get;

@@ -361,11 +361,41 @@ procedure Application is
    end On_Contract_Management;
 
    procedure On_Administration_Users (Object : in out Base.Base_Type'Class) is
+      Parent_Key : constant UXString := "Liste des utilisateurs";
+      Dummy : Integer := 0;
+      Index : Integer := 0;
    begin
       V22.Header_Notify_Menu_Click (Object, "Administration_Users");
 
       V22.Content_Set_Title (Object, "Utilisateurs");
-      V22.Content_Set_Text (Object, Lorem_Ipsum);
+      V22.Content_List_Create (Object, Parent_Key);
+      V22.Content_List_Add_Variable (Object, "ID", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Nom d'utilisateur", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Email", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Hash (25)", Parent_Key);
+
+      V22.Content_List_Add_Variable (Object, "Nom", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Prénom", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Numéro de téléphone", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Date de naissance", Parent_Key);
+      V22.Content_List_Add_Variable (Object, "Ville", Parent_Key);
+
+      for Data of v22.Identities loop
+         Index := Index + 1;
+         Dummy := V22.Content_List_Add_Item (Object, Parent_Key);
+         V22.Content_List_Set_Variable (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
+         V22.Content_List_Set_Variable (Object, Data.User_Name, Dummy, Parent_Key);
+         V22.Content_List_Set_Variable (Object, Data.Email, Dummy, Parent_Key);
+         V22.Content_List_Set_Variable (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
+
+         if Data.User_Name /= "Root User" then
+            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Surname"), Dummy, Parent_Key);
+            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Name"), Dummy, Parent_Key);
+            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Phone"), Dummy, Parent_Key);
+            V22.Content_List_Set_Variable (Object, v22.Get (Data, "Date"), Dummy, Parent_Key);
+            V22.Content_List_Set_Variable (Object, v22.Get (Data, "City"), Dummy, Parent_Key);
+         end if;
+      end loop;
    end On_Administration_Users;
 
    procedure On_Administration_Emails (Object : in out Base.Base_Type'Class) is

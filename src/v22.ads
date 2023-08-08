@@ -29,6 +29,38 @@ package v22 is
       Extra : Dictionary.Map;
    end record;
 
+         -----------------------------------------------------------------------------
+      --  User relative data
+      -----------------------------------------------------------------------------
+
+   procedure Set
+     (Identity : in out User_Data;
+      Key      :        UXString;
+      Value    :        UXString);
+
+   function Get
+     (Identity : in out User_Data;
+      Key      :        UXString)
+      return UXString;
+
+   procedure Identity_Set
+     (Object : in out Base.Base_Type'Class;
+      Key    :        UXString;
+      Value  :        UXString);
+
+   function Identity_Get
+     (Object : in out Base.Base_Type'Class;
+      Key    :        UXString)
+      return UXString;
+
+
+   --  /!\ \/ \/ \/ This is placed here just for demo
+   package User_Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   Identities : User_Dictionary.Map;
+   --  /!\ ^  ^  ^ This was placed here just for demo
+
    procedure Print (Object : in out Base.Base_Type'Class);
    --  Call system print on current web view
 
@@ -395,6 +427,30 @@ package v22 is
       Key    :        UXString;
       Text   :        UXString);
 
+   -----------------------------------------------------------------------------
+   --  Lists
+   -----------------------------------------------------------------------------
+
+   procedure Content_List_Create
+     (Object : in out Base.Base_Type'Class;
+      Title  :        UXString);
+
+   procedure Content_List_Add_Variable
+     (Object     : in out Base.Base_Type'Class;
+      Variable   :        UXString;
+      Parent_Key :        UXString);
+
+   procedure Content_List_Set_Variable
+     (Object : in out Base.Base_Type'Class;
+      Value : UXString;
+      Index : Integer;
+      Parent_Key : UXString);
+
+   function Content_List_Add_Item
+     (Object : in out Base.Base_Type'Class;
+      On_Click : Base.Action_Event;
+      Parent_Key : UXString) return Integer;
+
       -----------------------------------------------------------------------------
       --  Footer
       -----------------------------------------------------------------------------
@@ -406,30 +462,6 @@ package v22 is
    procedure Footer_Set_Permanent_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString := "");
-
-      -----------------------------------------------------------------------------
-      --  User relative data
-      -----------------------------------------------------------------------------
-
-   procedure Set
-     (Identity : in out User_Data;
-      Key      :        UXString;
-      Value    :        UXString);
-
-   function Get
-     (Identity : in out User_Data;
-      Key      :        UXString)
-      return UXString;
-
-   procedure Identity_Set
-     (Object : in out Base.Base_Type'Class;
-      Key    :        UXString;
-      Value  :        UXString);
-
-   function Identity_Get
-     (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
-      return UXString;
 
 private
 
