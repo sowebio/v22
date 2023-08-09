@@ -2,6 +2,7 @@ with Gnoga.Gui.Base;
 with Gnoga.Gui.Plugin;
 with Gnoga.Application.Multi_Connect;
 with UXStrings; use UXStrings;
+with UXStrings.Conversions; use UXStrings.Conversions;
 
 with v22;
 
@@ -11,11 +12,22 @@ procedure Application is
 
    use all type Gnoga.String;
 
-   App_Name : constant UXString := "V22 GNOGA";
+   App_Name : constant UXString := "GNOGA - v22";
 
    Lorem_Ipsum : constant UXString :=
      10 *
      "Lorem ipsum dolor sit amet. Quo autem eaque ut sint molestias eos voluptate minus. Sed adipisci laudantium et molestias omnis aut error ducimus eum quia eligendi ut eius aliquid aut voluptas mollitia ut nemo porro. Rem cumque excepturi eos ducimus totam ex consectetur esse. Et incidunt delectus sit omnis pariatur et magnam itaque et eius quibusdam. Qui sint numquam est asperiores rerum ut reprehenderit consequatur aut corrupti voluptate et explicabo voluptas sed molestiae nobis. Est rerum labore et assumenda mollitia ad temporibus cupiditate aut facilis saepe qui ullam enim a quibusdam consectetur nam perferendis voluptate. In quia rerum 33 nihil fuga aut consequuntur omnis cum amet incidunt qui enim cumque cum enim consectetur. Qui aliquam veniam ea asperiores iste qui autem voluptatibus vel perspiciatis autem? Sed consectetur eligendi qui expedita ratione ea molestias laboriosam. Et neque eaque nam dolore dicta est repellat eligendi eos suscipit mollitia. Qui error sequi et saepe fuga eos error molestiae qui voluptatem ipsam aut minus tempore est quos inventore. Qui repellat dignissimos rem nemo repudiandae ex dolorem ipsa ut quidem debitis aut nihil quod aut ipsam consequuntur est minus possimus. Et voluptates officia ad sequi fugiat sed distinctio molestias. Hic nihil assumenda vel officia ullam non adipisci voluptatem vel asperiores autem et internos rerum et iusto nostrum ut voluptas alias. 33 nihil beatae sit Quis possimus sed error velit qui voluptatem tempore qui omnis inventore et eligendi velit est quas praesentium. Et odit quis ut illo cumque a veritatis facere est voluptate expedita qui dicta fuga et nulla magnam in quam ducimus. Sed rerum illum non quam nostrum et assumenda repellendus aut rerum omnis et praesentium galisum. Ut magnam quia et quibusdam inventore rem beatae natus nam repudiandae repellendus! Et obcaecati laboriosam et eius quam est consectetur nihil. Et eius praesentium sed beatae impedit ut voluptas dolorem in cumque quia eum molestiae incidunt et debitis optio. Qui amet sint 33 nulla quod ut asperiores asperiores nam necessitatibus harum aut autem voluptatem cum repellendus iste. Qui internos perspiciatis qui corporis commodi est dolores quia sit fugiat pariatur et earum quae non tempora voluptatem ex perferendis harum. At magni consequatur non inventore sint aut perspiciatis quos cum maiores beatae ab aperiam ullam ea maiores omnis? Aut Quis iste qui consequatur repellendus in quas soluta eum dolores rerum et quasi nulla ea voluptatem iusto? Quo esse illum est officia corrupti sit neque velit qui ducimus dolor. Eum eius consequatur et fugit beatae eum vitae ducimus aut asperiores provident. Sed eligendi corporis et nihil eius id accusantium earum ut obcaecati amet ea obcaecati tempora et voluptate minus et soluta consequuntur. Eos iste quidem aut porro eius et rerum quia qui veritatis beatae. Eum error veritatis ut nihil repellendus rem unde optio sit quam deserunt id quasi distinctio ut commodi repellendus. Sed sint galisum et nihil veniam ex rerum accusantium hic magnam voluptatem eum dolores dicta ut galisum eligendi. Eos sunt neque rem iure maxime cum tempore maxime eos nemo fugit et nobis facilis? Est odit excepturi sed voluptas maiores in galisum suscipit. Et quia itaque ex dolore dicta ut tenetur repudiandae et illum odit. Cum suscipit culpa non voluptatum nesciunt eum error ipsum eum rerum dolores et labore doloremque et deserunt similique. Sit maxime eius hic rerum vitae ab dolorem odio ex natus suscipit. Et obcaecati reprehenderit ut illum nesciunt aut enim dolores id dolorem debitis id quia itaque. ";
+
+   function Int_Value is new Integer_Value (Integer);
+
+   function To_UXString
+     (Value : Integer)
+      return UXString
+   is
+   begin
+      return From_UTF_8 (Value'Image).Delete (1, 1);
+   end To_UXString;
+
    -----------------------------------------------------------------------------
    --  CRUD Handlers
    -----------------------------------------------------------------------------
@@ -291,6 +303,108 @@ procedure Application is
    end On_CRUD_New_Show_Search;
 
    -----------------------------------------------------------------------------
+   --  CRUD for Administration > Users
+   -----------------------------------------------------------------------------
+   procedure On_CRUD_User_File_Edit (Object : in out Base.Base_Type'Class) is
+      Parent_Key : constant UXString := "Liste des utilisateurs";
+      Sub_Key : constant UXString := "Détails de l'utilisateur";
+      Data_Index : constant Integer := v22.Content_List_Selected_Row (Object, Parent_Key);
+      Identity : v22.User_Data;
+      Index : Integer := 0;
+   begin
+      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
+      if Data_Index /= 0 then
+         for Data of v22.Identities loop
+            Index := Index + 1;
+            if Index = Data_Index then
+               Identity := Data;
+            end if;
+         end loop;
+
+         if Identity.Email /= "root@root" then
+            v22.Set_Data (Object, "Index", To_UXString (Data_Index));
+
+
+            v22.CRUD_Set_Unclickable (Object, "File_Delete");
+            v22.CRUD_Set_Unclickable (Object, "File_Edit");
+            v22.CRUD_Set_Clickable (Object, "File_Save");
+
+            V22.Content_Set_Title (Object, "Utilisateur - Modification");
+            v22.Content_Clear_Text (Object);
+
+            V22.Content_Group_Create (Object, Sub_Key);
+            V22.Content_Group_Text_Add (Object, "Nom d'utilisateur", Sub_Key);
+            v22.Content_Group_Email_Add (Object, "Adresse mail", Sub_Key);
+            V22.Content_Group_Text_Add (Object, "Nom", Sub_Key);
+            V22.Content_Group_Text_Add (Object, "Prénom", Sub_Key);
+            V22.Content_Group_Phone_Add (Object, "Numéro de téléphone", Sub_Key);
+            V22.Content_Group_Date_Add (Object, "Date de naissance", Sub_Key);
+            V22.Content_Group_Text_Add (Object, "Ville", Sub_Key);
+
+            V22.Content_Group_Text_Set (Object, "Nom d'utilisateur", Identity.User_Name);
+            v22.Content_Group_Email_Set (Object, "Adresse mail", Identity.Email);
+
+            v22.Content_Group_Item_Lock (Object, "Nom d'utilisateur");
+            v22.Content_Group_Item_Lock (Object, "Adresse mail");
+
+            V22.Content_Group_Text_Set (Object, "Nom", v22.Get_Identity (Identity, "Surname"));
+            V22.Content_Group_Text_Set (Object, "Prénom", v22.Get_Identity (Identity, "Name"));
+            V22.Content_Group_Phone_Set (Object, "Numéro de téléphone", v22.Get_Identity (Identity, "Phone"));
+            V22.Content_Group_Date_Set (Object, "Date de naissance", v22.Get_Identity (Identity, "Date"));
+            V22.Content_Group_Text_Set (Object, "Ville", v22.Get_Identity (Identity, "City"));
+         end if;
+      end if;
+   end On_CRUD_User_File_Edit;
+
+   procedure On_Administration_Users (Object : in out Base.Base_Type'Class);
+
+   procedure On_CRUD_User_File_Save (Object : in out Base.Base_Type'Class) is
+      Data_Index : constant Integer := Int_Value (v22.Get_Data (Object, "Index")); -- ?????????? bug
+      Identity : v22.User_Data;
+      Index : Integer := 0;
+   begin
+      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Save");
+      for Data of v22.Identities loop
+         Index := Index + 1;
+         if Index = Data_Index then
+            Identity := Data;
+         end if;
+      end loop;
+
+      Identity := v22.Identities.Element (Identity.Email);
+      --v22.Identities.Delete (Identity.Email);
+      Identity.Extra.Replace ("Surname", v22.Content_Group_Text_Get (Object, "Nom"));
+      Identity.Extra.Replace ("Name", v22.Content_Group_Text_Get (Object, "Prénom"));
+      Identity.Extra.Replace ("Phone", v22.Content_Group_Phone_Get (Object, "Numéro de téléphone"));
+      Identity.Extra.Replace ("Date", v22.Content_Group_Date_Get (Object, "Date de naissance"));
+      Identity.Extra.Replace ("City",  v22.Content_Group_Text_Get (Object, "Ville"));
+      --v22.Identities.Insert (Identity.Email, Identity);
+
+      On_Administration_Users (Object);
+   end On_CRUD_User_File_Save;
+
+   procedure On_CRUD_User_File_Delete (Object : in out Base.Base_Type'Class) is
+      Parent_Key : constant UXString := "Liste des utilisateurs";
+      Data_Index : constant Integer := v22.Content_List_Selected_Row (Object, Parent_Key);
+      Identity : v22.User_Data;
+      Index : Integer := 0;
+   begin
+      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
+      for Data of v22.Identities loop
+         Index := Index + 1;
+         if Index = Data_Index then
+            Identity := Data;
+         end if;
+      end loop;
+
+      if Data_Index /= 0 and then Identity.Email /= "root@root" then
+         v22.Identities.Delete (Identity.Email);
+      end if;
+
+      On_Administration_Users (Object);
+   end On_CRUD_User_File_Delete;
+
+   -----------------------------------------------------------------------------
    --  Browser Handlers
    -----------------------------------------------------------------------------
    procedure On_Contract (Object : in out Base.Base_Type'Class) is
@@ -353,6 +467,15 @@ procedure Application is
    begin
       V22.Header_Notify_Menu_Click (Object, "Administration_Users");
       V22.Content_Set_Title (Object, "Utilisateurs");
+
+      V22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
+      v22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_User_File_Edit'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Save", "Sauvegarder", "File", On_CRUD_User_File_Save'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_User_File_Delete'Unrestricted_Access);
+
+      v22.CRUD_Set_Unclickable (Object, "File_Save");
+      v22.CRUD_Load (Object);
+
       v22.Content_List_Create (Object, Parent_Key);
       V22.Content_List_Add_Column (Object, "ID", Parent_Key);
       V22.Content_List_Add_Column (Object, "Nom d'utilisateur", Parent_Key);
@@ -374,11 +497,11 @@ procedure Application is
          v22.Content_List_Add_Text (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
 
          if Data.User_Name /= "Root User" then
-            V22.Content_List_Add_Text (Object, v22.Get (Data, "Surname"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get (Data, "Name"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get (Data, "Phone"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get (Data, "Date"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get (Data, "City"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Surname"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Name"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Phone"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Date"), Dummy, Parent_Key);
+            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "City"), Dummy, Parent_Key);
          end if;
       end loop;
    end On_Administration_Users;
@@ -515,11 +638,11 @@ procedure Application is
                   if City = "" then
                      V22.Set_Register_Error_Message (Object, "Entrez votre ville");
                   else
-                     V22.Set (Identity, "Surname", Surname);
-                     V22.Set (Identity, "Name", Name);
-                     V22.Set (Identity, "Phone", Phone);
-                     V22.Set (Identity, "Date", Date);
-                     V22.Set (Identity, "City", City);
+                     V22.Set_Identity (Identity, "Surname", Surname);
+                     V22.Set_Identity (Identity, "Name", Name);
+                     V22.Set_Identity (Identity, "Phone", Phone);
+                     V22.Set_Identity (Identity, "Date", Date);
+                     V22.Set_Identity (Identity, "City", City);
                      return True;
                   end if;
                end if;

@@ -104,3 +104,7 @@
 .content-list-table > tbody > tr:not(:first-child):nth-child(odd) {
     background-color: var(--content-group-title-color);
 }
+
+.content-list-item-selected {
+    background-color: var(--content-list-selected-color) !important;
+}
