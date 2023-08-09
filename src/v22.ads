@@ -33,22 +33,22 @@ package v22 is
    --  User relative data
    -----------------------------------------------------------------------------
 
-   procedure Set
+   procedure Set_Identity
      (Identity : in out User_Data;
       Key      :        UXString;
       Value    :        UXString);
 
-   function Get
+   function Get_Identity
      (Identity : in out User_Data;
       Key      :        UXString)
       return UXString;
 
-   procedure Identity_Set
+   procedure Set_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
       Value  :        UXString);
 
-   function Identity_Get
+   function Get_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
       return UXString;
@@ -256,6 +256,12 @@ package v22 is
       Name         :        UXString;
       Place_Holder :        UXString);
 
+   procedure Content_Group_Add_Button
+     (Object : in out Base.Base_Type'Class;
+      Text : UXString;
+      On_Click : Base.Action_Event;
+      Parent_Key : UXString);
+
    -----------------
    --  Edit Text  --
    -----------------
@@ -361,6 +367,11 @@ package v22 is
       Parent_Key :        UXString;
       On_Change  :        Base.Action_Event := null);
 
+   procedure Content_Group_Date_Set
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Date : UXString);
+
    function Content_Group_Date_Get
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString)
@@ -374,6 +385,11 @@ package v22 is
       Name       :        UXString;
       Parent_Key :        UXString;
       On_Change  :        Base.Action_Event := null);
+
+   procedure Content_Group_Email_Set
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Email : UXString);
 
    function Content_Group_Email_Get
      (Object : in out Base.Base_Type'Class;
@@ -402,6 +418,11 @@ package v22 is
       Name       :        UXString;
       Parent_Key :        UXString;
       On_Change  :        Base.Action_Event := null);
+
+   procedure Content_Group_Phone_Set
+     (Object : in out Base.Base_Type'Class;
+      Name : UXString;
+      Phone : UXString);
 
    function Content_Group_Phone_Get
      (Object : in out Base.Base_Type'Class;
@@ -443,6 +464,11 @@ package v22 is
    function Content_List_Add_Item
      (Object     : in out Base.Base_Type'Class;
       Parent_Key :        UXString)
+      return Integer;
+
+   function Content_List_Selected_Row
+     (Object : in out Base.Base_Type'Class;
+      Parent_Key : UXString)
       return Integer;
 
    -----------------------------------------------------------------------------

@@ -43,6 +43,8 @@ package body v22 is
       Is_Logged : Boolean  := False;
       Email     : UXString := ""; -- As a dictionnary key
 
+      Custom_Data : Dictionary.Map;
+
       Window        : Gnoga.Gui.Window.Pointer_To_Window_Class;
       Container     : View.View_Type;
       Header_Parent : View.View_Type;
@@ -898,6 +900,38 @@ package body v22 is
       Form.Place_Holder (Place_Holder);
    end Content_Group_Item_Place_Holder;
 
+   procedure Content_Group_Add_Button
+     (Object : in out Base.Base_Type'Class;
+      Text : UXString;
+      On_Click : Base.Action_Event;
+      Parent_Key : UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+   begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Submit_Button.Dynamic;
+
+      Row.Create (Table.all);
+      First_Column.Create (Row.all);
+      Second_Column.Create (Row.all);
+
+      Submit_Button.Create (Second_Column.all, Text);
+      Submit_Button.Style ("width", "100%");
+      Submit_Button.Style ("box-sizing", "border-box");
+      Submit_Button.On_Click_Handler (On_Click);
+   end Content_Group_Add_Button;
+
    -----------------
    --  Edit Text  --
    -----------------
@@ -1136,6 +1170,18 @@ package body v22 is
       Content_Group_Item_Add (Object, Date, Name, Parent_Key, On_Change);
    end Content_Group_Date_Add;
 
+   procedure Content_Group_Date_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        UXString;
+      Date  :        UXString)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Date_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Date_Form         : constant Element.Form.Date_Access       := Element.Form.Date_Access (Date_Element);
+   begin
+      Date_Form.Value (Date);
+   end Content_Group_Date_Set;
+
    function Content_Group_Date_Get
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString)
@@ -1166,6 +1212,18 @@ package body v22 is
       Element.Form.Email_Access (Email).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Email, Name, Parent_Key, On_Change);
    end Content_Group_Email_Add;
+
+   procedure Content_Group_Email_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        UXString;
+      Email  :        UXString)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Email_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Email_Form         : constant Element.Form.Email_Access       := Element.Form.Email_Access (Email_Element);
+   begin
+      Email_Form.Value (Email);
+   end Content_Group_Email_Set;
 
    function Content_Group_Email_Get
      (Object : in out Base.Base_Type'Class;
@@ -1228,6 +1286,18 @@ package body v22 is
       Element.Form.Tel_Access (Tel).Create (Form => Parent.all, Name => Name);
       Content_Group_Item_Add (Object, Tel, Name, Parent_Key, On_Change);
    end Content_Group_Phone_Add;
+
+   procedure Content_Group_Phone_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        UXString;
+      Phone  :        UXString)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Tel_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Tel         : constant Element.Form.Tel_Access       := Element.Form.Tel_Access (Tel_Element);
+   begin
+      Tel.Value (Phone);
+   end Content_Group_Phone_Set;
 
    function Content_Group_Phone_Get
      (Object : in out Base.Base_Type'Class;
@@ -1313,6 +1383,7 @@ package body v22 is
       Table.Create (Parent.all);
       Table.Class_Name ("content-list-table");
       Table.jQuery_Execute ("data('last_index', 0)");
+      Table.jQuery_Execute ("data('selected_row', 0)");
       App.Content_Text.Add_Element ("List_" & Title, Table_Element);
 
       Row.Create (Table.all);
@@ -1335,6 +1406,41 @@ package body v22 is
       Column.Create (Row.all, Content => Variable);
    end Content_List_Add_Column;
 
+   procedure Content_List_Click_Handler
+     (Object : in out Base.Base_Type'Class)
+   is
+      App        : constant App_Access := App_Access (Object.Connection_Data);
+      Parent_Key : constant UXString   := Object.jQuery_Execute ("data('parent_key')");
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row_Index : constant Integer := Int_Value (Object.jQuery_Execute ("data('row_index')"));
+
+      Previous_Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+
+      Row : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Row_Index));
+   begin
+      Gnoga.Log (Object.jQuery_Execute ("data('parent_key')"));
+      Gnoga.Log (To_UXString (Previous_Row_Index) & ", " & To_UXString (Row_Index));
+
+      if Previous_Row_Index = Row_Index then
+         Row.Remove_Class ("content-list-item-selected");
+         Table.jQuery_Execute ("data('selected_row', 0)");
+      else
+         Row.Add_Class ("content-list-item-selected");
+         Table.jQuery_Execute ("data('selected_row', " & To_UXString (Row_Index) & ")");
+      end if;
+      if Previous_Row_Index /= 0 then
+         declare
+            Previous_Row : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Previous_Row_Index));
+         begin
+            Previous_Row.Remove_Class ("content-list-item-selected");
+         end;
+      end if;
+
+   end Content_List_Click_Handler;
+
    function Content_List_Add_Item
      (Object     : in out Base.Base_Type'Class;
       Parent_Key :        UXString)
@@ -1353,7 +1459,13 @@ package body v22 is
       Row.Create (Table.all);
       Row.Class_Name ("content-list-item");
 
-      App.Content_Text.Add_Element ("List_Header_" & Parent_Key & To_UXString (Row_Index), Row_Element);
+      Row.On_Click_Handler (Content_List_Click_Handler'Unrestricted_Access);
+      Row.jQuery_Execute ("data('parent_key', """ & Parent_Key & """)");
+      Row.jQuery_Execute ("data('row_index', " & To_UXString (Row_Index) & ")");
+
+      App.Content_Text.Add_Element ("List_Item_" & Parent_Key & To_UXString (Row_Index), Row_Element);
+
+      Table.jQuery_Execute ("data('last_index', " & To_UXString (Row_Index) & ")");
 
       return Row_Index;
    end Content_List_Add_Item;
@@ -1367,7 +1479,7 @@ package body v22 is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
       Current_Row_Element : constant Element.Pointer_To_Element_Class :=
-        App.Content_Text.Element ("List_Header_" & Parent_Key & To_UXString (Index));
+        App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Index));
       Current_Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Current_Row_Element);
 
       Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
@@ -1375,6 +1487,19 @@ package body v22 is
       Column.Dynamic;
       Column.Create (Current_Row.all, Content => Value);
    end Content_List_Add_Text;
+
+   function Content_List_Selected_Row
+     (Object : in out Base.Base_Type'Class;
+      Parent_Key : UXString)
+      return Integer
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Result : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+   begin
+      return Result;
+   end Content_List_Selected_Row;
 
    -----------------------------------------------------------------------------
    --  Footer
@@ -1402,44 +1527,46 @@ package body v22 is
    --  User relative data
    -----------------------------------------------------------------------------
 
-   procedure Set
+   procedure Set_Identity
      (Identity : in out User_Data;
       Key      :        UXString;
       Value    :        UXString)
    is
    begin
       Identity.Extra.Insert (Key, Value);
-   end Set;
+   end Set_Identity;
 
-   function Get
+   function Get_Identity
      (Identity : in out User_Data;
       Key      :        UXString)
       return UXString
    is
    begin
       return Identity.Extra.Element (Key);
-   end Get;
+   end Get_Identity;
 
-   procedure Identity_Set
+   procedure Set_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
       Value  :        UXString)
    is
       App      : constant App_Access := App_Access (Object.Connection_Data);
-      Identity : User_Data           := Identities.Element (App.Email);
    begin
-      Identity.Extra.Insert (Key, Value);
-   end Identity_Set;
+      if App.Custom_Data.Contains (Key) then
+         App.Custom_Data.Replace (Key, Value);
+      else
+         App.Custom_Data.Insert (Key, Value);
+      end if;
+   end Set_Data;
 
-   function Identity_Get
+   function Get_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
       return UXString
    is
       App      : constant App_Access := App_Access (Object.Connection_Data);
-      Identity : constant User_Data  := Identities.Element (App.Email);
    begin
-      return Identity.Extra.Element (Key);
-   end Identity_Get;
+      return App.Custom_Data.Element (Key);
+   end Get_Data;
 
 end v22;
