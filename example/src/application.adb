@@ -1,8 +1,9 @@
 with Gnoga.Gui.Base;
-with Gnoga.Gui.Plugin;
 with Gnoga.Application.Multi_Connect;
-with UXStrings; use UXStrings;
+with UXStrings;             use UXStrings;
 with UXStrings.Conversions; use UXStrings.Conversions;
+with UXStrings.Hash;
+with Ada.Containers.Hashed_Maps;
 
 with v22;
 
@@ -28,6 +29,32 @@ procedure Application is
       return From_UTF_8 (Value'Image).Delete (1, 1);
    end To_UXString;
 
+   type User_Info is tagged record
+      Email, Surname, Name, Phone, Date, City : UXString := "";
+   end record;
+
+   package User_Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => User_Info, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   User_Dict : User_Dictionary.Map;
+
+   procedure Set_Info
+     (Email : UXString;
+      Identity : User_Info)
+   is
+   begin
+      if User_Dict.Contains (Email) then
+         User_Dict.Replace (Email, Identity);
+      else
+         User_Dict.Insert (Email, Identity);
+      end if;
+   end Set_Info;
+
+   function Get_Info (Email : UXString) return User_Info is
+   begin
+      return User_Dict.Element (Email);
+   end Get_Info;
+
    -----------------------------------------------------------------------------
    --  CRUD Handlers
    -----------------------------------------------------------------------------
@@ -37,97 +64,97 @@ procedure Application is
    --------------------
    procedure On_CRUD_File_Create (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
       Gnoga.Log ("Créer");
    end On_CRUD_File_Create;
 
    procedure On_CRUD_File_Edit (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
       Gnoga.Log ("Modifier");
    end On_CRUD_File_Edit;
 
    procedure On_CRUD_File_Delete (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
       Gnoga.Log ("Supprimer");
    end On_CRUD_File_Delete;
 
    procedure On_CRUD_File_Export (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Export");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Export");
       Gnoga.Log ("Exporter");
    end On_CRUD_File_Export;
 
    procedure On_CRUD_File_Import (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Import");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Import");
       Gnoga.Log ("Importer");
    end On_CRUD_File_Import;
 
    procedure On_CRUD_File_Print (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Print");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Print");
       Gnoga.Log ("Imprimer");
    end On_CRUD_File_Print;
 
    procedure On_CRUD_Edit_Copy (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Copy");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Copy");
       Gnoga.Log ("Copier");
    end On_CRUD_Edit_Copy;
 
    procedure On_CRUD_Edit_Paste (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Paste");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Paste");
       Gnoga.Log ("Coller");
    end On_CRUD_Edit_Paste;
 
    procedure On_CRUD_Show_Previous (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Previous");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_Previous");
       Gnoga.Log ("Précédent");
    end On_CRUD_Show_Previous;
 
    procedure On_CRUD_Show_Next (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Next");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_Next");
       Gnoga.Log ("Suivant");
    end On_CRUD_Show_Next;
 
    procedure On_CRUD_Show_Search (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Search");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_Search");
       Gnoga.Log ("Rechercher");
    end On_CRUD_Show_Search;
 
    procedure Load_Default_CRUD_Roots (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
-      V22.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
-      V22.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
+      v22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
+      v22.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
+      v22.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
    end Load_Default_CRUD_Roots;
 
    procedure Load_Default_CRUD_Childs (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_File_Create'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_File_Edit'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
-      V22.CRUD_Add_Delimiter_Above (Object, "File_Export");
-      V22.CRUD_Set_Unclickable (Object, "File_Export");
-      V22.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
-      V22.CRUD_Set_Unclickable (Object, "File_Import");
-      V22.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_File_Print'Unrestricted_Access);
-      V22.CRUD_Add_Delimiter_Above (Object, "File_Print");
+      v22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_File_Create'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_File_Edit'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_File_Delete'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_File_Export'Unrestricted_Access);
+      v22.CRUD_Add_Delimiter_Above (Object, "File_Export");
+      v22.CRUD_Set_Unclickable (Object, "File_Export");
+      v22.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_File_Import'Unrestricted_Access);
+      v22.CRUD_Set_Unclickable (Object, "File_Import");
+      v22.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_File_Print'Unrestricted_Access);
+      v22.CRUD_Add_Delimiter_Above (Object, "File_Print");
 
-      V22.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_Edit_Copy'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_Edit_Paste'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_Edit_Copy'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_Edit_Paste'Unrestricted_Access);
 
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Show_Previous", "Précédent", "Show", On_CRUD_Show_Previous'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_Show_Next'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_Show_Next'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "Show_Search", "Rechercher", "Show", On_CRUD_Show_Search'Unrestricted_Access);
    end Load_Default_CRUD_Childs;
 
    ---------------------
@@ -135,49 +162,49 @@ procedure Application is
    ---------------------
    procedure On_CRUD_Show_List (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_List");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_List");
       Gnoga.Log ("Lister");
    end On_CRUD_Show_List;
 
    procedure On_CRUD_Show_List_Bill (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_List_Bill");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_List_Bill");
       Gnoga.Log ("Lister Factures");
    end On_CRUD_Show_List_Bill;
 
    procedure On_CRUD_Show_List_SEPA (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_List_SEPA");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Show_List_SEPA");
       Gnoga.Log ("Lister SEPA");
    end On_CRUD_Show_List_SEPA;
 
    procedure On_CRUD_Validate_Bill (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Validate_Bill");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Validate_Bill");
       Gnoga.Log ("Factures");
    end On_CRUD_Validate_Bill;
 
    procedure On_CRUD_Validate_SEPA (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Validate_SEPA");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Validate_SEPA");
       Gnoga.Log ("SEPA");
    end On_CRUD_Validate_SEPA;
 
    procedure On_CRUD_Preferences_SEPA (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Preferences_SEPA");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Preferences_SEPA");
       Gnoga.Log ("Intervalles SEPA");
    end On_CRUD_Preferences_SEPA;
 
    procedure On_CRUD_Preferences_Service (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Preferences_Service");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Preferences_Service");
       Gnoga.Log ("Type de Prestation");
    end On_CRUD_Preferences_Service;
 
    procedure On_CRUD_Security_Bug (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Security_Bug");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "Security_Bug");
       Gnoga.Log ("Should not appear...");
    end On_CRUD_Security_Bug;
 
@@ -185,278 +212,210 @@ procedure Application is
    --  Extended CRUD with different behaviour
    -----------------------------------------------------------------------------
    procedure Update_TTC (Object : in out Base.Base_Type'Class) is
-      Price  : constant Integer := V22.Content_Group_Number_Get (Object, "Prix HT");
-      TVA    : constant Integer := V22.Content_Group_Number_Get (Object, "TVA");
+      Price  : constant Integer := v22.Content_Group_Number_Get (Object, "Prix HT");
+      TVA    : constant Integer := v22.Content_Group_Number_Get (Object, "TVA");
       Result : Integer;
    begin
       Result := Price + TVA;
-      V22.Content_Group_Text_Set (Object, "TTC", From_UTF_8 (Result'Image) & " €");
+      v22.Content_Group_Text_Set (Object, "TTC", From_UTF_8 (Result'Image) & " €");
    end Update_TTC;
 
-   procedure On_CRUD_New_File_Create (Object : in out Base.Base_Type'Class) is
+   procedure On_CRUD_Contract_File_Create (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
-      V22.Content_Set_Title (Object, "Statistiques - Fichier");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
+      v22.Content_Set_Title (Object, "Statistiques - Fichier");
       v22.Content_Clear_Text (Object);
 
-      V22.Content_Group_Create (Object, "Spécification du contrat");
-      V22.Content_Group_Add_Title (Object, "Détails du contrat", "Spécification du contrat");
-      V22.Content_Group_Selection_Add (Object, "Type de contrat", "Spécification du contrat");
-      V22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Standard", Enabled => True);
-      V22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Modifié");
-      V22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Complexe");
-      V22.Content_Group_Date_Add (Object, "Date de création", "Spécification du contrat");
-      V22.Content_Group_Number_Add (Object, "Récurrence", "Spécification du contrat");
-      V22.Content_Group_Add_Title (Object, "Activité", "Spécification du contrat");
-      V22.Content_Group_Number_Add (Object, "Durée d'engagement en jours", "Spécification du contrat");
-      V22.Content_Group_Number_Set (Object, "Durée d'engagement en jours", 30);
-      V22.Content_Group_Check_Box_Add (Object, "Contrat actif", "Spécification du contrat");
-      V22.Content_Group_Check_Box_Checked (Object, "Contrat actif", True);
-      V22.Content_Group_Number_Add (Object, "Durée du contrat en jours", "Spécification du contrat");
-      V22.Content_Group_Number_Set (Object, "Durée du contrat en jours", 30);
-      V22.Content_Group_Item_Lock (Object, "Durée du contrat en jours");
+      v22.Content_Group_Create (Object, "Spécification du contrat");
+      v22.Content_Group_Add_Title (Object, "Détails du contrat", "Spécification du contrat");
+      v22.Content_Group_Selection_Add (Object, "Type de contrat", "Spécification du contrat");
+      v22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Standard", Enabled => True);
+      v22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Modifié");
+      v22.Content_Group_Selection_Add_Option (Object, "Type de contrat", "Complexe");
+      v22.Content_Group_Date_Add (Object, "Date de création", "Spécification du contrat");
+      v22.Content_Group_Number_Add (Object, "Récurrence", "Spécification du contrat");
+      v22.Content_Group_Add_Title (Object, "Activité", "Spécification du contrat");
+      v22.Content_Group_Number_Add (Object, "Durée d'engagement en jours", "Spécification du contrat");
+      v22.Content_Group_Number_Set (Object, "Durée d'engagement en jours", 30);
+      v22.Content_Group_Check_Box_Add (Object, "Contrat actif", "Spécification du contrat");
+      v22.Content_Group_Check_Box_Checked (Object, "Contrat actif", True);
+      v22.Content_Group_Number_Add (Object, "Durée du contrat en jours", "Spécification du contrat");
+      v22.Content_Group_Number_Set (Object, "Durée du contrat en jours", 30);
+      v22.Content_Group_Item_Lock (Object, "Durée du contrat en jours");
 
-      V22.Content_Group_Create (Object, "Prix");
-      V22.Content_Group_Number_Add (Object, "Prix HT", "Prix", Update_TTC'Unrestricted_Access);
-      V22.Content_Group_Number_Set (Object, "Prix HT", 0);
-      V22.Content_Group_Number_Add (Object, "TVA", "Prix", Update_TTC'Unrestricted_Access);
-      V22.Content_Group_Number_Set (Object, "TVA", 0);
-      V22.Content_Group_Text_Add (Object, "TTC", "Prix");
+      v22.Content_Group_Create (Object, "Prix");
+      v22.Content_Group_Number_Add (Object, "Prix HT", "Prix", Update_TTC'Unrestricted_Access);
+      v22.Content_Group_Number_Set (Object, "Prix HT", 0);
+      v22.Content_Group_Number_Add (Object, "TVA", "Prix", Update_TTC'Unrestricted_Access);
+      v22.Content_Group_Number_Set (Object, "TVA", 0);
+      v22.Content_Group_Text_Add (Object, "TTC", "Prix");
 
-      V22.Content_Group_Create (Object, "Agenda");
-      V22.Content_Group_Date_Add (Object, "Prochaine date de facturation", "Agenda");
-      V22.Content_Group_Date_Add (Object, "Prochaine date d'échéance", "Agenda");
+      v22.Content_Group_Create (Object, "Agenda");
+      v22.Content_Group_Date_Add (Object, "Prochaine date de facturation", "Agenda");
+      v22.Content_Group_Date_Add (Object, "Prochaine date d'échéance", "Agenda");
 
-      V22.Content_Group_Create (Object, "Autres informations");
-      V22.Content_Group_Text_Area_Add (Object, "Note publique", "Autres informations");
-      V22.Content_Group_Text_Area_Add (Object, "Note privée", "Autres informations");
+      v22.Content_Group_Create (Object, "Autres informations");
+      v22.Content_Group_Text_Area_Add (Object, "Note publique", "Autres informations");
+      v22.Content_Group_Text_Area_Add (Object, "Note privée", "Autres informations");
 
-      V22.Content_Group_Item_Lock (Object, "Prochaine date d'échéance");
-      V22.Content_Group_Item_Lock (Object, "Note privée");
-      V22.Content_Group_Item_Lock (Object, "TTC");
-      V22.Content_Group_Text_Set (Object, "TTC", "Remplissez les données précédentes");
-      V22.Content_Group_Text_Set (Object, "TTC", "0 €");
+      v22.Content_Group_Item_Lock (Object, "Prochaine date d'échéance");
+      v22.Content_Group_Item_Lock (Object, "Note privée");
+      v22.Content_Group_Item_Lock (Object, "TTC");
+      v22.Content_Group_Text_Set (Object, "TTC", "Remplissez les données précédentes");
+      v22.Content_Group_Text_Set (Object, "TTC", "0 €");
 
-      V22.CRUD_Set_Unclickable (Object, "File_Create");
-      V22.CRUD_Set_Clickable (Object, "File_Edit");
-      V22.CRUD_Set_Clickable (Object, "File_Delete");
-      V22.CRUD_Set_Clickable (Object, "File_Print");
-   end On_CRUD_New_File_Create;
+      v22.CRUD_Set_Unclickable (Object, "File_Create");
+      v22.CRUD_Set_Clickable (Object, "File_Edit");
+      v22.CRUD_Set_Clickable (Object, "File_Delete");
+   end On_CRUD_Contract_File_Create;
 
-   procedure On_CRUD_New_File_Edit (Object : in out Base.Base_Type'Class) is
+   procedure On_CRUD_Contract_File_Edit (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
-   end On_CRUD_New_File_Edit;
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
+   end On_CRUD_Contract_File_Edit;
 
-   procedure On_CRUD_New_File_Delete (Object : in out Base.Base_Type'Class) is
+   procedure On_CRUD_Contract_File_Delete (Object : in out Base.Base_Type'Class) is
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
 
-      V22.Content_Set_Title (Object, "Statistiques");
+      v22.Content_Set_Title (Object, "Statistiques");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
 
-      V22.CRUD_Set_Clickable (Object, "File_Create");
-      V22.CRUD_Set_Unclickable (Object, "File_Edit");
-      V22.CRUD_Set_Unclickable (Object, "File_Delete");
-      V22.CRUD_Set_Unclickable (Object, "File_Print");
-   end On_CRUD_New_File_Delete;
-
-   procedure On_CRUD_New_File_Export (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Export");
-   end On_CRUD_New_File_Export;
-
-   procedure On_CRUD_New_File_Import (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Import");
-   end On_CRUD_New_File_Import;
-
-   procedure On_CRUD_New_File_Print (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Print");
-      v22.Print (Object);
-   end On_CRUD_New_File_Print;
-
-   procedure On_CRUD_New_Edit_Copy (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Copy");
-   end On_CRUD_New_Edit_Copy;
-
-   procedure On_CRUD_New_Edit_Paste (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Edit_Paste");
-   end On_CRUD_New_Edit_Paste;
-
-   procedure On_CRUD_New_Show_Previous (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Previous");
-   end On_CRUD_New_Show_Previous;
-
-   procedure On_CRUD_New_Show_Next (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Next");
-   end On_CRUD_New_Show_Next;
-
-   procedure On_CRUD_New_Show_Search (Object : in out Base.Base_Type'Class) is
-   begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "Show_Search");
-   end On_CRUD_New_Show_Search;
+      v22.CRUD_Set_Clickable (Object, "File_Create");
+      v22.CRUD_Set_Unclickable (Object, "File_Edit");
+      v22.CRUD_Set_Unclickable (Object, "File_Delete");
+      v22.CRUD_Set_Unclickable (Object, "File_Print");
+   end On_CRUD_Contract_File_Delete;
 
    -----------------------------------------------------------------------------
    --  CRUD for Administration > Users
    -----------------------------------------------------------------------------
    procedure On_CRUD_User_File_Edit (Object : in out Base.Base_Type'Class) is
       Parent_Key : constant UXString := "Liste des utilisateurs";
-      Sub_Key : constant UXString := "Détails de l'utilisateur";
-      Data_Index : constant Integer := v22.Content_List_Selected_Row (Object, Parent_Key);
-      Identity : v22.User_Data;
-      Index : Integer := 0;
+      Sub_Key    : constant UXString := "Détails de l'utilisateur";
+      Data_Index : constant Integer  := v22.Content_List_Selected_Row (Object, Parent_Key);
+      Identity   : User_Info;
+      Index      : Integer           := 0;
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Edit");
       if Data_Index /= 0 then
-         for Data of v22.Identities loop
+         for Data of User_Dict loop
             Index := Index + 1;
             if Index = Data_Index then
                Identity := Data;
             end if;
          end loop;
 
-         if Identity.Email /= "root@root" then
-            v22.Set_Data (Object, "Index", To_UXString (Data_Index));
+         v22.Set_Data (Object, "Index", To_UXString (Data_Index));
 
+         v22.CRUD_Set_Unclickable (Object, "File_Delete");
+         v22.CRUD_Set_Unclickable (Object, "File_Edit");
+         v22.CRUD_Set_Clickable (Object, "File_Save");
 
-            v22.CRUD_Set_Unclickable (Object, "File_Delete");
-            v22.CRUD_Set_Unclickable (Object, "File_Edit");
-            v22.CRUD_Set_Clickable (Object, "File_Save");
+         v22.Content_Set_Title (Object, "Utilisateur - Modification");
+         v22.Content_Clear_Text (Object);
 
-            V22.Content_Set_Title (Object, "Utilisateur - Modification");
-            v22.Content_Clear_Text (Object);
+         v22.Content_Group_Create (Object, Sub_Key);
+         v22.Content_Group_Email_Add (Object, "Adresse mail", Sub_Key);
+         v22.Content_Group_Text_Add (Object, "Nom", Sub_Key);
+         v22.Content_Group_Text_Add (Object, "Prénom", Sub_Key);
+         v22.Content_Group_Phone_Add (Object, "Numéro de téléphone", Sub_Key);
+         v22.Content_Group_Date_Add (Object, "Date de naissance", Sub_Key);
+         v22.Content_Group_Text_Add (Object, "Ville", Sub_Key);
 
-            V22.Content_Group_Create (Object, Sub_Key);
-            V22.Content_Group_Text_Add (Object, "Nom d'utilisateur", Sub_Key);
-            v22.Content_Group_Email_Add (Object, "Adresse mail", Sub_Key);
-            V22.Content_Group_Text_Add (Object, "Nom", Sub_Key);
-            V22.Content_Group_Text_Add (Object, "Prénom", Sub_Key);
-            V22.Content_Group_Phone_Add (Object, "Numéro de téléphone", Sub_Key);
-            V22.Content_Group_Date_Add (Object, "Date de naissance", Sub_Key);
-            V22.Content_Group_Text_Add (Object, "Ville", Sub_Key);
+         v22.Content_Group_Email_Set (Object, "Adresse mail", Identity.Email);
 
-            V22.Content_Group_Text_Set (Object, "Nom d'utilisateur", Identity.User_Name);
-            v22.Content_Group_Email_Set (Object, "Adresse mail", Identity.Email);
+         v22.Content_Group_Item_Lock (Object, "Adresse mail");
 
-            v22.Content_Group_Item_Lock (Object, "Nom d'utilisateur");
-            v22.Content_Group_Item_Lock (Object, "Adresse mail");
-
-            V22.Content_Group_Text_Set (Object, "Nom", v22.Get_Identity (Identity, "Surname"));
-            V22.Content_Group_Text_Set (Object, "Prénom", v22.Get_Identity (Identity, "Name"));
-            V22.Content_Group_Phone_Set (Object, "Numéro de téléphone", v22.Get_Identity (Identity, "Phone"));
-            V22.Content_Group_Date_Set (Object, "Date de naissance", v22.Get_Identity (Identity, "Date"));
-            V22.Content_Group_Text_Set (Object, "Ville", v22.Get_Identity (Identity, "City"));
-         end if;
+         v22.Content_Group_Text_Set (Object, "Nom", Identity.Surname);
+         v22.Content_Group_Text_Set (Object, "Prénom", Identity.Name);
+         v22.Content_Group_Phone_Set (Object, "Numéro de téléphone", Identity.Phone);
+         v22.Content_Group_Date_Set (Object, "Date de naissance", Identity.Date);
+         v22.Content_Group_Text_Set (Object, "Ville", Identity.City);
       end if;
    end On_CRUD_User_File_Edit;
 
    procedure On_Administration_Users (Object : in out Base.Base_Type'Class);
 
    procedure On_CRUD_User_File_Save (Object : in out Base.Base_Type'Class) is
-      Data_Index : constant Integer := Int_Value (v22.Get_Data (Object, "Index")); -- ?????????? bug
-      Identity : v22.User_Data;
-      Index : Integer := 0;
+      Data_Index : constant Integer := Int_Value (v22.Get_Data (Object, "Index"));
+      Identity   : User_Info;
+      Index      : Integer          := 0;
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Save");
-      for Data of v22.Identities loop
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Save");
+      for Data of User_Dict loop
          Index := Index + 1;
          if Index = Data_Index then
             Identity := Data;
          end if;
       end loop;
 
-      Identity := v22.Identities.Element (Identity.Email);
-      --v22.Identities.Delete (Identity.Email);
-      Identity.Extra.Replace ("Surname", v22.Content_Group_Text_Get (Object, "Nom"));
-      Identity.Extra.Replace ("Name", v22.Content_Group_Text_Get (Object, "Prénom"));
-      Identity.Extra.Replace ("Phone", v22.Content_Group_Phone_Get (Object, "Numéro de téléphone"));
-      Identity.Extra.Replace ("Date", v22.Content_Group_Date_Get (Object, "Date de naissance"));
-      Identity.Extra.Replace ("City",  v22.Content_Group_Text_Get (Object, "Ville"));
-      --v22.Identities.Insert (Identity.Email, Identity);
+      Identity.Surname := v22.Content_Group_Text_Get (Object, "Nom");
+      Identity.Name := v22.Content_Group_Text_Get (Object, "Prénom");
+      Identity.Phone := v22.Content_Group_Phone_Get (Object, "Numéro de téléphone");
+      Identity.Date := v22.Content_Group_Date_Get (Object, "Date de naissance");
+      Identity.City := v22.Content_Group_Text_Get (Object, "Ville");
+
+      Set_Info (Identity.Email, Identity);
 
       On_Administration_Users (Object);
    end On_CRUD_User_File_Save;
 
    procedure On_CRUD_User_File_Delete (Object : in out Base.Base_Type'Class) is
       Parent_Key : constant UXString := "Liste des utilisateurs";
-      Data_Index : constant Integer := v22.Content_List_Selected_Row (Object, Parent_Key);
-      Identity : v22.User_Data;
-      Index : Integer := 0;
+      Data_Index : constant Integer  := v22.Content_List_Selected_Row (Object, Parent_Key);
+      Identity   : User_Info;
+      Index      : Integer           := 0;
    begin
-      V22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
-      for Data of v22.Identities loop
+      v22.CRUD_Notify_Sub_Element_Click (Object, "File_Delete");
+      for Data of User_Dict loop
          Index := Index + 1;
          if Index = Data_Index then
             Identity := Data;
          end if;
       end loop;
 
-      if Data_Index /= 0 and then Identity.Email /= "root@root" then
-         v22.Identities.Delete (Identity.Email);
+      if Data_Index /= 0 then
+         v22.Delete_User (Identity.Email);
+         User_Dict.Delete (Identity.Email);
       end if;
 
       On_Administration_Users (Object);
    end On_CRUD_User_File_Delete;
 
    -----------------------------------------------------------------------------
-   --  Browser Handlers
+   --  Navigation Handlers
    -----------------------------------------------------------------------------
    procedure On_Contract (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Contract");
+      v22.Header_Notify_Menu_Click (Object, "Contract");
 
-      V22.Content_Set_Title (Object, "Contrats");
+      v22.Content_Set_Title (Object, "Contrats");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Contract;
 
    procedure On_Contract_Stats (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Contract_Stats");
+      v22.Header_Notify_Menu_Click (Object, "Contract_Stats");
 
-      V22.Content_Set_Title (Object, "Statistiques");
+      v22.Content_Set_Title (Object, "Statistiques");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
-      V22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
-      V22.CRUD_Add_Element (Object, "Edit", "Éditer", "/css/icons/edit.png");
-      V22.CRUD_Add_Element (Object, "Show", "Afficher", "/css/icons/browse.png");
-
-      V22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_New_File_Create'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_New_File_Edit'Unrestricted_Access);
-      V22.CRUD_Set_Unclickable (Object, "File_Edit");
-      V22.CRUD_Add_Sub_Element
-        (Object, "File_Delete", "Supprimer", "File", On_CRUD_New_File_Delete'Unrestricted_Access);
-      V22.CRUD_Set_Unclickable (Object, "File_Delete");
-      V22.CRUD_Add_Sub_Element (Object, "File_Export", "Exporter", "File", On_CRUD_New_File_Export'Unrestricted_Access);
-      V22.CRUD_Add_Delimiter_Above (Object, "File_Export");
-      V22.CRUD_Set_Unclickable (Object, "File_Export");
-      V22.CRUD_Add_Sub_Element (Object, "File_Import", "Importer", "File", On_CRUD_New_File_Import'Unrestricted_Access);
-      V22.CRUD_Set_Unclickable (Object, "File_Import");
-      V22.CRUD_Add_Sub_Element (Object, "File_Print", "Imprimer", "File", On_CRUD_New_File_Print'Unrestricted_Access);
-      V22.CRUD_Add_Delimiter_Above (Object, "File_Print");
-      V22.CRUD_Set_Unclickable (Object, "File_Print");
-
-      V22.CRUD_Add_Sub_Element (Object, "Edit_Copy", "Copier", "Edit", On_CRUD_New_Edit_Copy'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Edit_Paste", "Coller", "Edit", On_CRUD_New_Edit_Paste'Unrestricted_Access);
-
-      V22.CRUD_Add_Sub_Element
-        (Object, "Show_Previous", "Précédent", "Show", On_CRUD_New_Show_Previous'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Show_Next", "Suivant", "Show", On_CRUD_New_Show_Next'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
-        (Object, "Show_Search", "Rechercher", "Show", On_CRUD_New_Show_Search'Unrestricted_Access);
+      v22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
+      v22.CRUD_Add_Sub_Element (Object, "File_Create", "Créer", "File", On_CRUD_Contract_File_Create'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_Contract_File_Edit'Unrestricted_Access);
+      v22.CRUD_Set_Unclickable (Object, "File_Edit");
+      v22.CRUD_Add_Sub_Element
+        (Object, "File_Delete", "Supprimer", "File", On_CRUD_Contract_File_Delete'Unrestricted_Access);
+      v22.CRUD_Set_Unclickable (Object, "File_Delete");
 
       v22.CRUD_Load (Object);
    end On_Contract_Stats;
 
    procedure On_Contract_Management (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Contract_Management");
+      v22.Header_Notify_Menu_Click (Object, "Contract_Management");
 
-      V22.Content_Set_Title (Object, "Gestion");
+      v22.Content_Set_Title (Object, "Gestion");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Contract_Management;
 
@@ -465,105 +424,100 @@ procedure Application is
       Dummy      : Integer           := 0;
       Index      : Integer           := 0;
    begin
-      V22.Header_Notify_Menu_Click (Object, "Administration_Users");
-      V22.Content_Set_Title (Object, "Utilisateurs");
+      v22.Header_Notify_Menu_Click (Object, "Administration_Users");
+      v22.Content_Set_Title (Object, "Utilisateurs");
 
-      V22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
+      v22.CRUD_Add_Element (Object, "File", "Fichier", "/css/icons/file.png");
       v22.CRUD_Add_Sub_Element (Object, "File_Edit", "Modifier", "File", On_CRUD_User_File_Edit'Unrestricted_Access);
       v22.CRUD_Add_Sub_Element (Object, "File_Save", "Sauvegarder", "File", On_CRUD_User_File_Save'Unrestricted_Access);
-      v22.CRUD_Add_Sub_Element (Object, "File_Delete", "Supprimer", "File", On_CRUD_User_File_Delete'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element
+        (Object, "File_Delete", "Supprimer", "File", On_CRUD_User_File_Delete'Unrestricted_Access);
 
       v22.CRUD_Set_Unclickable (Object, "File_Save");
       v22.CRUD_Load (Object);
 
       v22.Content_List_Create (Object, Parent_Key);
-      V22.Content_List_Add_Column (Object, "ID", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Nom d'utilisateur", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Email", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Hash (25)", Parent_Key);
+      v22.Content_List_Add_Column (Object, "ID", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Email", Parent_Key);
 
-      V22.Content_List_Add_Column (Object, "Nom", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Prénom", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Numéro de téléphone", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Date de naissance", Parent_Key);
-      V22.Content_List_Add_Column (Object, "Ville", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Nom", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Prénom", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Numéro de téléphone", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Date de naissance", Parent_Key);
+      v22.Content_List_Add_Column (Object, "Ville", Parent_Key);
 
-      for Data of v22.Identities loop
+      for Data of User_Dict loop
          Index := Index + 1;
          Dummy := v22.Content_List_Add_Item (Object, Parent_Key);
          v22.Content_List_Add_Text (Object, From_UTF_8 (Index'Image), Dummy, Parent_Key);
-         v22.Content_List_Add_Text (Object, Data.User_Name, Dummy, Parent_Key);
          v22.Content_List_Add_Text (Object, Data.Email, Dummy, Parent_Key);
-         v22.Content_List_Add_Text (Object, Head (Data.Password_Hash, 25), Dummy, Parent_Key);
 
-         if Data.User_Name /= "Root User" then
-            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Surname"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Name"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Phone"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "Date"), Dummy, Parent_Key);
-            V22.Content_List_Add_Text (Object, v22.Get_Identity (Data, "City"), Dummy, Parent_Key);
-         end if;
+         v22.Content_List_Add_Text (Object, Data.Surname, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.Name, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.Phone, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.Date, Dummy, Parent_Key);
+         v22.Content_List_Add_Text (Object, Data.City, Dummy, Parent_Key);
       end loop;
    end On_Administration_Users;
 
    procedure On_Administration_Emails (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Administration_Emails");
+      v22.Header_Notify_Menu_Click (Object, "Administration_Emails");
 
-      V22.Content_Set_Title (Object, "Emails");
+      v22.Content_Set_Title (Object, "Emails");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration_Emails;
 
    procedure On_Administration_Gen (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Administration_Gen");
+      v22.Header_Notify_Menu_Click (Object, "Administration_Gen");
 
       Load_Default_CRUD_Roots (Object);
-      V22.CRUD_Add_Element (Object, "Validate", "Valider", "/css/icons/checklist.png");
-      V22.CRUD_Add_Element (Object, "Preferences", "Préférences", "/css/icons/settings.png");
-      V22.CRUD_Add_Element (Object, "Security", "Sécurité", "/css/icons/security.png");
-      V22.CRUD_Set_Unclickable (Object, "Security");
+      v22.CRUD_Add_Element (Object, "Validate", "Valider", "/css/icons/checklist.png");
+      v22.CRUD_Add_Element (Object, "Preferences", "Préférences", "/css/icons/settings.png");
+      v22.CRUD_Add_Element (Object, "Security", "Sécurité", "/css/icons/security.png");
+      v22.CRUD_Set_Unclickable (Object, "Security");
 
       Load_Default_CRUD_Childs (Object);
 
-      V22.CRUD_Add_Sub_Element (Object, "Show_List", "Lister", "Show", On_CRUD_Show_List'Unrestricted_Access);
-      V22.CRUD_Add_Delimiter_Above (Object, "Show_List");
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element (Object, "Show_List", "Lister", "Show", On_CRUD_Show_List'Unrestricted_Access);
+      v22.CRUD_Add_Delimiter_Above (Object, "Show_List");
+      v22.CRUD_Add_Sub_Element
         (Object, "Show_List_Bill", "Lister Factures", "Show", On_CRUD_Show_List_Bill'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Show_List_SEPA", "Lister SEPA", "Show", On_CRUD_Show_List_SEPA'Unrestricted_Access);
 
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Validate_Bill", "Factures", "Validate", On_CRUD_Validate_Bill'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element (Object, "Validate_SEPA", "SEPA", "Validate", On_CRUD_Validate_SEPA'Unrestricted_Access);
+      v22.CRUD_Add_Sub_Element (Object, "Validate_SEPA", "SEPA", "Validate", On_CRUD_Validate_SEPA'Unrestricted_Access);
 
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Preferences_SEPA", "Intervalles SEPA", "Preferences", On_CRUD_Preferences_SEPA'Unrestricted_Access);
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Preferences_Service", "Type de Prestation", "Preferences",
          On_CRUD_Preferences_Service'Unrestricted_Access);
 
-      V22.CRUD_Add_Sub_Element
+      v22.CRUD_Add_Sub_Element
         (Object, "Security_Bug", "Ne devrait pas être affiché...", "Security",
          On_CRUD_Security_Bug'Unrestricted_Access);
 
       v22.CRUD_Load (Object);
 
-      V22.Content_Set_Title (Object, "Générer des requêtes");
+      v22.Content_Set_Title (Object, "Générer des requêtes");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration_Gen;
 
    procedure On_Administration (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "Administration");
+      v22.Header_Notify_Menu_Click (Object, "Administration");
 
-      V22.Content_Set_Title (Object, "Administration");
+      v22.Content_Set_Title (Object, "Administration");
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_Administration;
 
    procedure On_App_Menu (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Header_Notify_Menu_Click (Object, "App_Menu");
+      v22.Header_Notify_Menu_Click (Object, "App_Menu");
 
       Load_Default_CRUD_Roots (Object);
       Load_Default_CRUD_Childs (Object);
@@ -573,76 +527,121 @@ procedure Application is
       v22.Content_Set_Text (Object, Lorem_Ipsum);
    end On_App_Menu;
 
-   procedure On_Confirm (Object : in out Base.Base_Type'Class) is
-      pragma Unreferenced (Object);
+   procedure On_Dialog_Confirm (Object : in out Base.Base_Type'Class) is
    begin
-      Gnoga.Log ("Confirmed");
-   end On_Confirm;
+      Gnoga.Log ("Dialog: confirmed");
+      v22.Close_Dialog (Object);
+   end On_Dialog_Confirm;
 
-   procedure On_Cancel (Object : in out Base.Base_Type'Class) is
-      pragma Unreferenced (Object);
+   procedure On_Dialog_Cancel (Object : in out Base.Base_Type'Class) is
    begin
-      Gnoga.Log ("Cancelled");
-   end On_Cancel;
+      Gnoga.Log ("Dialog: cancelled");
+      v22.Close_Dialog (Object);
+   end On_Dialog_Cancel;
 
    -----------------------------------------------------------------------------
    --  On_Connect
    -----------------------------------------------------------------------------
+   procedure On_User_Help (Object : in out Base.Base_Type'Class) is
+   begin
+      v22.Header_Notify_User_Menu_Click (Object);
+      v22.Launch_Web (Object, "https://google.com");
+   end On_User_Help;
+
+   procedure On_User_Rights (Object : in out Base.Base_Type'Class) is
+   begin
+      v22.Header_Notify_User_Menu_Click (Object);
+      v22.Launch_Dialog
+        (Object, "Droits d'accès", "Ajouter les droits d'accès ici", "Confirmer", "Annuler",
+         On_Dialog_Confirm'Unrestricted_Access, On_Dialog_Cancel'Unrestricted_Access);
+   end On_User_Rights;
+
+   procedure On_User_Connection_Duration (Object : in out Base.Base_Type'Class) is
+   begin
+      v22.Header_Notify_User_Menu_Click (Object);
+      v22.Launch_Dialog (Object, "Connecté depuis...", "Ajouter durée de la connexion ici");
+   end On_User_Connection_Duration;
+
+   procedure On_User_Last_Connection (Object : in out Base.Base_Type'Class) is
+   begin
+      v22.Header_Notify_User_Menu_Click (Object);
+      v22.Launch_Dialog (Object, "Connexion précédente", "Ajouter la date de la dernière connexion ici");
+   end On_User_Last_Connection;
+
+   procedure On_User_About (Object : in out Base.Base_Type'Class) is
+   begin
+      v22.Header_Notify_User_Menu_Click (Object);
+      v22.Launch_Web (Object, "http://gnoga.com");
+   end On_User_About;
+
    procedure On_Connect (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Set_User_Name (Object, "");
-      V22.Set_User_Icon (Object, "/css/icons/user.png");
+      v22.Set_User_Name (Object, "Connectez-vous !");
+      v22.Set_User_Icon (Object, "/css/icons/user.png");
 
-      V22.Footer_Set_State_Text (Object, "Message de statut");
-      V22.Footer_Set_Permanent_Text (Object, "Informations permanentes");
+      v22.Footer_Set_State_Text (Object, "Message de statut");
+      v22.Footer_Set_Permanent_Text (Object, "Informations permanentes");
+
+      v22.Header_Add_User_Button (Object, "Aide en ligne", On_User_Help'Unrestricted_Access);
+      v22.Header_Add_User_Button (Object, "Droits d'accès", On_User_Rights'Unrestricted_Access);
+      v22.Header_Add_User_Button (Object, "Connecté depuis...", On_User_Connection_Duration'Unrestricted_Access);
+      v22.Header_Add_User_Button (Object, "Connexion précédente", On_User_Last_Connection'Unrestricted_Access);
+      v22.Header_Add_User_Button (Object, "À propos de...", On_User_About'Unrestricted_Access);
+      v22.Header_Add_User_Button (Object, "Se déconnecter", v22.Disconnect_User'Unrestricted_Access);
    end On_Connect;
 
    procedure On_Login (Object : in out Base.Base_Type'Class) is
+      Identity : constant User_Info := Get_Info (v22.Get_User_Email (Object));
    begin
-      null;
+      v22.Set_User_Name (Object, Identity.Surname & " " & Identity.Name);
    end On_Login;
 
    procedure On_Register_Create (Object : in out Base.Base_Type'Class) is
    begin
-      V22.Content_Group_Add_Title (Object, "Données utilisateur", V22.Register_Group_Key);
-      V22.Content_Group_Text_Add (Object, "Nom", V22.Register_Group_Key);
-      V22.Content_Group_Text_Add (Object, "Prénom", V22.Register_Group_Key);
-      V22.Content_Group_Phone_Add (Object, "Numéro de téléphone", V22.Register_Group_Key);
-      V22.Content_Group_Date_Add (Object, "Date de naissance", V22.Register_Group_Key);
-      V22.Content_Group_Text_Add (Object, "Ville", V22.Register_Group_Key);
+      v22.Content_Group_Add_Title (Object, "Données utilisateur", v22.Register_Group_Key);
+      v22.Content_Group_Text_Add (Object, "Nom", v22.Register_Group_Key);
+      v22.Content_Group_Text_Add (Object, "Prénom", v22.Register_Group_Key);
+      v22.Content_Group_Phone_Add (Object, "Numéro de téléphone", v22.Register_Group_Key);
+      v22.Content_Group_Date_Add (Object, "Date de naissance", v22.Register_Group_Key);
+      v22.Content_Group_Text_Add (Object, "Ville", v22.Register_Group_Key);
    end On_Register_Create;
 
    function On_Register
      (Object   : in out Base.Base_Type'Class;
-      Identity : in out v22.User_Data)
+      Email : UXString)
       return Boolean
    is
-      Surname : constant UXString := V22.Content_Group_Text_Get (Object, "Nom");
-      Name    : constant UXString := V22.Content_Group_Text_Get (Object, "Prénom");
-      Phone   : constant UXString := V22.Content_Group_Phone_Get (Object, "Numéro de téléphone");
-      Date    : constant UXString := V22.Content_Group_Date_Get (Object, "Date de naissance");
-      City    : constant UXString := V22.Content_Group_Text_Get (Object, "Ville");
+      Surname : constant UXString := v22.Content_Group_Text_Get (Object, "Nom");
+      Name    : constant UXString := v22.Content_Group_Text_Get (Object, "Prénom");
+      Phone   : constant UXString := v22.Content_Group_Phone_Get (Object, "Numéro de téléphone");
+      Date    : constant UXString := v22.Content_Group_Date_Get (Object, "Date de naissance");
+      City    : constant UXString := v22.Content_Group_Text_Get (Object, "Ville");
+      User_Identity : User_Info;
    begin
+      User_Identity.Email := Email;
+      User_Identity.Surname := Surname;
+      User_Identity.Name := Name;
+      User_Identity.Phone := Phone;
+      User_Identity.Date := Date;
+      User_Identity.City := City;
+
       if Surname = "" then
-         V22.Set_Register_Error_Message (Object, "Entrez votre nom");
+         v22.Set_Register_Error_Message (Object, "Entrez votre nom");
       else
          if Name = "" then
-            V22.Set_Register_Error_Message (Object, "Entrez votre prénom");
+            v22.Set_Register_Error_Message (Object, "Entrez votre prénom");
          else
             if Phone = "" then
-               V22.Set_Register_Error_Message (Object, "Entrez votre numéro de téléphone");
+               v22.Set_Register_Error_Message (Object, "Entrez votre numéro de téléphone");
             else
                if Date = "" then
-                  V22.Set_Register_Error_Message (Object, "Entrez votre date de naissance");
+                  v22.Set_Register_Error_Message (Object, "Entrez votre date de naissance");
                else
                   if City = "" then
-                     V22.Set_Register_Error_Message (Object, "Entrez votre ville");
+                     v22.Set_Register_Error_Message (Object, "Entrez votre ville");
                   else
-                     V22.Set_Identity (Identity, "Surname", Surname);
-                     V22.Set_Identity (Identity, "Name", Name);
-                     V22.Set_Identity (Identity, "Phone", Phone);
-                     V22.Set_Identity (Identity, "Date", Date);
-                     V22.Set_Identity (Identity, "City", City);
+                     Set_Info (Email, User_Identity);
+                     Gnoga.Log ("Created an account for " & Email);
                      return True;
                   end if;
                end if;
@@ -652,37 +651,39 @@ procedure Application is
       return False;
    end On_Register;
 
+   Root_Identity : User_Info;
+   Root_Password : constant UXString := "password";
+
 begin
-   V22.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
+   v22.Setup (On_Connect'Unrestricted_Access, App_Name, "<h1>Server closed</h1>");
    v22.Setup_Access
      (On_Login'Unrestricted_Access, On_Register_Create'Unrestricted_Access, On_Register'Unrestricted_Access);
-   v22.Add_Root_User;
 
-   V22.Set_Browse_Icon ("/css/icons/widget.png");
-   V22.Set_Default_User_Icon ("/css/icons/user.png");
+   Root_Identity.Email := "root@root";
+   Root_Identity.Surname := "Utilisateur";
+   Root_Identity.Name := "Root";
+   Root_Identity.Phone := "0000000000";
+   Root_Identity.Date := "0";
+   Root_Identity.City := "-";
+   v22.Add_User (Root_Identity.Email, Root_Password);
+   Set_Info (Root_Identity.Email, Root_Identity);
 
-   V22.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
+   v22.Set_Navigation_Icon ("/css/icons/widget.png");
+   v22.Set_Default_User_Icon ("/css/icons/user.png");
 
-   V22.Header_Add_Child ("Contract", "Contrats", "App_Menu", On_Contract'Unrestricted_Access);
-   V22.Header_Add_Child ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
-   V22.Header_Add_Child ("Contract_Stats", "Statistiques", "Contract", On_Contract_Stats'Unrestricted_Access);
+   v22.Header_Set_Root ("App_Menu", App_Name, On_App_Menu'Unrestricted_Access);
 
-   V22.Header_Add_Child ("Administration", "Administration", "App_Menu", On_Administration'Unrestricted_Access);
-   V22.Header_Add_Child
+   v22.Header_Add_Child ("Contract", "Contrats", "App_Menu", On_Contract'Unrestricted_Access);
+   v22.Header_Add_Child ("Contract_Management", "Gestion", "Contract", On_Contract_Management'Unrestricted_Access);
+   v22.Header_Add_Child ("Contract_Stats", "Statistiques", "Contract", On_Contract_Stats'Unrestricted_Access);
+
+   v22.Header_Add_Child ("Administration", "Administration", "App_Menu", On_Administration'Unrestricted_Access);
+   v22.Header_Add_Child
      ("Administration_Users", "Utilisateurs", "Administration", On_Administration_Users'Unrestricted_Access);
-   V22.Header_Add_Child
+   v22.Header_Add_Child
      ("Administration_Emails", "Emails", "Administration", On_Administration_Emails'Unrestricted_Access);
-   V22.Header_Add_Child
+   v22.Header_Add_Child
      ("Administration_Gen", "Gén. requêtes", "Administration", On_Administration_Gen'Unrestricted_Access);
-
-   V22.Header_Add_Web ("Aide en ligne", "https://google.com");
-   V22.Header_Add_Dialog
-     ("Droits d'accès", "Ajouter les droits d'accès", "Confirmer", "Annuler", On_Confirm'Unrestricted_Access,
-      On_Cancel'Unrestricted_Access);
-   V22.Header_Add_Dialog ("Connecté depuis...", "Ajouter durée de la connexion");
-   V22.Header_Add_Dialog ("Connexion précédente", "Ajouter la date de la dernière connexion");
-   V22.Header_Add_Web ("À propos de...", "http://gnoga.com");
-   V22.Header_Add_Button ("Se déconnecter", V22.Disconnect_User'Unrestricted_Access);
 
    Gnoga.Application.Multi_Connect.Message_Loop;
 exception

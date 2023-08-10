@@ -1,12 +1,16 @@
 with Gnoga.Types;
 with Gnoga.Gui.Base;        use Gnoga.Gui.Base;
 with Gnoga.Gui.Plugin;
+with Gnoga.Gui.Plugin.jQueryUI;
+with Gnoga.Gui.Plugin.jQueryUI.Widget;
 with Gnoga.Gui.Window;
 with Gnoga.Gui.Element;
 with Gnoga.Gui.Element.Common;
 with Gnoga.Gui.Element.Form;
 with Gnoga.Gui.Element.Table;
 with Gnoga.Application.Multi_Connect;
+with UXStrings.Hash;
+with Ada.Containers.Hashed_Maps;
 with UXStrings.Conversions; use UXStrings.Conversions;
 
 with GNAT.SHA512;
@@ -22,26 +26,38 @@ package body v22 is
    Login_Group_Key : constant UXString := "Se connecter";
 
    package Element renames Gnoga.Gui.Element;
+   package jQueryUI renames Gnoga.Gui.Plugin.jQueryUI;
+   package Widget renames Gnoga.Gui.Plugin.jQueryUI.Widget;
+
+   type User_Data is tagged record
+      Email         : UXString;
+      Password_Hash : UXString;
+   end record;
+
+   package User_Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
 
    package Integer_Dictionary is new Ada.Containers.Hashed_Maps
      (Key_Type => UXString, Element_Type => Integer, Hash => UXStrings.Hash, Equivalent_Keys => "=");
 
-   ID_Main                   : Integer;
+   package Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => UXString, Element_Type => UXString, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   ID_Main                   : Integer; --  Root menu ID
    On_Custom_Connect         : Base.Action_Event;
    On_Custom_Login           : Base.Action_Event;
    On_Custom_Register        : Register_Function;
    On_Custom_Register_Create : Base.Action_Event;
-
-   Header_Dict : Integer_Dictionary.Map;
-
-   Browse_Icon_SRC : UXString := "";
-   User_Icon_SRC   : UXString := "";
+   Navigation_Icon_SRC : UXString := "";
+   User_Icon_SRC       : UXString := "";
 
    Login_Required : Boolean := False;
+   Identities : User_Dictionary.Map;
+   Header_Dict : Integer_Dictionary.Map;
 
    type App_Data is new Gnoga.Types.Connection_Data_Type with record
       Is_Logged : Boolean  := False;
-      Email     : UXString := ""; -- As a dictionnary key
+      Email     : UXString := "";  -- As a dictionnary key
 
       Custom_Data : Dictionary.Map;
 
@@ -66,6 +82,9 @@ package body v22 is
    end record;
    type App_Access is access all App_Data;
 
+   -----------------------------------------------------------------------------
+   --  Utils
+   -----------------------------------------------------------------------------
    function Int_Value is new Integer_Value (Integer);
 
    function To_UXString
@@ -76,11 +95,23 @@ package body v22 is
       return From_UTF_8 (Value'Image).Delete (1, 1);
    end To_UXString;
 
-   procedure Print (Object : in out Base.Base_Type'Class) is
-      App : constant App_Access := App_Access (Object.Connection_Data);
+   function Replace_All
+     (Text        : UXString;
+      To_Replace  : Unicode_Character;
+      Replacement : UXString)
+      return UXString
+   is
+      Result : UXString := "";
    begin
-      App.Window.Print;
-   end Print;
+      for Index in 1 .. Text.Length loop
+         if Text.Element (Index) = To_Replace then
+            Result := Result & Replacement;
+         else
+            Result := Result & Text.Element (Index);
+         end if;
+      end loop;
+      return Result;
+   end Replace_All;
 
    procedure CRUD_Set
      (Object : in out Base.Base_Type'Class;
@@ -118,9 +149,9 @@ package body v22 is
       return Header_Dict.Element (Key);
    end Header_Get;
 
-   -----------------------------------------------------------------------------
-   --  CRUD Handlers
-   -----------------------------------------------------------------------------
+   ---------------------
+   --  CRUD Handlers  --
+   ---------------------
    procedure On_CRUD_Callback (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -140,9 +171,9 @@ package body v22 is
       App.Header_Instance.Close_User_Menu;
    end On_Key_Pressed;
 
-   -----------------------------------------------------------------------------
-   --  Menu Handlers
-   -----------------------------------------------------------------------------
+   ---------------------
+   --  Menu Handlers  --
+   ---------------------
    procedure On_Logo (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -172,18 +203,14 @@ package body v22 is
       end if;
    end On_User;
 
-   -----------------------------------------------------------------------------
-   --  Tool Bar expand button
-   -----------------------------------------------------------------------------
+   ------------------------------
+   --  Tool Bar expand button  --
+   ------------------------------
    procedure On_Tool_Bar_Expand (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
       App.CRUD_Instance.Notify_Resize;
    end On_Tool_Bar_Expand;
-
-   -----------------------------------------------------------------------------
-   --  Verify user identity
-   -----------------------------------------------------------------------------
 
    ------------------
    --  Login form  --
@@ -192,23 +219,20 @@ package body v22 is
       App      : constant App_Access := App_Access (Object.Connection_Data);
       Email    : constant UXString   := Content_Group_Email_Get (Object, "Adresse mail");
       Password : constant UXString   := Content_Group_Password_Get (Object, "Mot de passe");
+      Identity : User_Data;
    begin
       if Identities.Contains (Email) then
-         declare
-            Identity : constant User_Data := Identities.Element (Email);
-         begin
-            if From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password))) = Identity.Password_Hash then
-               App.Email := Email;
-               if On_Custom_Login /= null then
-                  On_Custom_Login (Object);
-               end if;
-               App.Header_Instance.Set_Menu (ID_Main);
-               App.Header_Instance.Set_User_Name (Identity.User_Name);
-               App.Is_Logged := True;
-            else
-               Set_Login_Error_Message (Object, "Mot de passe incorrect");
+         Identity := Identities.Element (Email);
+         if From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password))) = Identity.Password_Hash then
+            App.Email := Email;
+            if On_Custom_Login /= null then
+               On_Custom_Login (Object);
             end if;
-         end;
+            App.Header_Instance.Set_Menu (ID_Main);
+            App.Is_Logged := True;
+         else
+            Set_Login_Error_Message (Object, "Mot de passe incorrect");
+         end if;
       else
          Set_Login_Error_Message (Object, "Adresse mail inexistante. Créez un compte !");
       end if;
@@ -269,13 +293,12 @@ package body v22 is
       Submit_Button.On_Click_Handler (On_Login'Unrestricted_Access);
    end Setup_Login_Buttons;
 
-   ----------------
-   --  Register  --
-   ----------------
+   ---------------------
+   --  Register form  --
+   ---------------------
    procedure On_Register (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
-      User_Name : constant UXString := Content_Group_Text_Get (Object, "Nom d'utilisateur");
       Email     : constant UXString := Content_Group_Email_Get (Object, "Adresse mail");
       Password  : constant UXString := Content_Group_Password_Get (Object, "Mot de passe");
       Confirmed : constant UXString := Content_Group_Password_Get (Object, "Confirmer le mot de passe");
@@ -283,7 +306,6 @@ package body v22 is
       Allowed   : Boolean           := True;
    begin
       Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
-      Identity.User_Name     := User_Name;
       Identity.Email         := Email;
 
       if Email /= "" then
@@ -292,12 +314,11 @@ package body v22 is
                if Password = Confirmed then
                   App.Email := Email;
                   if On_Custom_Register /= null then
-                     Allowed := On_Custom_Register (Object, Identity);
+                     Allowed := On_Custom_Register (Object, Identity.Email);
                   end if;
                   if Allowed then
                      Setup_Login_Form (Object);
                      Identities.Insert (Email, Identity);
-                     Gnoga.Log ("Created an account for " & User_Name & ", Email : " & Email);
                   else
                      App.Email := "";
                   end if;
@@ -326,7 +347,6 @@ package body v22 is
       Content_Group_Create (Object, Register_Group_Key);
 
       Content_Group_Add_Title (Object, "Identifiants", Register_Group_Key);
-      Content_Group_Text_Add (Object, "Nom d'utilisateur", Register_Group_Key);
       Content_Group_Email_Add (Object, "Adresse mail", Register_Group_Key);
       Content_Group_Password_Add (Object, "Mot de passe", Register_Group_Key);
       Content_Group_Password_Add (Object, "Confirmer le mot de passe", Register_Group_Key);
@@ -375,9 +395,9 @@ package body v22 is
       Submit_Button.On_Click_Handler (On_Register'Unrestricted_Access);
    end Setup_Register_Buttons;
 
-   -----------------------------------------------------------------------------
-   --  On_Connect
-   -----------------------------------------------------------------------------
+   ------------------
+   --  On_Connect  --
+   ------------------
 
    procedure On_Connect
      (Screen     : in out Gnoga.Gui.Window.Window_Type'Class;
@@ -417,7 +437,7 @@ package body v22 is
 
       --  Header
       App.Header_Instance.Create (App.Header_Parent, On_Logo'Unrestricted_Access, On_User'Unrestricted_Access);
-      App.Header_Instance.Set_App_Icon (Browse_Icon_SRC);
+      App.Header_Instance.Set_App_Icon (Navigation_Icon_SRC);
       App.Header_Instance.Set_User_Icon (User_Icon_SRC);
 
       --  Footer
@@ -437,17 +457,9 @@ package body v22 is
       On_Custom_Connect (App.Container);
    end On_Connect;
 
-   procedure Add_Root_User is
-      Identity : User_Data;
-      Email    : constant UXString := "root@root";
-      Password : constant UXString := "password";
-   begin
-      Identity.Email         := Email;
-      Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
-      Identity.User_Name     := "Root User";
-      Identities.Insert (Email, Identity);
-   end Add_Root_User;
-
+   -----------------------------------------------------------------------------
+   --  Setup
+   -----------------------------------------------------------------------------
    procedure Setup
      (On_User_Connect       : Base.Action_Event;
       Title                 : UXString := "";
@@ -459,10 +471,86 @@ package body v22 is
       Gnoga.Application.Multi_Connect.Initialize (Boot => "boot_jqueryui.html");
       Gnoga.Application.Multi_Connect.On_Connect_Handler (On_Connect'Unrestricted_Access);
       On_Custom_Connect := On_User_Connect;
-
-      --  Connection.Connect (Database => "v22", Host => "localhost", User => "dv", Password => "dv160316");
    end Setup;
 
+   procedure Set_App_Title
+     (Object : in out Base.Base_Type'Class;
+      Title  :        UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Window.Document.Title (Title);
+   end Set_App_Title;
+
+   procedure Set_App_Icon (Icon_SRC : UXString) is
+   begin
+      Gnoga.Application.Favicon (Icon_SRC);
+   end Set_App_Icon;
+
+   procedure Set_Default_User_Icon (Icon_SRC : UXString) is
+   begin
+      User_Icon_SRC := Icon_SRC;
+   end Set_Default_User_Icon;
+
+   procedure Set_Navigation_Icon (Icon_SRC : UXString) is
+   begin
+      Navigation_Icon_SRC := Icon_SRC;
+   end Set_Navigation_Icon;
+
+   -----------------------------------------------------------------------------
+   --  User connection-relative data
+   -----------------------------------------------------------------------------
+   procedure Set_Data
+     (Object : in out Base.Base_Type'Class;
+      Key    :        UXString;
+      Value  :        UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if App.Custom_Data.Contains (Key) then
+         App.Custom_Data.Replace (Key, Value);
+      else
+         App.Custom_Data.Insert (Key, Value);
+      end if;
+   end Set_Data;
+
+   function Get_Data
+     (Object : in out Base.Base_Type'Class;
+      Key    :        UXString)
+      return UXString
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      return App.Custom_Data.Element (Key);
+   end Get_Data;
+
+   procedure Clear_Data (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Custom_Data.Clear;
+   end Clear_Data;
+
+   procedure Set_User_Icon
+     (Object   : in out Base.Base_Type'Class;
+      Icon_SRC :        UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Set_User_Icon (Icon_SRC);
+   end Set_User_Icon;
+
+   procedure Set_User_Name
+     (Object : in out Base.Base_Type'Class;
+      Name   :        UXString)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Set_User_Name (Name);
+   end Set_User_Name;
+
+   -----------------------------------------------------------------------------
+   --  Security
+   -----------------------------------------------------------------------------
    procedure Setup_Access
      (On_User_Login           : Base.Action_Event := null;
       On_User_Register_Create : Base.Action_Event := null;
@@ -491,6 +579,19 @@ package body v22 is
       Content_Group_Warning_Set (Object, "register-error", Error);
    end Set_Register_Error_Message;
 
+   procedure Add_User (Email, Password : UXString) is
+      Identity : User_Data;
+   begin
+      Identity.Email         := Email;
+      Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
+      Identities.Insert (Email, Identity);
+   end Add_User;
+
+   procedure Delete_User (Email : UXString) is
+   begin
+      Identities.Delete (Email);
+   end Delete_User;
+
    procedure Disconnect_User (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -499,58 +600,24 @@ package body v22 is
       App.Header_Instance.Clear;
       App.Header_Instance.Close_Menu;
       App.Header_Instance.Close_User_Menu;
-      App.Header_Instance.App_Browse_Parent.Inner_HTML ("");
+      App.Header_Instance.Clear;
       App.CRUD_Instance.Clear;
       App.CRUD_Dict.Clear;
       App.Is_Logged := False;
    end Disconnect_User;
 
-   procedure Set_App_Title
-     (Object : in out Base.Base_Type'Class;
-      Title  :        UXString)
+   function Get_User_Email
+     (Object : in out Base.Base_Type'Class)
+      return UXString
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      App.Window.Document.Title (Title);
-   end Set_App_Title;
-
-   procedure Set_App_Icon (Icon_SRC : UXString) is
-   begin
-      Gnoga.Application.Favicon (Icon_SRC);
-   end Set_App_Icon;
-
-   procedure Set_Browse_Icon (Icon_SRC : UXString) is
-   begin
-      Browse_Icon_SRC := Icon_SRC;
-   end Set_Browse_Icon;
-
-   procedure Set_Default_User_Icon (Icon_SRC : UXString) is
-   begin
-      User_Icon_SRC := Icon_SRC;
-   end Set_Default_User_Icon;
-
-   procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString)
-   is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      App.Header_Instance.Set_User_Icon (Icon_SRC);
-   end Set_User_Icon;
-
-   procedure Set_User_Name
-     (Object : in out Base.Base_Type'Class;
-      Name   :        UXString)
-   is
-      App : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      App.Header_Instance.Set_User_Name (Name);
-   end Set_User_Name;
+      return App.Email;
+   end Get_User_Email;
 
    -----------------------------------------------------------------------------
    --  Header
    -----------------------------------------------------------------------------
-
    procedure Header_Set_Root
      (Key      : UXString;
       Name     : UXString;
@@ -575,38 +642,19 @@ package body v22 is
       Header_Set (Key, Unique_ID);
    end Header_Add_Child;
 
-   procedure Header_Add_Dialog
-     (Title        : UXString;
-      Content      : UXString          := "";
-      Confirm_Text : UXString          := "";
-      Cancel_Text  : UXString          := "";
-      On_Confirm   : Base.Action_Event := null;
-      On_Cancel    : Base.Action_Event := null)
+   procedure Header_Add_User_Button
+     (Object   : in out Base.Base_Type'Class;
+      Name     :        UXString;
+      On_Click :        Base.Action_Event)
    is
+      App : constant App_Access := App_Access (Object.Connection_Data);
    begin
-      Header.Add_Dialog (Title, Content, Confirm_Text, Cancel_Text, On_Confirm, On_Cancel);
-   end Header_Add_Dialog;
-
-   procedure Header_Add_Web
-     (Title : UXString;
-      URL   : UXString)
-   is
-   begin
-      Header.Add_Web (Title, URL);
-   end Header_Add_Web;
-
-   procedure Header_Add_Button
-     (Title    : UXString;
-      On_Click : Base.Action_Event)
-   is
-   begin
-      Header.Add_Button (Title, On_Click);
-   end Header_Add_Button;
+      App.Header_Instance.Add_Element (Name, On_Click);
+   end Header_Add_User_Button;
 
    -----------------
    --  Callbacks  --
    -----------------
-
    procedure Header_Notify_Menu_Click
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
@@ -620,10 +668,26 @@ package body v22 is
       App.CRUD_Dict.Clear;
    end Header_Notify_Menu_Click;
 
+   procedure Header_Notify_User_Menu_Click (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Notify_User_Menu_Click;
+   end Header_Notify_User_Menu_Click;
+
+   -----------------------------------------------------------------------------
+   --  User relative data
+   -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
    -----------------------------------------------------------------------------
    --  CRUD
    -----------------------------------------------------------------------------
-
    procedure CRUD_Load (Object : in out Base.Base_Type'Class) is
       App : constant App_Access := App_Access (Object.Connection_Data);
    begin
@@ -708,7 +772,6 @@ package body v22 is
    -----------------------------------------------------------------------------
    --  Content
    -----------------------------------------------------------------------------
-
    function Content_Parent
      (Object : in out Base.Base_Type'Class)
       return View.View_Access
@@ -752,9 +815,9 @@ package body v22 is
       Content_Set_Text (Object, "");
    end Content_Clear_Text;
 
-   --------------
-   --  Groups  --
-   --------------
+   -----------------------------------------------------------------------------
+   --  Groups
+   -----------------------------------------------------------------------------
    procedure Content_Group_Create
      (Object : in out Base.Base_Type'Class;
       Title  :        UXString)
@@ -901,10 +964,10 @@ package body v22 is
    end Content_Group_Item_Place_Holder;
 
    procedure Content_Group_Add_Button
-     (Object : in out Base.Base_Type'Class;
-      Text : UXString;
-      On_Click : Base.Action_Event;
-      Parent_Key : UXString)
+     (Object     : in out Base.Base_Type'Class;
+      Text       :        UXString;
+      On_Click   :        Base.Action_Event;
+      Parent_Key :        UXString)
    is
       App : constant App_Access := App_Access (Object.Connection_Data);
 
@@ -1173,11 +1236,11 @@ package body v22 is
    procedure Content_Group_Date_Set
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString;
-      Date  :        UXString)
+      Date   :        UXString)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
       Date_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Date_Form         : constant Element.Form.Date_Access       := Element.Form.Date_Access (Date_Element);
+      Date_Form    : constant Element.Form.Date_Access         := Element.Form.Date_Access (Date_Element);
    begin
       Date_Form.Value (Date);
    end Content_Group_Date_Set;
@@ -1218,9 +1281,9 @@ package body v22 is
       Name   :        UXString;
       Email  :        UXString)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
       Email_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Email_Form         : constant Element.Form.Email_Access       := Element.Form.Email_Access (Email_Element);
+      Email_Form    : constant Element.Form.Email_Access        := Element.Form.Email_Access (Email_Element);
    begin
       Email_Form.Value (Email);
    end Content_Group_Email_Set;
@@ -1292,9 +1355,9 @@ package body v22 is
       Name   :        UXString;
       Phone  :        UXString)
    is
-      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      App         : constant App_Access                       := App_Access (Object.Connection_Data);
       Tel_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
-      Tel         : constant Element.Form.Tel_Access       := Element.Form.Tel_Access (Tel_Element);
+      Tel         : constant Element.Form.Tel_Access          := Element.Form.Tel_Access (Tel_Element);
    begin
       Tel.Value (Phone);
    end Content_Group_Phone_Set;
@@ -1406,24 +1469,21 @@ package body v22 is
       Column.Create (Row.all, Content => Variable);
    end Content_List_Add_Column;
 
-   procedure Content_List_Click_Handler
-     (Object : in out Base.Base_Type'Class)
-   is
+   procedure Content_List_Click_Handler (Object : in out Base.Base_Type'Class) is
       App        : constant App_Access := App_Access (Object.Connection_Data);
       Parent_Key : constant UXString   := Object.jQuery_Execute ("data('parent_key')");
 
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
       Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
 
-      Row_Index : constant Integer := Int_Value (Object.jQuery_Execute ("data('row_index')"));
+      Row_Index : constant Integer                          := Int_Value (Object.jQuery_Execute ("data('row_index')"));
+      Row       : constant Element.Pointer_To_Element_Class :=
+        App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Row_Index));
 
       Previous_Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+      Previous_Row       : Element.Pointer_To_Element_Class;
 
-      Row : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Row_Index));
    begin
-      Gnoga.Log (Object.jQuery_Execute ("data('parent_key')"));
-      Gnoga.Log (To_UXString (Previous_Row_Index) & ", " & To_UXString (Row_Index));
-
       if Previous_Row_Index = Row_Index then
          Row.Remove_Class ("content-list-item-selected");
          Table.jQuery_Execute ("data('selected_row', 0)");
@@ -1432,11 +1492,8 @@ package body v22 is
          Table.jQuery_Execute ("data('selected_row', " & To_UXString (Row_Index) & ")");
       end if;
       if Previous_Row_Index /= 0 then
-         declare
-            Previous_Row : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Previous_Row_Index));
-         begin
-            Previous_Row.Remove_Class ("content-list-item-selected");
-         end;
+         Previous_Row := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Previous_Row_Index));
+         Previous_Row.Remove_Class ("content-list-item-selected");
       end if;
 
    end Content_List_Click_Handler;
@@ -1489,14 +1546,14 @@ package body v22 is
    end Content_List_Add_Text;
 
    function Content_List_Selected_Row
-     (Object : in out Base.Base_Type'Class;
-      Parent_Key : UXString)
+     (Object     : in out Base.Base_Type'Class;
+      Parent_Key :        UXString)
       return Integer
    is
-      App : constant App_Access := App_Access (Object.Connection_Data);
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
       Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
       Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
-      Result : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+      Result        : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
    begin
       return Result;
    end Content_List_Selected_Row;
@@ -1504,7 +1561,6 @@ package body v22 is
    -----------------------------------------------------------------------------
    --  Footer
    -----------------------------------------------------------------------------
-
    procedure Footer_Set_State_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString := "")
@@ -1524,49 +1580,68 @@ package body v22 is
    end Footer_Set_Permanent_Text;
 
    -----------------------------------------------------------------------------
-   --  User relative data
+   --  API Utils
    -----------------------------------------------------------------------------
-
-   procedure Set_Identity
-     (Identity : in out User_Data;
-      Key      :        UXString;
-      Value    :        UXString)
+   procedure Launch_Dialog
+     (Object       : in out Base.Base_Type'Class;
+      Title        :        UXString;
+      Content      :        UXString;
+      Confirm_Text :        UXString          := "";
+      Cancel_Text  :        UXString          := "";
+      On_Confirm   :        Base.Action_Event := null;
+      On_Cancel    :        Base.Action_Event := null)
    is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Dialog_Class : constant Element.Pointer_To_Element_Class := new Widget.Dialog_Type;
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
+      Button       : Element.Pointer_To_Element_Class;
    begin
-      Identity.Extra.Insert (Key, Value);
-   end Set_Identity;
+      Dialog.Create (Object.Parent.all, Replace_All (Title, ''', "\'"), Content, Width => 400, Height => 300);
+      Dialog_Class.Dynamic;
 
-   function Get_Identity
-     (Identity : in out User_Data;
-      Key      :        UXString)
-      return UXString
-   is
-   begin
-      return Identity.Extra.Element (Key);
-   end Get_Identity;
-
-   procedure Set_Data
-     (Object : in out Base.Base_Type'Class;
-      Key    :        UXString;
-      Value  :        UXString)
-   is
-      App      : constant App_Access := App_Access (Object.Connection_Data);
-   begin
-      if App.Custom_Data.Contains (Key) then
-         App.Custom_Data.Replace (Key, Value);
-      else
-         App.Custom_Data.Insert (Key, Value);
+      if On_Cancel /= null then
+         Button := new Element.Common.Button_Type;
+         Element.Common.Button_Access (Button).Create (Dialog.all, Cancel_Text);
+         Button.On_Click_Handler (On_Cancel);
+         Button.Dynamic;
+         Button.Class_Name ("ui-button ui-corner-all");
+         jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
       end if;
-   end Set_Data;
 
-   function Get_Data
-     (Object : in out Base.Base_Type'Class;
-      Key    :        UXString)
-      return UXString
-   is
-      App      : constant App_Access := App_Access (Object.Connection_Data);
+      if On_Confirm /= null then
+         Button := new Element.Common.Button_Type;
+         Element.Common.Button_Access (Button).Create (Dialog.all, Confirm_Text);
+         Button.Dynamic;
+         Button.Focus;
+         Button.On_Click_Handler (On_Confirm);
+         Button.Class_Name ("ui-button ui-corner-all");
+         jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "right-70 bottom-10");
+      end if;
+
+      Dialog.On_Close_Handler (Close_Dialog'Unrestricted_Access);
+      App.Container.Add_Element ("dialog", Dialog_Class);
+   end Launch_Dialog;
+
+   procedure Close_Dialog (Object : in out Base.Base_Type'Class) is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Dialog_Class : constant Element.Pointer_To_Element_Class := App.Container.Element ("dialog");
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
    begin
-      return App.Custom_Data.Element (Key);
-   end Get_Data;
+      Dialog.Remove;
+   end Close_Dialog;
+
+   procedure Launch_Web
+     (Object : in out Base.Base_Type'Class;
+      URL    :        UXString)
+   is
+   begin
+      Object.jQuery_Execute ("gnoga_web = open('" & URL & "', '_blank')");
+   end Launch_Web;
+
+   procedure Print (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Window.Print;
+   end Print;
 
 end v22;

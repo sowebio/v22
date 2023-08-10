@@ -1,78 +1,73 @@
---  with Gnoga.Server;
---  with Gnoga.Server.Database;
---  with Gnoga.Server.Database.MySQL;
 with Gnoga.Gui.Base;
 with Gnoga.Gui.View;
 with UXStrings; use UXStrings;
-
-with UXStrings.Hash;
-with Ada.Containers.Hashed_Maps;
 
 package v22 is
 
    package Base renames Gnoga.Gui.Base;
    package View renames Gnoga.Gui.View;
 
-   --  Connection : aliased Gnoga.Server.Database.MySQL.Connection;
-   --  pragma Linker_Options ("-lmysqlclient");
-
    Register_Group_Key : constant UXString := "Créer un compte";
 
-   package Dictionary is new Ada.Containers.Hashed_Maps
-     (Key_Type => UXString, Element_Type => UXString, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+   -----------------------------------------------------------------------------
+   --  Setup
+   -----------------------------------------------------------------------------
+   procedure Setup
+     (On_User_Connect       : Base.Action_Event;
+      Title                 : UXString := "";
+      Server_Closed_Content : UXString := "Server closed.");
+   --  Set connection elements.
+   --  On_User_Connect is called every time a user launches the webpage.
 
-   type User_Data is tagged record
-      Email         : UXString;
-      Password_Hash : UXString;
-      User_Name     : UXString;
+   procedure Set_App_Title
+     (Object : in out Base.Base_Type'Class;
+      Title  :        UXString);
+   --  Set website title (in tab).
 
-      Extra : Dictionary.Map;
-   end record;
+   procedure Set_App_Icon (Icon_SRC : UXString);
+   --  Should theorically work but GNOGA refuses to update the icon.
+
+   procedure Set_Default_User_Icon (Icon_SRC : UXString);
+   --  Set the default user icon which (on click) displays the user menu,
+   --  can be overwritten with Set_User_Icon.
+
+   procedure Set_Navigation_Icon (Icon_SRC : UXString);
+   --  Set the icon which displays (on click) the navigation menu.
 
    -----------------------------------------------------------------------------
-   --  User relative data
+   --  User connection-relative data
    -----------------------------------------------------------------------------
-
-   procedure Set_Identity
-     (Identity : in out User_Data;
-      Key      :        UXString;
-      Value    :        UXString);
-
-   function Get_Identity
-     (Identity : in out User_Data;
-      Key      :        UXString)
-      return UXString;
-
    procedure Set_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString;
       Value  :        UXString);
+   --  Set connection data in a UXString - UXString dictionary.
 
    function Get_Data
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString)
       return UXString;
+   --  Get connection data in a UXString - UXString dictionary.
 
-   --  /!\ \/ \/ \/ This is placed here just for demo
-   package User_Dictionary is new Ada.Containers.Hashed_Maps
-     (Key_Type => UXString, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+   procedure Clear_Data (Object : in out Base.Base_Type'Class);
+   --  Clear connection data (could be used when user logouts).
 
-   Identities : User_Dictionary.Map;
-   --  /!\ ^  ^  ^ This was placed here just for demo
-
-   procedure Print (Object : in out Base.Base_Type'Class);
-   --  Call system print on current web view
-
-   procedure Setup
-     (On_User_Connect       : Base.Action_Event;
-      Title                 : UXString := "";
-      Server_Closed_Content : UXString := "Server closed.");
-   --  Set connection elements
-   --  On_User_Connect is called every time a user launches the webpage
-
-   type Register_Function is access function
+   procedure Set_User_Icon
      (Object   : in out Base.Base_Type'Class;
-      Instance : in out User_Data)
+      Icon_SRC :        UXString);
+   --  Set the user icon which (on click) displays the navigation user menu.
+
+   procedure Set_User_Name
+     (Object : in out Base.Base_Type'Class;
+      Name   :        UXString);
+   --  Set user name, displayed next to the user icon.
+
+   -----------------------------------------------------------------------------
+   --  Security
+   -----------------------------------------------------------------------------
+   type Register_Function is access function
+     (Object : in out Base.Base_Type'Class;
+      Email  :        UXString)
       return Boolean;
 
    procedure Setup_Access
@@ -86,40 +81,21 @@ package v22 is
    procedure Set_Register_Error_Message
      (Object : in out Base.Base_Type'Class;
       Error  :        UXString);
+   --  Set an error on register form.
 
-   procedure Add_Root_User;
-   --  Add default user
-   --  email : root@root
-   --  password : password
-   --  User name : Root User
+   procedure Add_User (Email, Password : UXString);
+   --  Add user with Email and clear password.
+
+   procedure Delete_User (Email : UXString);
+   --  Delete user from known identities.
 
    procedure Disconnect_User (Object : in out Base.Base_Type'Class);
    --  This function assumes Setup_Access was called
 
-   procedure Set_App_Title
-     (Object : in out Base.Base_Type'Class;
-      Title  :        UXString);
-   --  Set website title (in tab)
-
-   procedure Set_App_Icon (Icon_SRC : UXString);
-   --  Should theorically work but GNOGA refuses to update the icon
-
-   procedure Set_Browse_Icon (Icon_SRC : UXString);
-   --  Set the icon which displays (on click) the menu
-
-   procedure Set_Default_User_Icon (Icon_SRC : UXString);
-   --  Set the default user icon which (on click) displays the user menu,
-   --  can be overwritten with Set_User_Icon
-
-   procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :        UXString);
-   --  Set the user icon which (on click) displays the user menu
-
-   procedure Set_User_Name
-     (Object : in out Base.Base_Type'Class;
-      Name   :        UXString);
-   --  Set user name, displayed next to the user icon
+   function Get_User_Email
+     (Object : in out Base.Base_Type'Class)
+      return UXString;
+   --  Return current user email.
 
    -----------------------------------------------------------------------------
    --  Header
@@ -128,36 +104,25 @@ package v22 is
      (Key      : UXString;
       Name     : UXString;
       On_Click : Base.Action_Event);
-      --  Set default menu (root of browsing menu)
+   --  Set default menu (root of navigation menu).
+   --  On_Click handler needs to call Header_Notify_Menu_Click.
+   --  IMPORTANT: Key must be UNIQUE /!\
 
    procedure Header_Add_Child
      (Key        : UXString;
       Name       : UXString;
       Parent_Key : UXString;
       On_Click   : Base.Action_Event);
-   --  Add child to a child or root in menu
+   --  Add child to a child or root in menu.
+   --  On_Click handler needs to call Header_Notify_Menu_Click.
+   --  IMPORTANT: Key must be UNIQUE /!\
 
-   procedure Header_Add_Dialog
-     (Title        : UXString;
-      Content      : UXString          := "";
-      Confirm_Text : UXString          := "";
-      Cancel_Text  : UXString          := "";
-      On_Confirm   : Base.Action_Event := null;
-      On_Cancel    : Base.Action_Event := null);
-   --  Function to create a button on the user menu, creating a jQuery dialog
-   --  Two default buttons are available : Cancel and Confirm
-   --  On_Cancel is fired on default exit
-   --  Buttons are not displayed on dialog if corresponding handler is null
-
-   procedure Header_Add_Web
-     (Title : UXString;
-      URL   : UXString);
-   --  Function to create a button on the user menu, which opens a new web page
-
-   procedure Header_Add_Button
-     (Title    : UXString;
-      On_Click : Base.Action_Event);
-   --  Function to create a button with customized click handler
+   procedure Header_Add_User_Button
+     (Object   : in out Base.Base_Type'Class;
+      Name     :        UXString;
+      On_Click :        Base.Action_Event);
+   --  On_Click handler needs to call Header_Notify_User_Menu_Click otherwise
+   --  user navigation menu can't be closed.
 
    -----------------
    --  Callbacks  --
@@ -165,6 +130,8 @@ package v22 is
    procedure Header_Notify_Menu_Click
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString);
+
+   procedure Header_Notify_User_Menu_Click (Object : in out Base.Base_Type'Class);
 
    -----------------------------------------------------------------------------
    --  CRUD
@@ -176,6 +143,7 @@ package v22 is
       Key      :        UXString;
       Name     :        UXString;
       Icon_SRC :        UXString);
+   --  IMPORTANT: Key must be UNIQUE /!\
 
    procedure CRUD_Add_Sub_Element
      (Object     : in out Base.Base_Type'Class;
@@ -183,26 +151,35 @@ package v22 is
       Name       :        UXString;
       Parent_Key :        UXString;
       On_Click   :        Base.Action_Event);
+   --  IMPORTANT: Key must be UNIQUE /!\
+   --  If parent is "File", and this element is "Edit", then a unique key
+   --  could be set as "File_Edit".
 
    procedure CRUD_Add_Delimiter_Above
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString);
+   --  Add a delimiter above a sub-element.
 
    procedure CRUD_Set_Unclickable
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString);
+   --  Set an element (or sub-element) unclickable.
 
    procedure CRUD_Set_Clickable
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString);
+   --  Set an element (or sub-element) clickable.
 
    procedure CRUD_Notify_Sub_Element_Click
      (Object : in out Base.Base_Type'Class;
       Key    :        UXString);
+   --  Callback to place in sub-elements' handlers.
 
    procedure CRUD_Enable_Shortcuts (Object : in out Base.Base_Type'Class);
+   --  Enable CRUD shortcuts, allowing both elements and sub-elements shortcuts.
 
    procedure CRUD_Disable_Shortcuts (Object : in out Base.Base_Type'Class);
+   --  Disable CRUD shortcuts, for both elements and sub-elements.
 
    -----------------------------------------------------------------------------
    --  Content
@@ -210,61 +187,91 @@ package v22 is
    function Content_Parent
      (Object : in out Base.Base_Type'Class)
       return View.View_Access;
+   --  Return the element below menu title, containing all content.
 
    procedure Content_Clear (Object : in out Base.Base_Type'Class);
-   --  Removes any content inside content parent
+   --  Removes any HTML content inside content parent.
 
    procedure Content_Set_Title
      (Object : in out Base.Base_Type'Class;
       Title  :        UXString);
+   --  Set title above content.
 
    procedure Content_Clear_Title (Object : in out Base.Base_Type'Class);
+   --  Set title above content to "".
 
    procedure Content_Set_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString);
+   --  Set text in content parent.
+   --  NOTE: should be used when the only content of the menu is this text,
+   --  otherwise, should use Content_Parent instead.
 
    procedure Content_Clear_Text (Object : in out Base.Base_Type'Class);
+   --  Set text in content parent to "".
+   --  NOTE: should be used when the only content of the menu is this text.
+   --  otherwise, should use Content_Parent instead.
 
-   --------------
-   --  Groups  --
-   --------------
+   -----------------------------------------------------------------------------
+   --  Groups
+   -----------------------------------------------------------------------------
    procedure Content_Group_Create
      (Object : in out Base.Base_Type'Class;
       Title  :        UXString);
+   --  Create a container for forms. This element is displayed in the
+   --  content container. Does not need any clearing apart from Content_Clear
+   --  to delete this element.
 
    procedure Content_Group_Add_Title
      (Object     : in out Base.Base_Type'Class;
       Title      :        UXString;
       Parent_Key :        UXString);
+   --  Add a title to a form group.
+   --  NOTE: Title from arguments of Content_Group_Create is already on screen
+   --  and has a higher emphasis.
 
    procedure Content_Group_Add_Space
      (Object     : in out Base.Base_Type'Class;
       Parent_Key :        UXString;
       Height     :        Integer := 8);
+   --  Add space between rows in form group.
 
    procedure Content_Group_Item_Lock
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString);
+   --  Lock a form in a form group so the user can't write anything.
 
    procedure Content_Group_Item_Unlock
      (Object : in out Base.Base_Type'Class;
       Name   :        UXString);
+   --  Unlock a form in a form group.
 
    procedure Content_Group_Item_Place_Holder
      (Object       : in out Base.Base_Type'Class;
       Name         :        UXString;
       Place_Holder :        UXString);
+   --  Set a place-holder for field-type forms.
 
    procedure Content_Group_Add_Button
-     (Object : in out Base.Base_Type'Class;
-      Text : UXString;
-      On_Click : Base.Action_Event;
-      Parent_Key : UXString);
+     (Object     : in out Base.Base_Type'Class;
+      Text       :        UXString;
+      On_Click   :        Base.Action_Event;
+      Parent_Key :        UXString);
+   --  Add a button with a callback. Can be use as a submit button.
+
+   ----------------------
+   --  Group Elements  --
+   ----------------------
+   --  Most element come with an On_Change callback, fired once the user stops
+   --  focusing the given element.
+   --  Every item (except button and warning), have an explaining text next to
+   --  it in the container.
 
    -----------------
    --  Edit Text  --
    -----------------
+   --  This element allows to enter and modify text.
+
    procedure Content_Group_Text_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -284,6 +291,8 @@ package v22 is
    -----------------
    --  Text Area  --
    -----------------
+   --  Same as Edit Text, but the user can define the height of the view.
+
    procedure Content_Group_Text_Area_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -303,6 +312,8 @@ package v22 is
    -----------------
    --  Check Box  --
    -----------------
+   --  This element can be checked and unchecked by the user.
+
    procedure Content_Group_Check_Box_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -322,6 +333,8 @@ package v22 is
    --------------
    --  Number  --
    --------------
+   --  Same as Edit Text, but only numbers are allowed.
+
    procedure Content_Group_Number_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -341,6 +354,8 @@ package v22 is
    -----------------
    --  Selection  --
    -----------------
+   --  Element showing a list of items, user can only select one.
+
    procedure Content_Group_Selection_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -352,6 +367,7 @@ package v22 is
       Name    :        UXString;
       Option  :        UXString;
       Enabled :        Boolean := False);
+   --  If parameter Enabled is True, this element will be the selected by default.
 
    function Content_Group_Selection_Get
      (Object : in out Base.Base_Type'Class;
@@ -361,6 +377,9 @@ package v22 is
    ------------
    --  Date  --
    ------------
+   --  Element allowing the user to select a date.
+   --  NOTE: format for getter and setter is YYYY-MM-DD.
+
    procedure Content_Group_Date_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -369,8 +388,8 @@ package v22 is
 
    procedure Content_Group_Date_Set
      (Object : in out Base.Base_Type'Class;
-      Name : UXString;
-      Date : UXString);
+      Name   :        UXString;
+      Date   :        UXString);
 
    function Content_Group_Date_Get
      (Object : in out Base.Base_Type'Class;
@@ -380,6 +399,8 @@ package v22 is
    -------------
    --  Email  --
    -------------
+   --  Element allowing the user to write an email address.
+
    procedure Content_Group_Email_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -388,8 +409,8 @@ package v22 is
 
    procedure Content_Group_Email_Set
      (Object : in out Base.Base_Type'Class;
-      Name : UXString;
-      Email : UXString);
+      Name   :        UXString;
+      Email  :        UXString);
 
    function Content_Group_Email_Get
      (Object : in out Base.Base_Type'Class;
@@ -399,6 +420,8 @@ package v22 is
    ----------------
    --  Password  --
    ----------------
+   --  Element allowing the user to safely write a password.
+
    procedure Content_Group_Password_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -413,6 +436,8 @@ package v22 is
    -------------
    --  Phone  --
    -------------
+   --  Element to type a phone number.
+
    procedure Content_Group_Phone_Add
      (Object     : in out Base.Base_Type'Class;
       Name       :        UXString;
@@ -421,8 +446,8 @@ package v22 is
 
    procedure Content_Group_Phone_Set
      (Object : in out Base.Base_Type'Class;
-      Name : UXString;
-      Phone : UXString);
+      Name   :        UXString;
+      Phone  :        UXString);
 
    function Content_Group_Phone_Get
      (Object : in out Base.Base_Type'Class;
@@ -432,6 +457,9 @@ package v22 is
    ---------------
    --  Warning  --
    ---------------
+   --  Custom (non-form) element to potentially warn the user about something.
+   --  NOTE: Can be used with Text = "" at first, and using the setter.
+
    procedure Content_Group_Warning_Add
      (Object     : in out Base.Base_Type'Class;
       Text       :        UXString;
@@ -449,27 +477,53 @@ package v22 is
    procedure Content_List_Create
      (Object : in out Base.Base_Type'Class;
       Title  :        UXString);
+   --  Create a table for a list of items. This element is displayed in the
+   --  content container. Does not need any clearing apart from Content_Clear
+   --  to delete this element.
+   --  Elements can be selected, and the index can be known using
+   --  Content_List_Selected_Row.
 
    procedure Content_List_Add_Column
      (Object     : in out Base.Base_Type'Class;
       Variable   :        UXString;
       Parent_Key :        UXString);
+   --  Add a column in the table. Must be called as much as needed before using
+   --  Content_List_Add_Item.
+
+   function Content_List_Add_Item
+     (Object     : in out Base.Base_Type'Class;
+      Parent_Key :        UXString)
+      return Integer;
+   --  Returned value is the index of the item in list.
+   --  NOTE: Columns must be added before, using Content_List_Add_Column.
 
    procedure Content_List_Add_Text
      (Object     : in out Base.Base_Type'Class;
       Value      :        UXString;
       Index      :        Integer;
       Parent_Key :        UXString);
+   --  NOTE: The corresponding item must be created before using Content_List_Add_Item.
+   --  This function just place a new column in the table, at a given row.
 
-   function Content_List_Add_Item
+   function Content_List_Selected_Row
      (Object     : in out Base.Base_Type'Class;
       Parent_Key :        UXString)
       return Integer;
+   --  Return the selected row index.
 
-   function Content_List_Selected_Row
-     (Object : in out Base.Base_Type'Class;
-      Parent_Key : UXString)
-      return Integer;
+   --------------------------------------------------------
+   --  EXAMPLE: the following List is created like this:
+   --------------------------------------------------------
+   --            > Content_List_Create (*, key);
+   --  ┌───┬───┐ > Content_List_Add_Column (*, "A", key);
+   --  │ A │ B │ > Content_List_Add_Column (*, "B", key);
+   --  ├───┼───┤ > R1 := Content_List_Add_Item (*, key);
+   --  │ 1 | 2 | > Content_List_Add_Text (*, "1", R1, key);
+   --  ├───┼───┤ > Content_List_Add_Text (*, "2", R1, key);
+   --  │ 3 | 4 | > R2 := Content_List_Add_Item (*, key);
+   --  └───┴───┘ > Content_List_Add_Text (*, "3", R2, key);
+   --            > Content_List_Add_Text (*, "4", R2, key);
+   --------------------------------------------------------
 
    -----------------------------------------------------------------------------
    --  Footer
@@ -477,10 +531,42 @@ package v22 is
    procedure Footer_Set_State_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString := "");
+   --  Set state text on the left side of the footer.
 
    procedure Footer_Set_Permanent_Text
      (Object : in out Base.Base_Type'Class;
       Text   :        UXString := "");
+   --  Set permanent text on the right side of the footer.
+
+   -----------------------------------------------------------------------------
+   --  Utils
+   -----------------------------------------------------------------------------
+   procedure Launch_Dialog
+     (Object       : in out Base.Base_Type'Class;
+      Title        :        UXString;
+      Content      :        UXString;
+      Confirm_Text :        UXString          := "";
+      Cancel_Text  :        UXString          := "";
+      On_Confirm   :        Base.Action_Event := null;
+      On_Cancel    :        Base.Action_Event := null);
+   --  Create a jQuery dialog, with two potential buttons.
+   --  Buttons are displayed if their corresponding handler is not null.
+   --  Confirm button is focused.
+   --  It is advised to use Close_Dialog in On_Confirm and On_Cancel handlers.
+
+   procedure Close_Dialog (Object : in out Base.Base_Type'Class);
+   --  Close current jQuery dialog, removes it from HTML.
+
+   procedure Launch_Web
+     (Object : in out Base.Base_Type'Class;
+      URL    :        UXString);
+   --  Open a new tab in browser to URL.
+   --  NOTE: user's browser might not accept redirection at first, in this case
+   --  the user needs to enable this.
+
+   procedure Print (Object : in out Base.Base_Type'Class);
+   --  Call system print on current web view.
+   --  /!\ Tends to stop client-server communication.
 
 private
 

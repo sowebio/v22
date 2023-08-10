@@ -76,7 +76,7 @@
 }
 
 .content-list {
-    background-color: var(--content-group-color);
+    background-color: var(--content-list-color);
     width: 100%;
     border-radius: 8px;
     margin: 8px;
@@ -88,7 +88,7 @@
 .content-list-header {
     font-weight: bold;
     text-align: center;
-    background-color: var(--content-group-header-color);
+    background-color: var(--content-list-header-color);
 }
 
 .content-list-item {
@@ -102,7 +102,7 @@
 }
 
 .content-list-table > tbody > tr:not(:first-child):nth-child(odd) {
-    background-color: var(--content-group-title-color);
+    background-color: var(--content-list-secondary-color);
 }
 
 .content-list-item-selected {

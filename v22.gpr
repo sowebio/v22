@@ -12,7 +12,7 @@ project v22 is
    for Main use ("example/src/application.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use ("-O2", "-gnato", "-gnatwa", "-g", "-gnata", "-gnatq", "-gnatQ", "-gnato", "-gnatf", "-gnatW8");
+      for Default_Switches ("Ada") use ("-gnato", "-gnatwa", "-g", "-gnata", "-gnatq", "-gnatQ", "-gnato", "-gnatf", "-gnatW8");
    end Compiler;
 
    package Binder is
