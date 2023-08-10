@@ -13,7 +13,10 @@
     --content-group-warning-color: #ff405f;
     --content-group-link-color: #767696;
     --content-group-link-active-color: #767696;
+    --content-list-color: #dfdfff;
+    --content-list-header-color: #adadff;
     --content-list-selected-color: #efefff;
+    --content-list-secondary-color: #c0c0ff;
     
     --crud-color: #3d3e4d;
     --crud-extension-color: #262635;

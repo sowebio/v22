@@ -1,5 +1,3 @@
-with User_Menu;
-
 package body Header is
 
    package Element renames Gnoga.Gui.Element;
@@ -50,8 +48,8 @@ package body Header is
       Data_ID  :        Integer)
    is
    begin
-      if Instance.App_Browse_Parent.Element (Button_Name (Data_ID)) /= null then
-         Instance.App_Browse_Parent.Element (Button_Name (Data_ID)).Remove;
+      if Instance.App_Navigation_Parent.Element (Button_Name (Data_ID)) /= null then
+         Instance.App_Navigation_Parent.Element (Button_Name (Data_ID)).Remove;
       end if;
    end Remove_Button;
 
@@ -59,20 +57,19 @@ package body Header is
      (Instance  : in out Header_Type;
       Parent_ID :        Integer)
    is
+      Data : Data_Type;
+      Button : Element.Pointer_To_Element_Class;
    begin
       for Data_ID in Menu_Table'Range loop
          Instance.Remove_Button (Data_ID);
-         if Menu_Table (Data_ID).Parent_ID = Parent_ID then
-            declare
-               Data   : constant Data_Type                        := Menu_Table (Data_ID);
-               Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
-            begin
-               Common.Button_Access (Button).Create (Instance.App_Browse_Parent.all, Data.Name);
-               Button.Class_Name ("framework-button");
-               Button.Dynamic;
-               Instance.App_Browse_Parent.Add_Element (Button_Name (Data_ID), Button);
-               Button.On_Click_Handler (Data.On_Open);
-            end;
+         Data := Menu_Table (Data_ID);
+         if Data.Parent_ID = Parent_ID then
+            Button := new Common.Button_Type;
+            Common.Button_Access (Button).Create (Instance.App_Navigation_Parent.all, Data.Name);
+            Button.Class_Name ("framework-button");
+            Button.Dynamic;
+            Instance.App_Navigation_Parent.Add_Element (Button_Name (Data_ID), Button);
+            Button.On_Click_Handler (Data.On_Open);
          end if;
       end loop;
    end Update;
@@ -85,27 +82,27 @@ package body Header is
       Parent           : in out View.View_Type;
       On_Logo, On_User :        Base.Action_Event)
    is
-      App_Parent        : constant View.Pointer_To_View_Class       := new View.View_Type;
-      App_Icon          : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
-      App_Browse_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
+      App_Parent            : constant View.Pointer_To_View_Class       := new View.View_Type;
+      App_Icon              : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
+      App_Navigation_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
 
       Breadcrumb_Parent : constant View.Pointer_To_View_Class := new View.View_Type;
 
-      User_Parent        : constant View.Pointer_To_View_Class       := new View.View_Type;
-      User_Name_Parent   : constant Element.Pointer_To_Element_Class := new Common.P_Type;
-      User_Icon          : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
-      User_Browse_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
+      User_Parent            : constant View.Pointer_To_View_Class       := new View.View_Type;
+      User_Name_Parent       : constant Element.Pointer_To_Element_Class := new Common.P_Type;
+      User_Icon              : constant Element.Pointer_To_Element_Class := new Common.IMG_Type;
+      User_Navigation_Parent : constant View.Pointer_To_View_Class       := new View.View_Type;
    begin
       Instance.Parent := Parent'Unrestricted_Access;
 
       App_Parent.Dynamic;
       App_Icon.Dynamic;
-      App_Browse_Parent.Dynamic;
+      App_Navigation_Parent.Dynamic;
       Breadcrumb_Parent.Dynamic;
       User_Parent.Dynamic;
       User_Name_Parent.Dynamic;
       User_Icon.Dynamic;
-      User_Browse_Parent.Dynamic;
+      User_Navigation_Parent.Dynamic;
 
       --  App icon & browse menu
       Instance.App_Parent := View.View_Access (App_Parent);
@@ -117,9 +114,9 @@ package body Header is
       Instance.App_Icon.Class_Name ("header-icon");
       Instance.App_Icon.On_Click_Handler (On_Logo);
 
-      Instance.App_Browse_Parent := View.View_Access (App_Browse_Parent);
-      Instance.App_Browse_Parent.Create (Instance.App_Parent.all);
-      Instance.App_Browse_Parent.Class_Name ("header-app-browse-parent");
+      Instance.App_Navigation_Parent := View.View_Access (App_Navigation_Parent);
+      Instance.App_Navigation_Parent.Create (Instance.App_Parent.all);
+      Instance.App_Navigation_Parent.Class_Name ("header-app-browse-parent");
 
       --  Breadcrumb
       Instance.Breadcrumb_Parent := View.View_Access (Breadcrumb_Parent);
@@ -141,17 +138,44 @@ package body Header is
       Instance.User_Icon.Class_Name ("header-icon");
       Instance.User_Icon.On_Click_Handler (On_User);
 
-      Instance.User_Browse_Parent := View.View_Access (User_Browse_Parent);
-      Instance.User_Browse_Parent.Create (Instance.User_Parent.all);
-      Instance.User_Browse_Parent.Class_Name ("header-user-browse-parent");
+      Instance.User_Navigation_Parent := View.View_Access (User_Navigation_Parent);
+      Instance.User_Navigation_Parent.Create (Instance.User_Parent.all);
+      Instance.User_Navigation_Parent.Class_Name ("header-user-browse-parent");
 
-      Instance.App_Browse_Parent.Display ("none");
+      Instance.User_Content.Create (Instance.User_Navigation_Parent.all);
+
+      Instance.App_Navigation_Parent.Display ("none");
    end Create;
 
-   procedure Clear (Instance : in out Header_Type) is
+   -----------------------------------------------------------------------------
+   --  Main Menu
+   -----------------------------------------------------------------------------
+   procedure Open_Menu
+     (Instance  : in out Header_Type;
+      Unique_ID :        Integer)
+   is
    begin
-      Instance.Breadcrumb_Content.Clear;
-   end Clear;
+      Instance.Set_Menu (Unique_ID);
+      Instance.App_Navigation_Parent.Display ("block");
+      Update (Instance, Unique_ID);
+      Instance.App_Icon.Add_Class ("header-icon-active");
+      Instance.App_Is_Open := True;
+   end Open_Menu;
+
+   procedure Close_Menu (Instance : in out Header_Type) is
+   begin
+      Instance.App_Navigation_Parent.Display ("none");
+      Instance.App_Icon.Remove_Class ("header-icon-active");
+      Instance.App_Is_Open := False;
+   end Close_Menu;
+
+   function Is_Menu_Open
+     (Instance : in out Header_Type)
+      return Boolean
+   is
+   begin
+      return Instance.App_Is_Open;
+   end Is_Menu_Open;
 
    function Set_Root
      (Name    : UXString;
@@ -195,61 +219,12 @@ package body Header is
       return Last_Index;
    end Add_Child;
 
-   -----------------------------------------------------------------------------
-   --  Menu relative functions
-   -----------------------------------------------------------------------------
-   procedure Open_Menu
-     (Instance  : in out Header_Type;
-      Unique_ID :        Integer)
-   is
+   procedure Clear (Instance : in out Header_Type) is
    begin
-      Instance.Set_Menu (Unique_ID);
-      Instance.App_Browse_Parent.Display ("block");
-      Update (Instance, Unique_ID);
-      Instance.App_Icon.Add_Class ("header-icon-active");
-      Instance.App_Is_Open := True;
-   end Open_Menu;
+      Instance.Breadcrumb_Content.Clear;
+      Instance.App_Navigation_Parent.Inner_HTML ("");
+   end Clear;
 
-   procedure Close_Menu (Instance : in out Header_Type) is
-   begin
-      Instance.App_Browse_Parent.Display ("none");
-      Instance.App_Icon.Remove_Class ("header-icon-active");
-      Instance.App_Is_Open := False;
-   end Close_Menu;
-
-   function Is_Menu_Open
-     (Instance : in out Header_Type)
-      return Boolean
-   is
-   begin
-      return Instance.App_Is_Open;
-   end Is_Menu_Open;
-
-   procedure Open_User_Menu (Instance : in out Header_Type) is
-   begin
-      Instance.User_Icon.Add_Class ("header-icon-active");
-      User_Menu.Display (Instance.User_Browse_Parent.all);
-      Instance.User_Is_Open := True;
-   end Open_User_Menu;
-
-   procedure Close_User_Menu (Instance : in out Header_Type) is
-   begin
-      Instance.User_Browse_Parent.Inner_HTML ("");
-      Instance.User_Icon.Remove_Class ("header-icon-active");
-      Instance.User_Is_Open := False;
-   end Close_User_Menu;
-
-   function Is_User_Menu_Open
-     (Instance : in out Header_Type)
-      return Boolean
-   is
-   begin
-      return Instance.User_Is_Open;
-   end Is_User_Menu_Open;
-
-   -----------------------------------------------------------------------------
-   --  Setters
-   -----------------------------------------------------------------------------
    procedure Set_Menu
      (Instance  : in out Header_Type;
       Unique_ID :        Integer)
@@ -257,14 +232,6 @@ package body Header is
    begin
       Menu_Table (Unique_ID).On_Open (Instance.Parent.all);
    end Set_Menu;
-
-   procedure Set_User_Name
-     (Instance  : in out Header_Type;
-      User_Name :        UXString)
-   is
-   begin
-      Instance.User_Name.Inner_HTML (User_Name);
-   end Set_User_Name;
 
    procedure Set_App_Icon
      (Instance : in out Header_Type;
@@ -274,17 +241,6 @@ package body Header is
       Instance.App_Icon.URL_Source (Icon_SRC);
    end Set_App_Icon;
 
-   procedure Set_User_Icon
-     (Instance : in out Header_Type;
-      Icon_SRC :        UXString)
-   is
-   begin
-      Instance.User_Icon.URL_Source (Icon_SRC);
-   end Set_User_Icon;
-
-   -----------------------------------------------------------------------------
-   --  Callbacks
-   -----------------------------------------------------------------------------
    procedure Notify_Menu_Click
      (Instance  : in out Header_Type;
       Unique_ID :        Integer)
@@ -300,34 +256,58 @@ package body Header is
    end Notify_Menu_Click;
 
    -----------------------------------------------------------------------------
-   --  User menu
+   --  User Menu
    -----------------------------------------------------------------------------
-   procedure Add_Dialog
-     (Title           : UXString;
-      Content         : UXString          := "";
-      Confirm_Text    : UXString          := "";
-      Cancel_Text     : UXString          := "";
-      Confirm_Handler : Base.Action_Event := null;
-      Cancel_Handler  : Base.Action_Event := null)
-   is
+   procedure Open_User_Menu (Instance : in out Header_Type) is
    begin
-      User_Menu.Add_Dialog (Title, Content, Confirm_Text, Cancel_Text, Confirm_Handler, Cancel_Handler);
-   end Add_Dialog;
+      Instance.User_Icon.Add_Class ("header-icon-active");
+      Instance.User_Content.Display;
+      Instance.User_Is_Open := True;
+   end Open_User_Menu;
 
-   procedure Add_Web
-     (Title : UXString;
-      URL   : UXString)
-   is
+   procedure Close_User_Menu (Instance : in out Header_Type) is
    begin
-      User_Menu.Add_Web (Title, URL);
-   end Add_Web;
+      Instance.User_Content.Clear;
+      Instance.User_Icon.Remove_Class ("header-icon-active");
+      Instance.User_Is_Open := False;
+   end Close_User_Menu;
 
-   procedure Add_Button
-     (Title    : UXString;
-      On_Click : Base.Action_Event)
+   function Is_User_Menu_Open
+     (Instance : in out Header_Type)
+      return Boolean
    is
    begin
-      User_Menu.Add_Button (Title, On_Click);
-   end Add_Button;
+      return Instance.User_Is_Open;
+   end Is_User_Menu_Open;
+
+   procedure Add_Element
+     (Instance : in out Header_Type;
+      Name     :        UXString;
+      On_Click :        Base.Action_Event)
+   is
+   begin
+      Instance.User_Content.Add_Element (Name, On_Click);
+   end Add_Element;
+
+   procedure Set_User_Name
+     (Instance  : in out Header_Type;
+      User_Name :        UXString)
+   is
+   begin
+      Instance.User_Name.Inner_HTML (User_Name);
+   end Set_User_Name;
+
+   procedure Set_User_Icon
+     (Instance : in out Header_Type;
+      Icon_SRC :        UXString)
+   is
+   begin
+      Instance.User_Icon.URL_Source (Icon_SRC);
+   end Set_User_Icon;
+
+   procedure Notify_User_Menu_Click (Instance : in out Header_Type) is
+   begin
+      Instance.Close_User_Menu;
+   end Notify_User_Menu_Click;
 
 end Header;

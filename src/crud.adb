@@ -95,7 +95,7 @@ package body CRUD is
       return "<img class=""crud-icon"" src=""" & Data.Icon_SRC & """>";
    end HTML_Icon;
 
-   function HTML_Complete
+   function HTML_Full
      (Instance  : in out CRUD_Type;
       Unique_ID :        Integer;
       Name      :        UXString;
@@ -119,7 +119,7 @@ package body CRUD is
          end if;
       end loop;
       return Result & "</span>";
-   end HTML_Complete;
+   end HTML_Full;
 
    procedure Remove_Button
      (Parent  : View.View_Access;
@@ -135,19 +135,16 @@ package body CRUD is
    end Remove_Button;
 
    procedure Update_Selected_Element (Instance : in out CRUD_Type) is
+      Button : Common.Button_Access;
    begin
       for Button_ID in 1 .. Instance.Last_ID loop
          if Instance.Menu_Table (Button_ID).Parent_ID = Root_Parent_ID then
-            declare
-               Button : constant Common.Button_Access :=
-                 Common.Button_Access (Instance.Elements_Parent.Element (Button_Name (Button_ID)));
-            begin
-               if Button_ID = Instance.Current_Root then
-                  Button.Add_Class ("crud-selected-button");
-               else
-                  Button.Remove_Class ("crud-selected-button");
-               end if;
-            end;
+            Button := Common.Button_Access (Instance.Elements_Parent.Element (Button_Name (Button_ID)));
+            if Button_ID = Instance.Current_Root then
+               Button.Add_Class ("crud-selected-button");
+            else
+               Button.Remove_Class ("crud-selected-button");
+            end if;
          end if;
       end loop;
    end Update_Selected_Element;
@@ -177,13 +174,15 @@ package body CRUD is
    end Update_Shortcuts;
 
    procedure Open_Element
-     (Instance : in out CRUD_Type;
-      Parent_ID : Integer)
+     (Instance  : in out CRUD_Type;
+      Parent_ID :        Integer)
    is
       Data    : Data_Type;
       Clicked : constant Common.Button_Access :=
         Common.Button_Access (Instance.Elements_Parent.Element (Button_Name (Parent_ID)));
       Offset : constant Integer := Clicked.Offset_From_Top - Instance.Parent.Offset_From_Top;
+      Button : Element.Pointer_To_Element_Class;
+      Delimiter : Element.Pointer_To_Element_Class;
    begin
       Instance.Is_Opened := True;
       Instance.Sub_Elements_Parent.all.Style ("max-height", "calc(100% - " & To_UXString (Offset) & "px)");
@@ -195,36 +194,33 @@ package body CRUD is
       for Index in 1 .. Instance.Last_ID loop
          Data := Instance.Menu_Table (Index);
          if Data.Parent_ID = Parent_ID then
-            declare
-               Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
-            begin
-               if Data.Delimiter_Above then
-                  declare
-                     Delimiter : constant Element.Pointer_To_Element_Class := new View.View_Type;
-                  begin
-                     View.View_Access (Delimiter).Create (Instance.Sub_Elements_Parent.all);
-                     Delimiter.Class_Name ("crud-delimiter");
-                     Delimiter.Dynamic;
-                     Instance.Sub_Elements_Parent.Add_Element (Delimiter_Name (Index), Delimiter);
-                  end;
-               end if;
+            Button := new Common.Button_Type;
+            if Data.Delimiter_Above then
+               Delimiter := new View.View_Type;
+               View.View_Access (Delimiter).Create (Instance.Sub_Elements_Parent.all);
+               Delimiter.Class_Name ("crud-delimiter");
+               Delimiter.Dynamic;
+               Instance.Sub_Elements_Parent.Add_Element (Delimiter_Name (Index), Delimiter);
+            end if;
 
-               Common.Button_Access (Button).Create (Instance.Sub_Elements_Parent.all, Data.HTML);
-               Instance.Sub_Elements_Parent.Add_Element (Button_Name (Index), Button);
-               Button.Class_Name ("framework-button");
-               Button.On_Click_Handler (Data.Handler);
-               Button.Dynamic;
+            Common.Button_Access (Button).Create (Instance.Sub_Elements_Parent.all, Data.HTML);
+            Instance.Sub_Elements_Parent.Add_Element (Button_Name (Index), Button);
+            Button.Class_Name ("framework-button");
+            Button.On_Click_Handler (Data.Handler);
+            Button.Dynamic;
 
-               if not Data.Clickable then
-                  Button.Add_Class ("framework-unclickable");
-                  Button.On_Click_Handler (null);
-               end if;
-            end;
+            if not Data.Clickable then
+               Button.Add_Class ("framework-unclickable");
+               Button.On_Click_Handler (null);
+            end if;
          end if;
       end loop;
    end Open_Element;
 
-   procedure Toggle_Menu_Visibility (Instance : in out CRUD_Type; Parent_ID : Integer) is
+   procedure Toggle_Menu_Visibility
+     (Instance  : in out CRUD_Type;
+      Parent_ID :        Integer)
+   is
       Will_Open : constant Boolean := not (Instance.Current_Root = Parent_ID and then Instance.Is_Opened);
    begin
       if Instance.Is_Opened then
@@ -358,6 +354,7 @@ package body CRUD is
       Data   : Data_Type;
       Text   : UXString;
       Parent : constant View.View_Access := Instance.Elements_Parent;
+      Button : Element.Pointer_To_Element_Class;
    begin
       for Data_ID in 1 .. Instance.Last_ID loop
          Data := Instance.Menu_Table (Data_ID);
@@ -366,30 +363,27 @@ package body CRUD is
             Text := HTML_Icon (Instance, Data_ID);
          end if;
          if Data.Parent_ID = Root_Parent_ID then
-            declare
-               Button : constant Element.Pointer_To_Element_Class := new Common.Button_Type;
-            begin
-               Common.Button_Access (Button).Create (Parent.all, Text);
-               Button.Class_Name ("framework-button");
-               Button.Style ("display", "flex");
-               Button.Style ("align-items", "center");
-               Button.jQuery_Execute ("data('gnoga_id', " & To_UXString (Data_ID) & " )");
-               Button.On_Click_Handler (Instance.On_Click);
-               Button.Dynamic;
-               Parent.Add_Element (Button_Name (Data_ID), Button);
+            Button := new Common.Button_Type;
+            Common.Button_Access (Button).Create (Parent.all, Text);
+            Button.Class_Name ("framework-button");
+            Button.Style ("display", "flex");
+            Button.Style ("align-items", "center");
+            Button.jQuery_Execute ("data('gnoga_id', " & To_UXString (Data_ID) & " )");
+            Button.On_Click_Handler (Instance.On_Click);
+            Button.Dynamic;
+            Parent.Add_Element (Button_Name (Data_ID), Button);
 
-               if not Data.Clickable then
-                  Button.Add_Class ("framework-unclickable");
-                  Button.On_Click_Handler (null);
-               end if;
-            end;
+            if not Data.Clickable then
+               Button.Add_Class ("framework-unclickable");
+               Button.On_Click_Handler (null);
+            end if;
          end if;
       end loop;
    end Load;
 
    procedure Close_Menu (Instance : in out CRUD_Type) is
    begin
-      Instance.Is_Opened := False;
+      Instance.Is_Opened    := False;
       Instance.Current_Root := Root_Parent_ID;
       Update_Shortcuts (Instance, Root_Parent_ID);
       Update_Selected_Element (Instance);
@@ -401,8 +395,8 @@ package body CRUD is
          Remove_Button (Instance.Sub_Elements_Parent, Index);
          Remove_Button (Instance.Elements_Parent, Index);
       end loop;
-      Instance.Last_ID   := 0;
-      Instance.Is_Opened := False;
+      Instance.Last_ID      := 0;
+      Instance.Is_Opened    := False;
       Instance.Current_Root := Root_Parent_ID;
    end Clear;
 
@@ -430,7 +424,7 @@ package body CRUD is
       Instance.Last_ID := Instance.Last_ID + 1;
 
       Instance.Menu_Table (Instance.Last_ID).Parent_ID       := Parent_ID;
-      Instance.Menu_Table (Instance.Last_ID).HTML := HTML_Complete (Instance, Instance.Last_ID, Name, Shortcut);
+      Instance.Menu_Table (Instance.Last_ID).HTML            := HTML_Full (Instance, Instance.Last_ID, Name, Shortcut);
       Instance.Menu_Table (Instance.Last_ID).Handler         := Handler;
       Instance.Menu_Table (Instance.Last_ID).Shortcut_ID     := Shortcut_ID;
       Instance.Menu_Table (Instance.Last_ID).Clickable       := True;
