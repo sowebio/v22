@@ -10,10 +10,12 @@ with v22.Gui;
 
 procedure Application is
 
+   -- Avoid
    use v22;
 
    package Base renames Gnoga.Gui.Base;
 
+   -- https://learn.adacore.com/courses/advanced-ada/parts/modular_prog/packages.html#use-type
    use all type Gnoga.String;
 
    App_Name : constant UXString := "GNOGA - v22";
@@ -67,7 +69,7 @@ procedure Application is
    --------------------
    procedure On_CRUD_File_Create (Object : in out Base.Base_Type'Class) is
    begin
-      v22.Gui.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
+      Gui.CRUD_Notify_Sub_Element_Click (Object, "File_Create");
       Gnoga.Log ("Créer");
    end On_CRUD_File_Create;
 
