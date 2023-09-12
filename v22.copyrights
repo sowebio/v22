@@ -1,0 +1,29 @@
+------------------------------------------------------------------------------
+--  ▖▖▄▖▄▖
+--  ▌▌▄▌▄▌
+--  ▚▘▙▖▙▖
+--
+-- @file      v22.copyrights
+-- @copyright See authors list and v22.copyrights for index from name initials
+-- @licence   Gplv3
+-- @encoding  UTF-8
+------------------------------------------------------------------------------
+-- @summary
+-- V22 framework - Copyrights & credits summary 
+--
+-- @description
+-- 
+-- @authors
+-- Stéphane Rivière - sr - sriviere@soweb.io
+--
+-- @versions
+-- See git log
+------------------------------------------------------------------------------
+
+* Detailed copyrights and credits
+
+Refer to the v22 Ada Framework User Manual located in v22-doc repository.
+
+------------------------------------------------------------------------------
+-- eof
+------------------------------------------------------------------------------

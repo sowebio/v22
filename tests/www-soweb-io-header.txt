@@ -1,0 +1,14 @@
+HTTP/2 200 
+server: nginx/1.21.3
+date: Mon, 11 Sep 2023 16:16:49 GMT
+content-type: text/html; charset=UTF-8
+vary: Accept-Encoding
+link: <https://www.soweb.io/wp-json/>; rel="https://api.w.org/"
+link: <https://www.soweb.io/wp-json/wp/v2/pages/26>; rel="alternate"; type="application/json"
+link: <https://www.soweb.io/>; rel=shortlink
+x-cache-status: HIT
+strict-transport-security: max-age=63072000; includeSubdomains
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+

@@ -1,0 +1,1674 @@
+-------------------------------------------------------------------------------
+--  ▖▖▄▖▄▖
+--  ▌▌▄▌▄▌
+--  ▚▘▙▖▙▖
+--
+--  @file      v22-gui.ads
+--  @copyright See authors list below and v22.copyrights file
+--  @licence   LGPL v3
+--  @encoding  UTF-8
+-------------------------------------------------------------------------------
+--  @summary
+--  V22 framework - Gnoga User Interface
+--
+--  @description
+--
+--  @authors
+--  Théodore Gigault - tg - developpement@soweb.io
+--  Arthur Le Floch - alf - developpement@soweb.io
+--  Stéphane Rivière - sr - sriviere@soweb.io
+--
+--  @versions
+--  See git log
+-------------------------------------------------------------------------------
+
+with Gnoga.Types;
+with Gnoga.Gui.Base; use Gnoga.Gui.Base;
+with Gnoga.Gui.Plugin;
+with Gnoga.Gui.Plugin.jQueryUI;
+with Gnoga.Gui.Plugin.jQueryUI.Widget;
+with Gnoga.Gui.Window;
+with Gnoga.Gui.Element;
+with Gnoga.Gui.Element.Common;
+with Gnoga.Gui.Element.Form;
+with Gnoga.Gui.Element.Table;
+with Gnoga.Application.Multi_Connect;
+
+with UXStrings.Hash;
+with Ada.Containers.Hashed_Maps;
+with UXStrings.Conversions; use UXStrings.Conversions;
+
+with GNAT.SHA512;
+
+with v22.Gui.Header;
+with v22.Gui.CRUD;
+with v22.Gui.Footer;
+
+package body v22.Gui is
+
+   use all type Gnoga.String;
+
+   Login_Group_Key : constant String := "Se connecter";
+
+   package Element renames Gnoga.Gui.Element;
+   package jQueryUI renames Gnoga.Gui.Plugin.jQueryUI;
+   package Widget renames Gnoga.Gui.Plugin.jQueryUI.Widget;
+
+   type User_Data is tagged record
+      Email         : String;
+      Password_Hash : String;
+   end record;
+
+   package User_Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => String, Element_Type => User_Data, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   package Integer_Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => String, Element_Type => Integer, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   package Dictionary is new Ada.Containers.Hashed_Maps
+     (Key_Type => String, Element_Type => String, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+
+   ID_Main                   : Integer; --  Root menu ID
+   On_Custom_Connect         : Base.Action_Event;
+   On_Custom_Login           : Base.Action_Event;
+   On_Custom_Register        : Register_Function;
+   On_Custom_Register_Create : Base.Action_Event;
+   Navigation_Icon_SRC : String := "";
+   User_Icon_SRC       : String := "";
+
+   Login_Required : Boolean := False;
+   Identities : User_Dictionary.Map;
+   Header_Dict : Integer_Dictionary.Map;
+
+   type App_Data is new Gnoga.Types.Connection_Data_Type with record
+      Is_Logged : Boolean  := False;
+      Email     : String := "";  -- As a dictionnary key
+
+      Custom_Data : Dictionary.Map;
+
+      Window        : Gnoga.Gui.Window.Pointer_To_Window_Class;
+      Container     : View.View_Type;
+      Header_Parent : View.View_Type;
+
+      CRUD_Parent : View.View_Type;
+
+      Content        : View.View_Type;
+      Content_Header : View.View_Type;
+      Content_Text   : aliased View.View_Type;
+
+      Footer_Parent : View.View_Type;
+
+      Header_Dict : Integer_Dictionary.Map;
+      CRUD_Dict   : Integer_Dictionary.Map;
+
+      Header_Instance : v22.Gui.Header.Header_Type;
+      CRUD_Instance   : v22.Gui.CRUD.CRUD_Type;
+      Footer_Instance : v22.Gui.Footer.Footer_Type;
+   end record;
+   type App_Access is access all App_Data;
+
+   -----------------------------------------------------------------------------
+   --  Utils
+   -----------------------------------------------------------------------------
+   function Int_Value is new Integer_Value (Integer);
+
+   function To_UXString
+     (Value : Integer)
+      return String
+   is
+   begin
+      return From_UTF_8 (Value'Image).Delete (1, 1);
+   end To_UXString;
+
+   function Replace_All
+     (Text        : String;
+      To_Replace  : Unicode_Character;
+      Replacement : String)
+      return String
+   is
+      Result : String := "";
+   begin
+      for Index in 1 .. Text.Length loop
+         if Text.Element (Index) = To_Replace then
+            Result := Result & Replacement;
+         else
+            Result := Result & Text.Element (Index);
+         end if;
+      end loop;
+      return Result;
+   end Replace_All;
+
+   procedure CRUD_Set
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String;
+      Value  :        Integer)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Dict.Insert (Key, Value);
+   end CRUD_Set;
+
+   function CRUD_Get
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+      return Integer
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      return App.CRUD_Dict.Element (Key);
+   end CRUD_Get;
+
+   procedure Header_Set
+     (Key   : String;
+      Value : Integer)
+   is
+   begin
+      Header_Dict.Insert (Key, Value);
+   end Header_Set;
+
+   function Header_Get
+     (Key : String)
+      return Integer
+   is
+   begin
+      return Header_Dict.Element (Key);
+   end Header_Get;
+
+   ---------------------
+   --  CRUD Handlers  --
+   ---------------------
+   procedure On_CRUD_Callback (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Notify_Element_Click (Object);
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
+   end On_CRUD_Callback;
+
+   procedure On_Key_Pressed
+     (Object : in out Base.Base_Type'Class;
+      Char   :        Character)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Notify_Key_Pressed (Char);
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
+   end On_Key_Pressed;
+
+   ---------------------
+   --  Menu Handlers  --
+   ---------------------
+   procedure On_Logo (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if App.Is_Logged then
+         if App.Header_Instance.Is_Menu_Open then
+            App.Header_Instance.Close_Menu;
+         else
+            App.CRUD_Instance.Clear;
+            App.Header_Instance.Open_Menu (ID_Main);
+            App.Header_Instance.Close_User_Menu;
+            App.CRUD_Instance.Close_Menu;
+         end if;
+      end if;
+   end On_Logo;
+
+   procedure On_User (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if App.Is_Logged then
+         if App.Header_Instance.Is_User_Menu_Open then
+            App.Header_Instance.Close_User_Menu;
+         else
+            App.Header_Instance.Open_User_Menu;
+            App.Header_Instance.Close_Menu;
+            App.CRUD_Instance.Close_Menu;
+         end if;
+      end if;
+   end On_User;
+
+   ------------------------------
+   --  Tool Bar expand button  --
+   ------------------------------
+   procedure On_Tool_Bar_Expand (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Notify_Resize;
+   end On_Tool_Bar_Expand;
+
+   ------------------
+   --  Login form  --
+   ------------------
+   procedure On_Login (Object : in out Base.Base_Type'Class) is
+      App      : constant App_Access := App_Access (Object.Connection_Data);
+      Email    : constant String := Content_Group_Email_Get (Object, "Adresse mail");
+      Password : constant String := Content_Group_Password_Get (Object, "Mot de passe");
+      Identity : User_Data;
+   begin
+      if Identities.Contains (Email) then
+         Identity := Identities.Element (Email);
+         if From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password))) = Identity.Password_Hash then
+            App.Email := Email;
+            if On_Custom_Login /= null then
+               On_Custom_Login (Object);
+            end if;
+            App.Header_Instance.Set_Menu (ID_Main);
+            App.Is_Logged := True;
+         else
+            Set_Login_Error_Message (Object, "Mot de passe incorrect");
+         end if;
+      else
+         Set_Login_Error_Message (Object, "Adresse mail inexistante. Créez un compte !");
+      end if;
+   end On_Login;
+
+   procedure Setup_Login_Form (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Email := "";
+
+      Content_Clear_Title (Object);
+      Content_Clear_Text (Object);
+
+      Content_Group_Create (Object, Login_Group_Key);
+
+      Content_Group_Add_Space (Object, Login_Group_Key);
+      Content_Group_Email_Add (Object, "Adresse mail", Login_Group_Key);
+      Content_Group_Password_Add (Object, "Mot de passe", Login_Group_Key);
+
+      Setup_Login_Buttons (Object);
+   end Setup_Login_Form;
+
+   procedure Setup_Login_Buttons (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class :=
+        App.Content_Text.Element ("Table_" & Login_Group_Key);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
+
+      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Register_Link : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+      Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+   begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Register_Link.Dynamic;
+      Submit_Button.Dynamic;
+
+      Content_Group_Add_Space (Object, Login_Group_Key);
+      Content_Group_Warning_Add (Object, "", "login-error", Login_Group_Key);
+
+      Row.Create (Table.all);
+      First_Column.Create (Row.all);
+      Second_Column.Create (Row.all);
+
+      Register_Link.Create (First_Column.all, "Créer un compte...");
+      Register_Link.Class_Name ("content-group-link");
+      Register_Link.Style ("white-space", "nowrap");
+      Register_Link.On_Click_Handler (Setup_Register_Form'Unrestricted_Access);
+
+      Submit_Button.Create (Second_Column.all, "Connexion");
+      Submit_Button.Style ("width", "100%");
+      Submit_Button.Style ("box-sizing", "border-box");
+      Submit_Button.On_Click_Handler (On_Login'Unrestricted_Access);
+   end Setup_Login_Buttons;
+
+   ---------------------
+   --  Register form  --
+   ---------------------
+   procedure On_Register (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Email     : constant String := Content_Group_Email_Get (Object, "Adresse mail");
+      Password  : constant String := Content_Group_Password_Get (Object, "Mot de passe");
+      Confirmed : constant String := Content_Group_Password_Get (Object, "Confirmer le mot de passe");
+      Identity  : User_Data;
+      Allowed   : Boolean           := True;
+   begin
+      Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
+      Identity.Email         := Email;
+
+      if Email /= "" then
+         if not Identities.Contains (Email) then
+            if Password /= "" then
+               if Password = Confirmed then
+                  App.Email := Email;
+                  if On_Custom_Register /= null then
+                     Allowed := On_Custom_Register (Object, Identity.Email);
+                  end if;
+                  if Allowed then
+                     Setup_Login_Form (Object);
+                     Identities.Insert (Email, Identity);
+                  else
+                     App.Email := "";
+                  end if;
+               else
+                  Set_Register_Error_Message (Object, "Les mots de passes ne correspondent pas");
+               end if;
+            else
+               Set_Register_Error_Message (Object, "Veuillez renseigner un mot de passe");
+            end if;
+         else
+            Set_Register_Error_Message (Object, "Cette adresse est déjà associée à un compte. Connectez-vous !");
+         end if;
+      else
+         Set_Register_Error_Message (Object, "Veuillez renseigner votre adresse mail");
+      end if;
+   end On_Register;
+
+   procedure Setup_Register_Form (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Email := "";
+
+      Content_Clear_Title (Object);
+      Content_Clear_Text (Object);
+
+      Content_Group_Create (Object, Register_Group_Key);
+
+      Content_Group_Add_Title (Object, "Identifiants", Register_Group_Key);
+      Content_Group_Email_Add (Object, "Adresse mail", Register_Group_Key);
+      Content_Group_Password_Add (Object, "Mot de passe", Register_Group_Key);
+      Content_Group_Password_Add (Object, "Confirmer le mot de passe", Register_Group_Key);
+
+      if On_Custom_Register_Create /= null then
+         On_Custom_Register_Create (Object);
+      end if;
+      Setup_Register_Buttons (Object);
+   end Setup_Register_Form;
+
+   procedure Setup_Register_Buttons (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class :=
+        App.Content_Text.Element ("Table_" & Register_Group_Key);
+      Table : constant Element.Table.Table_Access := Element.Table.Table_Access (Table_Element);
+
+      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Login_Link    : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+      Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+   begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Login_Link.Dynamic;
+      Submit_Button.Dynamic;
+
+      Content_Group_Add_Space (Object, Register_Group_Key);
+      Content_Group_Warning_Add (Object, "", "register-error", Register_Group_Key);
+
+      Row.Create (Table.all);
+      First_Column.Create (Row.all);
+      Second_Column.Create (Row.all);
+
+      Login_Link.Create (First_Column.all, "Se connecter...");
+      Login_Link.Class_Name ("content-group-link");
+      Login_Link.Style ("white-space", "nowrap");
+      Login_Link.On_Click_Handler (Setup_Login_Form'Unrestricted_Access);
+
+      Submit_Button.Create (Second_Column.all, "Valider");
+      Submit_Button.Style ("width", "100%");
+      Submit_Button.Style ("box-sizing", "border-box");
+      Submit_Button.On_Click_Handler (On_Register'Unrestricted_Access);
+   end Setup_Register_Buttons;
+
+   ------------------
+   --  On_Connect  --
+   ------------------
+
+   procedure On_Connect
+     (Screen     : in out Gnoga.Gui.Window.Window_Type'Class;
+      Connection :        access Gnoga.Application.Multi_Connect.Connection_Holder_Type)
+   is
+      pragma Unreferenced (Connection);
+      App : constant App_Access := new App_Data;
+   begin
+      Screen.Connection_Data (App);
+      Screen.Buffer_Connection (True);
+      App.Window := Screen'Unchecked_Access;
+      App.Window.On_Character_Handler (On_Key_Pressed'Unrestricted_Access);
+      App.Container.Create (Screen);
+      App.Container.Style ("display", "flex");
+
+      --  Containers
+      App.Container.Style ("width", "100%");
+      App.Container.Style ("height", "100%");
+
+      App.Header_Parent.Create (App.Container);
+      App.Header_Parent.Class_Name ("header");
+
+      App.CRUD_Parent.Create (App.Container);
+      App.CRUD_Parent.Class_Name ("crud");
+
+      App.Content.Create (App.Container);
+      App.Content.Class_Name ("content-container");
+
+      App.Footer_Parent.Create (App.Container);
+      App.Footer_Parent.Class_Name ("footer");
+
+      --  Content
+      App.Content_Header.Create (App.Content);
+      App.Content_Header.Class_Name ("content-header");
+      App.Content_Text.Create (App.Content);
+      App.Content_Text.Class_Name ("content-text");
+
+      --  Header
+      App.Header_Instance.Create (App.Header_Parent, On_Logo'Unrestricted_Access, On_User'Unrestricted_Access);
+      App.Header_Instance.Set_App_Icon (Navigation_Icon_SRC);
+      App.Header_Instance.Set_User_Icon (User_Icon_SRC);
+
+      --  Footer
+      App.Footer_Instance.Create (App.Footer_Parent);
+
+      --  CRUD
+      App.CRUD_Instance.Create
+        (App.CRUD_Parent, On_Tool_Bar_Expand'Unrestricted_Access, On_CRUD_Callback'Unrestricted_Access);
+
+      App.Is_Logged := not Login_Required;
+      if Login_Required then
+         Setup_Login_Form (App.Container);
+      else
+         App.Header_Instance.Set_Menu (ID_Main);
+      end if;
+
+      On_Custom_Connect (App.Container);
+   end On_Connect;
+
+   -----------------------------------------------------------------------------
+   --  Setup
+   -----------------------------------------------------------------------------
+   procedure Setup
+     (On_User_Connect       : Base.Action_Event;
+      Title                 : String := "";
+      Server_Closed_Content : String := "Server closed.")
+   is
+   begin
+      Gnoga.Application.Title (Title);
+      Gnoga.Application.HTML_On_Close (Server_Closed_Content);
+      Gnoga.Application.Multi_Connect.Initialize (Boot => "boot_jqueryui.html");
+      Gnoga.Application.Multi_Connect.On_Connect_Handler (On_Connect'Unrestricted_Access);
+      On_Custom_Connect := On_User_Connect;
+   end Setup;
+
+   procedure Set_App_Title
+     (Object : in out Base.Base_Type'Class;
+      Title  :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Window.Document.Title (Title);
+   end Set_App_Title;
+
+   procedure Set_App_Icon (Icon_SRC : String) is
+   begin
+      Gnoga.Application.Favicon (Icon_SRC);
+   end Set_App_Icon;
+
+   procedure Set_Default_User_Icon (Icon_SRC : String) is
+   begin
+      User_Icon_SRC := Icon_SRC;
+   end Set_Default_User_Icon;
+
+   procedure Set_Navigation_Icon (Icon_SRC : String) is
+   begin
+      Navigation_Icon_SRC := Icon_SRC;
+   end Set_Navigation_Icon;
+
+   -----------------------------------------------------------------------------
+   --  User connection-relative data
+   -----------------------------------------------------------------------------
+   procedure Set_Data
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String;
+      Value  :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      if App.Custom_Data.Contains (Key) then
+         App.Custom_Data.Replace (Key, Value);
+      else
+         App.Custom_Data.Insert (Key, Value);
+      end if;
+   end Set_Data;
+
+   function Get_Data
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+      return String
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      return App.Custom_Data.Element (Key);
+   end Get_Data;
+
+   procedure Clear_Data (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Custom_Data.Clear;
+   end Clear_Data;
+
+   procedure Set_User_Icon
+     (Object   : in out Base.Base_Type'Class;
+      Icon_SRC :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Set_User_Icon (Icon_SRC);
+   end Set_User_Icon;
+
+   procedure Set_User_Name
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Set_User_Name (Name);
+   end Set_User_Name;
+
+   -----------------------------------------------------------------------------
+   --  Security
+   -----------------------------------------------------------------------------
+   procedure Setup_Access
+     (On_User_Login           : Base.Action_Event := null;
+      On_User_Register_Create : Base.Action_Event := null;
+      On_User_Register        : Register_Function := null)
+   is
+   begin
+      Login_Required            := True;
+      On_Custom_Login           := On_User_Login;
+      On_Custom_Register        := On_User_Register;
+      On_Custom_Register_Create := On_User_Register_Create;
+   end Setup_Access;
+
+   procedure Set_Login_Error_Message
+     (Object : in out Base.Base_Type'Class;
+      Error  :        String)
+   is
+   begin
+      Content_Group_Warning_Set (Object, "login-error", Error);
+   end Set_Login_Error_Message;
+
+   procedure Set_Register_Error_Message
+     (Object : in out Base.Base_Type'Class;
+      Error  :        String)
+   is
+   begin
+      Content_Group_Warning_Set (Object, "register-error", Error);
+   end Set_Register_Error_Message;
+
+   procedure Add_User (Email, Password : String) is
+      Identity : User_Data;
+   begin
+      Identity.Email         := Email;
+      Identity.Password_Hash := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password)));
+      Identities.Insert (Email, Identity);
+   end Add_User;
+
+   procedure Delete_User (Email : String) is
+   begin
+      Identities.Delete (Email);
+   end Delete_User;
+
+   procedure Disconnect_User (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      Setup_Login_Form (Object);
+      App.Header_Instance.Set_User_Name ("");
+      App.Header_Instance.Clear;
+      App.Header_Instance.Close_Menu;
+      App.Header_Instance.Close_User_Menu;
+      App.Header_Instance.Clear;
+      App.CRUD_Instance.Clear;
+      App.CRUD_Dict.Clear;
+      App.Is_Logged := False;
+   end Disconnect_User;
+
+   function Get_User_Email
+     (Object : in out Base.Base_Type'Class)
+      return String
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      return App.Email;
+   end Get_User_Email;
+
+   -----------------------------------------------------------------------------
+   --  Header
+   -----------------------------------------------------------------------------
+   procedure Header_Set_Root
+     (Key      : String;
+      Name     : String;
+      On_Click : Base.Action_Event)
+   is
+      Unique_ID : Integer;
+   begin
+      Unique_ID := v22.Gui.Header.Set_Root (Name, On_Click);
+      Header_Set (Key, Unique_ID);
+      ID_Main := Unique_ID;
+   end Header_Set_Root;
+
+   procedure Header_Add_Child
+     (Key        : String;
+      Name       : String;
+      Parent_Key : String;
+      On_Click   : Base.Action_Event)
+   is
+      Unique_ID : Integer;
+   begin
+      Unique_ID := v22.Gui.Header.Add_Child (Header_Get (Parent_Key), Name, On_Click);
+      Header_Set (Key, Unique_ID);
+   end Header_Add_Child;
+
+   procedure Header_Add_User_Button
+     (Object   : in out Base.Base_Type'Class;
+      Name     :        String;
+      On_Click :        Base.Action_Event)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Add_Element (Name, On_Click);
+   end Header_Add_User_Button;
+
+   -----------------
+   --  Callbacks  --
+   -----------------
+   procedure Header_Notify_Menu_Click
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Notify_Menu_Click (Header_Get (Key));
+      App.Content_Header.Inner_HTML ("");
+      App.Content_Text.Inner_HTML ("");
+      App.CRUD_Instance.Clear;
+      App.CRUD_Dict.Clear;
+   end Header_Notify_Menu_Click;
+
+   procedure Header_Notify_User_Menu_Click (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Header_Instance.Notify_User_Menu_Click;
+   end Header_Notify_User_Menu_Click;
+
+   -----------------------------------------------------------------------------
+   --  User relative data
+   -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+   -----------------------------------------------------------------------------
+   --  CRUD
+   -----------------------------------------------------------------------------
+   procedure CRUD_Load (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Load;
+   end CRUD_Load;
+
+   procedure CRUD_Add_Element
+     (Object   : in out Base.Base_Type'Class;
+      Key      :        String;
+      Name     :        String;
+      Icon_SRC :        String)
+   is
+      App       : constant App_Access := App_Access (Object.Connection_Data);
+      Unique_ID : Integer;
+   begin
+      Unique_ID := App.CRUD_Instance.Add_Element (Name, Icon_SRC);
+      CRUD_Set (Object, Key, Unique_ID);
+   end CRUD_Add_Element;
+
+   procedure CRUD_Add_Sub_Element
+     (Object     : in out Base.Base_Type'Class;
+      Key        :        String;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Click   :        Base.Action_Event)
+   is
+      App       : constant App_Access := App_Access (Object.Connection_Data);
+      Unique_ID : Integer;
+   begin
+      Unique_ID := App.CRUD_Instance.Add_Sub_Element (Name, CRUD_Get (Object, Parent_Key), On_Click);
+      CRUD_Set (Object, Key, Unique_ID);
+   end CRUD_Add_Sub_Element;
+
+   procedure CRUD_Add_Delimiter_Above
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Add_Delimiter_Above (CRUD_Get (Object, Key));
+   end CRUD_Add_Delimiter_Above;
+
+   procedure CRUD_Set_Unclickable
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Set_Unclickable (CRUD_Get (Object, Key));
+   end CRUD_Set_Unclickable;
+
+   procedure CRUD_Set_Clickable
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Set_Clickable (CRUD_Get (Object, Key));
+   end CRUD_Set_Clickable;
+
+   procedure CRUD_Notify_Sub_Element_Click
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.CRUD_Instance.Notify_Sub_Element_Click (CRUD_Get (Object, Key));
+   end CRUD_Notify_Sub_Element_Click;
+
+   procedure CRUD_Enable_Shortcuts (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      v22.Gui.CRUD.Enable_Shortcuts (App.CRUD_Instance);
+   end CRUD_Enable_Shortcuts;
+
+   procedure CRUD_Disable_Shortcuts (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      v22.Gui.CRUD.Disable_Shortcuts (App.CRUD_Instance);
+   end CRUD_Disable_Shortcuts;
+
+   -----------------------------------------------------------------------------
+   --  Content
+   -----------------------------------------------------------------------------
+   function Content_Parent
+     (Object : in out Base.Base_Type'Class)
+      return View.View_Access
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      return App.Content_Text'Access;
+   end Content_Parent;
+
+   procedure Content_Clear (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Content_Text.Inner_HTML ("");
+   end Content_Clear;
+
+   procedure Content_Set_Title
+     (Object : in out Base.Base_Type'Class;
+      Title  :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Content_Header.Text (Title);
+   end Content_Set_Title;
+
+   procedure Content_Clear_Title (Object : in out Base.Base_Type'Class) is
+   begin
+      Content_Set_Title (Object, "");
+   end Content_Clear_Title;
+
+   procedure Content_Set_Text
+     (Object : in out Base.Base_Type'Class;
+      Text   :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Content_Text.Text (Text);
+   end Content_Set_Text;
+
+   procedure Content_Clear_Text (Object : in out Base.Base_Type'Class) is
+   begin
+      Content_Set_Text (Object, "");
+   end Content_Clear_Text;
+
+   -----------------------------------------------------------------------------
+   --  Groups
+   -----------------------------------------------------------------------------
+   procedure Content_Group_Create
+     (Object : in out Base.Base_Type'Class;
+      Title  :        String)
+   is
+      App    : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent : constant Element.Pointer_To_Element_Class := new Element.Form.Form_Type;
+
+      Table_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Type;
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+   begin
+      Parent.Dynamic;
+      Table_Element.Dynamic;
+      Row.Dynamic;
+      Data.Dynamic;
+
+      Element.Form.Form_Access (Parent).Create (App.Content_Text);
+      Parent.Class_Name ("content-group");
+      App.Content_Text.Add_Element (Title, Parent);
+
+      Table.Dynamic;
+      Table.Create (Parent.all);
+      Table.Style ("width", "100%");
+      App.Content_Text.Add_Element ("Table_" & Title, Table_Element);
+
+      Row.Create (Table.all);
+      Data.Create (Row.all, Content => Title, Column_Span => 2);
+      Data.Class_Name ("content-group-header");
+   end Content_Group_Create;
+
+   procedure Content_Group_Add_Title
+     (Object     : in out Base.Base_Type'Class;
+      Title      :        String;
+      Parent_Key :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Span : constant Element.Common.Span_Access := new Element.Common.Span_Type;
+   begin
+      Row.Dynamic;
+      Data.Dynamic;
+      Span.Dynamic;
+
+      Content_Group_Add_Space (Object, Parent_Key, 8);
+      Row.Create (Table.all);
+      Data.Create (Row.all, Column_Span => 2);
+      Data.Style ("text-align", "center");
+      Span.Create (Data.all, Title);
+      Span.Class_Name ("content-group-title");
+   end Content_Group_Add_Title;
+
+   procedure Content_Group_Add_Space
+     (Object     : in out Base.Base_Type'Class;
+      Parent_Key :        String;
+      Height     :        Integer := 8)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row : constant Element.Table.Table_Row_Access := new Element.Table.Table_Row_Type;
+   begin
+      Row.Dynamic;
+      Row.Create (Table.all);
+      Row.Style ("height", From_UTF_8 (Height'Image) & "px");
+   end Content_Group_Add_Space;
+
+   procedure Content_Group_Item_Add
+     (Object     : in out Base.Base_Type'Class;
+      Item       :        Element.Pointer_To_Element_Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+   begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+
+      Row.Create (Table.all);
+      First_Column.Create (Row.all, Name);
+      Second_Column.Create (Row.all);
+      Second_Column.Style ("white-space", "nowrap");
+
+      Item.Place_Inside_Top_Of (Second_Column.all);
+      Item.Style ("width", "100%");
+      Item.Style ("box-sizing", "border-box");
+      Item.On_Focus_In_Handler (CRUD_Disable_Shortcuts'Unrestricted_Access);
+      Item.On_Focus_Out_Handler (CRUD_Enable_Shortcuts'Unrestricted_Access);
+      Item.On_Change_Handler (On_Change);
+
+      --  Not its true parent, but a lot easier to access
+      App.Content_Text.Add_Element (Name, Item);
+   end Content_Group_Item_Add;
+
+   procedure Content_Group_Item_Lock
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Form         : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
+   begin
+      Form.Disabled;
+   end Content_Group_Item_Lock;
+
+   procedure Content_Group_Item_Unlock
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Form         : constant Element.Form.Form_Element_Access := Element.Form.Form_Element_Access (Form_Element);
+   begin
+      Form.Disabled (False);
+   end Content_Group_Item_Unlock;
+
+   procedure Content_Group_Item_Place_Holder
+     (Object       : in out Base.Base_Type'Class;
+      Name         :        String;
+      Place_Holder :        String)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Form_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Form         : constant Element.Form.Text_Area_Access    := Element.Form.Text_Area_Access (Form_Element);
+   begin
+      Form.Place_Holder (Place_Holder);
+   end Content_Group_Item_Place_Holder;
+
+   procedure Content_Group_Add_Button
+     (Object     : in out Base.Base_Type'Class;
+      Text       :        String;
+      On_Click   :        Base.Action_Event;
+      Parent_Key :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row           : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      First_Column  : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+      Second_Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Submit_Button : constant Element.Common.Button_Access := new Element.Common.Button_Type;
+   begin
+      Row.Dynamic;
+      First_Column.Dynamic;
+      Second_Column.Dynamic;
+      Submit_Button.Dynamic;
+
+      Row.Create (Table.all);
+      First_Column.Create (Row.all);
+      Second_Column.Create (Row.all);
+
+      Submit_Button.Create (Second_Column.all, Text);
+      Submit_Button.Style ("width", "100%");
+      Submit_Button.Style ("box-sizing", "border-box");
+      Submit_Button.On_Click_Handler (On_Click);
+   end Content_Group_Add_Button;
+
+   -----------------
+   --  Edit Text  --
+   -----------------
+   procedure Content_Group_Text_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Edit_Text      : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Type;
+   begin
+      Edit_Text.Dynamic;
+      Element.Form.Text_Access (Edit_Text).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Edit_Text, Name, Parent_Key, On_Change);
+   end Content_Group_Text_Add;
+
+   procedure Content_Group_Text_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Text   :        String)
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Edit_Text_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Edit_Text         : constant Element.Form.Text_Access         := Element.Form.Text_Access (Edit_Text_Element);
+   begin
+      Edit_Text.Value (Text);
+   end Content_Group_Text_Set;
+
+   function Content_Group_Text_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Edit_Text_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Edit_Text         : constant Element.Form.Text_Access         := Element.Form.Text_Access (Edit_Text_Element);
+   begin
+      return Edit_Text.Value;
+   end Content_Group_Text_Get;
+
+   -----------------
+   --  Text Area  --
+   -----------------
+   procedure Content_Group_Text_Area_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Text_Area      : constant Element.Pointer_To_Element_Class := new Element.Form.Text_Area_Type;
+   begin
+      Text_Area.Dynamic;
+      Element.Form.Text_Area_Access (Text_Area).Create (Form => Parent.all, Name => Name);
+      Text_Area.Style ("resize", "vertical");
+      Text_Area.Style ("height", "38px");
+      Text_Area.Style ("min-height", "38px");
+      Content_Group_Item_Add (Object, Text_Area, Name, Parent_Key, On_Change);
+   end Content_Group_Text_Area_Add;
+
+   procedure Content_Group_Text_Area_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Text   :        String)
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Text_Area_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Text_Area         : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
+   begin
+      Text_Area.Value (Text);
+   end Content_Group_Text_Area_Set;
+
+   function Content_Group_Text_Area_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Text_Area_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Text_Area         : constant Element.Form.Text_Area_Access := Element.Form.Text_Area_Access (Text_Area_Element);
+   begin
+      return Text_Area.Value;
+   end Content_Group_Text_Area_Get;
+
+   -----------------
+   --  Check Box  --
+   -----------------
+   procedure Content_Group_Check_Box_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Check_Box      : constant Element.Pointer_To_Element_Class := new Element.Form.Check_Box_Type;
+   begin
+      Check_Box.Dynamic;
+      Element.Form.Check_Box_Access (Check_Box).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Check_Box, Name, Parent_Key, On_Change);
+   end Content_Group_Check_Box_Add;
+
+   procedure Content_Group_Check_Box_Checked
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Is_Checked :        Boolean)
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Check_Box_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Check_Box         : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
+   begin
+      Check_Box.Checked (Is_Checked);
+   end Content_Group_Check_Box_Checked;
+
+   function Content_Group_Check_Box_Is_Checked
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return Boolean
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Check_Box_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Check_Box         : constant Element.Form.Check_Box_Access := Element.Form.Check_Box_Access (Check_Box_Element);
+   begin
+      return Check_Box.Checked;
+   end Content_Group_Check_Box_Is_Checked;
+
+   --------------
+   --  Number  --
+   --------------
+   procedure Content_Group_Number_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Number         : constant Element.Pointer_To_Element_Class := new Element.Form.Number_Type;
+   begin
+      Number.Dynamic;
+      Element.Form.Number_Access (Number).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Number, Name, Parent_Key, On_Change);
+   end Content_Group_Number_Add;
+
+   procedure Content_Group_Number_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Value  :        Integer)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Number_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Number         : constant Element.Form.Number_Access       := Element.Form.Number_Access (Number_Element);
+   begin
+      Number.Value (Value);
+   end Content_Group_Number_Set;
+
+   function Content_Group_Number_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return Integer
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Number_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Number         : constant Element.Form.Number_Access       := Element.Form.Number_Access (Number_Element);
+   begin
+      return Number.Value;
+   end Content_Group_Number_Get;
+
+   -----------------
+   --  Selection  --
+   -----------------
+   procedure Content_Group_Selection_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Selection      : constant Element.Pointer_To_Element_Class := new Element.Form.Selection_Type;
+   begin
+      Selection.Dynamic;
+      Element.Form.Selection_Access (Selection).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Selection, Name, Parent_Key, On_Change);
+   end Content_Group_Selection_Add;
+
+   procedure Content_Group_Selection_Add_Option
+     (Object  : in out Base.Base_Type'Class;
+      Name    :        String;
+      Option  :        String;
+      Enabled :        Boolean := False)
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Selection_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Selection         : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
+   begin
+      Selection.Add_Option (Value => Option, Text => Option, Selected => Enabled);
+   end Content_Group_Selection_Add_Option;
+
+   function Content_Group_Selection_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App               : constant App_Access                       := App_Access (Object.Connection_Data);
+      Selection_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Selection         : constant Element.Form.Selection_Access := Element.Form.Selection_Access (Selection_Element);
+   begin
+      return Selection.Value;
+   end Content_Group_Selection_Get;
+
+   ------------
+   --  Date  --
+   ------------
+   procedure Content_Group_Date_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Date           : constant Element.Pointer_To_Element_Class := new Element.Form.Date_Type;
+   begin
+      Date.Dynamic;
+      Element.Form.Date_Access (Date).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Date, Name, Parent_Key, On_Change);
+   end Content_Group_Date_Add;
+
+   procedure Content_Group_Date_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Date   :        String)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Date_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Date_Form    : constant Element.Form.Date_Access         := Element.Form.Date_Access (Date_Element);
+   begin
+      Date_Form.Value (Date);
+   end Content_Group_Date_Set;
+
+   function Content_Group_Date_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Date_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Date         : constant Element.Form.Date_Access         := Element.Form.Date_Access (Date_Element);
+   begin
+      return Date.Value;
+   end Content_Group_Date_Get;
+
+   -------------
+   --  Email  --
+   -------------
+   procedure Content_Group_Email_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Email          : constant Element.Pointer_To_Element_Class := new Element.Form.Email_Type;
+   begin
+      Email.Dynamic;
+      Element.Form.Email_Access (Email).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Email, Name, Parent_Key, On_Change);
+   end Content_Group_Email_Add;
+
+   procedure Content_Group_Email_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Email  :        String)
+   is
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      Email_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Email_Form    : constant Element.Form.Email_Access        := Element.Form.Email_Access (Email_Element);
+   begin
+      Email_Form.Value (Email);
+   end Content_Group_Email_Set;
+
+   function Content_Group_Email_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      Email_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Email         : constant Element.Form.Email_Access        := Element.Form.Email_Access (Email_Element);
+   begin
+      return Email.Value;
+   end Content_Group_Email_Get;
+
+   ----------------
+   --  Password  --
+   ----------------
+   procedure Content_Group_Password_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Password       : constant Element.Pointer_To_Element_Class := new Element.Form.Password_Type;
+   begin
+      Password.Dynamic;
+      Element.Form.Password_Access (Password).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Password, Name, Parent_Key, On_Change);
+   end Content_Group_Password_Add;
+
+   function Content_Group_Password_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App              : constant App_Access                       := App_Access (Object.Connection_Data);
+      Password_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Password         : constant Element.Form.Password_Access     := Element.Form.Password_Access (Password_Element);
+   begin
+      return Password.Value;
+   end Content_Group_Password_Get;
+
+   -------------
+   --  Phone  --
+   -------------
+   procedure Content_Group_Phone_Add
+     (Object     : in out Base.Base_Type'Class;
+      Name       :        String;
+      Parent_Key :        String;
+      On_Change  :        Base.Action_Event := null)
+   is
+      App            : constant App_Access                       := App_Access (Object.Connection_Data);
+      Parent_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Parent_Key);
+      Parent         : constant Element.Form.Form_Access         := Element.Form.Form_Access (Parent_Element);
+      Tel            : constant Element.Pointer_To_Element_Class := new Element.Form.Tel_Type;
+   begin
+      Tel.Dynamic;
+      Element.Form.Tel_Access (Tel).Create (Form => Parent.all, Name => Name);
+      Content_Group_Item_Add (Object, Tel, Name, Parent_Key, On_Change);
+   end Content_Group_Phone_Add;
+
+   procedure Content_Group_Phone_Set
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String;
+      Phone  :        String)
+   is
+      App         : constant App_Access                       := App_Access (Object.Connection_Data);
+      Tel_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Tel         : constant Element.Form.Tel_Access          := Element.Form.Tel_Access (Tel_Element);
+   begin
+      Tel.Value (Phone);
+   end Content_Group_Phone_Set;
+
+   function Content_Group_Phone_Get
+     (Object : in out Base.Base_Type'Class;
+      Name   :        String)
+      return String
+   is
+      App         : constant App_Access                       := App_Access (Object.Connection_Data);
+      Tel_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Name);
+      Tel         : constant Element.Form.Tel_Access          := Element.Form.Tel_Access (Tel_Element);
+   begin
+      return Tel.Value;
+   end Content_Group_Phone_Get;
+
+   ---------------
+   --  Warning  --
+   ---------------
+   procedure Content_Group_Warning_Add
+     (Object     : in out Base.Base_Type'Class;
+      Text       :        String;
+      Key        :        String;
+      Parent_Key :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("Table_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row  : constant Element.Table.Table_Row_Access    := new Element.Table.Table_Row_Type;
+      Data : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+
+      Span_Element : constant Element.Pointer_To_Element_Class := new Element.Common.Span_Type;
+      Span         : constant Element.Common.Span_Access       := Element.Common.Span_Access (Span_Element);
+   begin
+      Row.Dynamic;
+      Data.Dynamic;
+      Span_Element.Dynamic;
+
+      Row.Create (Table.all);
+      Data.Create (Row.all, Column_Span => 2);
+      Data.Style ("text-align", "center");
+      Span.Create (Data.all, Text);
+      Span.Class_Name ("content-group-warning");
+
+      App.Content_Text.Add_Element (Key, Span_Element);
+   end Content_Group_Warning_Add;
+
+   procedure Content_Group_Warning_Set
+     (Object : in out Base.Base_Type'Class;
+      Key    :        String;
+      Text   :        String)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Span_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element (Key);
+      Span         : constant Element.Common.Span_Access       := Element.Common.Span_Access (Span_Element);
+   begin
+      Span.Text (Text);
+   end Content_Group_Warning_Set;
+
+   -----------------------------------------------------------------------------
+   --  Lists
+   -----------------------------------------------------------------------------
+   procedure Content_List_Create
+     (Object : in out Base.Base_Type'Class;
+      Title  :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Parent : constant Element.Common.DIV_Access := new Element.Common.DIV_Type;
+
+      Table_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Type;
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Row_Type;
+      Row         : constant Element.Table.Table_Row_Access   := Element.Table.Table_Row_Access (Row_Element);
+   begin
+      Parent.Dynamic;
+      Table_Element.Dynamic;
+      Row_Element.Dynamic;
+
+      Parent.Create (App.Content_Text);
+      Parent.Class_Name ("content-list");
+
+      Table.Create (Parent.all);
+      Table.Class_Name ("content-list-table");
+      Table.jQuery_Execute ("data('last_index', 0)");
+      Table.jQuery_Execute ("data('selected_row', 0)");
+      App.Content_Text.Add_Element ("List_" & Title, Table_Element);
+
+      Row.Create (Table.all);
+      App.Content_Text.Add_Element ("List_Header_" & Title, Row_Element);
+      Row.Class_Name ("content-list-header");
+   end Content_List_Create;
+
+   procedure Content_List_Add_Column
+     (Object     : in out Base.Base_Type'Class;
+      Variable   :        String;
+      Parent_Key :        String)
+   is
+      App            : constant App_Access                         := App_Access (Object.Connection_Data);
+      Row_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_Header_" & Parent_Key);
+      Row            : constant Element.Table.Table_Row_Access     := Element.Table.Table_Row_Access (Row_Element);
+      Column_Element : constant Element.Pointer_To_Element_Class   := new Element.Table.Table_Heading_Type;
+      Column : constant Element.Table.Table_Heading_Access := Element.Table.Table_Heading_Access (Column_Element);
+   begin
+      Column_Element.Dynamic;
+      Column.Create (Row.all, Content => Variable);
+   end Content_List_Add_Column;
+
+   procedure Content_List_Click_Handler (Object : in out Base.Base_Type'Class) is
+      App        : constant App_Access := App_Access (Object.Connection_Data);
+      Parent_Key : constant String := Object.jQuery_Execute ("data('parent_key')");
+
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row_Index : constant Integer                          := Int_Value (Object.jQuery_Execute ("data('row_index')"));
+      Row       : constant Element.Pointer_To_Element_Class :=
+        App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Row_Index));
+
+      Previous_Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+      Previous_Row       : Element.Pointer_To_Element_Class;
+
+   begin
+      if Previous_Row_Index = Row_Index then
+         Row.Remove_Class ("content-list-item-selected");
+         Table.jQuery_Execute ("data('selected_row', 0)");
+      else
+         Row.Add_Class ("content-list-item-selected");
+         Table.jQuery_Execute ("data('selected_row', " & To_UXString (Row_Index) & ")");
+      end if;
+      if Previous_Row_Index /= 0 then
+         Previous_Row := App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Previous_Row_Index));
+         Previous_Row.Remove_Class ("content-list-item-selected");
+      end if;
+
+   end Content_List_Click_Handler;
+
+   function Content_List_Add_Item
+     (Object     : in out Base.Base_Type'Class;
+      Parent_Key :        String)
+      return Integer
+   is
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+
+      Row_Element : constant Element.Pointer_To_Element_Class := new Element.Table.Table_Row_Type;
+      Row         : constant Element.Table.Table_Row_Access   := Element.Table.Table_Row_Access (Row_Element);
+
+      Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('last_index')")) + 1;
+   begin
+      Row_Element.Dynamic;
+      Row.Create (Table.all);
+      Row.Class_Name ("content-list-item");
+
+      Row.On_Click_Handler (Content_List_Click_Handler'Unrestricted_Access);
+      Row.jQuery_Execute ("data('parent_key', """ & Parent_Key & """)");
+      Row.jQuery_Execute ("data('row_index', " & To_UXString (Row_Index) & ")");
+
+      App.Content_Text.Add_Element ("List_Item_" & Parent_Key & To_UXString (Row_Index), Row_Element);
+
+      Table.jQuery_Execute ("data('last_index', " & To_UXString (Row_Index) & ")");
+
+      return Row_Index;
+   end Content_List_Add_Item;
+
+   procedure Content_List_Add_Text
+     (Object     : in out Base.Base_Type'Class;
+      Value      :        String;
+      Index      :        Integer;
+      Parent_Key :        String)
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+
+      Current_Row_Element : constant Element.Pointer_To_Element_Class :=
+        App.Content_Text.Element ("List_Item_" & Parent_Key & To_UXString (Index));
+      Current_Row : constant Element.Table.Table_Row_Access := Element.Table.Table_Row_Access (Current_Row_Element);
+
+      Column : constant Element.Table.Table_Column_Access := new Element.Table.Table_Column_Type;
+   begin
+      Column.Dynamic;
+      Column.Create (Current_Row.all, Content => Value);
+   end Content_List_Add_Text;
+
+   function Content_List_Selected_Row
+     (Object     : in out Base.Base_Type'Class;
+      Parent_Key :        String)
+      return Integer
+   is
+      App           : constant App_Access                       := App_Access (Object.Connection_Data);
+      Table_Element : constant Element.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
+      Table         : constant Element.Table.Table_Access       := Element.Table.Table_Access (Table_Element);
+      Result        : constant Integer := Int_Value (Table.jQuery_Execute ("data('selected_row')"));
+   begin
+      return Result;
+   end Content_List_Selected_Row;
+
+   -----------------------------------------------------------------------------
+   --  Footer
+   -----------------------------------------------------------------------------
+   procedure Footer_Set_State_Text
+     (Object : in out Base.Base_Type'Class;
+      Text   :        String := "")
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Footer_Instance.Set_State_Text (Text);
+   end Footer_Set_State_Text;
+
+   procedure Footer_Set_Permanent_Text
+     (Object : in out Base.Base_Type'Class;
+      Text   :        String := "")
+   is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Footer_Instance.Set_Permanent_Text (Text);
+   end Footer_Set_Permanent_Text;
+
+   -----------------------------------------------------------------------------
+   --  API Utils
+   -----------------------------------------------------------------------------
+   procedure Launch_Dialog
+     (Object       : in out Base.Base_Type'Class;
+      Title        :        String;
+      Content      :        String;
+      Confirm_Text :        String := "";
+      Cancel_Text  :        String := "";
+      On_Confirm   :        Base.Action_Event := null;
+      On_Cancel    :        Base.Action_Event := null)
+   is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Dialog_Class : constant Element.Pointer_To_Element_Class := new Widget.Dialog_Type;
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
+      Button       : Element.Pointer_To_Element_Class;
+   begin
+      Dialog.Create (Object.Parent.all, Replace_All (Title, ''', "\'"), Content, Width => 400, Height => 300);
+      Dialog_Class.Dynamic;
+
+      if On_Cancel /= null then
+         Button := new Element.Common.Button_Type;
+         Element.Common.Button_Access (Button).Create (Dialog.all, Cancel_Text);
+         Button.On_Click_Handler (On_Cancel);
+         Button.Dynamic;
+         Button.Class_Name ("ui-button ui-corner-all");
+         jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "left+70 bottom-10");
+      end if;
+
+      if On_Confirm /= null then
+         Button := new Element.Common.Button_Type;
+         Element.Common.Button_Access (Button).Create (Dialog.all, Confirm_Text);
+         Button.Dynamic;
+         Button.Focus;
+         Button.On_Click_Handler (On_Confirm);
+         Button.Class_Name ("ui-button ui-corner-all");
+         jQueryUI.Position (Button.all, Target => Dialog.all, Using_My => "bottom", At_Target => "right-70 bottom-10");
+      end if;
+
+      Dialog.On_Close_Handler (Close_Dialog'Unrestricted_Access);
+      App.Container.Add_Element ("dialog", Dialog_Class);
+   end Launch_Dialog;
+
+   procedure Close_Dialog (Object : in out Base.Base_Type'Class) is
+      App          : constant App_Access                       := App_Access (Object.Connection_Data);
+      Dialog_Class : constant Element.Pointer_To_Element_Class := App.Container.Element ("dialog");
+      Dialog       : constant Widget.Dialog_Access             := Widget.Dialog_Access (Dialog_Class);
+   begin
+      Dialog.Remove;
+   end Close_Dialog;
+
+   procedure Launch_Web
+     (Object : in out Base.Base_Type'Class;
+      URL    :        String)
+   is
+   begin
+      Object.jQuery_Execute ("gnoga_web = open('" & URL & "', '_blank')");
+   end Launch_Web;
+
+   procedure Print (Object : in out Base.Base_Type'Class) is
+      App : constant App_Access := App_Access (Object.Connection_Data);
+   begin
+      App.Window.Print;
+   end Print;
+
+-------------------------------------------------------------------------------
+end v22.Gui;
+-------------------------------------------------------------------------------

@@ -1,0 +1,27 @@
+# -----------------------------------------------------
+# A comment line is already write at the end of the
+# configuration file. So you can write headers and
+# intermediate comments to obtain a good looking
+# configuration file :)
+# -----------------------------------------------------
+# 
+# Section 1 deals with blah blah...
+# 
+[Section_1]
+Parameter_13 = Value_13
+Parameter_12 = Value_12
+Parameter_11 = Value_11
+# 
+# Section 2 deals with blah blah...
+# 
+[Section_2]
+Parameter_23 = Value_23
+Parameter_22 = Value_22
+Parameter_21 = Value_21  # Only this line should stay...
+# 
+# Section 3 deals with blah blah...
+# 
+[Section_3]
+Parameter_33 = Value_33
+Parameter_32 = Value_32
+Parameter_31 = Value_31

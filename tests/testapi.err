@@ -1,0 +1,331 @@
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230909-191155
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-09 19:11:23
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 23948 ] Max: [ 24524 ]
+All mem. alloc. (bytes): All Cur: [ 15859712 ] Max: [ 15859712 ]
+
+raised PROGRAM_ERROR : v22.Sql.Schema_Lines_List.Implementation.TC_Check: attempt to tamper with cursors
+[./testapi]
+0x5017fd v22__sql__schema_lines_list__implementation__tc_check at a-conhel.adb:126
+0x51e145 v22__sql__schema_lines_list__delete at a-convec.adb:404 (discriminator 2)
+0x51e9dc v22__sql__schema_lines_list__delete__2 at a-convec.adb:518 (discriminator 4)
+0x58a669 v22__sql__schema_update__finalize_loop.314 at v22-sql.adb:781
+0x5733ad v22__sql__schema_update at v22-sql.adb:906
+0x59e304 testapi_sql__run at testapi_sql.adb:471
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7f9b9c629d8e
+0x7f9b9c629e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-124620
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 12:46:12
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 11900 ] Max: [ 15828 ]
+All mem. alloc. (bytes): All Cur: [ 15073280 ] Max: [ 15073280 ]
+
+raised V22.RAISE_EXCEPTION.V22_EXCEPTION_TEST : v22.adb:42
+[./testapi]
+0x41d974 v22__raise_exception at v22.adb:42
+0x52501b testapi_sql__run at testapi_sql.adb:512
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7feaa6a29d8e
+0x7feaa6a29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-125602
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 12:55:54
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 11900 ] Max: [ 15828 ]
+All mem. alloc. (bytes): All Cur: [ 15204352 ] Max: [ 15204352 ]
+
+raised V22.RAISE_EXCEPTION.V22_EXCEPTION_TEST : v22.adb:42
+[./testapi]
+0x41d974 v22__raise_exception at v22.adb:42
+0x52580b testapi_sql__run at testapi_sql.adb:512
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fdff2e29d8e
+0x7fdff2e29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-125651
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 12:56:30
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 11900 ] Max: [ 15828 ]
+All mem. alloc. (bytes): All Cur: [ 15204352 ] Max: [ 15204352 ]
+
+raised V22.RAISE_EXCEPTION.V22_EXCEPTION_TEST : v22.adb:42
+[./testapi]
+0x41d974 v22__raise_exception at v22.adb:42
+0x52580b testapi_sql__run at testapi_sql.adb:512
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7f537c629d8e
+0x7f537c629e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-125839
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 12:58:29
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 11900 ] Max: [ 15828 ]
+All mem. alloc. (bytes): All Cur: [ 14942208 ] Max: [ 14942208 ]
+
+raised V22.RAISE_EXCEPTION.V22_EXCEPTION_TEST : v22.adb:43
+[./testapi]
+0x41d974 v22__raise_exception at v22.adb:43
+0x525815 testapi_sql__run at testapi_sql.adb:512
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fd4d4a29d8e
+0x7fd4d4a29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-144939
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 14:48:22
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 11900 ] Max: [ 15828 ]
+All mem. alloc. (bytes): All Cur: [ 14942208 ] Max: [ 14942208 ]
+
+raised V22.RAISE_EXCEPTION.V22_EXCEPTION_TEST : v22.adb:43
+[./testapi]
+0x41d974 v22__raise_exception at v22.adb:43
+0x5262c1 testapi_sql__run at testapi_sql.adb:512
+0x4153b4 _ada_testapi at testapi.adb:179
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fe4e1029d8e
+0x7fe4e1029e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-153352
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:33:38
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12524 ] Max: [ 18516 ]
+All mem. alloc. (bytes): All Cur: [ 15204352 ] Max: [ 15204352 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : SHOW INDEX FROM Tbl_Cluster WHERE Key_name = 'Number' => near "SHOW": syntax error
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x52674b testapi_sql__run at testapi_sql.adb:118 (discriminator 1)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fd64fc29d8e
+0x7fd64fc29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-154041
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:40:33
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12396 ] Max: [ 17892 ]
+All mem. alloc. (bytes): All Cur: [ 15204352 ] Max: [ 15204352 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : SELECT * FROM tablename => no such table: tablename
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x52674b testapi_sql__run at testapi_sql.adb:118 (discriminator 1)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc944c29d8e
+0x7fc944c29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-154110
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:41:02
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12380 ] Max: [ 17812 ]
+All mem. alloc. (bytes): All Cur: [ 15073280 ] Max: [ 15073280 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : START TRANSACTION => near "START": syntax error
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x526a5f testapi_sql__run at testapi_sql.adb:124 (discriminator 1)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7ff67e829d8e
+0x7ff67e829e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-154142
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:41:33
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12908 ] Max: [ 20324 ]
+All mem. alloc. (bytes): All Cur: [ 15204352 ] Max: [ 15204352 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : SHOW INDEX FROM Tbl_Cluster WHERE Key_name = 'Number' => near "SHOW": syntax error
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x69fdae gnoga__server__database__sqlite__execute_update at gnoga-server-database-sqlite.adb:179
+0x526c71 testapi_sql__run at testapi_sql.adb:126 (discriminator 1)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fcb6b229d8e
+0x7fcb6b229e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-154236
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:42:25
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12940 ] Max: [ 20484 ]
+All mem. alloc. (bytes): All Cur: [ 15728640 ] Max: [ 15728640 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : INSERT INTO Tbl_Cluster (Key_Name,Key_Private) VALUES ('Name of the key','Private key'); => no such table: main.Tbl_Instance
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x4993f7 v22__sql__insert at v22-sql.adb:261 (discriminator 1)
+0x52812b testapi_sql__run at testapi_sql.adb:144 (discriminator 2)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7f762bc29d8e
+0x7f762bc29e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+Exception time         : 20230911-154237
+Program uptime         :  0h0 0m0 0s
+Program build DT stamp : build 2023-09-11 15:42:25
+Program name & version : testapi v0.7
+Library name & version : v22 v0.1
+Start directory        : /home/sr/opt/v22/tests
+Home directory         : /home/sr
+Ada mem. alloc. (bytes): Ada Cur: [ 12940 ] Max: [ 20484 ]
+All mem. alloc. (bytes): All Cur: [ 15728640 ] Max: [ 15728640 ]
+
+raised GNOGA.SERVER.DATABASE.QUERY_ERROR : INSERT INTO Tbl_Cluster (Key_Name,Key_Private) VALUES ('Name of the key','Private key'); => no such table: main.Tbl_Instance
+[./testapi]
+0x69f075 gnoga__server__database__sqlite__execute_query at gnoga-server-database-sqlite.adb:155 (discriminator 8)
+0x4993f7 v22__sql__insert at v22-sql.adb:261 (discriminator 1)
+0x52812b testapi_sql__run at testapi_sql.adb:144 (discriminator 2)
+0x4153b4 _ada_testapi at testapi.adb:181
+0x41c6d1 main at b__testapi.adb:657
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7faf7e829d8e
+0x7faf7e829e3e
+[./testapi]
+0x413353 _start at ???
+0xfffffffffffffffe
+
+
+-------------------------------------------------------------------------------------
