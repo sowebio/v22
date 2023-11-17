@@ -1,7 +1,10 @@
 ------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22.gpr
 --  @copyright See authors list below and v22.copyrights file
@@ -26,7 +29,7 @@
 -------------------------------------------------------------------------------
 
 with "gnatcoll";
-with "gnoga";
+--with "gnoga";
 
 project v22 is
 
@@ -40,7 +43,7 @@ project v22 is
    
    v22_Build : v22_Build_Type := external ("v22_Build", "Debug");
 
-   for Source_Dirs use ("src/**","tests/src-testgui","tests/src-testapi");
+   for Source_Dirs use ("src/**","tests/src-testgui","tests/src-testapi","lib/**");
 
    case v22_Build is
       when "Style" => 

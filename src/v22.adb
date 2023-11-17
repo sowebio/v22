@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -14,8 +17,6 @@
 --  @description
 --
 --  @authors
---  Théodore Gigault - tg - developpement@soweb.io
---  Arthur Le Floch - alf - developpement@soweb.io
 --  Stéphane Rivière - sr - sriviere@soweb.io
 --
 --  @versions
@@ -24,8 +25,11 @@
 
 with Ada.Directories;
 with Ada.Strings.Fixed;
-with GNAT.Source_Info;
 
+with GNAT.Source_Info;
+with GNAT.OS_Lib;
+
+with v22.Msg;
 with v22.Prg;
 with v22.Sql;
 with v22.Sys;
@@ -36,6 +40,49 @@ package body v22 is
 
    use v22;
 
+   protected body Mutex is
+      entry Lock when not Owned is
+      begin
+         Owned := True;
+      end Lock;
+      procedure Release is
+      begin
+         Owned := False;
+      end Release;
+   end Mutex;
+
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   function Get_Build return String is
+   begin
+      return ("build " &
+              From_Latin_1 (GNAT.Source_Info.Compilation_ISO_Date) & " " &
+              From_Latin_1 (GNAT.Source_Info.Compilation_Time));
+   end Get_Build;
+
+   ----------------------------------------------------------------------------
+   function Get_Log_Dir return String is
+   begin
+     return Log_Dir;
+   end Get_Log_Dir;
+
+   ----------------------------------------------------------------------------
+   function Get_Tmp_Dir return String is
+   begin
+     return Tmp_Dir;
+   end Get_Tmp_Dir;
+
+   ----------------------------------------------------------------------------
+   function Get_Version return String is
+   begin
+      return (Name & " v" &
+              From_Latin_1 (Ada.Strings.Fixed.Trim (Natural'Image (Version_Major), Ada.Strings.Left)) & "." &
+              From_Latin_1 (Ada.Strings.Fixed.Trim (Natural'Image (Version_Minor), Ada.Strings.Left)));
+   end Get_Version;
+
    ----------------------------------------------------------------------------
    procedure Raise_Exception is
       v22_Exception_Test : exception;
@@ -45,7 +92,6 @@ package body v22 is
 
    ----------------------------------------------------------------------------
    procedure Exception_Handling (Exception_Hook : Ada.Exceptions.Exception_Occurrence) is
-
       Exception_Handle : Tio.File;
       Exception_File_Name : constant String := Prg.Start_Dir & "/" & Prg.Name & ".err";
       Trace_Output : String := From_Latin_1 (Ada.Exceptions.Exception_Information (Exception_Hook));
@@ -54,17 +100,14 @@ package body v22 is
       Current_Address : String;
       Number_Position, First_Space_Position : Natural;
       Output_Processed : String := "";
-
       Trace_without_Lines : Boolean := False;
-
       SE_Result : Integer := 0;
       SE_Output : String := "";
-
    begin
 
-      Tio.Line;
+      Tio.New_Line;
       Tio.Put_Line (Title_Max_Length * "-");
-      Tio.Line;
+      Tio.New_Line;
       Tio.Put_Line ("Exception time         : " & Prg.Time_Stamp);
       Tio.Put_Line ("Program uptime         : " & Prg.Duration_Stamp (Prg.Start_Time));
       Tio.Put_Line ("Program build DT stamp : " & v22.Get_Build);
@@ -101,10 +144,10 @@ package body v22 is
             Trace_Output := Output_Processed;
          end if;
 
-         Tio.Line;
+         Tio.New_Line;
          Tio.Put_Line (Trace_Output);
          Tio.Put_Line (Title_Max_Length * "-");
-         Tio.Line;
+         Tio.New_Line;
 
          if Ada.Directories.Exists (To_UTF_8 (Exception_File_Name)) then
             Tio.Append (Exception_Handle, Exception_File_Name);
@@ -114,7 +157,7 @@ package body v22 is
 
          if Tio.Is_Open (Exception_Handle) then
             Tio.Put_Line (Exception_Handle, Title_Max_Length * "-");
-            Tio.Line (Exception_Handle);
+            Tio.New_Line (Exception_Handle);
             Tio.Put_Line (Exception_Handle, "Exception time         : " & Prg.Time_Stamp);
             Tio.Put_Line (Exception_Handle, "Program uptime         : " & Prg.Duration_Stamp (Prg.Start_Time));
             Tio.Put_Line (Exception_Handle, "Program build DT stamp : " & v22.Get_Build);
@@ -124,55 +167,47 @@ package body v22 is
             Tio.Put_Line (Exception_Handle, "Home directory         : " & Sys.Get_Home);
             Tio.Put_Line (Exception_Handle, "Ada mem. alloc. (bytes): " & Sys.Get_Alloc_Ada);
             Tio.Put_Line (Exception_Handle, "All mem. alloc. (bytes): " & Sys.Get_Alloc_All);
-            Tio.Line (Exception_Handle);
+            Tio.New_Line (Exception_Handle);
             Tio.Put_Line (Exception_Handle, Trace_Output);
             Tio.Put_Line (Exception_Handle, Title_Max_Length * "-");
-            --Tio.Line (Exception_Handle);
             Tio.Close (Exception_Handle);
          end if;
 
       end if;
 
-      Tio.Put_Line ("Finalizations...");
-      Tio.Line;
-
-      Sql.Close;
-      Tio.Cursor_On;
-      Prg.Set_Exit_Status (9);
-
-      Tio.Line;
-      Tio.Put_Line (Title_Max_Length * "-");
-      Tio.Line;
+      Finalize_Application ("Exception");
+      Prg.Set_Exit_Status (Exit_Code_Exception_Unexpected);
 
    end Exception_Handling;
 
    ----------------------------------------------------------------------------
-   function Get_Version return String is
+   procedure Exception_Ctrl_C_Handling is
    begin
-      return (Name & " v" &
-              From_Latin_1 (Ada.Strings.Fixed.Trim (Natural'Image (Version_Major), Ada.Strings.Left)) & "." &
-              From_Latin_1 (Ada.Strings.Fixed.Trim (Natural'Image (Version_Minor), Ada.Strings.Left)));
-   end Get_Version;
+      if Prg.Get_Handler_Ctrl_C = On then
+         Msg.New_Line;
+         Finalize_Application ("Ctrl-C");
+         Tio.New_Line;
+         GNAT.OS_Lib.OS_Exit (Exit_Code_Exception_Ctrl_C); --  Set exit code and quit
+      else
+         Tio.New_Line;
+         Msg.Info (Prg.Name & " > Ctrl-C detected, program interrupt is inhibited");
+      end if;
+   end Exception_Ctrl_C_Handling;
 
    ----------------------------------------------------------------------------
-   function Get_Build return String is
-   begin
-      return ("build " &
-              From_Latin_1 (GNAT.Source_Info.Compilation_ISO_Date) & " " &
-              From_Latin_1 (GNAT.Source_Info.Compilation_Time));
-   end Get_Build;
+   --  Private
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
-   function Get_Log_Dir return String is
+   procedure Finalize_Application (Handling_Type : String) is
+      Message : String := Prg.Name & " > " & Handling_Type & " detected, finalize application";
    begin
-     return Log_Dir;
-   end Get_Log_Dir;
-
-   ----------------------------------------------------------------------------
-   function Get_Tmp_Dir return String is
-   begin
-     return Tmp_Dir;
-   end Get_Tmp_Dir;
+      Msg.Info (Message);
+      Msg.Set_Disk (Off);  --  Close <application>.log file, flushing the remaining message still in buffer
+      Msg.Info ("Total execution time: " & Prg.Duration_Stamp (Prg.Start_Time));
+      Sql.Close;             --  Close SQL Connection
+      Tio.Set_Cursor (On);   --  Restore console prompt
+   end Finalize_Application;
 
 -------------------------------------------------------------------------------
 end v22;

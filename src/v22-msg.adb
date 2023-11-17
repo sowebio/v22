@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-log.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -14,8 +17,6 @@
 --  @description
 --
 --  @authors
---  Théodore Gigault - tg - developpement@soweb.io
---  Arthur Le Floch - alf - developpement@soweb.io
 --  Stéphane Rivière - sr - sriviere@soweb.io
 --
 --  @versions
@@ -28,7 +29,153 @@ with v22.Fls;
 
 package body v22.Msg is
 
-   --  Private functions
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
+   
+   ----------------------------------------------------------------------------
+   procedure Debug (Message : String) is
+   begin
+      if Debug_On = On then
+         Put (Message, "DBG");
+      end if;
+   end Debug;
+   
+   ----------------------------------------------------------------------------
+   procedure Error (Message : String) is
+   begin
+      Put (Message, "ERR");
+   end Error;
+
+   ----------------------------------------------------------------------------
+   function Get_Debug return On_Off is
+   begin
+      return (Debug_On);
+   end Get_Debug;
+   
+   ----------------------------------------------------------------------------
+   procedure New_Line is
+   begin
+      Tio.New_Line;
+      if Disk_On then
+         Tio.New_Line (Handle);
+      end if;
+   end New_Line;
+
+   ----------------------------------------------------------------------------
+   procedure Info (Message : Boolean) is
+   begin
+      Put (From_Latin_1 ((if (Message) then "True" else "False")), "MSG");
+   end Info;
+   
+   procedure Info (Message : On_Off) is
+   begin
+      Put (From_Latin_1 (On_Off'Image (Message)), "MSG");
+   end Info;
+   
+   procedure Info (Message : ASCII_Character) is
+   begin
+      Put (From_ASCII (Message), "MSG");
+   end Info;
+   
+   procedure Info (Message : String) is
+   begin
+      Put (Trim_Left (Message), "MSG"); -- Suppress the space left for positive sign
+   end Info;
+   
+   procedure Info (Message : Integer) is
+   begin
+      Put (To_String (Message), "MSG");
+   end Info;
+   
+   procedure Info (Message : Long_Integer) is
+   begin
+      Put (To_String (Message), "MSG");
+   end Info;
+   
+   procedure Info (Message : Long_Long_Integer) is
+   begin
+      Put (To_String (Message), "MSG");
+   end Info;
+   
+   procedure Info (Message : Money) is
+   begin
+      Put (From_Latin_1 (Money'Image (Message)), "MSG");
+   end Info;
+
+   ----------------------------------------------------------------------------
+   procedure Set_Debug (Switch : On_Off)  is
+   begin
+      Debug_On := Switch;
+   end Set_Debug;
+   
+   ----------------------------------------------------------------------------
+   procedure Set_Disk (Switch : On_Off) is
+      Log_File_Name : constant String := Log_Dir_Store & Prg.Name & ".log";
+      Log_Dir_Name : constant String := Fls.Extract_Directory (Log_File_Name);
+   begin
+      Disk_On := (Switch = On);
+      if Disk_On then
+         if Fls.Exists (Log_File_Name) then
+            Tio.Append (Handle, Log_File_Name);
+         else
+            -- Ensure that the complete tree structure exists before creating file
+            if Fls.Create_Directory_Tree (Log_Dir_Name) then
+               Tio.Create (Handle, Log_File_Name);
+            else
+               Disk_On := False;
+               Error ("Log.Set_Disk > Can't create directory: " & Log_File_Name);
+            end if;
+         end if;
+         if not Tio.Is_Open (Handle) then
+            Disk_On := False;
+            Error ("Log.Set_Disk > can't log on disk to: " & Log_File_Name);
+         end if;
+      else
+         if Tio.Is_Open (Handle) then
+            Tio.Close (Handle);
+         end if;
+      end if;
+   end Set_Disk;
+   
+   ----------------------------------------------------------------------------
+   procedure Set_Display (Switch : On_Off)  is
+   begin
+      Display_On := (Switch = On);
+   end Set_Display;
+   
+   ----------------------------------------------------------------------------
+   procedure Set_Header (Switch : On_Off) is
+   begin
+      Header_On := (Switch = On);
+   end Set_Header;
+
+   ----------------------------------------------------------------------------
+   procedure Set_Dir (Dir_In : String) is
+   begin
+      Log_Dir_Store := Dir_In;
+   end Set_Dir;
+
+   function Get_Dir return String is
+   begin
+      return Log_Dir_Store;
+   end Get_Dir;
+   
+   ----------------------------------------------------------------------------
+   procedure Set_Task (New_Task : String) is
+   begin
+      Task_State := New_Task;
+   end Set_Task;
+   
+   ----------------------------------------------------------------------------
+   procedure Title (Message : String) is
+   begin
+      Put (To_Upper (Message), "MSG", True);
+   end Title;
+   
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    procedure Put (Line_In : String;
@@ -40,6 +187,8 @@ package body v22.Msg is
       Ansi_Begin : String := "";
       Ansi_End : String := "";
    begin
+      --  Mutex for exclusive use as Msg.* must be reentrant   
+      M.Lock;
 
       if Display_On and Tio.Ansi then
          if Line_Level = "DBG" then
@@ -107,143 +256,9 @@ package body v22.Msg is
                                Line_Disk);
       end if;
 
+      --  Mutex for exclusive use as Msg.* must be reentrant   
+      M.Release;
    end Put;
-
-   --  Public Functions
-   
-   ----------------------------------------------------------------------------
-   procedure Dbg (Message : String) is
-   begin
-      if Debug_On then
-         Put (Message, "DBG");
-      end if;
-   end Dbg;
-   
-   ----------------------------------------------------------------------------
-   procedure Err (Message : String) is
-   begin
-      Put (Message, "ERR");
-   end Err;
-
-   ----------------------------------------------------------------------------
-   function Get_Debug return Boolean is
-   begin
-      return Debug_On;
-   end Get_Debug;
-   
-   ----------------------------------------------------------------------------
-   procedure Line is
-   begin
-      Tio.Line;
-      if Disk_On then
-         Tio.Line (Handle);
-      end if;
-   end Line;
-
-   ----------------------------------------------------------------------------
-   procedure Std (Message : Boolean) is
-   begin
-      if Message then
-         Put ("True", "MSG");
-      else
-         Put ("False", "MSG");
-      end if;
-   end Std;
-   
-   procedure Std (Message : ASCII_Character) is
-   begin
-      Put (From_ASCII (Message), "MSG");
-   end Std;
-   
-   procedure Std (Message : String) is
-   begin
-      Put (Trim_Left (Message), "MSG"); -- Suppress the space left for positive sign
-   end Std;
-   
-   procedure Std (Message : Integer) is
-   begin
-      Put (To_String (Message), "MSG");
-   end Std;
-   
-   procedure Std (Message : Long_Integer) is
-   begin
-      Put (To_String (Message), "MSG");
-   end Std;
-   
-   procedure Std (Message : Money) is
-   begin
-      Put (From_Latin_1 (Money'Image (Message)), "MSG");
-   end Std;
-
-   ----------------------------------------------------------------------------
-   procedure Set_Debug (Action : Boolean)  is
-   begin
-      Debug_On := Action;
-   end Set_Debug;
-   
-   ----------------------------------------------------------------------------
-   procedure Set_Display (Action : Boolean)  is
-   begin
-      Display_On := Action;
-   end Set_Display;
-   
-   ----------------------------------------------------------------------------
-   procedure Set_Header (Action : Boolean) is
-   begin
-      Header_On := Action;
-   end Set_Header;
-
-   ----------------------------------------------------------------------------
-   procedure Set_Dir (Dir_In : String) is
-   begin
-      Log_Dir_Store := Dir_In;
-   end Set_Dir;
-
-   function Get_Dir return String is
-   begin
-      return Log_Dir_Store;
-   end Get_Dir;
-   
-   ----------------------------------------------------------------------------
-   procedure Set_Task (New_Task : String) is
-   begin
-      Task_State := New_Task;
-   end Set_Task;
-
-   ----------------------------------------------------------------------------
-   procedure Set_Disk (Action : Boolean) is
-      Log_File_Name : constant String := Log_Dir_Store & Prg.Name & ".log";
-      Log_Dir_Name : constant String := Fls.Extract_Directory (Log_File_Name);
-   begin
-      Disk_On := Action;
-      if Disk_On then
-         if Fls.Exists (Log_File_Name) then
-            Tio.Append (Handle, Log_File_Name);
-         else
-            -- Ensure that the complete tree structure exists before creating file
-            if Fls.Create_Directory_Tree (Log_Dir_Name) then
-               Tio.Create (Handle, Log_File_Name);
-            else
-               Disk_On := False;
-               Err ("Log.Set_Disk > Can't create directory: " & Log_File_Name);
-            end if;
-         end if;
-         if not Tio.Is_Open (Handle) then
-            Disk_On := False;
-            Err ("Log.Set_Disk > can't log on disk to: " & Log_File_Name);
-         end if;
-      else
-         if Tio.Is_Open (Handle) then
-            Tio.Close (Handle);
-         end if;
-      end if;
-   end Set_Disk;
-   
-   ----------------------------------------------------------------------------
-   procedure Title (Message : String) is
-   begin
-      Put (To_Upper (Message), "MSG", True);
-   end Title;
    
 ------------------------------------------------------------------------------
 end v22.Msg;

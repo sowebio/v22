@@ -1,8 +1,11 @@
 
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -35,11 +38,7 @@ package v22.Uxs is
    function Char_Count (String_To_Process : String ; Char_Set_Pattern : String) return Integer;
    --  Count each char in String_To_Process relative to Char_Set_Pattern.
 
-   function Empty (Source : String) return Boolean;
-   --  Return True if String is empty.
-
    function Ends_With (Item : String; Pattern : ASCII_Character) return Boolean;
-   function Ends_With (Item : String; Pattern : String) return Boolean;
    --  Check if String Item ends with another String or String Pattern.
 
    --  Fields processing
@@ -73,12 +72,7 @@ package v22.Uxs is
    function Replace_Char (String_To_Process : String ; Char_In : ASCII_Character ; Char_Out : ASCII_Character) return String;
    --  Replace all Char_In by Char_Out in String_To_Process
 
-   function Replace_Pattern (String_To_Process : String ; Pattern_In : String ; Pattern_Out : String) return String;
-   -- Replace Pattern_In by Pattern_Out in String_To_Process. Returns a
-   -- String with Pattern_In replaced by Pattern_Out
-
    function Starts_With (Item : String; Pattern : ASCII_Character) return Boolean;
-   function Starts_With (Item : String; Pattern : String) return Boolean;
    --  Check if String Item starts with another String or String Pattern.
 
    function Stript_Chars (String_To_Process : String ; Char_List : String) return String;
@@ -101,7 +95,7 @@ package v22.Uxs is
    function To_Hex (Byte : Interfaces.Unsigned_8) return String;
    --  Convert a Byte to a String hexadecimal output.
 
-   function To_Hex (String_To_Convert : String) return String;
+   function To_Hex (String_In : String) return String;
    -- Convert a String to a String hexadecimal formatted output.
 
    function To_Hex_From_Val (Input : String) return String;
@@ -112,10 +106,16 @@ package v22.Uxs is
    --  Convert a String or String to an Integer.
 
    function To_String (B : Boolean) return String;
+   function To_String (B : On_Off) return String;
    function To_String (I : Integer) return String;
    function To_String (I : Long_Integer) return String;
+   function To_String (I : Long_Long_Integer) return String;
    function To_String (C : ASCII_Character) return String;
-   --  Convert a Boolean, a Integer, a Long Integer or a Char into String type.
+   --  Convert a Boolean, an Integer, a Long Integer or a Char into String type.
+
+   function To_String_Unsigned (I : Integer) return String;
+   --  Convert an Integer into String type removing the sign, i.e
+   --  ' ' space for plus and '-' for minus
 
    function To_Val (String_To_Convert : String) return String;
    -- Convert a String to String ASCII decimal values formatted output.
@@ -137,12 +137,6 @@ package v22.Uxs is
    --    "i") returns "i"
    --    "/i") returns "i"
    --    "//////i/////") returns "i"
-
-   --  function To_Lower (Item : Character) return Character renames ACH.To_Lower;
-   --  --  Convert a Character or a String to lower case.
-   --
-   --  function To_Upper (Item : Character) return Character renames ACH.To_Upper;
-   --  --  Convert a Character or a String to upper case.
 
 ------------------------------------------------------------------------------
 end v22.Uxs;

@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-fls.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -29,15 +32,9 @@ with v22.Tio;
 
 package body v22.Fls is
 
-   --  Private functions
-
    ----------------------------------------------------------------------------
-   procedure Log_Err (Err_Exc : Ada.Exceptions.Exception_Occurrence) is
-   begin
-      Msg.Err ("v22.Fls.Exception: " & From_Latin_1 (Ada.Exceptions.Exception_Information (Err_Exc)));
-   end Log_Err;
-
-   --  Public functions
+   --  API
+   ----------------------------------------------------------------------------
    
    ----------------------------------------------------------------------------
    procedure Backup_File (File_To_Backup : String) is
@@ -68,7 +65,7 @@ package body v22.Fls is
       if (Index (Target_Name, "/") > 0) then
          if not (AD.Exists (To_Latin_1 (Slice (Source_Name, 1, Index (Source_Name, "/", Ada.Strings.Backward))))) then
             Destination_Valid := False;
-            Msg.Err ("v22.Fls.Copy_File > Destination directory does not exist: " & Target_Name);
+             Msg.Error ("v22.Fls.Copy_File > Destination directory does not exist: " & Target_Name);
          end if;
       end if;  
       if Destination_Valid then      
@@ -113,7 +110,7 @@ package body v22.Fls is
             Result := True;
          end if;
       else
-         Msg.Err ("v22.Fls.Delete_Directory_Tree - Attempt to delete a root directory: " & Dir_Tree);
+          Msg.Error ("v22.Fls.Delete_Directory_Tree - Attempt to delete a root directory: " & Dir_Tree);
       end if;   
       return Result;
    exception
@@ -173,7 +170,7 @@ package body v22.Fls is
             Rename (File_Write, File_Name);
          end if;
       else
-         Msg.Err ("v22.Fls.Delete_Lines > Can't find: " & File_Name);
+          Msg.Error ("v22.Fls.Delete_Lines > Can't find: " & File_Name);
       end if;
    end Delete_Lines;
 
@@ -196,17 +193,17 @@ package body v22.Fls is
             --  If Size correct
             if Fls.File_Size (Dlfile) = DlSize then
                Result := True;
-               Msg.Std ("Keep existing and valid file: " & Dlfile);
+               Msg.Info ("Keep existing and valid file: " & Dlfile);
             end if;
          end if;
          if not Result then
-            Msg.Std ("Delete old file: " & Dlfile);
+            Msg.Info ("Delete old file: " & Dlfile);
             Fls.Delete_File (Dlfile);
          end if;
       end if;
       --  Proceed to download if needed
       if not Result then
-         Msg.Std ("Download file: " & Message_Name);
+         Msg.Info ("Download file: " & Message_Name);
          
          -- http1.1 to avoid curl error 'HTTP/2 stream 0 was not closed cleanly'
          Sys.Shell_Execute ("curl --http1.1 --location --output " &
@@ -221,7 +218,7 @@ package body v22.Fls is
             end if;
          end if;
          if not Result then
-            Msg.Err ("v22.Fls.Download_File > Download file failed: " & Message_Name);
+             Msg.Error ("v22.Fls.Download_File > Download file failed: " & Message_Name);
          end if;
       end if;
       return Result;
@@ -290,7 +287,7 @@ package body v22.Fls is
          if (Char_Count (Test_Dir_Tree, Slash) = 2) and
             (Length (Dir_Tree) > 2) then
             Test_Dir_Tree := Slice (Test_Dir_Tree, 2, Length (Test_Dir_Tree) - 1);
-            if not Empty (Field_By_Name (Root_Dirs, Test_Dir_Tree, Slash)) then
+            if not Is_Empty (Field_By_Name (Root_Dirs, Test_Dir_Tree, Slash)) then
                Result := True;
             end if;
          end if;
@@ -359,6 +356,16 @@ package body v22.Fls is
          Log_Err (Error);
          return False;
    end Set_Directory;
+   
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
+   procedure Log_Err (Err_Exc : Ada.Exceptions.Exception_Occurrence) is
+   begin
+       Msg.Error ("v22.Fls.Exception: " & From_Latin_1 (Ada.Exceptions.Exception_Information (Err_Exc)));
+   end Log_Err;
 
 -------------------------------------------------------------------------------
 end v22.Fls;

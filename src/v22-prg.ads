@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-prg.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -78,6 +81,16 @@ package v22.Prg is
    function Path return String;
    --  Program path.
 
+   procedure Set_Handler_Ctrl_C (Switch : On_Off);
+   --  Activate Ctrl-C interrupt handler. If Switch is On, Ctrl-C is activated and,
+   --  when pressed, application is properly finalize. If Switch is Off, Ctrl-C is
+   --  inhibited and application continue.
+
+   function Get_Handler_Ctrl_C return On_Off;
+   --  Get Ctrl-C handling status. If returns On, Ctrl-C is activated and,
+   --  when pressed, application is properly finalize. If returns Off, Ctrl-C is
+   --  inhibited and application continue.
+
    procedure Set_Exit_Status (Code : Natural);
    --  Set errorlevel return code. Each call is cumulative. Four calls with
    --  1, 2, 4 and 8 set 15 ie msb-00001111-lsb. Can be used everywhere in
@@ -90,7 +103,7 @@ package v22.Prg is
    Start_Dir : constant String := From_Latin_1 (Ada.Directories.Current_Directory);
    --  Constant storing current directory at start.
 
-   Start_Time : constant Ada.Calendar.Time := AC.Clock;
+   Start_Time : constant AC.Time := AC.Clock;
    --  Constant storing Time at program start
 
    function Time_Stamp return String;
@@ -104,7 +117,8 @@ private
    Version_Major : Natural := 0;
    Version_Minor : Natural := 0;
 
-   Prg_Exit_Status : Natural := 0;
+   Exit_Status : Natural := 0;
+   Ctrl_C_Status : On_Off := On;
 
 -------------------------------------------------------------------------------
 end v22.Prg;

@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-sql.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -22,10 +25,10 @@
 
 with Ada.Exceptions;
 with Ada.IO_Exceptions;
-
 with Ada.Iterator_Interfaces; -- Vérifier si nécessaire
-
 with Ada.Tags;
+
+with GNAT.SHA512;
 
 with v22.Fls;
 with v22.Msg;
@@ -33,28 +36,9 @@ with v22.Tio;
 
 package body v22.Sql is
 
-   --package AE  renames Ada.Exceptions;
-
-   --  Private subprograms
-
-   ----------------------------------------------------------------------------
-
-   --  Public subprograms
-
-   ----------------------------------------------------------------------------
-   function Brand (DB : in out GSD.Connection'Class) return Database_Brand is
-      --  {GNOGA.SERVER.DATABASE.MYSQL.CONNECTION object}
-      --  {GNOGA.SERVER.DATABASE.SQLITE.CONNECTION object}
-      DB_Brand : String := Field_By_Index (From_Latin_1 (Ada.Tags.External_Tag (DB'Tag)),4,".");
-      Result : Database_Brand := Unknown;
-   begin
-      if DB_Brand = "MYSQL" then
-         Result := MySQL;
-      elsif DB_Brand = "SQLITE" then
-         Result := SQLite;
-      end if;
-      return Result;
-   end Brand;
+   -----------------------------------------------------------------------------
+   --  API
+   -----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
    procedure Close (DB : in out GSD.Connection'Class) is
@@ -71,14 +55,12 @@ package body v22.Sql is
          elsif Databases(C).Brand = SQLite then
             Databases(C).DBS.Disconnect;
          end if;
-         Msg.Std ("Closing " & From_Latin_1 (Databases(C).Brand'Image) & " database: " & Databases(C).Name);
+         Msg.Info ("Closing " & From_Latin_1 (Databases(C).Brand'Image) & " database: " & Databases(C).Name);
       end loop;
    end Close;
 
    ----------------------------------------------------------------------------
-   function Column_Exists (DB : in out GSD.Connection'Class;
-                           Table_Name : String;
-                           Column_Name : String) return Boolean is
+   function Column_Exists (DB : in out GSD.Connection'Class; Table_Name : String; Column_Name : String) return Boolean is
       Fields : Gnoga.Types.Data_Array_Type;
       Result : Boolean := False;
    begin
@@ -91,37 +73,32 @@ package body v22.Sql is
             end if;
          end loop;
       else
-         Msg.Err ("Sql.Column_Exists > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Column_Exists > Table does not exists: " & Table_Name);
       end if;
       return Result;
    end Column_Exists;
 
    ----------------------------------------------------------------------------
-   procedure Delete (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Where_Condition : String) is
+   procedure Delete (DB : in out GSD.Connection'Class; Table_Name : String; Where_Condition : String) is
       Request : String;
    begin
       if Table_Exists (DB, Table_Name) then
          Request := "DELETE FROM " & Table_Name & " WHERE " & Where_Condition;
-         Msg.Dbg ("Delete_From: " & Request);
+         Msg.Debug ("Delete_From: " & Request);
          DB.Execute_Query (Request);
       else
-         Msg.Err ("Sql.Delete > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Delete > Table does not exists: " & Table_Name);
       end if;
    end Delete;
 
    ----------------------------------------------------------------------------
-   function From_Money (DB_Money : Money) return Integer is
+   function From_Money (DB_Money : Money) return Long_Long_Integer is
    begin
-      return Integer (DB_Money * 100);
+      return Long_Long_Integer (DB_Money * 100);
    end From_Money;
 
    ----------------------------------------------------------------------------
-   function Get_Config (DB : in out GSD.Connection'Class;
-                        Parameter : String) return String is
+   function Get_Config (DB : in out GSD.Connection'Class; Parameter : String) return String is
       Result_Statement : String := "";
    begin
       declare
@@ -146,8 +123,29 @@ package body v22.Sql is
    end Get_Config;
 
    ----------------------------------------------------------------------------
+   function Get_Database_Brand (DB : in out GSD.Connection'Class) return Database_Brand is
+      --  {GNOGA.SERVER.DATABASE.MYSQL.CONNECTION object}
+      --  {GNOGA.SERVER.DATABASE.SQLITE.CONNECTION object}
+      DB_Brand : String := Field_By_Index (From_Latin_1 (Ada.Tags.External_Tag (DB'Tag)), 4, ".");
+      Result : Database_Brand := Unknown;
+   begin
+      if DB_Brand = "MYSQL" then
+         Result := MySQL;
+      elsif DB_Brand = "SQLITE" then
+         Result := SQLite;
+      end if;
+      return Result;
+   end Get_Database_Brand;
+
+   ----------------------------------------------------------------------------
+   function Get_Database_Main return String is
+   begin
+      return Database_Main;
+   end Get_Database_Main;
+
+   ----------------------------------------------------------------------------
    function Get_Version (DB : in out GSD.Connection'Class) return String is
-      DB_Type : Database_Brand := Brand (DB);
+      DB_Type : Database_Brand := Get_Database_Brand (DB);
       DB_Version : String := "";
    begin
       if DB_Type = MySQL then
@@ -168,18 +166,15 @@ package body v22.Sql is
    end Get_Version;
 
    ----------------------------------------------------------------------------
-   function Index_Exists (DB : in out GSD.Connection'Class;
-                          Table_Name : String;
-                          Index_Name : String) return Boolean is
-      DB_Type : Database_Brand := Brand (DB);
+   function Index_Exists (DB : in out GSD.Connection'Class; Table_Name : String; Index_Name : String) return Boolean is
+      DB_Type : Database_Brand := Get_Database_Brand (DB);
       Result : Boolean;
    begin
       if Table_Exists (DB, Table_Name) then
          if DB_Type = MySQL then
-            Result := (DB.Execute_Update ("SHOW INDEX FROM " & Table_Name &
-                              " WHERE Key_name = '" & Index_Name & "'") = 1);
+            Result := (DB.Execute_Update ("SHOW INDEX FROM " & Table_Name & " WHERE Key_name = '" & Index_Name & "'") = 1);
          elsif DB_Type = SQLite then
-            -- When SQLite API fixed, replace by:
+            -- When SQLite API fixed, replace the following lines by:
             -- Result := (DB.Execute_Update ("SELECT * FROM sqlite_master WHERE type = 'index'" &
             -- " and tbl_name = '" & Table_Name  & "' and name = '" & Index_Name & "'") = 1);
             declare
@@ -191,16 +186,13 @@ package body v22.Sql is
             end;
          end if;
       else
-         Msg.Err ("Sql.Index_Exists > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Index_Exists > Table does not exists: " & Table_Name);
       end if;
       return Result;
    end Index_Exists;
 
    ----------------------------------------------------------------------------
-   procedure Insert (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Columns_Values : String) is
+   procedure Insert (DB : in out GSD.Connection'Class; Table_Name : String; Columns_Values : String) is
       Description_List : GSD.Field_Description_Array_Type;
       Description : GSD.Field_Description;
       Current_Column, Current_Value, Current_Type, Insert_Columns_Names,
@@ -209,46 +201,55 @@ package body v22.Sql is
    begin
       if Table_Exists (DB, Table_Name) then
          Description_List := DB.Field_Descriptions (Table_Name);
-         --  Msg.Dbg ("Counter_Columns: " & To_String (Natural (Description_List.Last_Index)));
+         --  Msg.Debug ("Counter_Columns: " & To_String (Natural (Description_List.Last_Index)));
          --  Check each field in parameter against the current table's column
          for Index in 1 .. Counter_Columns loop
             --  Iterate through each column
             for I in Description_List.First_Index .. Description_List.Last_Index loop
                Description := Description_List.Element (I);
                Current_Column := Field_By_Index (Field_By_Index (Columns_Values, Index, CD), 1, ND);
-               --  Msg.Std (I);
-               --  Msg.Std (Description_List.Last_Index);
-               --  Msg.Dbg ("Current_Columns_Values: " & Current_Column);
-               --  Msg.Dbg ("Current_Column_Database: " & To_Upper (Description.Column_Name));
+               --  Msg.Debug (I);
+               --  Msg.Debug (Description_List.Last_Index);
+               --  Msg.Debug ("Current_Column (PRG name): " & To_Upper (Current_Column));
+               --  Msg.Debug ("Current_Column (DB name): " & To_Upper (Description.Column_Name));
                --  If field name and column name match
                if To_Upper (Current_Column) = To_Upper (Description.Column_Name) then
                   --  Fill Name and Value, according to field type
                   Current_Value := Field_By_Index (Field_By_Index (Columns_Values, Index, CD), 2, ND);
                   Current_Type := To_Upper (Slice (Description.Data_Type, 1, 3));
                   Insert_Columns_Names := Insert_Columns_Names & Current_Column & ",";
-                  --  Msg.Dbg  ("Field Type: " & Current_Type);
+                  --  Msg.Debug ("Current_Value: " & Current_Value);
+                  --  Msg.Debug ("Current_Type: " & Current_Type);
+                  --  Msg.Debug ("Insert_Columns_Names: " & Insert_Columns_Names);
                   --  Apply, depending of the column type
-                  if Current_Type = "INT" then -- MySQL INT but SQLite INTEGER
+                  if Current_Type = "BIG" then --  BIGINT
                      Insert_Columns_Values := Insert_Columns_Values & Current_Value & ",";
-                  elsif Current_Type = "TEX" then
+                  elsif Current_Type = "BLO" then --  BLOB
                      --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
-                     Insert_Columns_Values := Insert_Columns_Values & "'" & Replace_Pattern (Current_Value, "'", "''") & "',";
-                  elsif Current_Type = "BLO" then
+                     Insert_Columns_Values := Insert_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
+                  elsif Current_Type = "FLO" then --  FLOAT
+                     Insert_Columns_Values := Insert_Columns_Values & Current_Value & ",";
+                  elsif Current_Type = "INT" then --  MySQL INT but SQLite INTEGER
+                     Insert_Columns_Values := Insert_Columns_Values & Current_Value & ",";
+                  elsif Current_Type = "TEX" then --  TEXT
                      --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
-                     Insert_Columns_Values := Insert_Columns_Values & "'" & Replace_Pattern (Current_Value, "'", "''") & "',";
+                     Insert_Columns_Values := Insert_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
+                  elsif Current_Type = "VAR" then --  VARCHAR(255)
+                     --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
+                     Insert_Columns_Values := Insert_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
                   else
-                     Msg.Err ("Sql.Insert > Field: " & Current_Column & " does not handle Type: " & Current_Type);
+                      Msg.Error ("Sql.Insert > Field: " & Current_Column & " does not handle Type: " & Current_Type);
                   end if;
                   exit; --  No need to iterate further after match
                else
-                  if I = Description_List.Last_Index then
-                     Msg.Err ("Sql.Insert > Field: " & Current_Column & " does not exists in Table: " & Table_Name);
+                  if I = Description_List.Last_Index and not Is_Empty (Current_Column) then
+                      Msg.Error ("Sql.Insert > Field: " & Current_Column & " does not exists in Table: " & Table_Name);
                   end if;
                end if;
             end loop;
          end loop;
-         --  Msg.Dbg ("Insert_Columns_Names: " & Insert_Columns_Names);
-         --  Msg.Dbg ("Insert_Columns_Values: " & Insert_Columns_Values);
+         --  Msg.Debug ("Insert_Columns_Names: " & Insert_Columns_Names);
+         --  Msg.Debug ("Insert_Columns_Values: " & Insert_Columns_Values);
          --  If at least one Field/Value pair has been processed
          if (Index (Insert_Columns_Names, ",") > 0) and
             (Index (Insert_Columns_Values, ",") > 0) then
@@ -257,19 +258,18 @@ package body v22.Sql is
             Insert_Columns_Values := Slice (Insert_Columns_Values, 1, Length (Insert_Columns_Values) - 1);
 
             Sql_Request := "INSERT INTO " & Table_Name & " (" & Insert_Columns_Names & ") VALUES (" & Insert_Columns_Values & ");";
-            --  Msg.Dbg ("Insert_Into: " & Sql_Request);
+            --  Msg.Debug ("Insert_Into: " & Sql_Request);
             DB.Execute_Query (Sql_Request);
          end if;
       else
-         Msg.Err ("Sql.Insert > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Insert > Table does not exists: " & Table_Name);
       end if;
    end Insert;
 
    ----------------------------------------------------------------------------
    function Last_RowID (DB : in out GSD.Connection'Class;
                         Table_Name : String) return Integer is
-      DB_Type : Database_Brand := Brand (DB);
+      DB_Type : Database_Brand := Get_Database_Brand (DB);
       Result : Natural := 0;
    begin
       if Table_Exists (DB, Table_Name) then
@@ -286,8 +286,7 @@ package body v22.Sql is
             end;
          end if;
       else
-         Msg.Err ("Sql.Last_RowID > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Last_RowID > Table does not exists: " & Table_Name);
       end if;
       return Result;
    end Last_RowID;
@@ -298,7 +297,7 @@ package body v22.Sql is
       DB_Index : Databases_List.Extended_Index := Databases_List.No_Index;
    begin
       for C in Databases.Iterate loop
-         --Msg.Dbg ("Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (To_Index (C))));
+         --  Msg.Debug ("Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (To_Index (C))));
          if  Databases(C).Name = DB_Name then
               DB_Index := Databases_List.Extended_Index (To_Index (C));
             exit;
@@ -309,8 +308,9 @@ package body v22.Sql is
 
    ----------------------------------------------------------------------------
    function Open (DBM : in out GSD.MySQL.Connection;
-                   URI : String := "";
-                   Version : String := "") return Database_Status is
+                  URI : String := "";
+                  Version : String := "";
+                  Rank : Database_Rank := Main) return Database_Status is
       DB_Brand : Database_Brand := MySQL;
       DB_Status : Database_Status := None;
       DB_URI : String := URI;
@@ -318,10 +318,9 @@ package body v22.Sql is
       DB_Port : Natural := 0;
       DB_URI_Parameter, DB_URI_Parameter_Name : String := "";
    begin
-      --  MySQL:  db:db_name?host=192.168.0.243&port=3306&user=user_name&password=user_password
-      --  db_name
+      --  MySQL: db:db_name?host=host_name&port=port_number&user=user_name&password=user_password
+      --  This parameters string conforms to RFC 3986
       DB_Name := Field_By_Index (Field_By_Index (DB_URI, 2, ":"), 1, "?");
-      --  host=192.168.0.243&port=3306&user=user_name&password=user_password
       DB_Temp := Field_By_Index (DB_URI, 2, "?");
       if Field_Count (DB_Temp, "&") >= 1 then
          --  Default port for MySQL
@@ -350,20 +349,21 @@ package body v22.Sql is
          exception
             when Error : GSD.Connection_Error =>
                DB_Status := Open_Failed;
-               Msg.Err ("v22.Sql.Open > MySQL database " & DB_Name & " failed" &
-                        (if Empty (DBM.Error_Message) then From_ASCII ("") else From_ASCII (" > ") & DBM.Error_Message));
+                Msg.Error ("v22.Sql.Open > MySQL database " & DB_Name & " failed" &
+                        (if Is_Empty (DBM.Error_Message) then From_ASCII ("") else From_ASCII (" > ") & DBM.Error_Message));
          end;
       end if;
       if (DB_Status = Open_Success) then
-         Open_Load (DBM, SQLite, DB_Status, DB_URI, DB_Name, DB_Host, DB_Port, DB_User, DB_Password, DB_File, Version);
+         Open_Load (DBM, MySQL, DB_Status, DB_URI, DB_Name, DB_Host, DB_Port, DB_User, DB_Password, DB_File, Version, Rank);
       end if;
       return DB_Status;
    end Open;
 
    ----------------------------------------------------------------------------
    function Open (DBS : in out GSD.SQLite.Connection;
-                   URI : String := "";
-                   Version : String := "") return Database_Status is
+                  URI : String := "";
+                  Version : String := "";
+                  Rank : Database_Rank := Main) return Database_Status is
       DB_Brand : Database_Brand := SQLite;
       DB_Status : Database_Status := None;
       DB_URI : String := URI;
@@ -371,7 +371,7 @@ package body v22.Sql is
       DB_Port : Natural := 0;
    begin
       -- SQLite: file:data.db or file:data.db?mode=ro&cache=private
-      -- SQLite has been set in RFC 3986 URI mode, almost nothing to do
+      -- SQLite has been set in RFC 3986 URI mode (see sqlite.c)
       DB_Temp := Field_By_Index (DB_URI, 2, ":");
       DB_File := Field_By_Index (DB_Temp, 1, "?");
       DB_Name := Field_By_Index (Tail_After_Match (DB_File, "/"), 1, ".");
@@ -382,8 +382,8 @@ package body v22.Sql is
       exception
          when Error : GSD.Connection_Error =>
             DB_Status := Open_Failed;
-            Msg.Err ("v22.Sql.Open > SQlite Database " & DB_Name & " failed" &
-                     (if Empty (DBS.Error_Message) then From_ASCII(" ") else From_ASCII(" > ") & DBS.Error_Message));
+             Msg.Error ("v22.Sql.Open > SQlite Database " & DB_Name & " failed" &
+                     (if Is_Empty (DBS.Error_Message) then From_ASCII(" ") else From_ASCII(" > ") & DBS.Error_Message));
       end;
       if (DB_Status = Open_Success) then
          Open_Load (DBS, SQLite, DB_Status, DB_URI, DB_Name, DB_Host, DB_Port, DB_User, DB_Password, DB_File, Version);
@@ -402,11 +402,10 @@ package body v22.Sql is
                         DB_User : String;
                         DB_Password : String;
                         DB_File : String;
-                        DB_Version : String) is
+                        DB_Version : String;
+                        Rank : Database_Rank := Main) is
       Get_Schema_Version : String;
       DB_Schema_Version : Natural;
-      --DB_DBC : GSD.Connection;
-      --DB_DBU : GSD.Connection_Access'Class;
       DB_DBS : GSD.SQLite.Connection;
       DB_DBM : GSD.MySQL.Connection;
       DB_Major : constant Natural := To_Integer (Field_By_Index (DB_Version,1,"."));
@@ -421,15 +420,15 @@ package body v22.Sql is
       elsif DB_Brand = SQLite then
          DB_DBS := GSD.SQLite.Connection (DB);
          Schema_Load (Database_Pragma,"journal_mode","WAL");
-         -- sqlite doc : As of SQLite version 3.6.19, the default setting for foreign key enforcement is OFF.
+         --  SQLite doc: As of SQLite version 3.6.19, the default setting for foreign key enforcement is OFF.
          Schema_Load (Database_Pragma,"foreign_keys","ON");
-         -- Open DB and eventually apply pragmas
+         --  Open DB and eventually apply pragmas
          for I of Schema loop
             if I.Command = Database_Name then
                --  Do nothing
                null;
             elsif I.Command = Database_Pragma then
-               Msg.Dbg ("Load Database_Pragma: " & I.Name & "=" & I.Attribute);
+               Msg.Debug ("Load Database_Pragma: " & I.Name & "=" & I.Attribute);
                DB.Execute_Query ("PRAGMA " & I.Name & "=" & I.Attribute);
             else
                exit;
@@ -437,32 +436,61 @@ package body v22.Sql is
          end loop;
       end if;
 
-      -- Preload Sys_Config table definition
-      Schema_Load (Table_Name, Table_Sys_Config);
-      Schema_Load (Column_Name, "Parameter", "TEXT");
-      Schema_Load (Column_Constraint, "Parameter", "UNIQUE");
-      Schema_Load (Table_Constraint, "Parameter", "PRIMARY KEY");
-      Schema_Load (Column_Name, "Value", "TEXT");
-      Schema_Load (Index_Name, "Idx_Config_Parameter","Parameter");
+      --  System tables creation only for main database
+      if Rank = Main then
+         -- Preload Sys_Config table definition
+         Schema_Load (Table_Name, Table_Sys_Config, Comment => "System config table");
+         Schema_Load (Column_Name, "Parameter", "VARCHAR(40)");
+         Schema_Load (Column_Constraint, "Parameter", "UNIQUE");
+         Schema_Load (Table_Constraint, "Parameter", "PRIMARY KEY");
+         Schema_Load (Column_Name, "Value", "TEXT");
+         Schema_Load (Index_Name, "Idx_Config_Parameter","Parameter");
 
-      -- Preload Sys_Schema table definition
-      Schema_Load (Table_Name, Table_Sys_Schema);
-      Schema_Load (Column_Name, "Table_Name", "TEXT");
-      Schema_Load (Column_Name, "Column_Name", "TEXT");
-      Schema_Load (Column_Name, "Column_Type", "TEXT");
-      Schema_Load (Column_Name, "Column_Constraint", "TEXT");
-      Schema_Load (Column_Name, "Version", "TEXT");
-      Schema_Load (Column_Name, "Comment", "TEXT");
+         -- Preload Sys_Schema table definition
+         Schema_Load (Table_Name, Table_Sys_Schema, Comment => "System schema table");
+         Schema_Load (Column_Name, "Table_Name", "VARCHAR(40)");
+         Schema_Load (Column_Name, "Column_Name", "VARCHAR(40)");
+         Schema_Load (Column_Name, "Column_Type", "TEXT");
+         Schema_Load (Column_Name, "Column_Constraint", "TEXT");
+         Schema_Load (Column_Name, "Version", "TEXT");
+         Schema_Load (Column_Name, "Comment", "TEXT");
+         Schema_Load (Index_Name, "Idx_Schema_Table_Name","Table_Name,Column_Name");
 
-      -- Load if exists current database schema version else Database_Version=0
+         --  Preload Sys_User table definition
+         Sql.Schema_Load (Sql.Table_Name, Table_Sys_Users, Comment => "System user table");
+         Sql.Schema_Load (Sql.Column_Name, "Login", "VARCHAR(40)", "User login");
+         Schema_Load (Column_Constraint, "Login", "UNIQUE");
+         Schema_Load (Table_Constraint, "Login", "PRIMARY KEY");
+         Sql.Schema_Load (Sql.Column_Name, "First_Name", "TEXT", "User surname");
+         Sql.Schema_Load (Sql.Column_Name, "Last_Name", "TEXT", "User name");
+         Sql.Schema_Load (Sql.Column_Name, "Phone", "TEXT", "User phone");
+         Sql.Schema_Load (Sql.Column_Name, "Email", "TEXT", "User email");
+         Sql.Schema_Load (Sql.Column_Name, "Password", "TEXT", "User hasched password");
+         Sql.Schema_Load (Sql.Column_Name, "Grants", "TEXT", "Admin:(A)ccess(C)reate(U)date(D)elete(P)rint(E)xport...Module_N");
+         Sql.Schema_Load (Sql.Column_Name, "Properties", "TEXT", "Property_1:Value,Property_2:value...Property_N");
+         Sql.Schema_Load (Sql.Column_Name, "Language", "TEXT", "Language from country code ISO 3166-1 alpha-2");
+         Sql.Schema_Load (Sql.Column_Name, "Time_Zone", "TEXT", "Time zone TZ Database compliant see Wikipedia page");
+         Sql.Schema_Load (Sql.Column_Name, "Theme", "TEXT", "Theme name");
+         Sql.Schema_Load (Sql.Column_Name, "Notes", "TEXT", "Notes");
+         Sql.Schema_Load (Sql.Column_Name, "Created_On", "VARCHAR(15)", "User creation datetime stamp");
+         Sql.Schema_Load (Sql.Column_Name, "Updated_On", "VARCHAR(15)", "User update datetime stamp");
+         Sql.Schema_Load (Sql.Column_Name, "Connection_Timeout", "INTEGER", "Timeout delay in seconds");
+         Sql.Schema_Load (Sql.Column_Name, "Connection_Total", "INTEGER", "Duration of cumulated connections");
+         Sql.Schema_Load (Sql.Column_Name, "Connection_Counter", "INTEGER", "Total number of connections");
+         Sql.Schema_Load (Sql.Column_Name, "Connection_Info",
+                          "INTEGER", "Current or last connection information (Datetime, IP, Browser, Duration");
+         Sql.Schema_Load (Sql.Index_Name, "Idx_User_Login", "Login");
+         Sql.Schema_Load (Sql.Index_Constraint, "Idx_User_Login", "UNIQUE");
+      end if;
+
+      --  Load if exists current database schema version else Database_Version=0
       Get_Schema_Version := Get_Config (DB, "Schema_Version");
       DB_Schema_Version := (To_Integer (Field_By_Index (Get_Schema_Version, 1, ".")) * 10) +
                             To_Integer (Field_By_Index (Get_Schema_Version, 2, "."));
-      -- False if DB_Schema_Version is >= Schema_Version => no need updating
+      --  False if DB_Schema_Version is >= Schema_Version => no need updating
       if (DB_Schema_Version < Schema_Version) then
          DB_Status := Open_Need_Update;
       end if;
-
       --  Database_Line'(record) mandatory with GCC 11,
       --  See http://www.ada-auth.org/cgi-bin/cvsweb.cgi/ai12s/ai12-0400-1.txt?rev=1.3
       Databases.Append (Database_Line'(Brand => DB_Brand,
@@ -474,37 +502,49 @@ package body v22.Sql is
                                        User => DB_User,
                                        Password => DB_Password,
                                        File => DB_File,
-                                       -- Store DB_Version for later writing of
-                                       -- this current version in Schema_Update,
-                                       -- which must be done at the very end of
-                                       -- the update process to ensure the
-                                       -- completion of the update
+                                       --  Store DB_Version for later writing in Schema_Update,
+                                       --  which must be done at the very end of the update
+                                       --  process to ensure update completion
                                        Version => DB_Version,
                                        DBS => DB_DBS,
                                        DBM => DB_DBM
                                        ));
-      --  Msg.Std (40 * "-");
+      --  Msg.Info (40 * "-");
       --  -- Index
       --  DB_Index : Databases_List.Extended_Index;
       --  DB_Index := Databases.Last_Index;
-      --  Msg.Dbg ("DB_Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (DB_Index)));
-      --  Msg.Dbg ("URI:      " & Databases(DB_Index).URI);
+      --  Msg.Debug ("DB_Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (DB_Index)));
+      --  Msg.Debug ("URI:      " & Databases(DB_Index).URI);
       --  -- Last_Element
-      --  Msg.Dbg ("URI:      " & Databases.Last_Element.URI);
-      --  Msg.Dbg ("DBM:      " & From_Latin_1 (Databases.Last_Element.DBM'Image));
-      --  Msg.Dbg ("DBS:      " & From_Latin_1 (Databases.Last_Element.DBS'Image));
-      --  Msg.Dbg ("URI:      " & Databases.Last_Element.URI);
-      --  Msg.Dbg ("Name:     " & Databases.Last_Element.Name);
-      --  Msg.Dbg ("Host:     " & Databases.Last_Element.Host);
-      --  Msg.Dbg ("Port:     " & To_String (Databases.Last_Element.Port));
-      --  Msg.Dbg ("User:     " & Databases.Last_Element.User);
-      --  Msg.Dbg ("Password: " & Databases.Last_Element.Password);
-      --  Msg.Dbg ("File:     " & Databases.Last_Element.File);
-      --  Msg.Dbg ("Major:    " & To_String (Databases.Last_Element.Major));
-      --  Msg.Dbg ("Minor:    " & To_String (Databases.Last_Element.Minor));
-      --  Msg.Std (40 * "-");
+      --  Msg.Debug ("URI:      " & Databases.Last_Element.URI);
+      --  Msg.Debug ("DBM:      " & From_Latin_1 (Databases.Last_Element.DBM'Image));
+      --  Msg.Debug ("DBS:      " & From_Latin_1 (Databases.Last_Element.DBS'Image));
+      --  Msg.Debug ("URI:      " & Databases.Last_Element.URI);
+      --  Msg.Debug ("Name:     " & Databases.Last_Element.Name);
+      --  Msg.Debug ("Host:     " & Databases.Last_Element.Host);
+      --  Msg.Debug ("Port:     " & To_String (Databases.Last_Element.Port));
+      --  Msg.Debug ("User:     " & Databases.Last_Element.User);
+      --  Msg.Debug ("Password: " & Databases.Last_Element.Password);
+      --  Msg.Debug ("File:     " & Databases.Last_Element.File);
+      --  Msg.Debug ("Major:    " & To_String (Databases.Last_Element.Major));
+      --  Msg.Debug ("Minor:    " & To_String (Databases.Last_Element.Minor));
+      --  Msg.Info (40 * "-");
 
    end Open_Load;
+
+   ----------------------------------------------------------------------------
+   procedure Ping is
+   begin
+      for C in Databases.Iterate loop
+         if Databases(C).Brand = MySQL then
+            Databases(C).DBM.Execute_Query ("SELECT 1");
+            Msg.Info ("Ping on " & From_Latin_1 (Databases(C).Brand'Image) & " database: " & Databases(C).Name);
+         elsif Databases(C).Brand = SQLite then
+            --  Not applicable
+            null;
+         end if;
+      end loop;
+   end Ping;
 
    ----------------------------------------------------------------------------
    function Properties (DB_Name : String) return Database_Line is
@@ -513,7 +553,7 @@ package body v22.Sql is
       DB_Record : Database_Line;
    begin
       for C in Databases.Iterate loop
-         --Msg.Dbg ("Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (To_Index (C))));
+         --  Msg.Debug ("Index: " & From_Latin_1 (Databases_List.Extended_Index'Image (To_Index (C))));
          if  Databases(C).Name = DB_Name then
               DB_Record := Databases(C);
             exit;
@@ -523,54 +563,44 @@ package body v22.Sql is
    end Properties;
 
    ----------------------------------------------------------------------------
-   function Read (DB : in out GSD.Connection'Class;
-                  Table_Name : String;
-                  Columns : String;
-                  Condition : String := "") return String is
+   function Read (DB : in out GSD.Connection'Class; Table_Name : String;
+                  Columns : String; Condition : String := "") return String is
       Sql_Request : String := "SELECT " & Columns & " FROM " & Table_Name & " " & Condition;
       RS : GSD.Recordset'Class := DB.Query (Sql_Request);
       Counter_Columns : constant Natural:= Field_Count (Columns, ",");
       Sql_Result : String := "";
    begin
       if Table_Exists (DB, Table_Name) then
-         --  Msg.Dbg ("Sql_Request: " & Sql_Request);
+         --  Msg.Debug ("Sql_Request: " & Sql_Request);
          --  Iterate result(s) line(s)
-         if Sql.Table_Exists (DB, Table_Sys_Config) then
-            --  Column existance test (TBD)
-            if True then
-               while RS.Next loop
-                  --  Iterate choosen columns
-                  for Index in 1..RS.Number_Of_Fields loop
-                     --  Msg.Dbg ("Current_Column_Text: " & Column_Text (Local_Statement, Index));
-                     Sql_Result := Sql_Result & RS.Field_Value (Index) & CD;
-                  end loop;
-                  if (Index (Sql_Result, CD) > 0) then
-                     --  Delete last CD and add row delimiter
-                     Sql_Result := Slice (Sql_Result, 1, Length (Sql_Result) - 1) & RD;
-                  end if;
-               end loop;
+         while RS.Next loop
+            --  Iterate choosen columns
+            for Index in 1..RS.Number_Of_Fields loop
+               --  Msg.Debug ("Current_Column_Text: " & Column_Text (Local_Statement, Index));
+               Sql_Result := Sql_Result & RS.Field_Value (Index) & CD;
+            end loop;
+            --  Delete last CD and add row delimiter
+            if (Index (Sql_Result, CD) > 0) then
+               Sql_Result := Slice (Sql_Result, 1, Length (Sql_Result) - 1) & RD;
             end if;
-         end if;
+         end loop;
          --  Delete last RD
          if Length (Sql_Result) >= 2 then -- to handle one digit answer with a trailing RD = 2 chars
             if Slice (Sql_Result, Length (Sql_Result), Length (Sql_Result)) = RD then
                Sql_Result := Slice (Sql_Result, 1, Length (Sql_Result) - 1);
             end if;
          end if;
-         --  Msg.Dbg ("Read: " & Sql_Result);
+         --  Msg.Debug ("Read: " & Sql_Result);
       else
-         Msg.Err ("Sql.Read > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Read > Table does not exists: " & Table_Name);
       end if;
       RS.Close;
       return Sql_Result;
    end Read;
 
    ----------------------------------------------------------------------------
-   function Row_Count (DB : in out GSD.Connection'Class;
-                       Table_Name : String;
-                       Option : String := "*") return Integer is
-      DB_Type : Database_Brand := Brand (DB);
+   function Row_Count (DB : in out GSD.Connection'Class; Table_Name : String; Option : String := "*") return Integer is
+      DB_Type : Database_Brand := Get_Database_Brand (DB);
       Result : Natural := 0;
    begin
       if Table_Exists (DB, Table_Name) then
@@ -587,8 +617,7 @@ package body v22.Sql is
             Result := DB.Execute_Update ("SELECT COUNT(" & Option & ") FROM " & Table_Name);
          end if;
       else
-         Msg.Err ("Sql.Row_Count > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Row_Count > Table does not exists: " & Table_Name);
       end if;
       return Result;
    end Row_Count;
@@ -606,15 +635,6 @@ package body v22.Sql is
    procedure Schema_Update (DB : in out GSD.Connection'Class) is
 
       DBT : Sql.Database_Line_Type;
-      --  DB_Brand : Database_Brand;
-      --  DB_Status : Database_Status;
-      --  DB_URI : String;
-      --  DB_Name : String;
-      --  DB_Host: String;
-      --  DB_Port : Natural;
-      --  DB_User : String;
-      --  DB_Password : String;
-      --  DB_File : String;
       DB_Version : String;
 
       Current_Table_Name, Current_Table_Constraint, Current_Table_Comment,
@@ -629,9 +649,6 @@ package body v22.Sql is
       --                          Table_Name, Table_Constraint,
       --                          Column_Name, Column_Constraint,
       --                          Index_Name, Constraint);
-      --
-      --  State : Parsing_States := Idle;
-      --  State_Memory :  Parsing_States := Init;
 
       ---------------------------------
       procedure Add_Sys_Schema is
@@ -672,16 +689,16 @@ package body v22.Sql is
       ---------------------------------
       procedure Create_Column is
       begin
-         -- Test if non empty column name to handle table break
-         -- when previous table column already exists
-         if not Empty (Current_Column_Name) then
+         --  Test if non empty column name to handle table break
+         --  when previous table column already exists
+         if not Is_Empty (Current_Column_Name) then
             if Column_Exists (DB, Current_Table_Name, Current_Column_Name) then
-               Msg.Dbg ("Existing Table: " & Current_Table_Name &
+               Msg.Debug ("Existing Table: " & Current_Table_Name &
                           " - Existing Column: " & Current_Column_Name &
                           " " & Current_Column_Type &
                           " " & Current_Column_Constraint);
             else
-               Msg.Std ("Table: " & Current_Table_Name &
+               Msg.Info ("Table: " & Current_Table_Name &
                           " - Create Column: " & Current_Column_Name &
                           " " & Current_Column_Type &
                           " " & Current_Column_Constraint);
@@ -707,16 +724,16 @@ package body v22.Sql is
       ---------------------------------
       procedure Create_Index is
       begin
-         -- Test if non empty column name to handle table break
-         -- when previous table index already exists
-         if not Empty (Current_Index_Name) then
+         --  Test if non empty column name to handle table break
+         --  when previous table index already exists
+         if not Is_Empty (Current_Index_Name) then
             if Index_Exists (DB, Current_Table_Name, Current_Index_Name) then
-               Msg.Dbg ("Existing Table: " & Current_Table_Name &
+               Msg.Debug ("Existing Table: " & Current_Table_Name &
                           " - Existing Index: " & Current_Index_Name &
                           " " & Current_Index_Key &
                           " " & Current_Index_Constraint);
             else
-               Msg.Std ("Table: " & Current_Table_Name &
+               Msg.Info ("Table: " & Current_Table_Name &
                           " - Creating Index: " & Current_Index_Name &
                           " " & Current_Index_Key &
                           " " & Current_Index_Constraint);
@@ -734,13 +751,13 @@ package body v22.Sql is
       procedure Create_Table is
       begin
          if Current_Table_Not_Exists then
-            Msg.Std ("Create Table: " & Current_Table_Name &
+            Msg.Info ("Create Table: " & Current_Table_Name &
                        " - Create Column: " & Current_Column_Name &
                        " " & Current_Column_Type &
                        " " & Current_Column_Constraint &
                        " " & Current_Table_Constraint);
 
-            Msg.Std ("CREATE TABLE " & Current_Table_Name &
+            Msg.Debug ("CREATE TABLE " & Current_Table_Name &
                            " (" & Current_Column_Name &
                            " " & Current_Column_Type &
                            " " & Current_Column_Constraint &
@@ -765,13 +782,13 @@ package body v22.Sql is
 
     begin
 
-      -- Empty Sys_Table for later filling from scratch
+      --  Empty Sys_Table for later filling from scratch
       --  if Table_Exists (DB, "Sys_Schema") then
       --     DB.Execute_Query ("DELETE FROM Sys_Schema;");
       --     DB.Execute_Query ("VACUUM;");
       --  end if;
 
-      --Display Schema list for tests
+      --  Display Schema list for tests
       --  for I of Schema loop
       --     Schema_Command_List.Put (I.Command);
       --     Tio.Put_Line (" - " & I.Name & " - " & I.Attribute);
@@ -779,60 +796,50 @@ package body v22.Sql is
 
       for I of Schema loop
 
-         --Schema_Command_List.Put (I.Command);
-         --Tio.Put_Line (" - " & I.Name & " - " & I.Attribute);
+         --  Schema_Command_List.Put (I.Command);
+         --  Tio.Put_Line (" - " & I.Name & " - " & I.Attribute);
 
          if    I.Command = Null_Command then
-            -- No processing
-            null;
+            null; --  No processing
+
          elsif I.Command = Database_Name then
             DBT := Sql.Properties (I.Name);
-            if DBT.Brand /= None then -- Ie DB name not found
-               Msg.Std ("Database " & I.Name & DBT.Name & DBT.URI & " needs creation or update");
-               --  DB_Brand := DBT.Brand;
-               --  DB_Status := DBT.Status;
-               --  DB_URI := DBT.URI;
-               --  DB_Name := DBT.Name;
-               --  DB_Host:= DBT.Host;
-               --  DB_Port := DBT.Port;
-               --  DB_User := DBT.User;
-               --  DB_Password := DBT.Password;
-               --  DB_File := DBT.File;
+            if DBT.Brand /= None then -- ie DB name not found
+               Msg.Info ("Database " & I.Name & " needs creation or update");
                DB_Version := DBT.Version;
             else
-               Msg.Err ("Sql.Schema_Update > Database not found: " & I.Name);
+                Msg.Error ("Sql.Schema_Update > Database not found: " & I.Name);
             end if;
 
          elsif I.Command = Database_Pragma then
-            -- No processing
-            null;
+            null; --  No processing
 
          elsif I.Command = Table_Name then
-            -- Wait first column reading if table has to be created
+            --  Wait first column reading if table has to be created
             if Columns_Counter = 1 then
                Create_Table;
             end if;
-            -- Process eventually a remaining column
+            --  Process eventually a remaining column
             Create_Column;
-            -- Last table command must have been read to eventually create the last index
+            --  Last table command must have been read to eventually create the last index
             Create_Index;
 
             Current_Table_Name := I.Name;
             Current_Table_Comment := I.Comment;
-            Msg.Dbg ("Load Table_Name: " & Current_Table_Name & " " & Current_Table_Comment);
+            Msg.Debug ("Load Table_Name: " & Current_Table_Name & " " & Current_Table_Comment);
 
             Current_Table_Not_Exists := not Table_Exists (DB, I.Name);
-            Msg.Dbg ("Table_Name exists: " & To_String (not Current_Table_Not_Exists));
+            Msg.Debug ("Table_Name exists: " & To_String (not Current_Table_Not_Exists));
 
             Columns_Counter := 0;
 
          elsif I.Command = Table_Constraint then
 
             Current_Table_Constraint := I.Attribute;
-            Msg.Dbg ("Load Table_Constraint: " & Current_Table_Constraint);
+            Msg.Debug ("Load Table_Constraint: " & Current_Table_Constraint);
 
          elsif I.Command = Column_Name then
-            -- Wait first column reading if table has to be created
+            --  Wait first column reading if table has to be created
             if Columns_Counter = 1 then
                Create_Table;
             else
@@ -842,35 +849,35 @@ package body v22.Sql is
             Current_Column_Name := I.Name;
             Current_Column_Type := I.Attribute;
             Current_Column_Comment := I.Comment;
-            Msg.Dbg ("Load Column_Name: " & Current_Column_Name & " " & Current_Column_Type & " " & Current_Column_Comment) ;
+            Msg.Debug ("Load Column_Name: " & Current_Column_Name & " " & Current_Column_Type & " " & Current_Column_Comment) ;
 
             Columns_Counter := Columns_Counter + 1;
 
          elsif I.Command = Column_Constraint then
 
             Current_Column_Constraint := I.Attribute;
-            Msg.Dbg ("Load Column_Constraint: " & Current_Column_Constraint);
+            Msg.Debug ("Load Column_Constraint: " & Current_Column_Constraint);
 
             Constraint_Counter := Constraint_Counter + 1;
 
          elsif I.Command = Index_Name then
-            -- Previous table command could be a column creation
+            --  Previous table command could be a column creation
             if Columns_Counter >= 2 then
                Create_Column;
             end if;
-            -- Previous table command could be an index creation
+            --  Previous table command could be an index creation
             Create_Index;
 
             Current_Index_Name := I.Name;
             Current_Index_Key := I.Attribute;
-            Msg.Dbg ("Load Index_Name: " & Current_Index_Name & " " & Current_Index_Key);
+            Msg.Debug ("Load Index_Name: " & Current_Index_Name & " " & Current_Index_Key);
 
             Index_Counter := Index_Counter + 1;
 
          elsif I.Command = Index_Constraint then
 
             Current_Index_Constraint := I.Attribute;
-            Msg.Dbg ("Load Index_Constraint: " & Current_Index_Constraint);
+            Msg.Debug ("Load Index_Constraint: " & Current_Index_Constraint);
 
          end if;
 
@@ -883,52 +890,73 @@ package body v22.Sql is
       end if;
       Create_Index;
 
-      -- Clear Schema container for the next possible database processing
+      --  Only main database has Sys_Users table
+      if Table_Exists (DB, Table_Sys_Users) then
+         --  If Sys_Users table has just been created, it still has no record,
+         --  but Sys_Users must have, at least, one admin user registered
+         if Sql.Row_Count (DB, "Sys_Users") = 0 then
+            Msg.Info ("Initialize " & Sql.Get_Database_Main & " newly created");
+            --  Initialize Sys_Users with a default user with administrator rights
+            declare
+               Query : constant String := "Login~admin" & "^" &
+                                          "First_Name~Number" & "^" &
+                                          "Last_Name~Six" & "^" &
+                                          "Password~" & From_Latin_1 (GNAT.SHA512.Digest ("password")) & "^" &
+                                          "Grants~admin:ACUDPE" & "^" &
+                                          "Notes~Default administrator" & "^" &
+                                          "Created_On~" & Prg.Time_Stamp;
+            begin
+               Msg.Debug ("Query: " & Query);
+               Sql.Insert (DB, "Sys_Users", Query);
+            end;
+         end if;
+      end if;
+
+      --  Clear Schema container for the next possible database processing
       Schema.Clear;
 
-      -- Update database schema version
+      --  Update database schema version
       Set_Config (DB, "Schema_Version", DB_Version);
 
    end Schema_Update;
 
    ----------------------------------------------------------------------------
-   function Search (DB : in out GSD.Connection'Class;
-                    Table_Name : String;
-                    Condition : String) return Boolean is
+   function Search (DB : in out GSD.Connection'Class; Table_Name : String; Condition : String) return Boolean is
       Result : Boolean := False;
    begin
       if Table_Exists (DB, Table_Name) then
          declare
-            RS : GSD.Recordset'Class := DB.Query ("SELECT * FROM " & Table_Name &
-                                     " WHERE " & Condition & " LIMIT 1");
+            RS : GSD.Recordset'Class := DB.Query ("SELECT * FROM " & Table_Name & " WHERE " & Condition & " LIMIT 1");
          begin
             Result := RS.Next;
             RS.Close;
          end;
       else
-         Msg.Err ("Sql.Row_Count > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Row_Count > Table does not exists: " & Table_Name);
       end if;
       return Result;
    end Search;
 
    ----------------------------------------------------------------------------
-   procedure Set_Config (DB : in out GSD.Connection'Class;
-                         Parameter : String;
-                         Value : String) is
+   procedure Set_Config (DB : in out GSD.Connection'Class; Parameter : String; Value : String) is
    begin
-      if not Sql.Table_Exists (DB, Table_Sys_Config) then
-         DB.Execute_Query ("CREATE TABLE " & Table_Sys_Config &
-         " (Parameter text DEFAULT NULL, Value text DEFAULT NULL, KEY Idx_Config_Parameter (Parameter (50)))");
-      end if;
-      if Sql.Column_Exists (DB, Table_Sys_Config, "Parameter") and Sql.Column_Exists (DB, Table_Sys_Config, "Value") then
-         DB.Execute_Query ("REPLACE INTO " & Table_Sys_Config & " (Parameter, Value) VALUES ('" & Parameter & "', '" & Value & "')");
+      if Table_Exists (DB, Table_Sys_Config) then
+         if Sql.Column_Exists (DB, Table_Sys_Config, "Parameter") and Sql.Column_Exists (DB, Table_Sys_Config, "Value") then
+            DB.Execute_Query ("REPLACE INTO " & Table_Sys_Config & " (Parameter, Value) VALUES ('" & Parameter & "', '" & Value & "')");
+         end if;
+      else
+          Msg.Error ("Sql.Set_Config > Table does not exists: " & Table_Sys_Config);
       end if;
    end Set_Config;
 
    ----------------------------------------------------------------------------
-   function Table_Exists (DB : in out GSD.Connection'Class;
-                          Table_Name : String) return Boolean is
+   procedure Set_Database_Main (Database_Name : String) is
+   begin
+      Database_Main := Database_Name;
+   end Set_Database_Main;
+
+   ----------------------------------------------------------------------------
+   function Table_Exists (DB : in out GSD.Connection'Class; Table_Name : String) return Boolean is
       Tables : Gnoga.Types.Data_Array_Type;
       Result : Boolean := False;
    begin
@@ -943,16 +971,13 @@ package body v22.Sql is
    end Table_Exists;
 
    ----------------------------------------------------------------------------
-   function To_Money (DB_Integer : Integer) return Money is
+   function To_Money (DB_Integer : Long_Long_Integer) return Money is
    begin
       return Money (DB_Integer) / 100.00;
    end To_Money;
 
    ----------------------------------------------------------------------------
-   procedure Update (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Columns_Values : String;
-                     Where_Condition : String) is
+   procedure Update (DB : in out GSD.Connection'Class; Table_Name : String; Columns_Values : String; Where_Condition : String) is
       Description_List : GSD.Field_Description_Array_Type;
       Description : GSD.Field_Description;
       Current_Column, Current_Value, Update_Columns_Values, Current_Type,
@@ -961,46 +986,56 @@ package body v22.Sql is
    begin
       if Table_Exists (DB, Table_Name) then
          Description_List := DB.Field_Descriptions (Table_Name);
-         -- Msg.Dbg ("Counter_Columns: " & To_String (Natural (Description_List.Last_Index)));
-         -- Check each field in parameter against the current table's column
+         --  Msg.Debug ("Counter_Columns: " & To_String (Natural (Description_List.Last_Index)));
+         --  Check each field in parameter against the current table's column
          for Index in 1 .. Counter_Columns loop
             --  Iterate through each column
             for I in Description_List.First_Index .. Description_List.Last_Index loop
                Description := Description_List.Element (I);
                Current_Column := Field_By_Index (Field_By_Index (Columns_Values, Index, CD), 1, ND);
-               --  Msg.Std (I);
-               --  Msg.Std (Description_List.Last_Index);
-               --  Msg.Dbg ("Current_Column_Insert: " & Current_Column);
-               --  Msg.Dbg ("Current_Column_Table: " & To_Upper (Description.Column_Name));
-               -- If field name and column name match
+               --  Msg.Info (I);
+               --  Msg.Info (Description_List.Last_Index);
+               --  Msg.Debug ("Current_Column (PRG name): " & To_Upper (Current_Column));
+               --  Msg.Debug ("Current_Column (DB name): " & To_Upper (Description.Column_Name));
+               --  If field name and column name match
                if To_Upper (Current_Column) = To_Upper (Description.Column_Name) then
-                  -- Fill Name and Value, according to field type
+                  --  Fill Name and Value, according to field type
                   Current_Value := Field_By_Index (Field_By_Index (Columns_Values, Index, CD), 2, ND);
                   Current_Type := To_Upper (Slice (Description.Data_Type, 1, 3));
                   Update_Columns_Values := Update_Columns_Values & Current_Column & " = ";
-                  --  Msg.Dbg  ("Field Type: " & Current_Type);
+                  --  Msg.Debug ("Current_Value: " & Current_Value);
+                  --  Msg.Debug ("Current_Type: " & Current_Type);
+                  --  Msg.Debug ("Update_Columns_Values: " & Update_Columns_Values);
+                  --  Msg.Debug  ("Field Type: " & Current_Type);
                   --  Apply, depending of type
-                  if Current_Type = "INT" then -- MySQL INT but SQLite INTEGER
+                  if Current_Type = "BIG" then --  BIGINT
                      Update_Columns_Values := Update_Columns_Values & Current_Value & ",";
-                  elsif Current_Type = "TEX" then
-                     -- Single quotes outside string and, inside string, escape single quote with pair of single quotes
-                     Update_Columns_Values := Update_Columns_Values & "'" & Replace_Pattern (Current_Value, "'", "''") & "',";
-                  elsif Current_Type = "BLO" then
-                     -- Single quotes outside string and, inside string, escape single quote with pair of single quotes
-                     Update_Columns_Values := Update_Columns_Values & "'" & Replace_Pattern (Current_Value, "'", "''") & "',";
+                  elsif Current_Type = "BLO" then --  BLOB
+                     --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
+                     Update_Columns_Values := Update_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
+                  elsif Current_Type = "FLO" then --  FLOAT
+                     Update_Columns_Values := Update_Columns_Values & Current_Value & ",";
+                  elsif Current_Type = "INT" then --  MySQL INT but SQLite INTEGER
+                     Update_Columns_Values := Update_Columns_Values & Current_Value & ",";
+                  elsif Current_Type = "TEX" then --  TEXT
+                     --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
+                     Update_Columns_Values := Update_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
+                  elsif Current_Type = "VAR" then --  VARCHAR(255)
+                     --  Single quotes outside string and, inside string, escape single quote with pair of single quotes
+                     Update_Columns_Values := Update_Columns_Values & "'" & Replace (Current_Value, "'", "''") & "',";
                   else
-                     Msg.Err ("Sql.Insert > Field: " & Current_Column & " does not handle Type: " & Current_Type);
+                      Msg.Error ("Sql.Insert > Field: " & Current_Column & " does not handle Type: " & Current_Type);
                   end if;
-                  exit; -- No need to iterate further after match
+                  exit; --  No need to iterate further after match
                else
                   if I = Description_List.Last_Index then
-                     Msg.Err ("Sql.Insert > Field: " & Current_Column & " does not exists in Table: " & Table_Name);
+                      Msg.Error ("Sql.Insert > Field: " & Current_Column & " does not exists in Table: " & Table_Name);
                   end if;
                end if;
             end loop;
          end loop;
-         -- Msg.Dbg ("Update_Columns_Values: " & Update_Columns_Values);
-         -- If at least one Field/Value pair has been processed
+         --  Msg.Debug ("Update_Columns_Values: " & Update_Columns_Values);
+         --  If at least one Field/Value pair has been processed
          if (Index (Update_Columns_Values, ",") > 0) then
             -- Trailing comma deletion
             Update_Columns_Values := Slice (Update_Columns_Values, 1, Length (Update_Columns_Values) - 1);
@@ -1008,8 +1043,7 @@ package body v22.Sql is
             DB.Execute_Query (Sql_Request);
          end if;
       else
-         Msg.Err ("Sql.Insert > Table does not exists: " & Table_Name);
-         --raise Table_Dont_Exists with To_Latin_1 (Table_Name);
+          Msg.Error ("Sql.Insert > Table does not exists: " & Table_Name);
       end if;
    end Update;
 
@@ -1158,6 +1192,10 @@ package body v22.Sql is
 --        return Error_String;
 --
 --     end Error_Display;
+
+   -----------------------------------------------------------------------------
+   --  Private
+   -----------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 end v22.Sql;

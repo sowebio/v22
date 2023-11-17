@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-crl.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -126,7 +129,7 @@ package v22.Crl is
       Data : chars_ptr;
       Next : Curl_Slist_P;
    end record;
-   pragma Convention(C,Curl_Slist);
+   pragma Convention (C, Curl_Slist);
 
    type Curl_Httppost;
    type Curl_Httppost_P is access all Curl_Httppost;
@@ -145,7 +148,7 @@ package v22.Crl is
       Flags          : long;
       Showfilename   : chars_ptr;
    end record;
-   pragma Convention(C,Curl_Httppost);
+   pragma Convention (C, Curl_Httppost);
 
    CURL_MAX_WRITE_SIZE : constant := 16384;
 
@@ -204,7 +207,7 @@ package v22.Crl is
                           CURLINFO_SSL_DATA_IN,
                           CURLINFO_SSL_DATA_OUT,
                           CURLINFO_END);
-   pragma Convention(C,Curl_Infotype);
+   pragma Convention (C,Curl_Infotype);
 
    type Curl_Debug_Callback is access function (Handle : CURL_P;
                                                 Ctype  : Curl_Infotype;
@@ -282,9 +285,9 @@ package v22.Crl is
                      CURLE_SSL_ENGINE_INITFAILED,
                      CURLE_LOGIN_DENIED,
                      CURL_LAST);
-   pragma Convention(C,Curlcode);
+   pragma Convention (C, Curlcode);
 
-   type Curl_Ssl_Ctx_Callback is access function (C       : CURL_P;
+   type Curl_Ssl_Ctx_Callback is access function (C : CURL_P;
                                                   Ssl_Ctx : System.Address;
                                                   Userptr : System.Address) return Curlcode;
    --
@@ -296,8 +299,7 @@ package v22.Crl is
    for Curl_Proxytype use (CURLPROXY_HTTP => 0,
                            CURLPROXY_SOCKS4 => 4,
                            CURLPROXY_SOCKS5 => 5);
-   pragma Convention(C,Curl_Proxytype);
-
+   pragma Convention (C, Curl_Proxytype);
 
    CURLAUTH_NONE         : constant := 0;
    CURLAUTH_BASIC        : constant := 1;
@@ -314,13 +316,13 @@ package v22.Crl is
                         CURLFTPSSL_CONTROL,
                         CURLFTPSSL_ALL,
                         CURLFTPSSL_LAST);
-   pragma Convention(C,Curl_Ftpssl);
+   pragma Convention (C, Curl_Ftpssl);
 
    type  Curl_Ftpauth is (CURLFTPAUTH_DEFAULT,
                           CURLFTPAUTH_SSL,
                           CURLFTPAUTH_TLS,
                           CURLFTPAUTH_LAST);
-   pragma Convention(C,Curl_Ftpauth);
+   pragma Convention (C, Curl_Ftpauth);
 
    CURLOPTTYPE_LONG          : constant := 0;
    CURLOPTTYPE_OBJECTPOINT   : constant := 10000;
@@ -573,7 +575,7 @@ package v22.Crl is
                        CURLOPT_POSTFIELDSIZE_LARGE => (CURLOPTTYPE_OFF_T + 120),
                        CURLOPT_LASTENTRY => (CURLOPTTYPE_OFF_T + 121)
                        );
-   pragma Convention(C,Curloption);
+   pragma Convention (C, Curloption);
 
    CURL_IPRESOLVE_WHATEVER : constant := 0;
    CURL_IPRESOLVE_V4       : constant := 1;
@@ -587,27 +589,27 @@ package v22.Crl is
                               CURL_HTTP_VERSION_1_0,
                               CURL_HTTP_VERSION_1_1,
                               CURL_HTTP_VERSION_LAST);
-   pragma Convention(C,Curl_Http_Version);
+   pragma Convention (C, Curl_Http_Version);
 
    type Curl_Netrc_Option is (CURL_NETRC_IGNORED,
                               CURL_NETRC_OPTIONAL,
                               CURL_NETRC_REQUIRED,
                               CURL_NETRC_LAST);
-   pragma Convention(C,Curl_Netrc_Option);
+   pragma Convention (C, Curl_Netrc_Option);
 
    type Curl_Ssl_Version is (CURL_SSLVERSION_DEFAULT,
                              CURL_SSLVERSION_TLSv1,
                              CURL_SSLVERSION_SSLv2,
                              CURL_SSLVERSION_SSLv3,
                              CURL_SSLVERSION_LAST);
-   pragma Convention(C,Curl_Ssl_Version);
+   pragma Convention (C, Curl_Ssl_Version);
 
    type Curl_Timecond is (CURL_TIMECOND_NONE,
                           CURL_TIMECOND_IFMODSINCE,
                           CURL_TIMECOND_IFUNMODSINCE,
                           CURL_TIMECOND_LASTMOD,
                           CURL_TIMECOND_LAST);
-   pragma Convention(C,Curl_Timecond);
+   pragma Convention (C, Curl_Timecond);
 
    type Curlformoption is (CURLFORM_NOTHING,
                            CURLFORM_COPYNAME,
@@ -629,7 +631,7 @@ package v22.Crl is
                            CURLFORM_END,
                            CURLFORM_OBSOLETE2,
                            CURLFORM_LASTENTRY);
-   pragma Convention(C,Curlformoption);
+   pragma Convention (C, Curlformoption);
 
    type Curl_Forms is record
       Option : Curlformoption;
@@ -645,7 +647,7 @@ package v22.Crl is
                          CURL_FORMADD_ILLEGAL_ARRAY,
                          CURL_FORMADD_DISABLED,
                          CURL_FORMADD_LAST);
-   pragma Convention(C,Curlformcode);
+   pragma Convention (C, Curlformcode);
    
    function Curl_Formadd (Httppost  : access Curl_Httppost_P;
                           Last_Post : access Curl_Httppost_P;
@@ -704,6 +706,7 @@ package v22.Crl is
    
    function Curl_Version return chars_ptr;
    --
+   
    function Curl_Escape(String : chars_ptr; Length : int) return chars_ptr;
    --
    
@@ -719,11 +722,11 @@ package v22.Crl is
    -- Added sr@20211029 to avoid warnings like below...
    -- 706 subprogram pointer "Curl_Global_Init_Mem.M" should have foreign convention [-gnatwx]
    -- 706 add Convention pragma to declaration of "Adacurl.Curl_Malloc_Callback" at line 146 [-gnatwx]
-   pragma Convention(C,Curl_Malloc_Callback);
-   pragma Convention(C,Curl_Free_Callback);
-   pragma Convention(C,Curl_Realloc_Callback);
-   pragma Convention(C,Curl_Strdup_Callback);
-   pragma Convention(C,Curl_Calloc_Callback);
+   pragma Convention (C, Curl_Malloc_Callback);
+   pragma Convention (C, Curl_Free_Callback);
+   pragma Convention (C, Curl_Realloc_Callback);
+   pragma Convention (C, Curl_Strdup_Callback);
+   pragma Convention (C, Curl_Calloc_Callback);
 
    function Curl_Global_Init_Mem(Flags : long;
                                  M     : Curl_Malloc_Callback;
@@ -881,8 +884,8 @@ package v22.Crl is
    --
    
    -- Added sr@20211029 to avoid warnings
-   pragma Convention(C,Curl_Lock_Function);
-   pragma Convention(C,Curl_Unlock_Function);
+   pragma Convention (C, Curl_Lock_Function);
+   pragma Convention (C, Curl_Unlock_Function);
 
    function Curl_Share_Setopt(H : CURLSH_P; Option : CURLSHoption; D : Curl_Lock_Function) return CURLSHcode;
    --
@@ -912,7 +915,7 @@ package v22.Crl is
       Ares_Num : int;
       Libidn : chars_ptr;
    end record;
-   pragma Convention(C,Curl_Version_Info_Data);
+   pragma Convention (C, Curl_Version_Info_Data);
 
    type Curl_Version_Info_Data_P is access all Curl_Version_Info_Data;
 
@@ -929,13 +932,13 @@ package v22.Crl is
    CURL_VERSION_IDN          : constant := 1024;
    CURL_VERSION_SSPI         : constant := 2048;
 
-   function Curl_Version_Info(A1 : Curlversion) return Curl_Version_Info_Data_P;
+   function Curl_Version_Info (A1 : Curlversion) return Curl_Version_Info_Data_P;
    --
    
-   function Curl_Easy_Strerror(C : Curlcode) return chars_ptr;
+   function Curl_Easy_Strerror (C : Curlcode) return chars_ptr;
    --
    
-   function Curl_Share_Strerror(C : CURLSHcode) return chars_ptr;
+   function Curl_Share_Strerror (C : CURLSHcode) return chars_ptr;
 
    ---------------------------------------------------------------------------
    -- cURL easy low level functions
@@ -957,32 +960,32 @@ package v22.Crl is
    pragma Convention (C, Curl_Progress_Callback);
    pragma Convention (C, Curl_Ssl_Ctx_Callback);
 
-   function Curl_Easy_Setopt(C : CURL_P; Option : Curloption; Datap  : Curl_Readwrite_Callback) return Curlcode;
+   function Curl_Easy_Setopt (C : CURL_P; Option : Curloption; Datap  : Curl_Readwrite_Callback) return Curlcode;
    --function Curl_Easy_Setopt(C : CURL_P; Option : Curloption; Datap  : Curl_Passwd_Callback) return Curlcode;
-   function Curl_Easy_Setopt(C : CURL_P; Option : Curloption; Datap  : Curl_Progress_Callback) return Curlcode;
-   function Curl_Easy_Setopt(C : CURL_P; Option : Curloption; Datap  : Curl_Ssl_Ctx_Callback) return Curlcode;
-   function Curl_Easy_Setopt(C : CURL_P; Option : Curloption; Datap  : File_P) return Curlcode;
+   function Curl_Easy_Setopt (C : CURL_P; Option : Curloption; Datap  : Curl_Progress_Callback) return Curlcode;
+   function Curl_Easy_Setopt (C : CURL_P; Option : Curloption; Datap  : Curl_Ssl_Ctx_Callback) return Curlcode;
+   function Curl_Easy_Setopt (C : CURL_P; Option : Curloption; Datap  : File_P) return Curlcode;
    --
 
-   function Curl_Easy_Perform(C : CURL_P) return Curlcode;
+   function Curl_Easy_Perform  (C : CURL_P) return Curlcode;
    --
    
-   procedure Curl_Easy_Cleanup(C : CURL_P);
+   procedure Curl_Easy_Cleanup (C : CURL_P);
    --
    
-   procedure Curl_Easy_Reset(C : CURL_P);
+   procedure Curl_Easy_Reset (C : CURL_P);
    --
 
-   function Curl_Easy_Getinfo(C : CURL_P; Option : Curlinfo; Datap  : access chars_ptr) return Curlcode;
+   function Curl_Easy_Getinfo (C : CURL_P; Option : Curlinfo; Datap  : access chars_ptr) return Curlcode;
    --
    
-   function Curl_Easy_Getinfo(C : CURL_P; Option : Curlinfo; Datap  : access long) return Curlcode;
+   function Curl_Easy_Getinfo (C : CURL_P; Option : Curlinfo; Datap  : access long) return Curlcode;
    --
    
-   function Curl_Easy_Getinfo(C : CURL_P; Option : Curlinfo; Datap  : access double) return Curlcode;
+   function Curl_Easy_Getinfo (C : CURL_P; Option : Curlinfo; Datap  : access double) return Curlcode;
    --
    
-   function Curl_Easy_Duphandle(C : CURL_P) return CURL_P;
+   function Curl_Easy_Duphandle (C : CURL_P) return CURL_P;
    --
 
    ---------------------------------------------------------------------------
@@ -1007,10 +1010,10 @@ package v22.Crl is
                       CURLM_OUT_OF_MEMORY      => 3,
                       CURLM_INTERNAL_ERROR     => 4,
                       CURLM_LAST               => 5);
-   pragma Convention(C,CURLMcode);
+   pragma Convention (C, CURLMcode);
 
    type CURL_MSG is (CURLMSG_NONE, CURLMSG_DONE, CURLMSG_LAST);
-   pragma Convention(C,CURL_MSG);
+   pragma Convention (C, CURL_MSG);
 
    type Data_Union_Range is new Positive range 1..2;
 
@@ -1022,17 +1025,17 @@ package v22.Crl is
             Result : Curlcode;
       end case;
    end record;
-   pragma Unchecked_Union(Data_Union);
+   pragma Unchecked_Union (Data_Union);
 
    type Curlmsg is record
       Msg         : CURL_MSG;
       Easy_Handle : CURL_P;
       Data        : Data_Union;
    end record;
-   pragma Convention(C,Curlmsg);
+   pragma Convention (C, Curlmsg);
    
    type Curlmsg_P is access all Curlmsg;
-   pragma Convention(C,Curlmsg_P);
+   pragma Convention (C, Curlmsg_P);
 
    function Curl_Multi_Init return CURLM_P;
    --
@@ -1048,7 +1051,7 @@ package v22.Crl is
    type Fd_Set is array (1 .. 32) of int;
    for Fd_Set'Alignment use ALIGNMENT;
    for Fd_Set'Size use 1024;
-   pragma Convention (C,Fd_Set);
+   pragma Convention (C, Fd_Set);
 
    type Fd_Set_P is access all Fd_Set;
    pragma Convention (C, Fd_Set_P);

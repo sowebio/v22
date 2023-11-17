@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-tio.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -30,7 +33,7 @@ with v22.Tio;
 package body v22.Tio is
 
    ----------------------------------------------------------------------------
-   --  Terminal
+   --  API - Terminal
    ----------------------------------------------------------------------------
 
    ----------------------------------------------------------------------------
@@ -52,7 +55,7 @@ package body v22.Tio is
             delay 0.143; -- 0.143 x 7 = 1001 ms ~ 1s
          end loop;
       end loop;
-      Line;
+      New_Line;
    end Animated_Delay;
 
    ----------------------------------------------------------------------------
@@ -85,7 +88,7 @@ package body v22.Tio is
          Tio.Get_Immediate (Answer);
          Result := (Answer = 'c' or Answer = 'C');
       end if;
-      Line;
+      New_Line;
       return Result;
    end Confirm_Twice;
 
@@ -150,16 +153,14 @@ package body v22.Tio is
    end Cursor_Restore;
 
    ----------------------------------------------------------------------------
-   procedure Cursor_On is
+   procedure Set_Cursor (Switch : On_Off) is
    begin
-      ATI.Put (ASCII.ESC & "[?25h");
-   end Cursor_On;
-
-   ----------------------------------------------------------------------------
-   procedure Cursor_Off is
-   begin
-      ATI.Put (ASCII.ESC & "[?25l");
-   end Cursor_Off;
+      if Switch = On then
+         ATI.Put (ASCII.ESC & "[?25h");
+      else
+         ATI.Put (ASCII.ESC & "[?25l");
+      end if;
+   end Set_Cursor;
 
    ----------------------------------------------------------------------------
    function Get_Password return String is
@@ -177,7 +178,7 @@ package body v22.Tio is
             Result := Result & From_ASCII (Current_Char);
          end if;
       end loop;
-      Tio.Line;
+      Tio.New_Line;
       return Result;
    end Get_Password;
 
@@ -192,11 +193,12 @@ package body v22.Tio is
    ----------------------------------------------------------------------------
    procedure Put (B : Boolean) is
    begin
-      if B then
-         Put ("True");
-      else
-         Put ("False");
-      end if;
+      Put (From_Latin_1 ((if (B) then "True" else "False")));
+   end Put;
+
+   procedure Put (B : On_Off) is
+   begin
+      ATI.Put (On_Off'Image (B));
    end Put;
 
    procedure Put (V : String) is
@@ -227,12 +229,18 @@ package body v22.Tio is
    ----------------------------------------------------------------------------
    procedure Put_Line (B : Boolean) is
    begin
-      if B then
-         Put ("True");
-      else
-         Put ("False");
-      end if;
-      Line;
+      Put (From_Latin_1 ((if (B) then "True" else "False")));
+      --  if B then
+      --     Put ("True");
+      --  else
+      --     Put ("False");
+      --  end if;
+      New_Line;
+   end Put_Line;
+
+   procedure Put_Line (B : On_Off) is
+   begin
+      ATI.Put_Line (On_Off'Image (B));
    end Put_Line;
 
    procedure Put_Line (V : String) is
@@ -243,25 +251,25 @@ package body v22.Tio is
    procedure Put_Line (I : Integer) is
    begin
       Put (To_String (I));
-      Line;
+      New_Line;
    end Put_Line;
 
    procedure Put_Line (I : Long_Integer) is
    begin
       Put (To_String (Integer (I)));
-      Line;
+      New_Line;
    end Put_Line;
 
    procedure Put_Line (I : Integer_64) is
    begin
       Put (To_String (Integer (I)));
-      Line;
+      New_Line;
    end Put_Line;
 
    procedure Put_Line (C : Character) is
    begin
       Put (C);
-      Line;
+      New_Line;
    end Put_Line;
 
    procedure Put_Line (M : Money) is
@@ -270,12 +278,30 @@ package body v22.Tio is
    end Put_Line;
 
    ----------------------------------------------------------------------------
-   --  File
+   --  API - Text File
    ----------------------------------------------------------------------------
 
-   procedure Open_Conf (Handle : in out File; Name : String ;
-                       Wipe_Before_Process : Boolean := False ;
-                       Permissions : String := "") is
+   ----------------------------------------------------------------------------
+   procedure Append (Handle : in out File; Name : String) is
+   begin
+      ATI.Open (Handle, ATI.Append_File, To_Latin_1 (Name));
+   end Append;
+
+   ----------------------------------------------------------------------------
+   procedure Create (Handle : in out File; Name : String) is
+   begin
+      ATI.Create (Handle, ATI.Out_File, To_Latin_1 (Name));
+   end Create;
+
+   ----------------------------------------------------------------------------
+   procedure Get_Line (Handle : File; V : out String) is
+   begin
+      V := From_Latin_1 (ATI.Get_Line (Handle));
+   end Get_Line;
+
+   ----------------------------------------------------------------------------
+   procedure Open_Conf (Handle : in out File; Name : String ; Wipe_Before_Process : Boolean := False ;
+                        Permissions : String := "") is
       Dir_File : constant String := Fls.Extract_Directory (Name);
       SE_Result : Integer := 0;
    begin
@@ -294,15 +320,15 @@ package body v22.Tio is
          if Fls.Create_Directory_Tree (Dir_File) then
             Create (Handle, Name);
          else
-            Msg.Err ("v22.Tio.Open_Conf > Can't create directory: " & Dir_File);
+            Msg.Error ("v22.Tio.Open_Conf > Can't create directory: " & Dir_File);
          end if;
       end if;
 
       -- Apply optional permissions
-      if Fls.Exists (Name) and not Empty (Permissions) then
+      if Fls.Exists (Name) and not Is_Empty (Permissions) then
          Sys.Shell_Execute ("chmod 0600 " & Name, SE_Result);
          if SE_Result /= 0 then
-            Msg.Err  ("v22.Tio.Open_Conf > Can't apply permissions to: " & Name);
+            Msg.Error  ("v22.Tio.Open_Conf > Can't apply permissions to: " & Name);
           end if;
       end if;
 
@@ -314,17 +340,6 @@ package body v22.Tio is
       ATI.Open (Handle, ATI.In_File, To_Latin_1 (Name));
    end Open_Read;
 
-   ----------------------------------------------------------------------------
-   procedure Create (Handle : in out File; Name : String) is
-   begin
-      ATI.Create (Handle, ATI.Out_File, To_Latin_1 (Name));
-   end Create;
-
-   ----------------------------------------------------------------------------
-   procedure Append (Handle : in out File; Name : String) is
-   begin
-      ATI.Open (Handle, ATI.Append_File, To_Latin_1 (Name));
-   end Append;
 
    ----------------------------------------------------------------------------
    procedure Put (Handle : File; V : String) is
@@ -336,7 +351,7 @@ package body v22.Tio is
    procedure Put_Line (Handle : File; C : Character) is
    begin
       Put (Handle, C);
-      Line (Handle);
+      New_Line (Handle);
    end Put_Line;
 
    procedure Put_Line (Handle : File; V : String) is
@@ -357,7 +372,7 @@ package body v22.Tio is
          end loop;
          Close (File_Handle);
       else
-         Msg.Err ("v22.Tio.Read_File > File does not exist: " & File_Name);
+         Msg.Error ("v22.Tio.Read_File > File does not exist: " & File_Name);
       end if;
       return Result_Buffer;
    end Read_File;
@@ -379,10 +394,10 @@ package body v22.Tio is
          Create (File_Handle, File_Name);
 
          -- Apply optional permissions
-         if Fls.Exists (File_Name) and not Empty (Permissions) then
+         if Fls.Exists (File_Name) and not Is_Empty (Permissions) then
             Sys.Shell_Execute ("chmod 0600 " & File_Name, SE_Result);
             if SE_Result /= 0 then
-               Msg.Err  ("v22.Tio.Open_Conf > Can't apply permissions to: " & File_Name);
+               Msg.Error  ("v22.Tio.Open_Conf > Can't apply permissions to: " & File_Name);
             end if;
          end if;
 
@@ -406,16 +421,10 @@ package body v22.Tio is
          Close (File_Handle);
 
       else
-         Msg.Err ("v22.Tio.Write_File > Can't create directory: " & Dir_File);
+         Msg.Error ("v22.Tio.Write_File > Can't create directory: " & Dir_File);
       end if;
 
    end Write_File;
-
-   ----------------------------------------------------------------------------
-   procedure Get_Line (Handle : File; V : out String) is
-   begin
-      V := From_Latin_1 (ATI.Get_Line (Handle));
-   end Get_Line;
 
 ------------------------------------------------------------------------------
 end v22.Tio;

@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-gui-footer.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -27,40 +30,34 @@ package body v22.Gui.Footer is
    -----------------------------------------------------------------------------
    --  API
    -----------------------------------------------------------------------------
-   procedure Create
-     (Instance : in out Footer_Type;
-      Parent   : in out View.View_Type)
-   is
-      State_Text_Parent     : constant View.Pointer_To_View_Class := new View.View_Type;
-      Permanent_Text_Parent : constant View.Pointer_To_View_Class := new View.View_Type;
+
+   ----------------------------------------------------------------------------
+   procedure Create (Instance : in out Footer_Type; Parent : in out GGV.View_Type) is
+      Left_Text_Parent : constant GGV.Pointer_To_View_Class := new GGV.View_Type;
+      Right_Text_Parent : constant GGV.Pointer_To_View_Class := new GGV.View_Type;
    begin
-      State_Text_Parent.Dynamic;
-      Permanent_Text_Parent.Dynamic;
+      Left_Text_Parent.Dynamic;
+      Right_Text_Parent.Dynamic;
 
-      Instance.State_Text_Parent := View.View_Access (State_Text_Parent);
-      Instance.State_Text_Parent.Create (Parent);
-      Instance.State_Text_Parent.Class_Name ("state-text-parent");
+      Instance.Left_Text_Parent := GGV.View_Access (Left_Text_Parent);
+      Instance.Left_Text_Parent.Create (Parent);
+      Instance.Left_Text_Parent.Class_Name ("left-text-parent");
 
-      Instance.Permanent_Text_Parent := View.View_Access (Permanent_Text_Parent);
-      Instance.Permanent_Text_Parent.Create (Parent);
-      Instance.Permanent_Text_Parent.Class_Name ("permanent-text-parent");
+      Instance.Right_Text_Parent := GGV.View_Access (Right_Text_Parent);
+      Instance.Right_Text_Parent.Create (Parent);
+      Instance.Right_Text_Parent.Class_Name ("right-text-parent");
    end Create;
 
-   procedure Set_State_Text
-     (Instance : in out Footer_Type;
-      State    :        String := "")
-   is
+   ----------------------------------------------------------------------------
+   procedure Set_Left_Text (Instance : in out Footer_Type; State : String := "") is
    begin
-      Instance.State_Text_Parent.Inner_HTML (State);
-   end Set_State_Text;
+      Instance.Left_Text_Parent.Inner_HTML (State);
+   end Set_Left_Text;
 
-   procedure Set_Permanent_Text
-     (Instance : in out Footer_Type;
-      State    :        String := "")
-   is
+   procedure Set_Right_Text (Instance : in out Footer_Type; State : String := "") is
    begin
-      Instance.Permanent_Text_Parent.Inner_HTML (State);
-   end Set_Permanent_Text;
+      Instance.Right_Text_Parent.Inner_HTML (State);
+   end Set_Right_Text;
 
 -------------------------------------------------------------------------------
 end v22.Gui.Footer;

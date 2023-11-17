@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-gui.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -22,520 +25,222 @@
 --  See git log
 -------------------------------------------------------------------------------
 
+
 with Gnoga.Gui.Base;
+
 with Gnoga.Gui.View;
+with Gnoga.Gui.Window;
+with Gnoga.Server.Database;
+
+with UXStrings; use UXStrings;
+
+with v22.Msg;
+with v22.Prg;
+with v22.Sql; use v22.Sql;
+with v22.Uxs; use v22.Uxs;
 
 package v22.Gui is
 
-   package Base renames Gnoga.Gui.Base;
-   package View renames Gnoga.Gui.View;
+   package GS renames Gnoga.Server;
+   package GGB renames Gnoga.Gui.Base;
+   package GGV renames Gnoga.Gui.View;
+   package GSD renames Gnoga.Server.Database;
 
-   Register_Group_Key : constant String := "Créer un compte";
+   --  -- For type App_Data
+   --  package AC renames Ada.Calendar;
+   --
+   --  package Integer_Dictionary is new Ada.Containers.Hashed_Maps
+   --    (Key_Type => String, Element_Type => Integer, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+   --
+   --  package Dictionary is new Ada.Containers.Hashed_Maps
+   --    (Key_Type => String, Element_Type => String, Hash => UXStrings.Hash, Equivalent_Keys => "=");
+   --
+   --  Header_Dict : Integer_Dictionary.Map;
+   --  -- For type App_Data
+   --
+   --  type App_Data is new Gnoga.Types.Connection_Data_Type with record
+   --     User_Logged_In : Boolean  := False;
+   --     --  Connection login flag
+   --     User_Logged_Since : AC.Time;
+   --     --  Connection time
+   --     Custom_Data : Dictionary.Map;
+   --     --  Connection level free to use dictionnary
+   --
+   --     Window : Gnoga.Gui.Window.Pointer_To_Window_Class;
+   --
+   --     Container : GGV.View_Type;
+   --
+   --     Header_Parent : GGV.View_Type;
+   --     Header_Instance : v22.Gui.Header.Header_Type;
+   --     Header_Dict : Integer_Dictionary.Map;
+   --
+   --     Main_Menu_Parent : GGV.View_Type;
+   --     Main_Menu_Instance : v22.Gui.Main_Menu.Main_Menu_Type;
+   --     Main_Menu_Dict : Integer_Dictionary.Map;
+   --
+   --     Footer_Instance : v22.Gui.Footer.Footer_Type;
+   --     Footer_Parent : GGV.View_Type;
+   --
+   --     Content : GGV.View_Type;
+   --     Content_Header : GGV.View_Type;
+   --     Content_Text : aliased GGV.View_Type;
+   --     Content_HTML : aliased GGV.View_Type;
+   --    end record;
+   --
+   --  type App_Access is access all App_Data;
 
-   -----------------------------------------------------------------------------
-   --  Setup
-   -----------------------------------------------------------------------------
-   procedure Setup
-     (On_User_Connect       : Base.Action_Event;
-      Title                 : String := "";
-      Server_Closed_Content : String := "Server closed.");
-   --  Set connection elements.
-   --  On_User_Connect is called every time a user launches the webpage.
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
 
-   procedure Set_App_Title
-     (Object : in out Base.Base_Type'Class;
-      Title  :        String);
-   --  Set website title (in tab).
+   procedure Clear_Connection_Data (Object : in out GGB.Base_Type'Class);
+   --  Delete user connection datas. Should be used when user disconnects.
+   --  Connection_Data is a free to use dictionary unique to each user.
 
-   procedure Set_App_Icon (Icon_SRC : String);
-   --  Should theorically work but GNOGA refuses to update the icon.
+   procedure Close_Dialog (Object : in out GGB.Base_Type'Class);
+   --  Close current jQuery dialog, removes it from HTML.
 
-   procedure Set_Default_User_Icon (Icon_SRC :  String);
-   --  Set the default user icon which (on click) displays the user menu,
-   --  can be overwritten with Set_User_Icon.
+   procedure Content_Clear (Object : in out GGB.Base_Type'Class);
+   --  Removes any content inside content parent.
 
-   procedure Set_Navigation_Icon (Icon_SRC :  String);
-   --  Set the icon which displays (on click) the navigation menu.
+   procedure Content_Clear_HTML (Object : in out GGB.Base_Type'Class);
+   --  Clear HTML in content parent.
 
-   -----------------------------------------------------------------------------
-   --  User connection-relative data
-   -----------------------------------------------------------------------------
-   procedure Set_Data
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String;
-      Value  :         String);
-   --  Set connection data in a  String -  String dictionary.
-
-   function Get_Data
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String)
-      return  String;
-   --  Get connection data in a  String -  String dictionary.
-
-   procedure Clear_Data (Object : in out Base.Base_Type'Class);
-   --  Clear connection data (could be used when user logouts).
-
-   procedure Set_User_Icon
-     (Object   : in out Base.Base_Type'Class;
-      Icon_SRC :         String);
-   --  Set the user icon which (on click) displays the navigation user menu.
-
-   procedure Set_User_Name
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String);
-   --  Set user name, displayed next to the user icon.
-
-   -----------------------------------------------------------------------------
-   --  Security
-   -----------------------------------------------------------------------------
-   type Register_Function is access function
-     (Object : in out Base.Base_Type'Class;
-      Email  :         String)
-      return Boolean;
-
-   procedure Setup_Access
-     (On_User_Login           : Base.Action_Event := null;
-      On_User_Register_Create : Base.Action_Event := null;
-      On_User_Register        : Register_Function := null);
-   --  Set the webpage accessible only by logging in
-   --  On_User_Register_Create allows to customize the register form,
-   --  using Register_Group_Key, and return a boolean to accept or not form
-
-   procedure Set_Register_Error_Message
-     (Object : in out Base.Base_Type'Class;
-      Error  :         String);
-   --  Set an error on register form.
-
-   procedure Add_User (Email, Password :  String);
-   --  Add user with Email and clear password.
-
-   procedure Delete_User (Email :  String);
-   --  Delete user from known identities.
-
-   procedure Disconnect_User (Object : in out Base.Base_Type'Class);
-   --  This function assumes Setup_Access was called
-
-   function Get_User_Email
-     (Object : in out Base.Base_Type'Class)
-      return  String;
-   --  Return current user email.
-
-   -----------------------------------------------------------------------------
-   --  Header
-   -----------------------------------------------------------------------------
-   procedure Header_Set_Root
-     (Key      :  String;
-      Name     :  String;
-      On_Click : Base.Action_Event);
-   --  Set default menu (root of navigation menu).
-   --  On_Click handler needs to call Header_Notify_Menu_Click.
-   --  IMPORTANT: Key must be UNIQUE /!\
-
-   procedure Header_Add_Child
-     (Key        :  String;
-      Name       :  String;
-      Parent_Key :  String;
-      On_Click   : Base.Action_Event);
-   --  Add child to a child or root in menu.
-   --  On_Click handler needs to call Header_Notify_Menu_Click.
-   --  IMPORTANT: Key must be UNIQUE /!\
-
-   procedure Header_Add_User_Button
-     (Object   : in out Base.Base_Type'Class;
-      Name     :         String;
-      On_Click :        Base.Action_Event);
-   --  On_Click handler needs to call Header_Notify_User_Menu_Click otherwise
-   --  user navigation menu can't be closed.
-
-   -----------------
-   --  Callbacks  --
-   -----------------
-   procedure Header_Notify_Menu_Click
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String);
-
-   procedure Header_Notify_User_Menu_Click (Object : in out Base.Base_Type'Class);
-
-   -----------------------------------------------------------------------------
-   --  CRUD
-   -----------------------------------------------------------------------------
-   procedure CRUD_Load (Object : in out Base.Base_Type'Class);
-
-   procedure CRUD_Add_Element
-     (Object   : in out Base.Base_Type'Class;
-      Key      :         String;
-      Name     :         String;
-      Icon_SRC :         String);
-   --  IMPORTANT: Key must be UNIQUE /!\
-
-   procedure CRUD_Add_Sub_Element
-     (Object     : in out Base.Base_Type'Class;
-      Key        :         String;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Click   :        Base.Action_Event);
-   --  IMPORTANT: Key must be UNIQUE /!\
-   --  If parent is "File", and this element is "Edit", then a unique key
-   --  could be set as "File_Edit".
-
-   procedure CRUD_Add_Delimiter_Above
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String);
-   --  Add a delimiter above a sub-element.
-
-   procedure CRUD_Set_Unclickable
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String);
-   --  Set an element (or sub-element) unclickable.
-
-   procedure CRUD_Set_Clickable
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String);
-   --  Set an element (or sub-element) clickable.
-
-   procedure CRUD_Notify_Sub_Element_Click
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String);
-   --  Callback to place in sub-elements' handlers.
-
-   procedure CRUD_Enable_Shortcuts (Object : in out Base.Base_Type'Class);
-   --  Enable CRUD shortcuts, allowing both elements and sub-elements shortcuts.
-
-   procedure CRUD_Disable_Shortcuts (Object : in out Base.Base_Type'Class);
-   --  Disable CRUD shortcuts, for both elements and sub-elements.
-
-   -----------------------------------------------------------------------------
-   --  Content
-   -----------------------------------------------------------------------------
-   function Content_Parent
-     (Object : in out Base.Base_Type'Class)
-      return View.View_Access;
-   --  Return the element below menu title, containing all content.
-
-   procedure Content_Clear (Object : in out Base.Base_Type'Class);
-   --  Removes any HTML content inside content parent.
-
-   procedure Content_Set_Title
-     (Object : in out Base.Base_Type'Class;
-      Title  :         String);
-   --  Set title above content.
-
-   procedure Content_Clear_Title (Object : in out Base.Base_Type'Class);
-   --  Set title above content to "".
-
-   procedure Content_Set_Text
-     (Object : in out Base.Base_Type'Class;
-      Text   :         String);
-   --  Set text in content parent.
-   --  NOTE: should be used when the only content of the menu is this text,
-   --  otherwise, should use Content_Parent instead.
-
-   procedure Content_Clear_Text (Object : in out Base.Base_Type'Class);
-   --  Set text in content parent to "".
+   procedure Content_Clear_Text (Object : in out GGB.Base_Type'Class);
+   --  Clear text in content parent.
    --  NOTE: should be used when the only content of the menu is this text.
    --  otherwise, should use Content_Parent instead.
 
-   -----------------------------------------------------------------------------
-   --  Groups
-   -----------------------------------------------------------------------------
-   procedure Content_Group_Create
-     (Object : in out Base.Base_Type'Class;
-      Title  :         String);
+   procedure Content_Clear_Title (Object : in out GGB.Base_Type'Class);
+   --  Clear title above content.
+
+   procedure Content_Group_Add_Button (Object : in out GGB.Base_Type'Class; Text : String;
+                                       On_Click : GGB.Action_Event; Parent_Key : String);
+   --  Add a button with a callback. Can be use as a submit button.
+
+   procedure Content_Group_Add_Space (Object : in out GGB.Base_Type'Class; Parent_Key : String; Height : Integer := 8);
+   --  Add space between rows in form group.
+
+   procedure Content_Group_Add_Title (Object : in out GGB.Base_Type'Class; Title : String; Parent_Key : String);
+   --  Add a title to a form group.
+   --  Title from arguments of Content_Group_Create is already on screen
+   --  and has a higher emphasis.
+
+   procedure Content_Group_Check_Box_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                          On_Change : GGB.Action_Event := null);
+   --  Add a check box in a group.
+
+   procedure Content_Group_Check_Box_Checked (Object : in out GGB.Base_Type'Class; Name : String; Is_Checked : Boolean);
+   --  Set a check box state in a group.
+
+   function Content_Group_Check_Box_Is_Checked (Object : in out GGB.Base_Type'Class; Name : String) return Boolean;
+   --  Get a check box state in a group.
+
+   procedure Content_Group_Create (Object : in out GGB.Base_Type'Class; Title : String);
    --  Create a container for forms. This element is displayed in the
    --  content container. Does not need any clearing apart from Content_Clear
    --  to delete this element.
 
-   procedure Content_Group_Add_Title
-     (Object     : in out Base.Base_Type'Class;
-      Title      :         String;
-      Parent_Key :         String);
-   --  Add a title to a form group.
-   --  NOTE: Title from arguments of Content_Group_Create is already on screen
-   --  and has a higher emphasis.
+   procedure Content_Group_Date_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                     On_Change : GGB.Action_Event := null);
+   --  Add a date in a group.
 
-   procedure Content_Group_Add_Space
-     (Object     : in out Base.Base_Type'Class;
-      Parent_Key :         String;
-      Height     :        Integer := 8);
-   --  Add space between rows in form group.
+   function Content_Group_Date_Get (Object : in out GGB.Base_Type'Class; Name : String) return String;
+   --  Get a date in a group. Format is YYYY-MM-DD.
 
-   procedure Content_Group_Item_Lock
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String);
+   procedure Content_Group_Date_Set (Object : in out GGB.Base_Type'Class; Name : String; Date : String);
+   --  Set a date in a group. Format is YYYY-MM-DD.
+
+   --  Drop-down menu  --
+   procedure Content_Group_Drop_Down_Menu_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                          On_Change : GGB.Action_Event := null);
+   --  Add a drop-down menu, with customizable default item, in a group.
+
+   procedure Content_Group_Drop_Down_Menu_Add_Option (Object : in out GGB.Base_Type'Class; Name : String; Option : String;
+                                                 Enabled : Boolean := False);
+   --  Add an item to a drop-down menu. If Enabled is True, this item will be the displayed by default.
+
+   function Content_Group_Drop_Down_Menu_Get (Object : in out GGB.Base_Type'Class; Name : String) return String;
+   --  Get the selected item in a drop-down menu.
+
+   procedure Content_Group_Email_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                      On_Change :  GGB.Action_Event := null);
+   --  Add an email in a group.
+
+   function Content_Group_Email_Get (Object : in out GGB.Base_Type'Class; Name : String) return  String;
+   --  Get an email in a group.
+
+   procedure Content_Group_Email_Set (Object : in out GGB.Base_Type'Class; Name : String; Email : String);
+   --  Set an email in a group.
+
+   procedure Content_Group_Item_Lock (Object : in out GGB.Base_Type'Class; Name : String);
    --  Lock a form in a form group so the user can't write anything.
 
-   procedure Content_Group_Item_Unlock
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String);
+   procedure Content_Group_Item_Unlock (Object : in out GGB.Base_Type'Class; Name : String);
    --  Unlock a form in a form group.
 
-   procedure Content_Group_Item_Place_Holder
-     (Object       : in out Base.Base_Type'Class;
-      Name         :         String;
-      Place_Holder :         String);
+   procedure Content_Group_Item_Place_Holder (Object : in out GGB.Base_Type'Class; Name : String; Place_Holder : String);
    --  Set a place-holder for field-type forms.
 
-   procedure Content_Group_Add_Button
-     (Object     : in out Base.Base_Type'Class;
-      Text       :         String;
-      On_Click   :        Base.Action_Event;
-      Parent_Key :         String);
-   --  Add a button with a callback. Can be use as a submit button.
+   procedure Content_Group_Number_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                       On_Change : GGB.Action_Event := null);
+   --  Add a number in a group.
 
-   ----------------------
-   --  Group Elements  --
-   ----------------------
-   --  Most element come with an On_Change callback, fired once the user stops
-   --  focusing the given element.
-   --  Every item (except button and warning), have an explaining text next to
-   --  it in the container.
+   function Content_Group_Number_Get (Object : in out GGB.Base_Type'Class; Name : String) return Integer;
+   --  Get a number value in a group.
 
-   -----------------
-   --  Edit Text  --
-   -----------------
-   --  This element allows to enter and modify text.
+   procedure Content_Group_Number_Set (Object : in out GGB.Base_Type'Class; Name : String; Value : Integer);
+   --  Set a number in a group.
 
-   procedure Content_Group_Text_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
+   procedure Content_Group_Password_Add (Object : in out GGB.Base_Type'Class; Name : String;
+                                         Parent_Key : String; On_Change : GGB.Action_Event := null);
+   --  Add a password in a group.
 
-   procedure Content_Group_Text_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Text   :         String);
+   function Content_Group_Password_Get (Object : in out GGB.Base_Type'Class; Name : String) return String;
+   --  Get a password in a group.
 
-   function Content_Group_Text_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
+   procedure Content_Group_Password_Set (Object : in out GGB.Base_Type'Class; Name : String; Password : String);
+   --  Set a password in a group to simulate an existing password in update form.
 
-   -----------------
-   --  Text Area  --
-   -----------------
-   --  Same as Edit Text, but the user can define the height of the view.
+   procedure Content_Group_Phone_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                      On_Change : GGB.Action_Event := null);
+   --  Add a phone number in a group.
 
-   procedure Content_Group_Text_Area_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
+   function Content_Group_Phone_Get (Object : in out GGB.Base_Type'Class; Name : String) return  String;
+   --  Get a phone number in a group.
 
-   procedure Content_Group_Text_Area_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Text   :         String);
+   procedure Content_Group_Phone_Set (Object : in out GGB.Base_Type'Class; Name : String; Phone : String);
+   --  Set a phone number in a group.
 
-   function Content_Group_Text_Area_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
+   procedure Content_Group_Text_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                     On_Change : GGB.Action_Event := null);
+   --  Add text entry in a group.
 
-   -----------------
-   --  Check Box  --
-   -----------------
-   --  This element can be checked and unchecked by the user.
+   function Content_Group_Text_Get (Object : in out GGB.Base_Type'Class; Name : String) return String;
+   --  Get text content in a group.
 
-   procedure Content_Group_Check_Box_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
+   procedure Content_Group_Text_Set (Object : in out GGB.Base_Type'Class; Name : String; Text : String);
+   --  Set text content in a group.
 
-   procedure Content_Group_Check_Box_Checked
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Is_Checked :        Boolean);
+   procedure Content_Group_Text_Area_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
+                                          On_Change : GGB.Action_Event := null);
+   --  Add text area with customizable height in a group.
 
-   function Content_Group_Check_Box_Is_Checked
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return Boolean;
+   function Content_Group_Text_Area_Get (Object : in out GGB.Base_Type'Class; Name : String) return String;
+   --  Get text area content in a group.
 
-   --------------
-   --  Number  --
-   --------------
-   --  Same as Edit Text, but only numbers are allowed.
+   procedure Content_Group_Text_Area_Set (Object : in out GGB.Base_Type'Class; Name : String; Text : String);
+   --  Set text area content in a group.
 
-   procedure Content_Group_Number_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
+   procedure Content_Group_Warning_Add (Object : in out GGB.Base_Type'Class; Text : String; Key : String; Parent_Key : String);
+   --  Add a custom (non form) warning area in a group to display a warning message.
+   --  Can be used with an empty Text at first, then later using the setter.
 
-   procedure Content_Group_Number_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Value  :        Integer);
-
-   function Content_Group_Number_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return Integer;
-
-   -----------------
-   --  Selection  --
-   -----------------
-   --  Element showing a list of items, user can only select one.
-
-   procedure Content_Group_Selection_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
-
-   procedure Content_Group_Selection_Add_Option
-     (Object  : in out Base.Base_Type'Class;
-      Name    :         String;
-      Option  :         String;
-      Enabled :        Boolean := False);
-   --  If parameter Enabled is True, this element will be the selected by default.
-
-   function Content_Group_Selection_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
-
-   ------------
-   --  Date  --
-   ------------
-   --  Element allowing the user to select a date.
-   --  NOTE: format for getter and setter is YYYY-MM-DD.
-
-   procedure Content_Group_Date_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
-
-   procedure Content_Group_Date_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Date   :         String);
-
-   function Content_Group_Date_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
-
-   -------------
-   --  Email  --
-   -------------
-   --  Element allowing the user to write an email address.
-
-   procedure Content_Group_Email_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
-
-   procedure Content_Group_Email_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Email  :         String);
-
-   function Content_Group_Email_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
-
-   ----------------
-   --  Password  --
-   ----------------
-   --  Element allowing the user to safely write a password.
-
-   procedure Content_Group_Password_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
-
-   function Content_Group_Password_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
-
-   -------------
-   --  Phone  --
-   -------------
-   --  Element to type a phone number.
-
-   procedure Content_Group_Phone_Add
-     (Object     : in out Base.Base_Type'Class;
-      Name       :         String;
-      Parent_Key :         String;
-      On_Change  :        Base.Action_Event := null);
-
-   procedure Content_Group_Phone_Set
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String;
-      Phone  :         String);
-
-   function Content_Group_Phone_Get
-     (Object : in out Base.Base_Type'Class;
-      Name   :         String)
-      return  String;
-
-   ---------------
-   --  Warning  --
-   ---------------
-   --  Custom (non-form) element to potentially warn the user about something.
-   --  NOTE: Can be used with Text = "" at first, and using the setter.
-
-   procedure Content_Group_Warning_Add
-     (Object     : in out Base.Base_Type'Class;
-      Text       :         String;
-      Key        :         String;
-      Parent_Key :         String);
-
-   procedure Content_Group_Warning_Set
-     (Object : in out Base.Base_Type'Class;
-      Key    :         String;
-      Text   :         String);
-
-   -----------------------------------------------------------------------------
-   --  Lists
-   -----------------------------------------------------------------------------
-   procedure Content_List_Create
-     (Object : in out Base.Base_Type'Class;
-      Title  :         String);
-   --  Create a table for a list of items. This element is displayed in the
-   --  content container. Does not need any clearing apart from Content_Clear
-   --  to delete this element.
-   --  Elements can be selected, and the index can be known using
-   --  Content_List_Selected_Row.
-
-   procedure Content_List_Add_Column
-     (Object     : in out Base.Base_Type'Class;
-      Variable   :         String;
-      Parent_Key :         String);
-   --  Add a column in the table. Must be called as much as needed before using
-   --  Content_List_Add_Item.
-
-   function Content_List_Add_Item
-     (Object     : in out Base.Base_Type'Class;
-      Parent_Key :         String)
-      return Integer;
-   --  Returned value is the index of the item in list.
-   --  NOTE: Columns must be added before, using Content_List_Add_Column.
-
-   procedure Content_List_Add_Text
-     (Object     : in out Base.Base_Type'Class;
-      Value      :         String;
-      Index      :        Integer;
-      Parent_Key :         String);
-   --  NOTE: The corresponding item must be created before using Content_List_Add_Item.
-   --  This function just place a new column in the table, at a given row.
-
-   function Content_List_Selected_Row
-     (Object     : in out Base.Base_Type'Class;
-      Parent_Key :         String)
-      return Integer;
-   --  Return the selected row index.
+   procedure Content_Group_Warning_Set (Object : in out GGB.Base_Type'Class; Key : String; Text : String);
+   --  Display a warning message in a group.
 
    --------------------------------------------------------
-   --  EXAMPLE: the following List is created like this:
+   --  Creation list example
    --------------------------------------------------------
    --            > Content_List_Create (*, key);
    --  ┌───┬───┐ > Content_List_Add_Column (*, "A", key);
@@ -548,59 +253,196 @@ package v22.Gui is
    --            > Content_List_Add_Text (*, "4", R2, key);
    --------------------------------------------------------
 
-   -----------------------------------------------------------------------------
-   --  Footer
-   -----------------------------------------------------------------------------
-   procedure Footer_Set_State_Text
-     (Object : in out Base.Base_Type'Class;
-      Text   :         String := "");
-   --  Set state text on the left side of the footer.
+   procedure Content_List_Add_Column (Object : in out GGB.Base_Type'Class; Variable : String; Parent_Key : String);
+   --  Add a column in the table.
+   --  Must be called as much as needed before using Content_List_Add_Item.
 
-   procedure Footer_Set_Permanent_Text
-     (Object : in out Base.Base_Type'Class;
-      Text   :         String := "");
-   --  Set permanent text on the right side of the footer.
+   function Content_List_Add_Item (Object : in out GGB.Base_Type'Class; Parent_Key : String) return Integer;
+   --  Returns the item index in list.
+   --  Columns must be added before using Content_List_Add_Column.
 
-   -----------------------------------------------------------------------------
-   --  Utils
-   -----------------------------------------------------------------------------
-   procedure Launch_Dialog
-     (Object       : in out Base.Base_Type'Class;
-      Title        :         String;
-      Content      :         String;
-      Confirm_Text :         String          := "";
-      Cancel_Text  :         String          := "";
-      On_Confirm   :        Base.Action_Event := null;
-      On_Cancel    :        Base.Action_Event := null);
-   --  Create a jQuery dialog, with two potential buttons.
-   --  Buttons are displayed if their corresponding handler is not null.
-   --  Confirm button is focused.
+   procedure Content_List_Add_Text (Object : in out GGB.Base_Type'Class; Value : String; Index : Integer; Parent_Key : String);
+   --  This function place a new column in the table at a given row.
+   --  The corresponding item must be created before using Content_List_Add_Item.
+
+   procedure Content_List_Create (Object : in out GGB.Base_Type'Class; Title : String);
+   --  Create a table for a list of items. This element is displayed in the
+   --  content container. Does not need any clearing apart from Content_Clear
+   --  to delete this element.
+   --  Elements can be selected, and the index obtained using Content_List_Selected_Row.
+
+   function Content_List_Selected_Row (Object : in out GGB.Base_Type'Class; Parent_Key : String) return Integer;
+   --  Return the selected row index.
+
+   procedure Content_Load_HTML (Object : in out GGB.Base_Type'Class; Text : String);
+   --  Displays a HTML encoded file.
+
+   function Content_Parent (Object : in out GGB.Base_Type'Class) return GGV.View_Access;
+   --  Return the element below menu title, containing all content.
+
+   procedure Content_Put_HTML (Object : in out GGB.Base_Type'Class; Text : String);
+   --  Displays a HTML encoded string.
+
+   procedure Content_Put_Text (Object : in out GGB.Base_Type'Class; Text : String);
+   --  Set text in content parent.
+   --  Should be used when the only content of the menu is this text,
+   --  otherwise use Content_Parent instead.
+
+   procedure Content_Put_Title (Object : in out GGB.Base_Type'Class; Title : String);
+   --  Set title above content.
+
+   procedure Dialog_Buttons (Object : in out Gnoga.Gui.Base.Base_Type'Class;
+                             Key : String;
+                             Button_Left_Text : String := "";
+                             Button_Left_Handler : GGB.Action_Event := null;
+                             Button_Right_Text : String := "";
+                             Button_Right_Handler : GGB.Action_Event := null);
+   --  Display a one or two Buttons dialog, for user to quit a screen,
+   --  user choices like Quit/Update or Cancel/Validate, etc.
+
+   procedure Dialog_Popup (Object : in out GGB.Base_Type'Class; Title : String; Content : String; Confirm_Text : String := "";
+                       Cancel_Text : String := ""; On_Confirm : GGB.Action_Event := null; On_Cancel : GGB.Action_Event := null);
+   --  Create a jQuery dialog, with two potential buttons. Buttons are displayed
+   --  if their corresponding handler is not null. Confirm button is focused.
    --  It is advised to use Close_Dialog in On_Confirm and On_Cancel handlers.
 
-   procedure Close_Dialog (Object : in out Base.Base_Type'Class);
-   --  Close current jQuery dialog, removes it from HTML.
 
-   procedure Launch_Web
-     (Object : in out Base.Base_Type'Class;
-      URL    :         String);
+   procedure Put_User_Icon (Object : in out GGB.Base_Type'Class);
+   --  Display the user icon registered by Set_User_Icon.
+
+   procedure Footer_Set_Left_Text (Object : in out GGB.Base_Type'Class; Text : String := "");
+   --  Displays text on the left side of the footer.
+
+   procedure Footer_Set_Right_Text (Object : in out GGB.Base_Type'Class; Text : String := "");
+   --  Displays text on the right side of the footer.
+
+   function Get_Connection_Data (Object : in out GGB.Base_Type'Class; Key : String) return  String;
+   --  Retrieve user connection datas.
+   --  Connection_Data is a free to use dictionary unique to each user.
+
+   procedure Header_Application_Menu_Add (Key : String; Name : String; Parent_Key :  String; On_Click : GGB.Action_Event);
+   --  Add menu and cascaded menu to application menu.
+   --  Key must be unique and On_Click handler must call Header_Notify_Menu_Click.
+
+   procedure Header_Notify_Menu_Click (Object : in out GGB.Base_Type'Class; Key : String);
+   --  Header module menu callback.
+
+   procedure Header_Notify_User_Menu_Click (Object : in out GGB.Base_Type'Class);
+   --  Header user menu callback.
+
+   procedure Header_Set_Root (Key :  String; Name : String; On_Click : GGB.Action_Event);
+   --  Set default root module menu.
+   --  Key must be unique and On_Click handler must call Header_Notify_Menu_Click.
+
+   procedure Header_User_Menu_Add (Object : in out GGB.Base_Type'Class; Name : String; On_Click : GGB.Action_Event);
+   --  Add menu to user menu.
+   --  On_Click handler must call Header_Notify_User_Menu_Click otherwise.
+   --  User navigation menu can't be closed.
+
+   procedure Launch_Web (Object : in out GGB.Base_Type'Class; URL : String);
    --  Open a new tab in browser to URL.
-   --  NOTE: user's browser might not accept redirection at first, in this case
+   --  User's browser might not accept redirection at first, in this case
    --  the user needs to enable this.
 
-   procedure Print (Object : in out Base.Base_Type'Class);
-   --  Call system print on current web view.
+   procedure List (Object : in out GGB.Base_Type'Class;
+                   DB : in out GSD.Connection'Class;
+                   Key : String;
+                   Title : String;
+                   Table : String;
+                   Columns_Names : String;
+                   Columns_Titles : String;
+                   Condition : String := "");
+   --  List Table columns listed in Columns_Names (comma separated) with
+   --  header table titles Columns_Titles (comma separated) and Condition.
+   --  Key is the table list unique identifier
+   --  The column tagged with "~" (constant ND) in Columns_Names is the
+   --  column key for further seeking the record.
+   --  Title is the list title. See extended example in manual.
+
+   procedure Main_Menu_Add_Delimiter_Above (Object : in out GGB.Base_Type'Class; Key : String);
+   --  Add a delimiter above a sub-element.
+
+   procedure Main_Menu_Add_Element (Object : in out GGB.Base_Type'Class;
+                                    Key : String; Name : String; Icon_SRC : String; On_Click : GGB.Action_Event := null);
+   --  Add an element to a menu.
+   --  IMPORTANT: Key must be UNIQUE /!\
+
+   procedure Main_Menu_Add_Sub_Element (Object : in out GGB.Base_Type'Class;
+                                        Key : String; Name : String; Parent_Key : String; On_Click : GGB.Action_Event);
+   --  Add an element to a sub menu. If parent is "File", and this element is "Edit",
+   --  then a unique key should be set as "File_Edit".
+   --  IMPORTANT: Key must be UNIQUE /!\
+   --  IMPORTANT: On_Click event procedure must in turn call Main_Menu_Notify_Sub_Element_Click /!\
+
+   procedure Main_Menu_Clear (Object : in out GGB.Base_Type'Class);
+   --  Clear Main_Menu content
+
+   procedure Main_Menu_Disable_Shortcuts (Object : in out GGB.Base_Type'Class);
+   --  Disable Main_Menu shortcuts, for both elements and sub-elements.
+
+   procedure Main_Menu_Enable_Shortcuts (Object : in out GGB.Base_Type'Class);
+   --  Enable Main_Menu shortcuts, allowing both elements and sub-elements shortcuts.
+
+   procedure Main_Menu_Load (Object : in out GGB.Base_Type'Class);
+   --  Load Main_Menu after elements has been added.
+
+   procedure Main_Menu_Notify_Sub_Element_Click (Object : in out GGB.Base_Type'Class; Key : String);
+   --  Callback to place in sub-elements' handlers.
+
+   procedure Main_Menu_Set_Clickable (Object : in out GGB.Base_Type'Class; Key : String);
+   --  Set an element (or sub-element) clickable.
+
+   procedure Main_Menu_Set_Unclickable (Object : in out GGB.Base_Type'Class; Key : String);
+   --  Set an element (or sub-element) unclickable.
+
+   procedure Print (Object : in out GGB.Base_Type'Class);
+   --  Call system printing on current web view.
    --  /!\ Tends to stop client-server communication.
 
+   procedure Set_Application_Icon (Icon_File :  String);
+   --  Set the application icon when clicked displays the modules menu.
+
+   procedure Set_Browser_Icon (Icon_File : String);
+   --  Set application icon in browser tab. Don't work, to be fixed.
+
+   procedure Set_Browser_Title (Object : in out GGB.Base_Type'Class; Title : String);
+   --  Set application title in browser tab.
+
+   procedure Set_Connection_Data (Object : in out GGB.Base_Type'Class; Key : String; Value : String);
+   --  Save user connection datas.
+
+   procedure Set_Debug (Switch : On_Off);
+   --  Set Gnoga debug mode. This mode must be set before calling Setup to take effect.
+
+   procedure Set_Login (Switch : On_Off);
+   --  Application access control.
+
+   procedure Set_User_Icon (Icon_File : String);
+   --  Set the user icon when clicked displays the user menu.
+
+   procedure Set_User_Name (Object : in out GGB.Base_Type'Class; Name : String);
+   --  Set user name, displayed next to the user icon.
+
+   procedure Setup (On_User_Connect : GGB.Action_Event;
+                    Host : String := "";
+                    Port : Integer := 8_080;
+                    Boot : in String := "boot_jqueryui.html";
+                    Title : String := "";
+                    Server_Closed_Content : String := "Server closed.");
+   --  Set application connection parameters
+   --  On_User_Connect is called every time a user calls a web page.
+
+   procedure User_Logout (Object : in out GGB.Base_Type'Class);
+   --  Disconnect user. This function assumes Setup was called.
+
+-------------------------------------------------------------------------------
 private
 
-   procedure Setup_Login_Form (Object : in out Base.Base_Type'Class);
-   procedure Setup_Login_Buttons (Object : in out Base.Base_Type'Class);
-   procedure Set_Login_Error_Message
-     (Object : in out Base.Base_Type'Class;
-      Error  :         String);
-
-   procedure Setup_Register_Form (Object : in out Base.Base_Type'Class);
-   procedure Setup_Register_Buttons (Object : in out Base.Base_Type'Class);
+   Access_Control : On_Off := Off;
+   Debug_Control : On_Off := Off;
+   Application_Icon_File : String := "";
+   User_Icon_File : String := "";
+   Image_Gnoga_Root : String := "/img/";
 
 -------------------------------------------------------------------------------
 end v22.Gui;

@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-fls.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -127,6 +130,7 @@ package v22.Fls is
    --  Change to a directory Directory. Create Directory if this latter does
    --  not exist. Return False if operation is unsuccessfull.
 
+-------------------------------------------------------------------------------
 private
 
    --  Form parameter:

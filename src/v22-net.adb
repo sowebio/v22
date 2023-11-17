@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-net.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -33,6 +36,10 @@ package body v22.Net is
    --  SSH_Temp_Delete_Directory : String := "-v22-net-delete-directory-tree.key";
    --  SSH_Temp_Mount_Key : String := "-v22-net-mount-private.key";
 
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
+
  ---------------------------------------------------------------------------
    function Command (Target : in String ; Command_In : in String ; SE_Output : out String) return Boolean is
       Temp_Key_Name : constant String := v22.Get_Tmp_Dir & Prg.Time_Stamp & SSH_Temp_Command_Key;
@@ -43,7 +50,7 @@ package body v22.Net is
       Result : Boolean := False;
    begin
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
@@ -52,7 +59,7 @@ package body v22.Net is
       Command_String := "ssh" & SSH_Default_Options & Key_To_Use & Target & " " & DQ & Command_In & DQ & " > " & Temp_Output;
       Sys.Shell_Execute (Command_String, SE_Result);
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
@@ -60,8 +67,8 @@ package body v22.Net is
       Fls.Delete_File (Temp_Output);
 
       if (SE_Result = 0) then
-         if SSH_Message then
-            Msg.Std ("Remote command " & Command_In & " on " & Target & " successful");
+         if SSH_Message = On then
+            Msg.Info ("Remote command " & Command_In & " on " & Target & " successful");
          end if;
          Result := True;
       else
@@ -69,10 +76,10 @@ package body v22.Net is
          -- One may want to test the non-existence of a file, which will
          -- nevertheless trigger a non-zero error code. Hence the error message
          -- in the exception handling block
-         if SSH_Message then
-            Msg.Err ("Net.Send_Command > Command error with: " & Command_String & " on " & Target & " Error: " & To_String (SE_Result));
+         if SSH_Message = On then
+             Msg.Error ("Net.Send_Command > Command error with: " & Command_String & " on " & Target & " Error: " & To_String (SE_Result));
          end if;
-         if Set_Exception then
+         if Get_Exception = On then
             raise Error_Command;
          end if;
       end if;
@@ -80,7 +87,7 @@ package body v22.Net is
       return Result;
    end Command;
 
----------------------------------------------------------------------------
+   ---------------------------------------------------------------------------
    function Command (Target : in String ; Command_In : in String) return Boolean is
       Temp_Key_Name : constant String := v22.Get_Tmp_Dir & Prg.Time_Stamp & SSH_Temp_Command_Key;
       Command_String : String := "";
@@ -89,24 +96,24 @@ package body v22.Net is
       SE_Result : Integer := 0;
    begin
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
 
       -- Command must be between quotation marks to keep the redirections safe on the distant host
       Command_String := "ssh" & SSH_Default_Options & Key_To_Use & Target & " " & DQ & Command_In &
-                              DQ & (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                              DQ & (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
 
       Sys.Shell_Execute (Command_String, SE_Result);
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
       if (SE_Result = 0) then
-         if  SSH_Message then
-            Msg.Std ("Remote command: " & Command_In & " on " & Target & " successful");
+         if  SSH_Message = On then
+            Msg.Info ("Remote command: " & Command_In & " on " & Target & " successful");
          end if;
          Result := True;
       else
@@ -114,10 +121,10 @@ package body v22.Net is
          -- One may want to test the non-existence of a file, which will
          -- nevertheless trigger a non-zero error code. Hence the error message
          -- in the exception handling block
-         if SSH_Message then
-            Msg.Err ("Net.Send_Command > Command error with: " & Command_String & " on " & Target & " Error: " & To_String (SE_Result));
+         if SSH_Message = On then
+             Msg.Error ("Net.Send_Command > Command error with: " & Command_String & " on " & Target & " Error: " & To_String (SE_Result));
          end if;
-         if Set_Exception then
+         if Get_Exception = On then
             raise Error_Command;
          end if;
       end if;
@@ -141,14 +148,14 @@ package body v22.Net is
       Result : Boolean := False;
    begin
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
 
       -- scp <options> $file1 $file2 $fileN root@$host:$dir/[/distant_received_filename]
       Command_String := "scp " & Options & " " & SSH_Default_Options & Key_To_Use & File_Tx & " " &
-                                 Target & ":" & Directory_Rx & (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                                 Target & ":" & Directory_Rx & (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
 
       -- Default distant directory creation for safety
       if not Net.Directory_Exists (Target, Directory_Rx) then
@@ -157,18 +164,18 @@ package body v22.Net is
 
       Sys.Shell_Execute (Command_String, Exec_Error);
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
       if (Exec_Error = 0) then
-         if  SSH_Message then
-            Msg.Std ("Remote copy: " & File_Tx & " to " & Directory_Rx & " successful");
+         if  SSH_Message = On then
+            Msg.Info ("Remote copy: " & File_Tx & " to " & Directory_Rx & " successful");
          end if;
          Result := True;
       else
-         Msg.Err ("Net.Send_File > Copy error with: " & Command_String & " to " & Target & " Error: " & To_String (Exec_Error));
-         if Set_Exception then
+          Msg.Error ("Net.Send_File > Copy error with: " & Command_String & " to " & Target & " Error: " & To_String (Exec_Error));
+         if Get_Exception = On then
             raise Error_Copy_File;
          end if;
       end if;
@@ -177,6 +184,7 @@ package body v22.Net is
 
    end Copy_File;
 
+   ----------------------------------------------------------------------------
    procedure Copy_File (Target : in String ; File_Tx : in String; Directory_Rx : in String ; Options : in String := "") is
       Dummy : Boolean;
    begin
@@ -193,26 +201,26 @@ package body v22.Net is
    begin
       if not Is_Root_Directory (Dir_Tree) then
 
-         if not Empty (SSH_Key) then
+         if not Is_Empty (SSH_Key) then
             Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
             Key_To_Use := "-i " & Temp_Key_Name & " ";
          end if;
 
          Command_String := "ssh" & SSH_Default_Options &
                                  Key_To_Use & Target & " " &
-                                 DQ & "rm -fr " & Dir_Tree & DQ & (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                                 DQ & "rm -fr " & Dir_Tree & DQ & (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
 
          Sys.Shell_Execute (Command_String, Exec_Error);
          if (Exec_Error = 0) then
             Result := True;
          end if;
 
-         if not Empty (SSH_Key) then
+         if not Is_Empty (SSH_Key) then
             Fls.Delete_File (Temp_Key_Name);
          end if;
 
       else
-         Msg.Err ("Fls.Delete_Directory_Tree - Attempt to delete a root directory: " & Dir_Tree);
+          Msg.Error ("Fls.Delete_Directory_Tree - Attempt to delete a root directory: " & Dir_Tree);
       end if;
       return Result;
    end Delete_Directory_Tree;
@@ -241,7 +249,7 @@ package body v22.Net is
       Key_To_Use : String := "";
       Result : Boolean := False;
    begin
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
@@ -249,14 +257,14 @@ package body v22.Net is
       Command_String := "ssh" & SSH_Default_Options &
                                  Key_To_Use & Target & " " &
                                  DQ & "test -d " & Name & DQ &
-                             (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                             (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
 
       Sys.Shell_Execute (Command_String, Exec_Error);
       if (Exec_Error = 0) then
          Result := True;
       end if;
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
@@ -271,7 +279,7 @@ package body v22.Net is
       Key_To_Use : String := "";
       Result : Boolean := False;
    begin
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
@@ -279,18 +287,24 @@ package body v22.Net is
       Command_String := "ssh" & SSH_Default_Options &
                                  Key_To_Use & Target & " " &
                                  DQ & "test -f " & Name & DQ &
-                             (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                             (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
       Sys.Shell_Execute (Command_String, Exec_Error);
       if (Exec_Error = 0) then
          Result := True;
       end if;
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
       return Result;
    end File_Exists;
+
+   ---------------------------------------------------------------------------
+   function Get_Exception return On_Off is
+   begin
+      return SSH_Exception;
+   end Get_Exception;
 
   ---------------------------------------------------------------------------
    function Get_Network_From_Ip (Ip : in String) return String is
@@ -310,7 +324,7 @@ package body v22.Net is
       Ip_Num : Natural;
       Result : Boolean := False;
    begin
-      if not Empty (Ip) then
+      if not Is_Empty (Ip) then
          if (Field_Count (Ip, ".") = 4) then
             for I in 1..4 loop
                Ip_Part := Field_By_Index (Ip, I, ".");
@@ -361,7 +375,7 @@ package body v22.Net is
          if (Char_Count (Test_Dir_Tree, Slash) = 2) and
             (Length (Dir_Tree) > 2) then
             Test_Dir_Tree := Slice (Test_Dir_Tree, 2, Length (Test_Dir_Tree) - 1);
-            if not Empty (Field_By_Name (Root_Dirs, Test_Dir_Tree, Slash)) then
+            if not Is_Empty (Field_By_Name (Root_Dirs, Test_Dir_Tree, Slash)) then
                Result := True;
             end if;
          end if;
@@ -389,33 +403,33 @@ package body v22.Net is
       Sys.Shell_Execute ("mkdir --parents " & Mount_Point & STD_ERR_OUT_REDIRECT, Exec_Error);
       if (Exec_Error = 0) then
 
-         if not Empty (SSH_Key) then
+         if not Is_Empty (SSH_Key) then
             Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
             Key_To_Use := " -o IdentityFile=" & Temp_Key_Name & " ";
          end if;
 
          -- Mount
          Command_String := "sshfs " & Target & ":/ " & Mount_Point & Key_To_Use &
-                                (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                                (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
          Sys.Shell_Execute (Command_String, Exec_Error);
 
-         if not Empty (SSH_Key) then
+         if not Is_Empty (SSH_Key) then
             Fls.Delete_File (Temp_Key_Name);
          end if;
 
          if (Exec_Error = 0) then
-            if  SSH_Message then
-               Msg.Std (Target & " mounted in " & Mount_Point);
+            if  SSH_Message = On then
+               Msg.Info (Target & " mounted in " & Mount_Point);
             end if;
          else
-            Msg.Err ("v22.Net.Mount > Error mounting: " & Target & " in " & Mount_Point & " Error: " & To_String (Exec_Error));
-            if Set_Exception then
+             Msg.Error ("v22.Net.Mount > Error mounting: " & Target & " in " & Mount_Point & " Error: " & To_String (Exec_Error));
+            if Get_Exception = On then
                raise Error_Mount;
             end if;
          end if;
       else
-         Msg.Err ("v22.Net.Mount > Error creating local mount point: " & Mount_Point & " Error: " & To_String (Exec_Error));
-         if Set_Exception then
+          Msg.Error ("v22.Net.Mount > Error creating local mount point: " & Mount_Point & " Error: " & To_String (Exec_Error));
+         if Get_Exception = On then
             raise Error_Mount;
          end if;
       end if;
@@ -430,10 +444,10 @@ package body v22.Net is
          if Net.Command (Remote_Host, "mount " & Mount_Options & " " & Target_To_Mount & " " & Mount_Point) then
             Result := True;
          else
-            Msg.Err ("v22.Net.Mount_Remote > Error mounting: " & Target_To_Mount & " linked to " & Mount_Point & " on " & Remote_Host);
+             Msg.Error ("v22.Net.Mount_Remote > Error mounting: " & Target_To_Mount & " linked to " & Mount_Point & " on " & Remote_Host);
          end if;
       else
-         Msg.Err ("v22.Mount_Remote > Error creating mount point: " & Mount_Point & " targetting " & Target_To_Mount & " on " & Remote_Host);
+          Msg.Error ("v22.Mount_Remote > Error creating mount point: " & Mount_Point & " targetting " & Target_To_Mount & " on " & Remote_Host);
       end if;
       return Result;
    end Mount_Remote;
@@ -445,14 +459,9 @@ package body v22.Net is
    end Mount_Remote;
 
    ---------------------------------------------------------------------------
-   procedure Set_Exception (Set_Unset : Boolean := True) is
+   procedure Set_Exception (Switch : On_Off := On) is
    begin
-      SSH_Exception := Set_Unset;
-   end Set_Exception;
-
-   function Set_Exception return Boolean is
-   begin
-      return SSH_Exception;
+      SSH_Exception := Switch;
    end Set_Exception;
 
    ---------------------------------------------------------------------------
@@ -463,7 +472,7 @@ package body v22.Net is
       Key_To_Use : String := "";
       Result : Boolean := False;
    begin
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
       end if;
@@ -471,14 +480,14 @@ package body v22.Net is
       Command_String := "ssh" & SSH_Default_Options &
                                  Key_To_Use & Target & " " &
                                  DQ & "hostnamectl set-hostname " & Hostname & DQ &
-                             (if SSH_Output then Null_String else STD_ERR_OUT_REDIRECT);
+                             (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
 
       Sys.Shell_Execute (Command_String, Exec_Error);
       if (Exec_Error = 0) then
          Result := True;
       end if;
 
-      if not Empty (SSH_Key) then
+      if not Is_Empty (SSH_Key) then
          Fls.Delete_File (Temp_Key_Name);
       end if;
 
@@ -497,7 +506,7 @@ package body v22.Net is
          SSH_Key := Key;
          Result := True;
       else
-         Msg.Err ("v22.Net.Set_Key > Key invalid Error: " & To_String (Exec_Error));
+          Msg.Error ("v22.Net.Set_Key > Key invalid Error: " & To_String (Exec_Error));
       end if;
       Fls.Delete_File (Temp_Key_Name);
       return Result;
@@ -509,15 +518,15 @@ package body v22.Net is
    end Set_Key;
 
    ---------------------------------------------------------------------------
-   procedure Set_Message (Msg : Boolean := True) is
+   procedure Set_Message (Switch : On_Off := On) is
    begin
-      SSH_Message := Msg;
+      SSH_Message := Switch;
    end Set_Message;
 
    ---------------------------------------------------------------------------
-   procedure Set_Output (Output : Boolean := True) is
+   procedure Set_Output (Switch : On_Off := On) is
    begin
-      SSH_Output := Output;
+      SSH_Output := Switch;
    end Set_Output;
 
    ---------------------------------------------------------------------------
@@ -527,21 +536,21 @@ package body v22.Net is
    begin
       Sys.Shell_Execute ("umount " & Mount_Point & STD_ERR_OUT_REDIRECT, Exec_Error);
       if (Exec_Error = 0) then
-         Msg.Std (Target & " unmounted from " & Mount_Point);
+         Msg.Info (Target & " unmounted from " & Mount_Point);
          Sys.Shell_Execute ("rmdir " & Mount_Point & STD_ERR_OUT_REDIRECT, Exec_Error);
          if (Exec_Error = 0) then
-            if  SSH_Message then
-               Msg.Std ("Delete local mount point: " & Mount_Point);
+            if  SSH_Message = On then
+               Msg.Info ("Delete local mount point: " & Mount_Point);
             end if;
          else
-            Msg.Err ("v22.Net.Unmount > Error deleting local mount point: " & Mount_Point & " Error: " & To_String (Exec_Error));
-            if Set_Exception then
+             Msg.Error ("v22.Net.Unmount > Error deleting local mount point: " & Mount_Point & " Error: " & To_String (Exec_Error));
+            if Get_Exception = On then
                raise Error_Unmount;
             end if;
          end if;
       else
-         Msg.Err ("v22.Net.Unmount > Error unmounting: " & Target & " from " & Mount_Point & " Error: " & To_String (Exec_Error));
-         if Set_Exception then
+          Msg.Error ("v22.Net.Unmount > Error unmounting: " & Target & " from " & Mount_Point & " Error: " & To_String (Exec_Error));
+         if Get_Exception = On then
             raise Error_Unmount;
          end if;
       end if;
@@ -556,10 +565,10 @@ package body v22.Net is
          if not Net.Directory_Exists (Remote_Host, Mount_Point) then
             Result := True;
          else
-            Msg.Err ("v22.Net.Mount_Remote > Mount point: " & Mount_Point & " not deleted on " & Remote_Host);
+             Msg.Error ("v22.Net.Mount_Remote > Mount point: " & Mount_Point & " not deleted on " & Remote_Host);
          end if;
       else
-         Msg.Err ("v22.Net.Mount_Remote > Mount point: " & Mount_Point & " not unmounted on " & Remote_Host);
+          Msg.Error ("v22.Net.Mount_Remote > Mount point: " & Mount_Point & " not unmounted on " & Remote_Host);
       end if;
       return Result;
    end Unmount_Remote;
@@ -569,6 +578,10 @@ package body v22.Net is
    begin
       Dummy := Unmount_Remote (Remote_Host, Mount_Point);
    end Unmount_Remote;
+
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 --- PUBLIC VARIABLES AND CONSTANTS

@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -36,6 +39,10 @@ package body v22.Uxs is
    package ASF renames Ada.Strings.Fixed;
 
    ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
+
+   ----------------------------------------------------------------------------
    function Char_Count (String_To_Process : String ; Char_Set_Pattern : String) return Integer is
       Result_Count : Integer := 0;
       String_To_Process_Length : constant Natural := Length (String_To_Process);
@@ -55,10 +62,10 @@ package body v22.Uxs is
    end Char_Count;
 
    ---------------------------------------------------------------------------
-   function Empty (Source : String) return Boolean is
-   begin
-      return (Length (Source) = 0);
-   end Empty;
+   --  function Empty (Source : String) return Boolean is
+   --  begin
+   --     return (Length (Source) = 0);
+   --  end Empty;
 
    ---------------------------------------------------------------------------
    function Ends_With (Item : String; Pattern : ASCII_Character) return Boolean is
@@ -67,10 +74,10 @@ package body v22.Uxs is
       then From_Unicode (Element (Item, Length (Item))) =  From_ASCII (Pattern);
    end Ends_With;
 
-   function Ends_With (Item : String; Pattern : String) return Boolean is
-   begin
-      return Length (Pattern) <= Length (Item) and then Tail (Item, Length (Pattern)) = Pattern;
-   end Ends_With;
+   --  function Ends_With (Item : String; Pattern : String) return Boolean is
+   --  begin
+   --     return Length (Pattern) <= Length (Item) and then Tail (Item, Length (Pattern)) = Pattern;
+   --  end Ends_With;
 
    ---------------------------------------------------------------------------
    function Field_By_Index (String_Input : String ; Index_Field : Integer ; Field_Delimiter : String) return String is
@@ -129,9 +136,9 @@ package body v22.Uxs is
       String_To_Process : constant String := String_Input & Field_Delimiter;
       String_To_Process_Length : constant Natural := Length (String_To_Process);
    begin
-      if ((not Empty (String_Input)) and
-          (not Empty (Field_To_Search)) and
-          (not Empty (Field_Delimiter))
+      if ((not Is_Empty (String_Input)) and
+          (not Is_Empty (Field_To_Search)) and
+          (not Is_Empty (Field_Delimiter))
          ) then
          for I in 1 .. String_To_Process_Length loop
             Result_Char := Slice (String_To_Process, I, I);
@@ -153,7 +160,7 @@ package body v22.Uxs is
    ---------------------------------------------------------------------------
    function Field_Count (String_To_Process : String ; Field_Delimiter : String) return Integer is
    begin
-      if Empty (String_To_Process) then
+      if Is_Empty (String_To_Process) then
          return 0;
       else
          return Char_Count (String_To_Process, Field_Delimiter) + 1;
@@ -173,8 +180,8 @@ package body v22.Uxs is
 
    begin
 
-      --Log.Dbg ("Columns " & To_String (Columns));
-      --Log.Dbg ("Rows " & To_String (Rows));
+      --Msg.Debug ("Columns " & To_String (Columns));
+      --Msg.Debug ("Rows " & To_String (Rows));
 
       -- Format
       if Columns > 0 then
@@ -193,7 +200,7 @@ package body v22.Uxs is
                end if;
             end loop;
 
-            --Log.Dbg ("Max_Width for column " & Current_Column & ": " & To_String (Max_Width));
+            --Msg.Debug ("Max_Width for column " & Current_Column & ": " & To_String (Max_Width));
 
             -- Format header
             if Length (Header) > 0 then
@@ -217,7 +224,7 @@ package body v22.Uxs is
                Max_Width := Max_Width + Length (Current_Column);
                Tio.Put (Current_Column);
             end loop;
-            Tio.Line;
+            Tio.New_Line;
             Tio.Put_Line ( (Max_Width - 2) * "-");
          end if;
 
@@ -226,7 +233,7 @@ package body v22.Uxs is
             for Index_Columns in 1..Columns loop
                Tio.Put (Display (Index_Rows, Index_Columns) & "  ");
             end loop;
-            Tio.Line;
+            Tio.New_Line;
          end loop;
       end if;
 
@@ -290,30 +297,30 @@ package body v22.Uxs is
    end Replace_Char;
 
    ---------------------------------------------------------------------------
-   function Replace_Pattern (String_To_Process : String ;
-              Pattern_In : String ; Pattern_Out : String) return String is
-      Result_String : String := "";
-      Result_Char : String;
-      Pattern_In_Length : constant Natural := Length (Pattern_In);
-      Pattern_Buffer : String := "";
-      String_To_Process_Length : constant Natural := Length (String_To_Process);
-   begin
-      for I in 1 .. String_To_Process_Length loop
-         Result_Char := Slice (String_To_Process, I, I);
-         Pattern_Buffer := Pattern_Buffer & Result_Char;
-         -- Sliding window
-         if (Length (Pattern_Buffer) > Pattern_In_Length) then
-            Pattern_Buffer := Slice (Pattern_Buffer, 2, Pattern_In_Length + 1);
-         end if;
-         if (Pattern_Buffer = Pattern_In) then
-            Result_String := Slice (Result_String, 1, Length (Result_String) - Pattern_In_Length + 1) & Pattern_Out;
-            Pattern_Buffer := "";
-         else
-            Result_String := Result_String & Result_Char;
-         end if;
-      end loop;
-      return Result_String;
-   end Replace_Pattern;
+   --  function Replace_Pattern (String_To_Process : String ;
+   --             Pattern_In : String ; Pattern_Out : String) return String is
+   --     Result_String : String := "";
+   --     Result_Char : String;
+   --     Pattern_In_Length : constant Natural := Length (Pattern_In);
+   --     Pattern_Buffer : String := "";
+   --     String_To_Process_Length : constant Natural := Length (String_To_Process);
+   --  begin
+   --     for I in 1 .. String_To_Process_Length loop
+   --        Result_Char := Slice (String_To_Process, I, I);
+   --        Pattern_Buffer := Pattern_Buffer & Result_Char;
+   --        -- Sliding window
+   --        if (Length (Pattern_Buffer) > Pattern_In_Length) then
+   --           Pattern_Buffer := Slice (Pattern_Buffer, 2, Pattern_In_Length + 1);
+   --        end if;
+   --        if (Pattern_Buffer = Pattern_In) then
+   --           Result_String := Slice (Result_String, 1, Length (Result_String) - Pattern_In_Length + 1) & Pattern_Out;
+   --           Pattern_Buffer := "";
+   --        else
+   --           Result_String := Result_String & Result_Char;
+   --        end if;
+   --     end loop;
+   --     return Result_String;
+   --  end Replace_Pattern;
 
    ---------------------------------------------------------------------------
    function Starts_With (Item : String; Pattern : ASCII_Character) return Boolean is
@@ -321,10 +328,10 @@ package body v22.Uxs is
       return 1 <= Length (Item) and then From_Unicode (Element (Item, 1)) = From_ASCII (Pattern);
    end Starts_With;
 
-   function Starts_With (Item : String; Pattern : String) return Boolean is
-   begin
-      return Length (Pattern) <= Length (Item) and then Head (Item, Length (Pattern)) = Pattern;
-   end Starts_With;
+   --  function Starts_With (Item : String; Pattern : String) return Boolean is
+   --  begin
+   --     return Length (Pattern) <= Length (Item) and then Head (Item, Length (Pattern)) = Pattern;
+   --  end Starts_With;
 
    ---------------------------------------------------------------------------
    function Stript_Chars (String_To_Process : String ; Char_List : String) return String is
@@ -383,18 +390,14 @@ package body v22.Uxs is
       return From_Latin_1 (Hex_Chars (Half_Byte_2)) & From_Latin_1 (Hex_Chars (Half_Byte_1));
    end To_Hex;
 
-   function To_Hex (String_To_Convert : String) return String is
-      String_Extracted : String := " ";
+   function To_Hex (String_In : String) return String is
+      String_To_Convert : Standard.String := To_Latin_1 (String_In);
       String_Converted : String := "";
    begin
-      for I in 1 .. Length (String_To_Convert) loop
-         String_Extracted := Slice (Source => String_To_Convert, Low => I, High => I);
-         --Append (String_Converted, To_Hex ( Character'Pos ( String_Extracted (1))) & " ");
-         Append (String_Converted, To_Hex ( To_String (To_Integer ( String_Extracted ))) & " ");
-
+      for I in 1 .. String_To_Convert'Last loop
+         String_Converted := String_Converted & To_Hex (Character'Pos (String_To_Convert(I))) & " ";
       end loop;
-      --  Strip last trailing space
-      if Length (String_Converted) >= 3 then
+      if Length (String_Converted) >= 3 then --  Strip last trailing space
          String_Converted := Slice (String_Converted, 1, Length (String_Converted) - 1);
       end if;
       return String_Converted;
@@ -427,29 +430,38 @@ package body v22.Uxs is
    ---------------------------------------------------------------------------
    function To_String (B : Boolean) return String is
    begin
-      if B then
-         return "True";
-      else
-         return "False";
-      end if;
+      return From_Latin_1 ((if (B) then "True" else "False"));
+   end To_String;
+
+   function To_String (B : On_Off) return String is
+   begin
+      return From_Latin_1 (On_Off'Image (B));
    end To_String;
 
    function To_String (I : Integer) return String is
    begin
-      --return From_UTF_8 (I'Image).Delete (1, 1); Keep the sign
       return From_UTF_8 (I'Image);
    end To_String;
 
    function To_String (I : Long_Integer) return String is
    begin
-      --return From_UTF_8 (Long_Integer'Image (I)).Delete (1, 1); Keep the sign
-      return From_UTF_8 (Long_Integer'Image (I)).Delete (1, 1);
+      return Trim_Left (From_UTF_8 (Long_Integer'Image (I))); -- Suppress the space left for positive sign
    end To_String;
 
-  function To_String (C : ASCII_Character) return String is
+   function To_String (I : Long_Long_Integer) return String is
+   begin
+      return Trim_Left (From_UTF_8 (Long_Long_Integer'Image (I))); -- Suppress the space left for positive sign
+   end To_String;
+
+   function To_String (C : ASCII_Character) return String is
    begin
       return From_Latin_1 ((1 => C));
    end To_String;
+
+   function To_String_Unsigned (I : Integer) return String is
+   begin
+      return From_UTF_8 (I'Image).Delete (1, 1); -- Removes the sign (' ' for plus, '-' for minus)
+   end To_String_Unsigned;
 
    ---------------------------------------------------------------------------
    function To_Val (String_To_Convert : String) return String is
@@ -499,6 +511,10 @@ package body v22.Uxs is
       end loop;
       return Src;
    end Trim_Slashes;
+
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
 end v22.Uxs;

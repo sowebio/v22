@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-net.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -67,6 +70,9 @@ package v22.Net is
    function File_Exists (Target : in String ; Name : String) return Boolean;
    --  Returns True if distant file Name exists.
 
+   function Get_Exception return On_Off;
+   --  Returns Exception status.
+
    function Get_Network_From_Ip (Ip : in String) return String;
    --  Returns the network part of a /32 classless IP address.
 
@@ -95,10 +101,8 @@ package v22.Net is
    --  options Mount_Options. All mount options are accepted. Returns true if
    --  operation is successful.
 
-   procedure Set_Exception (Set_Unset : Boolean := True);
-   function Set_Exception return Boolean;
-   -- Enable Exception processing, which is disabled by default. A call without
-   -- parameter returns the Exception status (enable or disabled).
+   procedure Set_Exception (Switch : On_Off := On);
+   -- Enable Exception processing, which is disabled by default.
 
    function Set_Hostname (Target : String ; Hostname : String) return Boolean;
    -- Set Hostname for a Target host. Returns true if command ok.
@@ -111,12 +115,12 @@ package v22.Net is
    procedure Set_Key;
    -- Delete the key previously set.
 
-   procedure Set_Message (Msg : Boolean := True);
+   procedure Set_Message (Switch : On_Off := On);
    -- Control console message when using commands like Send_Command and
    -- Send_File. Default is console message enable. A call without parameter
    -- enable console output.
 
-   procedure Set_Output (Output : Boolean := True);
+   procedure Set_Output (Switch : On_Off := On);
    -- Control console output when using commands like Send_Command and
    -- Send_File. Default is console output enable. A call without parameter
    -- enable console output.
@@ -172,10 +176,11 @@ package v22.Net is
 private
 
    SSH_Default_Options : constant String := " -q -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ";
-   SSH_Exception : Boolean := False;
+   SSH_Exception : On_Off := Off;
    SSH_Key : String := "";
-   SSH_Message : Boolean := True;
-   SSH_Output : Boolean := True;
+   SSH_Message : On_Off := On;
+   SSH_Output :  On_Off := On;
+
    SSH_Temp_Command_Key : String := "-v22-net-command-private.key";
    --  SSH_Temp_Command_Output : String := "-v22-net-command.output";
    --  SSH_Temp_Delete_Directory : String := "-v22-net-delete-directory-tree.key";
