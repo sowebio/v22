@@ -1,9 +1,12 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi_Tio.adb
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi_tio.adb
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   LGPL v3
 --  @encoding  UTF-8
@@ -29,20 +32,21 @@ package body TestApi_Tio is
    procedure Run is
    begin
 
+      -------------------------------------------------------------------------
       Msg.Set_Task ("TIO T1");
       Msg.Title ("Console demo - nothing will be logged");
-      Msg.Line;
+      Msg.New_Line;
 
       Tio.Put_Line ("Put a String at current cursor position");
       Tio.Put_Line ("Put a Char, a String then put a new line");
-      Tio.Put ("C"); Tio.Put (" String"); Tio.Line;
+      Tio.Put ("C"); Tio.Put (" String"); Tio.New_Line;
       Tio.Put_Line ("Move cursor forward, backward, then put a new line");
       Tio.Put_Line ("     0    1         2         ");
       Tio.Put_Line ("012345678901234567890123456789");
       Tio.Cursor_Line_Forward (10); Tio.Put ("|");
       Tio.Cursor_Line_Forward (9); Tio.Put ("|");
       Tio.Cursor_Line_Backward (16); Tio.Put ("|");
-      Tio.Line;
+      Tio.New_Line;
       Tio.Put_Line ("(-16)3<  >1(+10)   >2(+9)");
       Tio.Put_Line ("Save cursor pos, print first line, restore pos, print");
       Tio.Put_Line ("current line, then put a new line. Using 'clear'");
@@ -55,11 +59,12 @@ package body TestApi_Tio is
       Tio.Cursor_Restore;
       Tio.Put_Line ("Command 2 : Cursor at the current line, after restoring");
       Tio.Put_Line ("cursor coordinates...");
-      Tio.Line;
+      Tio.New_Line;
 
+      -------------------------------------------------------------------------
       Msg.Set_Task ("TIO T2");
       Msg.Title ("Animation for batch processing, style 1");
-      Tio.Line;
+      Tio.New_Line;
 
       for I in 1 .. 10 loop
          Tio.Put (".*");
@@ -72,11 +77,13 @@ package body TestApi_Tio is
          delay 0.1;
       end loop;
 
-      Tio.Line;
-      Tio.Line;
+      Tio.New_Line;
+      Tio.New_Line;
+
+      -------------------------------------------------------------------------
       Msg.Set_Task ("TIO T3");
       Msg.Title ("Animation for batch processing, style 2");
-      Tio.Line;
+      Tio.New_Line;
 
       for I in 1 .. 3 loop
          Tio.Put (I * 2 * ".");
@@ -89,15 +96,17 @@ package body TestApi_Tio is
          delay 0.2;
       end loop;
 
-      Tio.Line;
-      Tio.Line;
+      Tio.New_Line;
+      Tio.New_Line;
+
+      -------------------------------------------------------------------------
       Msg.Set_Task ("TIO T4");
       Msg.Title ("Animation for batch processing, style 3");
-      Msg.Line;
+      Msg.New_Line;
 
       Tio.Animated_Delay (8);
 
-      Tio.Line;
+      Tio.New_Line;
       Tio.Put_Line ("Finally send a beep");
       Tio.Beep;
 

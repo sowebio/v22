@@ -22,10 +22,34 @@
    </HEAD>
 
    <style>
+        <!-- The order italic, bolditalic, bold and regular is mandatory -->
+        @font-face {
+            font-family: "Overpass";
+            src: url("Overpass-Italic.woff");
+            font-style: italic, oblique;
+        }
+        @font-face {
+            font-family: "Overpass";
+            src: url("Overpass-BoldItalic.woff");
+            font-weight: bold;
+            font-style: italic, oblique;
+        }
+
+        @font-face {
+            font-family: "Overpass";
+            src: url("Overpass-Bold.woff");
+            font-weight: bold;
+        }
+        @font-face {
+            font-family: "Overpass";
+            src: url("Overpass-Regular.woff");
+        }
+
         body{
-                font-family: "Trebuchet MS", sans-serif;
+                font-family: "Overpass", sans-serif;
                 margin: 50px;
         }
+
         .demoHeaders {
                 margin-top: 2em;
         }

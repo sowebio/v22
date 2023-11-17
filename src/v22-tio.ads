@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-tio.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -20,9 +23,7 @@
 --  See git log
 -------------------------------------------------------------------------------
 
---with Ada.Strings.Unbounded;
 with Ada.Text_IO;
-
 with Interfaces;
 
 with v22.Uxs; use v22.Uxs;
@@ -31,7 +32,10 @@ package v22.Tio is
 
    package ATI renames Ada.Text_IO;
 
-   --  Terminal
+   ----------------------------------------------------------------------------
+   --  API - Terminal
+   ----------------------------------------------------------------------------
+
    Max_Row  : constant Natural := 29;
    Max_Column : constant Natural := 79;
 
@@ -40,6 +44,7 @@ package v22.Tio is
    subtype Integer_64 is Interfaces.Integer_64;
 
    procedure Put (B : Boolean);
+   procedure Put (B : On_Off);
    procedure Put (C : Character) renames ATI.Put;
    procedure Put (V : String);
    procedure Put (I : Integer);
@@ -49,6 +54,7 @@ package v22.Tio is
    --  Print to the console.
 
    procedure Put_Line (B : Boolean);
+   procedure Put_Line (B : On_Off);
    procedure Put_Line (C : Character);
    procedure Put_Line (V : String);
    procedure Put_Line (I : Integer);
@@ -74,11 +80,10 @@ package v22.Tio is
    function Confirm_Twice (User_Prompt_1 : String ; User_Prompt_2 : String) return Boolean;
    -- Double check by user before action. Returns True if user has validate.
 
-   procedure Line (Spacing : ATI.Positive_Count := 1) renames ATI.New_Line;
+   procedure New_Line (Spacing : ATI.Positive_Count := 1) renames ATI.New_Line;
    --  Add a new line to the console
 
-   procedure Get_Immediate (C : out Character)
-                            renames Ada.Text_IO.Get_Immediate;
+   procedure Get_Immediate (C : out Character) renames Ada.Text_IO.Get_Immediate;
    --  Get a character validated by [Enter].
 
    function Get_Password return String;
@@ -113,20 +118,43 @@ package v22.Tio is
    procedure Cursor_Restore;
    --  Restore the previous saved cursor position.
 
-   procedure Cursor_On;
-   --  Display cursor.
+   procedure Set_Cursor (Switch : On_Off);
+   --  Display or hide cursor.
 
-   procedure Cursor_Off;
-   --  Hide cursor.
-
-   --  Text File_Handle
+   ----------------------------------------------------------------------------
+   --  API - Text File
+   ----------------------------------------------------------------------------
 
    subtype File is ATI.File_Type;
 
-   procedure Open_Conf (Handle : in out File; Name : String ;
-                       Wipe_Before_Process : Boolean := False ;
-                       Permissions : String := "");
+   procedure Append (Handle : in out File; Name : String);
+   --  Append on an existing file.
 
+   procedure Close (Handle : in out File) renames ATI.Close;
+   --  Close a file.
+
+   procedure Create (Handle : in out File; Name : String);
+   --  Create a file.
+
+   function End_Of_File (Handle : File) return Boolean renames ATI.End_Of_File;
+   --  Test if enf of file reached.
+
+   function End_Of_Line (Handle : File) return Boolean renames ATI.End_Of_Line;
+   --  Test if end of line reached.
+
+      procedure Flush (Handle : File) renames ATI.Flush;
+   --  Flush file buffer to disk.
+
+   procedure Get_Line (Handle : File; V : out String);
+   --  Read a line then move the file pointer to the next line.
+
+   function Is_Open (Handle : File) return Boolean renames ATI.Is_Open;
+   --  Test if a file is open.
+
+   procedure New_Line (Handle : File; Spacing : ATI.Positive_Count := 1) renames ATI.New_Line;
+   --  Add a new line to a file.
+
+   procedure Open_Conf (Handle : in out File; Name : String ; Wipe_Before_Process : Boolean := False ; Permissions : String := "");
    --  Special Open procedure for config files. Creates or Append if needed.
    --  Ensure that the complete directory tree structure exists before
    --  creating file. Creating this directory tree if needed.
@@ -135,18 +163,6 @@ package v22.Tio is
 
    procedure Open_Read (Handle : in out File; Name : String);
    --  Open a file in read mode.
-
-   procedure Create (Handle : in out File; Name : String);
-   --  Create a file.
-
-   procedure Append (Handle : in out File; Name : String);
-   --  Append on an existing file.
-
-   procedure Close (Handle : in out File) renames ATI.Close;
-   --  Close a file.
-
-   function Is_Open (Handle : File) return Boolean renames ATI.Is_Open;
-   --  Test if a file is open.
 
    procedure Put (Handle  : File; C : Character) renames ATI.Put;
    procedure Put (Handle  : File; S : Standard.String) renames ATI.Put;
@@ -158,28 +174,12 @@ package v22.Tio is
    procedure Put_Line (Handle  : File; V : String);
    --  Write a file and then add a new line
 
-   procedure Get_Line (Handle : File; V : out String);
-   --  Read a line then move the file pointer to the next line.
-
-   procedure Line (Handle : File; Spacing : ATI.Positive_Count := 1)
-                   renames ATI.New_Line;
-   --  Add a new line to a file.
-
-   procedure Reset (Handle : in out File) renames ATI.Reset;
-   --  Reset the file pointer to the start of the file
-
-   procedure Flush (Handle : File) renames ATI.Flush;
-   --  Flush file buffer to disk.
-
-   function End_Of_Line (Handle : File) return Boolean renames ATI.End_Of_Line;
-   --  Test if end of line reached.
-
-   function End_Of_File (Handle : File) return Boolean renames ATI.End_Of_File;
-   --  Test if enf of file reached.
-
    function Read_File (File_Name : String) return String;
    --  Read a text file File_To_Read and returning a String buffer. LF
    --  (line feed) are preserved.
+
+   procedure Reset (Handle : in out File) renames ATI.Reset;
+   --  Reset the file pointer to the start of the file
 
    procedure Write_File (File_Name : String ; Content : String ; Permissions : String := "");
    --  Write a text file File_To_Write with Content. LF in content are

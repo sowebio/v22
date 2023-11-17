@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-sys.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -32,6 +35,11 @@ package body v22.Sys is
 
    package AEV renames Ada.Environment_Variables;
    
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
+   
+   ----------------------------------------------------------------------------
    function Command_Path (Command_Name : String) return String is
       Exec_Error : Integer;
       Find_Command : constant String := "which " & Command_Name;
@@ -40,11 +48,6 @@ package body v22.Sys is
       Shell_Execute (Find_Command, Exec_Error, Exec_Output);
       return Exec_Output;
    end Command_Path;
-   
-   --  function Command_Path (Command_Name : String) return String is
-   --  begin
-   --     return Command_Path (To_String (Command_Name ));
-   --  end Command_Path;
 
    ---------------------------------------------------------------------------
    function Get_Alloc_Ada return String is
@@ -118,7 +121,7 @@ package body v22.Sys is
       Exec_Output : String;
       Exec_Output_Install_Ok : constant String := "Status: install ok installed";
    begin
-      if Empty (Host_Name) then
+      if Is_Empty (Host_Name) then
          -- Exec_Error checking is irrelevant with dpkg-query, allways check 
          -- message output. In addition, dpkg-query -W -f='${Status}' method
          -- is not recommended as the result is not reliable. Indeed, with a 
@@ -132,9 +135,67 @@ package body v22.Sys is
          Sys.Shell_Execute ("ssh -q -o StrictHostKeyChecking=no " & Host_Name & " " & DQ & 
                             Check_Command & DQ & STD_ERR_OUT_REDIRECT, Exec_Error, Exec_Output);
       end if;
-      Msg.Dbg ("Is_Install Exec_Output: " & Exec_Output);
+      Msg.Debug ("Is_Install Exec_Output: " & Exec_Output);
       return (Index (Exec_Output, Exec_Output_Install_Ok) > 0);
    end Is_Package;
+   
+   ---------------------------------------------------------------------------
+   function Is_Command (Command : String) return Boolean is
+      function Sys (Arg : Interfaces.C.char_array) return Integer;
+      pragma Import (C, Sys, "system");
+      -- Stript parameters if exists (or not) because "which" needs command without parameter
+      Command_Processed : constant String := Field_By_Index (Trim_Both (Command), 1, SP);
+   begin
+      return (Sys (Interfaces.C.To_C (To_ASCII ("which " & Command_Processed & STD_ERR_OUT_REDIRECT)) ) = 0);
+   end Is_Command;
+   
+   ---------------------------------------------------------------------------
+   procedure Reset_Memory_Monitor is
+   begin
+      GNATCOLL.Memory.Reset;
+   end Reset_Memory_Monitor; 
+   
+   ---------------------------------------------------------------------------
+   procedure Set_Env (Name : String; Value : String) is
+   begin
+      AEV.Set (To_ASCII (Name), To_ASCII (Value));
+   end Set_Env;
+
+   ---------------------------------------------------------------------------
+   procedure Set_Memory_Monitor (Switch : On_Off) is
+   begin
+      GNATCOLL.Memory.Configure (Activate_Monitor => (Switch = On));
+   end Set_Memory_Monitor;
+    
+   ---------------------------------------------------------------------------
+   --  https://rosettacode.org/wiki/Execute_a_system_command#Ada
+   procedure Shell_Execute (Command : String; Result : out Integer) is
+      function Sys (Arg : Interfaces.C.char_array) return Integer;
+      pragma Import (C, Sys, "system");
+   begin
+      if Is_Command (Command) then
+         Result := Sys (Interfaces.C.To_C (To_ASCII (Command)));
+      else
+         Result := 255;
+      end if;
+   end Shell_Execute;
+     
+   procedure Shell_Execute (Command : String) is
+      Dummy : Integer := 0;
+   begin
+      Shell_Execute (Command, Dummy);
+   end Shell_Execute;
+   
+   procedure Shell_Execute (Command : String;
+                            Result : out Integer;
+                            Output : out String) is
+   begin
+      Shell_Execute_Output (Command, Result, Output);
+   end Shell_Execute;
+
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
 
    ---------------------------------------------------------------------------
    function Install_Package (Package_Name : String; Host_Name : String) return Boolean is
@@ -147,28 +208,28 @@ package body v22.Sys is
    begin
    
       if not Is_Package (Package_Name_Trimmed, Host_Name) then
-         if Empty (Host_Name) then
-            Msg.Std ("Local install of " & Package_Name_Trimmed);
+         if Is_Empty (Host_Name) then
+            Msg.Info ("Local install of " & Package_Name_Trimmed);
             if Prg.Is_User_Not_Root then
                Installer := "sudo " & Installer;
             end if;
-            Msg.Dbg ("Command: " & Installer & " install -y " & Package_Name_Trimmed & STD_ERR_OUT_REDIRECT);
+            Msg.Debug ("Command: " & Installer & " install -y " & Package_Name_Trimmed & STD_ERR_OUT_REDIRECT);
             Sys.Shell_Execute (Installer & " install -y " & Package_Name_Trimmed & STD_ERR_OUT_REDIRECT, Exec_Error);
          else
-            Msg.Std ("Remote install of " & Package_Name_Trimmed);
+            Msg.Info ("Remote install of " & Package_Name_Trimmed);
             -- Use of Exec_Output seems to disturb results. Definitly we should handle redirection analysis through STD and ERR files
             Sys.Shell_Execute ("ssh -q -o StrictHostKeyChecking=no " & Host_Name & " " & 
                DQ & Installer & " install -y " & Package_Name_Trimmed & DQ & STD_ERR_OUT_REDIRECT, Exec_Error);
          end if;
          
          if Exec_Error = 0 then
-            Msg.Std (Package_Name_Trimmed & " installed successfully.");
+            Msg.Info (Package_Name_Trimmed & " installed successfully.");
          else
-            Msg.Err ("v20.Sys.Install_Package > Exec error installing: " & Package_Name_Trimmed & " Error code: " & To_String (Exec_Error));
+            Msg.Error ("v20.Sys.Install_Package > Exec error installing: " & Package_Name_Trimmed & " Error code: " & To_String (Exec_Error));
             Result := False;
          end if;
       else
-         Msg.Std ("Package " & Package_Name_Trimmed & " already installed.");
+         Msg.Info ("Package " & Package_Name_Trimmed & " already installed.");
       end if;
       return Result;
    end Install_Package;
@@ -178,7 +239,7 @@ package body v22.Sys is
       Packages_Count : Natural;
       Result : Boolean := True;
    begin
-      Msg.Std ("Check packages to install.");
+      Msg.Info ("Check packages to install.");
       Packages_Count := Field_Count (Packages_String, VD);
       if (Packages_Count > 0) then
          -- Install packages
@@ -208,8 +269,8 @@ package body v22.Sys is
       Result : Boolean := True;
    begin
       if Is_Package (Package_Name, Host_Name) then
-         Msg.Std ("Installing " & Package_Name);
-         if Empty (Host_Name) then
+         Msg.Info ("Installing " & Package_Name);
+         if Is_Empty (Host_Name) then
             if Prg.Is_User_Not_Root then
                Installer := "sudo " & Installer;
             end if;
@@ -220,13 +281,13 @@ package body v22.Sys is
          end if;
          
          if Exec_Error = 0 then
-            Msg.Std (Package_Name & " installed successfully.");
+            Msg.Info (Package_Name & " installed successfully.");
          else
-            Msg.Err ("v22.Sys.Install_Package > Exec error purging: " & Package_Name);
+            Msg.Error ("v22.Sys.Install_Package > Exec error purging: " & Package_Name);
             Result := False;
          end if;
       else
-         Msg.Std ("Package " & Package_Name & " not yet installed.");
+         Msg.Info ("Package " & Package_Name & " not yet installed.");
       end if;
       return Result;
    end Purge_Package;
@@ -236,7 +297,7 @@ package body v22.Sys is
       Packages_Count : Natural;
       Result : Boolean := True;
    begin
-      Msg.Std ("Check packages to purge.");
+      Msg.Info ("Check packages to purge.");
       Packages_Count := Field_Count (Packages_String, VD);
       if (Packages_Count > 0) then
          -- Purge package
@@ -257,37 +318,7 @@ package body v22.Sys is
    end Purge_Packages;
    
    ---------------------------------------------------------------------------
-   procedure Reset_Memory_Monitor is
-   begin
-      GNATCOLL.Memory.Reset;
-   end Reset_Memory_Monitor; 
-   
-   ---------------------------------------------------------------------------
-   procedure Set_Env (Name : String; Value : String) is
-   begin
-      AEV.Set (To_ASCII (Name), To_ASCII (Value));
-   end Set_Env;
-
-   ---------------------------------------------------------------------------
-   procedure Set_Memory_Monitor (State : Boolean := True) is
-   begin
-      GNATCOLL.Memory.Configure (Activate_Monitor => State);
-   end Set_Memory_Monitor;
-
-   ---------------------------------------------------------------------------
-   function Is_Command (Command : String) return Boolean is
-      function Sys (Arg : Interfaces.C.char_array) return Integer;
-      pragma Import (C, Sys, "system");
-      -- Stript parameters if exists (or not) because "which" needs command without parameter
-      Command_Processed : constant String := Field_By_Index (Trim_Both (Command), 1, SP);
-   begin
-      return (Sys (Interfaces.C.To_C (To_ASCII ("which " & Command_Processed & STD_ERR_OUT_REDIRECT)) ) = 0);
-   end Is_Command;
-   
-   ---------------------------------------------------------------------------
-   procedure Shell_Execute_Output (Command : String;
-                                   Result : out Integer;
-                                   Output : out String) is
+   procedure Shell_Execute_Output (Command : String; Result : out Integer; Output : out String) is
       Arguments : GOL.Argument_List_Access;
       Command_Exit_Code : aliased Integer; --  Must reside in memory (pointer)
    begin
@@ -305,32 +336,6 @@ package body v22.Sys is
          Result := 255;
       end if;
    end Shell_Execute_Output;
-   
-   ---------------------------------------------------------------------------
-   --  https://rosettacode.org/wiki/Execute_a_system_command#Ada
-   procedure Shell_Execute (Command : String; Result : out Integer) is
-      function Sys (Arg : Interfaces.C.char_array) return Integer;
-      pragma Import (C, Sys, "system");
-   begin
-      if Is_Command (Command) then
-         Result := Sys (Interfaces.C.To_C (To_ASCII (Command)));
-      else
-         Result := 255;
-      end if;
-   end Shell_Execute;
-     
-   procedure Shell_Execute (Command : String) is
-      Dummy : Integer := 0;
-   begin
-      Shell_Execute (Command, Dummy);
-   end Shell_Execute;
-   
-   procedure Shell_Execute (Command : String;
-                            Result : out Integer;
-                            Output : out String) is
-   begin
-      Shell_Execute_Output (Command, Result, Output);
-   end Shell_Execute;
       
 -------------------------------------------------------------------------------
 end v22.Sys;

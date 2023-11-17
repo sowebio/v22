@@ -1,0 +1,58 @@
+
+make_icons.txt
+
+Go to website https://fonts.google.com/icons
+
+Settings: Fill = on & Optical size = 48px
+
+Clic on icon "xxxxxx", download it in SVG as xxxxxx.svg
+Repeat as needed
+
+When finished, run ./cv in the download directory to convert svg icons in the proper v22 icon format (png, 128x128 px, transparent and negative):
+
+Color: #ffffff
+Size: 128x128
+Density: 1200
+
+Convert apps.svg > apps.png
+Convert browse_activity.svg > browse_activity.png
+Convert dataset.svg > dataset.png
+Convert event_list.svg > event_list.png
+Convert group.svg > group.png
+Convert indeterminate_check_box.svg > indeterminate_check_box.png
+Convert local_convenience_store.svg > local_convenience_store.png
+Convert person.svg > person.png
+Convert point_of_sale.svg > point_of_sale.png
+Convert query_stats.svg > query_stats.png
+Convert settings_account_box.svg > settings_account_box.png
+Convert settings.svg > settings.png
+Convert whatshot.svg > whatshot.png
+
+
+cv file:
+--------------------------------
+#!/bin/env bash
+
+color="#ffffff"
+size=128
+density=1200
+
+echo ""
+echo "Color: $color"
+echo "Size: ${size}x${size}"
+echo "Density: $density"
+echo ""
+
+files="./*.svg"
+for file in $files
+do
+  output="${file##*/}" # delete residual path (./)
+  output="${output%.*}" # delete extension (.svg)
+  echo "Convert $output.svg > $output.png"
+  convert -background none -density $density -resize "$size"x"$size" $file /tmp/output.png
+  convert /tmp/output.png +level-colors $color, /tmp/output.png
+  convert /tmp/output.png -fill $color -opaque white ico-$output.png
+done
+
+# eof
+--------------------------------

@@ -1,9 +1,12 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi_Sql.ads
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi_sql.ads
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   LGPL v3
 --  @encoding  UTF-8
@@ -30,19 +33,16 @@ with Gnoga.Server.Database.SQLite;
 
 with UXStrings; use UXStrings;
 
-with v22;
+with v22; use v22;
 with v22.Msg;
 with v22.Sql;
 with v22.Tio;
-with v22.Uxs;
+with v22.Uxs; use v22.Uxs;
 
 package TestApi_Sql is
 
    use Gnoga;
    use all type Gnoga.String;
-
-   use v22;
-   use v22.Uxs;
    subtype String is UXString;
 
    procedure Run;

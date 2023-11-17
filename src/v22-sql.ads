@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-sql.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -14,24 +17,22 @@
 --  @description
 --
 --  @authors
---  Dmitry Kazakov - dk - http://www.dmitry-kazakov.de (low level SQLite binding in sql directory)
 --  Stéphane Rivière - sr - sriviere@soweb.io (high level SQLite binding, some low level binding hacks)
 --
 --  @versions
 --  See git log
 -------------------------------------------------------------------------------
 
--- Schema
 with Ada.Containers; use Ada.Containers;
 with Ada.Containers.Vectors;
 with Ada.Text_IO;
-
 with Interfaces.C.Strings;
 
 with Gnoga.Types;
 with Gnoga.Server.Database.MySQL; use Gnoga.Server.Database.MySQL;
 with Gnoga.Server.Database.SQLite;
 
+with v22.Prg;
 with v22.Uxs; use v22.Uxs;
 
 package v22.Sql is
@@ -40,6 +41,8 @@ package v22.Sql is
    package GSD renames Gnoga.Server.Database;
 
    type Database_Brand is (None, MySQL, SQLite, Unknown);
+
+   type Database_Rank is (Main, Secondary);
 
    type Database_Status is (None,
                             Open_Failed,
@@ -84,48 +87,43 @@ package v22.Sql is
 
 ------------------------------------------------------------------------------
 
-   function Brand (DB : in out GSD.Connection'Class) return Database_Brand;
-   --  Returns the Database_Type of DB
-
    procedure Close (DB : in out GSD.Connection'Class);
    procedure Close;
    -- Close a database or all data database without passing database handle.
 
-   function Column_Exists (DB : in out GSD.Connection'Class;
-                           Table_Name : String;
-                           Column_Name : String) return Boolean;
+   function Column_Exists (DB : in out GSD.Connection'Class; Table_Name : String; Column_Name : String) return Boolean;
    --  Return true if Column_Name exists in Table_Name.
    --  Return False if Column_Name or Table_Name does not exist.
 
-   procedure Delete (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Where_Condition : String);
+   procedure Delete (DB : in out GSD.Connection'Class; Table_Name : String; Where_Condition : String);
    --  Delete a row in Table_Name specifying a Where_Condition.
 
-   function From_Money (DB_Money : Money) return Integer;
-   --  Convert type Money to Integer for accurate storage.
+   function From_Money (DB_Money : Money) return Long_Long_Integer;
+   --  Convert Bigint database storage (Long_Long_Integer) to Money type.
 
-   function Get_Config (DB : in out GSD.Connection'Class;
-                        Parameter : String) return String;
+   function Get_Config (DB : in out GSD.Connection'Class; Parameter : String) return String;
    --  Get configuration Value from Parameter stored in Sys_Config table.
    --  The Sys_Config table must be already created. Returns an empty string
    --  if the Sys_Config table or parameter does not exist.
+
+   function Get_Database_Brand (DB : in out GSD.Connection'Class) return Database_Brand;
+   --  Returns the Database_Type of DB
+
+  function Get_Database_Main return String;
+   --  Get the main application database. The main database owns Sys_Config,
+   --  Sys_Schema and Sys_Users system tables.
 
    function Get_Version (DB : in out GSD.Connection'Class) return String;
    --  Returns MySQL or SQLite database version.
    --  MySQL: v10.3.39-MariaDB-0+deb10u1 (output sample).
    --  SQLite: v3.43.0 (output sample).
 
-   function Index_Exists (DB : in out GSD.Connection'Class;
-                          Table_Name : String;
-                          Index_Name : String) return Boolean;
+   function Index_Exists (DB : in out GSD.Connection'Class; Table_Name : String; Index_Name : String) return Boolean;
    --  Return True if Index_Name exists for Table_Name.
    --  Return False if Index_Name or Table_Name does not exist.
    --  Names are case insensitive for MySQL and case sensitive for SQLite.
 
-   procedure Insert (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Columns_Values : String);
+   procedure Insert (DB : in out GSD.Connection'Class; Table_Name : String; Columns_Values : String);
    --  Create a row in Table_Name with Columns_Values.
    --  The special character ^ (or constant CD as Column delimiter) is used to
    --  separate column/value pairs and the special character ~ (or constant ND
@@ -133,16 +131,17 @@ package v22.Sql is
    --  from its value. A non existent Table or Column don't raise exception
    --  but an error is logged.
 
-   function Last_RowID (DB : in out GSD.Connection'Class;
-                        Table_Name : String) return Integer;
+   function Last_RowID (DB : in out GSD.Connection'Class; Table_Name : String) return Integer;
    -- Returns last existing RowID in Table_Name.
 
    function Open (DBM : in out GSD.MySQL.Connection;
                   URI : String := "";
-                  Version : String := "") return Database_Status;
+                  Version : String := "";
+                  Rank : Database_Rank := Main) return Database_Status;
    function Open (DBS : in out GSD.SQLite.Connection;
                   URI : String := "";
-                  Version : String := "") return Database_Status;
+                  Version : String := "";
+                  Rank : Database_Rank := Main) return Database_Status;
    --  Open a database.
    --  URI conforms to RFC 3986 URI. See examples below:
    --  MySQL:  db:db_name?host=192.168.0.243&port=3306&user=user_name&password=user_password
@@ -151,13 +150,14 @@ package v22.Sql is
    --  DB_Version is major.minor DB schema version
    --  Returns Database_Status see above
 
-   function Properties (DB_Name : String) return Database_Line;
-   -- Returns database properties record.
+   procedure Ping;
+   --  Ping opened databases to reset timeout, to avoid the infamous MySQL error "server has gone away".
+   --  This does not apply to SQLite databases.
 
-   function Read (DB : in out GSD.Connection'Class;
-                  Table_Name : String;
-                  Columns : String;
-                  Condition : String := "") return String;
+   function Properties (DB_Name : String) return Database_Line;
+   --  Returns database properties record.
+
+   function Read (DB : in out GSD.Connection'Class; Table_Name : String; Columns : String; Condition : String := "") return String;
    --  Returns an extraction from Table_Name with comma delimited Columns and
    --  standard SQL Condition (like WHERE, ORDER BY, LIMIT).
    --  The extraction is formatted with standard v22 CD constant as Column
@@ -166,9 +166,7 @@ package v22.Sql is
    --  function Row_Count (DB : in out GSD.MySQL.Connection;
    --                      Table_Name : String;
    --                      Option : String := "*") return Integer;
-   function Row_Count (DB : in out GSD.Connection'Class;
-                       Table_Name : String;
-                       Option : String := "*") return Integer;
+   function Row_Count (DB : in out GSD.Connection'Class; Table_Name : String; Option : String := "*") return Integer;
    --  Returns counted rows in Table_Name with Options All and Distinct.
 
 
@@ -183,29 +181,25 @@ package v22.Sql is
    --  Create, read, update and delete operations on database schema after
    --  loading schema by Schema_Load
 
-   function Search (DB : in out GSD.Connection'Class;
-                    Table_Name : String;
-                    Condition : String) return Boolean;
+   function Search (DB : in out GSD.Connection'Class; Table_Name : String; Condition : String) return Boolean;
    --  Return True if Condition verified.
 
-   procedure Set_Config (DB : in out GSD.Connection'Class;
-                         Parameter : String;
-                         Value : String);
+   procedure Set_Config (DB : in out GSD.Connection'Class; Parameter : String; Value : String);
    --  Store configuration Parameter and Value to Sys_Config table.
    --  The new Value will replaced the eventually existing one.
    --  The Sys_Config table will be created if needed.
 
-   function Table_Exists (DB : in out GSD.Connection'Class;
-                          Table_Name : String) return Boolean;
+   procedure Set_Database_Main (Database_Name : String);
+   --  Set the main application database. The main database owns Sys_Config,
+   --  Sys_Schema and Sys_Users system tables.
+
+   function Table_Exists (DB : in out GSD.Connection'Class; Table_Name : String) return Boolean;
    --  Return true if Table_Name exists.
 
-   function To_Money (DB_Integer : Integer) return Money;
-   --  Convert Integer storage to Money type for accurate computing.
+   function To_Money (DB_Integer : Long_Long_Integer) return Money;
+   --  Convert Bigint database storage (Long_Long_Integer) to Money type.
 
-   procedure Update (DB : in out GSD.Connection'Class;
-                     Table_Name : String;
-                     Columns_Values : String;
-                     Where_Condition : String);
+   procedure Update (DB : in out GSD.Connection'Class; Table_Name : String; Columns_Values : String; Where_Condition : String);
    --  Update one or more row in Table_Name with Columns_Values specifying a
    --  Where_Condition.
    --  The special character ^ (or constant CD as Column delimiter) is used to
@@ -294,8 +288,11 @@ package v22.Sql is
 ------------------------------------------------------------------------------
 private
 
+   Database_Main : String := Prg.Name;
+
    Table_Sys_Config : String := "Sys_Config";
    Table_Sys_Schema : String := "Sys_Schema";
+   Table_Sys_Users : String := "Sys_Users";
 
    Databases : Databases_List.Vector;
    Schema : Schema_Lines_List.Vector;
@@ -313,7 +310,8 @@ private
                         DB_User : String;
                         DB_Password : String;
                         DB_File : String;
-                        DB_Version : String);
+                        DB_Version : String;
+                        Rank : Database_Rank := Main);
 
 ------------------------------------------------------------------------------
 end v22.Sql;

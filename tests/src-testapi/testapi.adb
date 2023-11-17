@@ -1,9 +1,12 @@
 ------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi.adb
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi.adb
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   LGPL v3
 --  @encoding  UTF-8
@@ -30,7 +33,7 @@ with GNAT.Strings;
 
 with UXStrings; use UXStrings;
 
-with v22;
+with v22; use v22;
 with v22.Cfg;
 with v22.Crl; use v22.Crl; -- for operators
 with v22.Fls;
@@ -40,7 +43,7 @@ with v22.Prg;
 with v22.Sql;
 with v22.Sys;
 with v22.Tio;
-with v22.Uxs;
+with v22.Uxs; use v22.Uxs;
 
 with TestApi_Cfg;
 with TestApi_Crl;
@@ -55,8 +58,6 @@ with TestApi_Tio;
 
 procedure TestApi is
 
-   use v22;
-   use v22.Uxs;
    subtype String is UXString;
 
    package AC  renames Ada.Calendar;
@@ -70,28 +71,28 @@ procedure TestApi is
    Result : Integer := 0;
 
    Config : GCL.Command_Line_Configuration;
-   --Cursor_Animation_1 : aliased Boolean := False;
-   --Cursor_Animation_2 : aliased Boolean := False;
-   Exception_Test : aliased Boolean := False;
-   Package_Test : aliased Boolean := False;
-   Memory_Reports : aliased Boolean := False;
    String_Option : aliased GS.String_Access;
    Long_Option : aliased Integer := 0;
 
+   Exception_Test : aliased Boolean := False;
+   Package_Test : aliased Boolean := False;
+   Memory_Reports : aliased Boolean := False;
+
+
 begin
 
-   Sys.Set_Memory_Monitor (True);
+   Sys.Set_Memory_Monitor (On);
 
    Prg.Set_Version (0, 8);
-   Msg.Set_Display(True);
-   Msg.Set_Debug (False);
-   Tio.Cursor_Off;
+   Msg.Set_Display (On);
+   Msg.Set_Debug (Off);
+   Tio.Set_Cursor (Off);
 
-   Msg.Line;
-   Msg.Std ("v22 framework - API test program.");
-   Msg.Std ("Copyright (C) Sowebio SARL 2020-2022" & From_Latin_1 (GCT.Image (AC.Clock, "%Y")) & ", according to GPLv3.");
-   Msg.Std (Prg.Get_Version & " - " & v22.Get_Version & " - " & v22.Get_Build);
-   Msg.Line;
+   Msg.New_Line;
+   Msg.Info ("v22 Framework - API test program");
+   Msg.Info ("Copyright (C) Sowebio SARL 2020-" & From_Latin_1 (GCT.Image (AC.Clock, "%Y")) & ", according to LGPLv3");
+   Msg.Info (Prg.Get_Version & " - " & v22.Get_Version & " - " & v22.Get_Build);
+   Msg.New_Line;
 
    ----------------------------------------------------------------------------
 
@@ -117,44 +118,44 @@ begin
 
    ----------------------------------------------------------------------------
 
-   Msg.Set_Header (True);
-   Msg.Set_Disk (True);
+   Msg.Set_Header (On);
+   Msg.Set_Disk (On);
 
-   Msg.Std (Sys.Get_Alloc_Ada);
-   Msg.Std (Sys.Get_Alloc_All);
-   Msg.Line;
+   Msg.Info (Sys.Get_Alloc_Ada);
+   Msg.Info (Sys.Get_Alloc_All);
+   Msg.New_Line;
 
    ----------------------------------------------------------------------------
 
    Msg.Set_Task ("BASE 1");
    Msg.Title ("Get option demo");
-   Msg.Line;
+   Msg.New_Line;
 
    if String_Option.all /= "" then
-      Msg.Std ("Switch -s:        : " & From_Latin_1 (String_Option.all));
+      Msg.Info ("Switch -s:        : " & From_Latin_1 (String_Option.all));
    end if;
    if Long_Option /= 0 then
-      Msg.Std ("Switch -l --long= : " & To_String (Long_Option));
+      Msg.Info ("Switch -l --long= : " & To_String (Long_Option));
    end if;
 
    if (String_Option.all = "") and (Long_Option = 0) then
-      Msg.Std ("Try ./test -h or --help");
-      Msg.Std ("Try ./test -badoption");
-      Msg.Std ("Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)");
+      Msg.Info ("Try ./test -h or --help");
+      Msg.Info ("Try ./test -badoption");
+      Msg.Info ("Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)");
    end if;
-   Msg.Line;
+   Msg.New_Line;
 
    ----------------------------------------------------------------------------
 
    Msg.Set_Task ("BASE 2");
    Msg.Title ("Basic informations");
-   Msg.Line;
+   Msg.New_Line;
 
-   Msg.Std ("Program name   : " & Prg.Name);
-   Msg.Std ("User home      : " & Sys.Get_Home);
-   Msg.Std ("Library version: " & v22.Get_Version);
-   Msg.Std ("A time stamp  : " & Prg.Time_Stamp);
-   Msg.Line;
+   Msg.Info ("Program name   : " & Prg.Name);
+   Msg.Info ("User home      : " & Sys.Get_Home);
+   Msg.Info ("Library version: " & v22.Get_Version);
+   Msg.Info ("A time stamp  : " & Prg.Time_Stamp);
+   Msg.New_Line;
 
    ----------------------------------------------------------------------------
 
@@ -180,19 +181,19 @@ begin
 
    ----------------------------------------------------------------------------
 
-   Msg.Set_Debug (False);
-   Tio.Cursor_On;
+   Msg.Set_Debug (Off);
+   Tio.Set_Cursor (On);
 
-   Msg.Line;
+   Msg.New_Line;
    Msg.Set_Task ("END");
    Msg.Title ("End of demo");
-   Msg.Line;
+   Msg.New_Line;
 
    if Exception_Test then
 
-      Msg.Line;
+      Msg.New_Line;
       Msg.Title ("Exception test trigered by a raise exception");
-      Msg.Line;
+      Msg.New_Line;
 
    -- ------------------------------------------------------------------/\-----
      Raise_Exception;   --  < Uncomment for trigger exception test     /!!\
@@ -203,12 +204,12 @@ exception
 
    --  Invalid switches
    when GCL.Invalid_Switch =>
-      Msg.Line;
+      Msg.New_Line;
       GOL.OS_Exit (2);
 
    --  -h or --help switches
    when GCL.Exit_From_Command_Line =>
-      Msg.Line;
+      Msg.New_Line;
       GOL.OS_Exit (1);
 
    --  Runtime errors

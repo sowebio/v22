@@ -1,9 +1,12 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi_Tio.ads
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi_tio.ads
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   LGPL v3
 --  @encoding  UTF-8
@@ -23,13 +26,11 @@
 
 with UXStrings; use UXStrings;
 
-with v22;
+with v22; use v22;
 with v22.Msg;
 with v22.Tio;
 
 package TestApi_Tio is
-
-   use v22;
 
    procedure Run;
 

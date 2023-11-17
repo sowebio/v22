@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-prg.adb
 --  @copyright See authors list below and v22.copyrights file
@@ -21,8 +24,10 @@
 -------------------------------------------------------------------------------
 
 with Ada.Calendar.Formatting;
-with GNAT.Calendar.Time_IO;
 with Ada.Strings.Fixed;
+
+with GNAT.Calendar.Time_IO;
+with GNAT.Ctrl_C;
 
 with v22.Msg;
 with v22.Sys;
@@ -32,13 +37,17 @@ package body v22.Prg is
    package ACF renames Ada.Calendar.Formatting;
    package GCT renames GNAT.Calendar.Time_IO;
 
-   --  Program related --------------------------------------------------------
+   ----------------------------------------------------------------------------
+   --  API
+   ----------------------------------------------------------------------------
 
+   ----------------------------------------------------------------------------
    function Current_Time_Seconds return Natural is
    begin
       return Integer (AC.Clock - ACF.Time_Of (1970, 1, 1, 0.0));
    end Current_Time_Seconds;
 
+   ----------------------------------------------------------------------------
    function Duration_Stamp (Time : Ada.Calendar.Time) return String is
       Day_Secs : Natural;
    begin
@@ -50,12 +59,14 @@ package body v22.Prg is
              Time_Format  (Day_Secs mod 60) & "s";
    end Duration_Stamp;
 
+   ----------------------------------------------------------------------------
    function Duration_Stamp_Seconds (Time : Ada.Calendar.Time) return Natural is
    begin
       return (if AC.Seconds (AC.Clock) < AC.Seconds (Time) then 86400 else 0) +
                       Integer (AC.Seconds (AC.Clock) - AC.Seconds (Time));
    end Duration_Stamp_Seconds;
 
+   ----------------------------------------------------------------------------
    function Duration_Stamp_Time (Time_Seconds : Integer) return String is
    begin
       --  Unlimited hours counter for long uptimes
@@ -64,6 +75,7 @@ package body v22.Prg is
              Time_Format  (Time_Seconds mod 60) & "s";
    end Duration_Stamp_Time;
 
+   ----------------------------------------------------------------------------
    function Generate_Password return String is
       --  Sowebio password generation with 64 chars:
       --    ([A-Z] + [a-z] + [0-9] + '_' + '-')
@@ -80,7 +92,7 @@ package body v22.Prg is
    begin
       Sys.Shell_Execute ("< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-14};echo;", SE_Result, SE_Output);
       if (SE_Result /= 0) then
-         Msg.Err ("v22.Prg.Generate_Password > Password generation command failed");
+          Msg.Error ("v22.Prg.Generate_Password > Password generation command failed");
       end if;
       return SE_Output;
    end Generate_Password;
@@ -94,6 +106,14 @@ package body v22.Prg is
    --         Ada.Strings.Left));
    --  end Get_Version;
 
+   ----------------------------------------------------------------------------
+   function Get_Handler_Ctrl_C return On_Off is
+   begin
+
+   return Ctrl_C_Status;
+   end Get_Handler_Ctrl_C;
+
+   ----------------------------------------------------------------------------
    function Get_Version return String is
    begin
       return (Name & " v" &
@@ -101,16 +121,19 @@ package body v22.Prg is
               From_Latin_1 (Ada.Strings.Fixed.Trim (Natural'Image (Version_Minor), Ada.Strings.Left)));
    end Get_Version;
 
+   ----------------------------------------------------------------------------
    function Get_Version_Major return Natural is
    begin
       return Version_Major;
    end Get_Version_Major;
 
+   ----------------------------------------------------------------------------
    function Get_Version_Minor return Natural is
    begin
       return Version_Minor;
    end Get_Version_Minor;
 
+   ----------------------------------------------------------------------------
    function Is_User_Not_Root return Boolean is
    begin
       --  Determining if the current user is root is not so simple. Indeed, USER
@@ -135,6 +158,7 @@ package body v22.Prg is
 
    end Is_User_Not_Root;
 
+   ----------------------------------------------------------------------------
    function Name return String is
       Result : String := Tail_After_Match (Command, "/");
    begin
@@ -144,6 +168,7 @@ package body v22.Prg is
      return Result;
    end Name;
 
+   ----------------------------------------------------------------------------
    function Path return String is
       Result_Code : Natural := 0;
       Result_String : String := "";
@@ -157,19 +182,28 @@ package body v22.Prg is
       return Result_String;
    end Path;
 
+   ----------------------------------------------------------------------------
+   procedure Set_Handler_Ctrl_C (Switch : On_Off) is
+   begin
+      GNAT.Ctrl_C.Install_Handler (Handler => Exception_Ctrl_C_Handling'Access);
+      Ctrl_C_Status := Switch;
+   end Set_Handler_Ctrl_C;
+
+   ----------------------------------------------------------------------------
    procedure Set_Exit_Status (Code : Natural) is
    begin
-      Prg_Exit_Status := Prg_Exit_Status + Code;
-      Ada.Command_Line.Set_Exit_Status
-                             (Ada.Command_Line.Exit_Status (Prg_Exit_Status));
+      Exit_Status := Exit_Status + Code;
+      Ada.Command_Line.Set_Exit_Status (Ada.Command_Line.Exit_Status (Exit_Status));
    end Set_Exit_Status;
 
+   ----------------------------------------------------------------------------
    procedure Set_Version (Major : Natural; Minor : Natural) is
    begin
       Version_Major := Major;
       Version_Minor := Minor;
    end Set_Version;
 
+   ----------------------------------------------------------------------------
    function Time_Format (Input_To_Format : Integer) return String is
       Two_Digits_Output : String;
    begin
@@ -180,10 +214,15 @@ package body v22.Prg is
       return Two_Digits_Output;
    end Time_Format;
 
+   ----------------------------------------------------------------------------
    function Time_Stamp return String is
    begin
       return From_ASCII (GCT.Image (AC.Clock, "%Y%m%d-%H%M%S"));
    end Time_Stamp;
+
+   ----------------------------------------------------------------------------
+   --  Private
+   ----------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
 end v22.Prg;

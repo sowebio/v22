@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-gui-footer.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -26,30 +29,25 @@ with Gnoga.Gui.View;
 
 package v22.Gui.Footer is
 
-   package View renames Gnoga.Gui.View;
+   package GGV renames Gnoga.Gui.View;
 
    type Footer_Type is tagged private;
 
-   procedure Create
-     (Instance : in out Footer_Type;
-      Parent   : in out View.View_Type);
+   procedure Create (Instance : in out Footer_Type; Parent   : in out GGV.View_Type);
    --  Should be called every time a user connects.
 
-   procedure Set_State_Text
-     (Instance : in out Footer_Type;
-      State    :        String := "");
-   --  Set user state text.
+   procedure Set_Left_Text (Instance : in out Footer_Type; State : String := "");
+   --  Set footer left text.
 
-   procedure Set_Permanent_Text
-     (Instance : in out Footer_Type;
-      State    :        String := "");
-   --  Set user permanent text.
+   procedure Set_Right_Text (Instance : in out Footer_Type; State : String := "");
+   --  Set footer right text.
 
+-------------------------------------------------------------------------------
 private
 
    type Footer_Type is tagged record
-      State_Text_Parent     : View.View_Access;
-      Permanent_Text_Parent : View.View_Access;
+      Left_Text_Parent : GGV.View_Access;
+      Right_Text_Parent : GGV.View_Access;
    end record;
 
 -------------------------------------------------------------------------------

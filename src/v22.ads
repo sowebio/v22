@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -14,8 +17,6 @@
 --  @description
 --
 --  @authors
---  Théodore Gigault - tg - developpement@soweb.io
---  Arthur Le Floch - alf - developpement@soweb.io
 --  Stéphane Rivière - sr - sriviere@soweb.io
 --
 --  @versions
@@ -24,19 +25,22 @@
 
 with Interfaces;
 with Ada.Exceptions;
-with UXStrings;
+with UXStrings; use UXStrings;
 
 package v22 is
 
-   use UXStrings;
    subtype String is UXString;
    Null_String : constant String := Null_UXString;
 
    type Money is delta 0.01 digits 14 range -999_999_999_999.99 .. 999_999_999_999.99;
-   -- Type money 1_000_000_000_000.00
+   --  Type money (14 digits including decimals)
 
    type Unsigned_Integer8 is mod 256;
-   --subtype Integer_64 is Interfaces.Integer_64;
+
+   type On_Off is (On, Off);
+   -- To replace True/False in setters functions
+
+   type Db_Mode is (None, Create, Read, Update, Delete, Search);
 
    --  Redirection constants
    STD_OUT_REDIRECT  : constant String := " 1>/dev/null";
@@ -59,15 +63,22 @@ package v22 is
    CD   : constant String := "^"; --  94d 5Eh Column delimiter
    RD   : constant String := "\"; --  92d 5Ch Row delimiter
    VD   : constant String := ","; --  44d 2Ch Virgule (comma) delimiter
-   DD   : constant String := ","; --  46d 2Eh Dot delimiter
+   DD   : constant String := "."; --  46d 2Eh Dot delimiter
    SD   : constant String := ":"; --  58d 3Ah Colon delimiter
    SP   : constant String := " "; --  32d 20h Space
 
-   -- ANSI colors (ISO 6429 standard)
+   --  ANSI colors (ISO 6429 standard)
    CONSOLE_COLOR_GREEN  : constant String := ESC & "[1;32m";
    CONSOLE_COLOR_RED    : constant String := ESC & "[1;31m";
    CONSOLE_COLOR_YELLOW : constant String := ESC & "[1;33m";
    CONSOLE_COLOR_RESET  : constant String := ESC & "[0m";
+
+   --  v22 exit codes
+   Exit_Code_Success : constant Natural := 0;
+   Exit_Code_After_Help : constant Natural := 1;
+   Exit_Code_Invalid_Parameter : constant Natural := 2;
+   Exit_Code_Exception_Ctrl_C : constant Natural := 8;
+   Exit_Code_Exception_Unexpected : constant Natural := 9;
 
    function Get_Version return String;
    --  Returns the Library name and formatted version like:
@@ -90,12 +101,24 @@ package v22 is
    --  library names & versions, start & home directories and Ada and all
    --  languages memory allocation, current & maximum (peak) values.
 
-   procedure Exception_Handling
-   (Exception_Hook : Ada.Exceptions.Exception_Occurrence);
-   --  Process exceptions.
+   procedure Exception_Handling (Exception_Hook : Ada.Exceptions.Exception_Occurrence);
+   --  Process unexpected exceptions.
+
+   procedure Exception_Ctrl_C_Handling;
+   --  Process Ctrl-C exceptions.
+
+   ----------------------------------------------------------------------------
+   protected type Mutex is
+      entry Lock;
+      procedure Release;
+   end Mutex;
+
+   M : Mutex;
 
 -------------------------------------------------------------------------------
 private
+
+   Owned : Boolean := False;
 
    Name : constant String := "v22";
    --  Library's name
@@ -103,7 +126,7 @@ private
    Version_Major : constant Natural := 0;
    --  Library major version number
 
-   Version_Minor : constant Natural := 1;
+   Version_Minor : constant Natural := 2;
    --  Library minor version number
 
    --  135 cols width is the max full screen standard console on a rather old,
@@ -123,6 +146,8 @@ private
    --  Temporary directory
 
    Errorlevel : Natural := 0;
+
+   procedure Finalize_Application (Handling_Type : String);
 
 ------------------------------------------------------------------------------
 end v22;

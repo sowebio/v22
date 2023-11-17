@@ -1,0 +1,24 @@
+#!/bin/env bash
+
+color="#ffffff"
+size=128
+density=1200
+
+echo ""
+echo "Color: $color"
+echo "Size: ${size}x${size}"
+echo "Density: $density"
+echo ""
+
+files="./*.svg"
+for file in $files
+do
+  output="${file##*/}" # delete path (./)
+  output="${output%.*}" # delete extension
+  echo "Convert $output.svg > $output.png"
+  convert -background none -density $density -resize "$size"x"$size" $file /tmp/output.png
+  convert /tmp/output.png +level-colors $color, /tmp/output.png
+  convert /tmp/output.png -fill $color -opaque white ico-$output.png
+done
+
+# eof

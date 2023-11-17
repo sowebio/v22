@@ -1,9 +1,12 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi_Crl.ads
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi_crl.ads
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   LGPL v3
 --  @encoding  UTF-8
@@ -45,9 +48,10 @@ package body TestApi_Crl is
 
    begin
 
+      -------------------------------------------------------------------------
       Msg.Set_Task ("CRL T1");
       Msg.Title ("cURL demo");
-      Msg.Line;
+      Msg.New_Line;
 
       Curl := Crl.Curl_Easy_Init;
 
@@ -67,8 +71,8 @@ package body TestApi_Crl is
                Res := Curl_Easy_Setopt (Curl, Crl.CURLOPT_WRITEDATA, Body_Handle);
                Res := Curl_Easy_Perform (Curl);
 
-               Msg.Std (Crl.Get_Version);
-               Msg.Std ("cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files processed successfully");
+               Msg.Info (Crl.Get_Version);
+               Msg.Info ("cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files processed successfully");
 
                --  www-soweb-io-header.txt
                --
@@ -100,7 +104,7 @@ package body TestApi_Crl is
 
       end if;
 
-      Msg.Line;
+      Msg.New_Line;
 
    end Run;
 

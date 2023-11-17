@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22-gui-user_menu.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -29,34 +32,33 @@ with Gnoga.Gui.Element.Common;
 
 package v22.Gui.User_Menu is
 
-   package View renames Gnoga.Gui.View;
-   package Base renames Gnoga.Gui.Base;
-   package Common renames Gnoga.Gui.Element.Common;
+   package GGB renames Gnoga.Gui.Base;
+   package GGV renames Gnoga.Gui.View;
+   package GGE renames Gnoga.Gui.Element;
+   package GGEC renames Gnoga.Gui.Element.Common;
 
    type User_Menu_Type is tagged private;
 
    procedure Create
      (Instance : in out User_Menu_Type;
-      Parent   :        View.View_Type);
+      Parent : GGV.View_Type);
 
    procedure Display (Instance : in out User_Menu_Type);
    --  Should be called every time user menu is opened.
 
-   procedure Add_Element
-     (Instance : in out User_Menu_Type;
-      Name     :        String;
-      On_Click :        Base.Action_Event);
+   procedure Add_Element (Instance : in out User_Menu_Type; Name : String; On_Click : GGB.Action_Event);
    --  Create a button with customized click handler.
 
    procedure Clear (Instance : in out User_Menu_Type);
    --  Remove elements from HTML.
 
+-------------------------------------------------------------------------------
 private
 
    type Data_Type is record
-      Button        : Common.Button_Access;
-      Click_Handler : Base.Action_Event;
-      Name          : String := "";
+      Button : GGEC.Button_Access;
+      Click_Handler : GGB.Action_Event;
+      Name : String := "";
    end record;
 
    Max_Menu_Item : constant Integer := 50;
@@ -64,7 +66,7 @@ private
    type Menu_Array is array (1 .. Max_Menu_Item) of Data_Type;
 
    type User_Menu_Type is tagged record
-      Parent     : View.View_Access;
+      Parent : GGV.View_Access;
       Menu_Table : Menu_Array;
       Last_Index : Integer := 0;
    end record;

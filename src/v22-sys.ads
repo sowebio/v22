@@ -1,7 +1,10 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
+-- 
+--  _|      _|    _|_|      _|_|    
+--  _|      _|  _|    _|  _|    _| 
+--  _|      _|      _|        _|    
+--    _|  _|      _|        _|      
+--      _|      _|_|_|_|  _|_|_|_|  
 --
 --  @file      v22-sys.ads
 --  @copyright See authors list below and v22.copyrights file
@@ -97,7 +100,7 @@ package v22.Sys is
    --  general not needed, unless you want to know what memory is used by
    --  specific parts of your application.
 
-   procedure Set_Memory_Monitor (State : Boolean := True);
+   procedure Set_Memory_Monitor (Switch : On_Off);
    --  If Activate_Monitor is true, the program will monitor all memory
    --  allocations and deallocations, and through the Get_Memory_Dump
    --  procedure below be able to report the memory usage. The overhead is
@@ -107,14 +110,13 @@ package v22.Sys is
 
    procedure Shell_Execute (Command : String);
    procedure Shell_Execute (Command : String; Result : out Integer);
-   procedure Shell_Execute (Command : String;
-                            Result : out Integer;
-                            Output : out String);
+   procedure Shell_Execute (Command : String; Result : out Integer; Output : out String);
    --  Executes shell command. Return the exit code if passed from the
    --  executed command. Without Output parameter, the command console output
    --  is displayed by default but can be redirected. If Output is used, then
    --  the executed command output is return in this parameter.
 
+-------------------------------------------------------------------------------
 private
 
    function Install_Package (Package_Name : String; Host_Name : String) return Boolean;
@@ -123,9 +125,7 @@ private
    function Purge_Package (Package_Name : String; Host_Name : String) return Boolean;
    --  Purge a Debian or Ubuntu package.
 
-   procedure Shell_Execute_Output (Command : String;
-                                   Result : out Integer;
-                                   Output : out String);
+   procedure Shell_Execute_Output (Command : String; Result : out Integer; Output : out String);
 
 -------------------------------------------------------------------------------
 end v22.Sys;

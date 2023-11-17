@@ -1,9 +1,12 @@
 -------------------------------------------------------------------------------
---  ▖▖▄▖▄▖
---  ▌▌▄▌▄▌
---  ▚▘▙▖▙▖
 --
---  @file      TestApi_Sql.adb
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      testapi_sql.adb
 --  @copyright See authors list below and v22.copyrights file
 --  @licence   GPL v3
 --  @encoding  UTF-8
@@ -37,34 +40,34 @@ package body TestApi_Sql is
       --Result_Status : Sql.Database_Status;
 
       Money_Value : Money := 100.01;
-      Integer_Value : Integer;
+      Bigint_Value : Long_Long_Integer;
 
    begin
 
       -------------------------------------------------------------------------
       Msg.Set_Task ("SQL T1");
-      Msg.Title ("Money conversion to and from integer");
-      Msg.Line;
+      Msg.Title ("Money conversion to and from Long_Long_Integer");
+      Msg.New_Line;
 
       Tio.Put_Line ("Money is delta 0.01 digits 10 - Money'Image (Money'Last): " & From_Latin_1 (Money'Image (Money'Last)));
-      Msg.Line;
+      Msg.New_Line;
 
-      Integer_Value := From_Money (Money_Value);
-      Msg.Std (Integer_Value);
-      Msg.Std (To_Money (Integer_Value));
+      Bigint_Value := From_Money (Money_Value);
+      Msg.Info (Bigint_Value);
+      Msg.Info (To_Money (Bigint_Value));
 
       Money_Value := -100.01;
-      Integer_Value := From_Money (Money_Value);
-      Msg.Std (Integer_Value);
-      Msg.Std (To_Money (Integer_Value));
-      Integer_Value := -10001;
-      Msg.Std (Integer_Value);
-      Msg.Line;
+      Bigint_Value := From_Money (Money_Value);
+      Msg.Info (Bigint_Value);
+      Msg.Info (To_Money (Bigint_Value));
+
+      Bigint_Value := -10001;
+      Msg.Info (Bigint_Value);
+      Msg.New_Line;
 
       ----------------------------------------------------------------------------
       Msg.Set_Task ("SQL T2");
       Msg.Title ("Opening two SQLite databases");
-      --Msg.Line;
 
       if Sql.Open (DBS_1, "file:v22_testapi_1.db", "1.0") = Open_Need_Update then
 
@@ -88,7 +91,7 @@ package body TestApi_Sql is
          Sql.Schema_Update (DBS_1);
       end if;
 
-      Msg.Line;
+      Msg.New_Line;
 
       if Sql.Open (DBS_2, "file:v22_testapi_2.db", "1.0") = Open_Need_Update then
          Sql.Schema_Load (Sql.Table_Name,        "Tbl_Cluster", Comment => "Clusters table");
@@ -108,78 +111,79 @@ package body TestApi_Sql is
          Sql.Schema_Update (DBS_2);
       end if;
 
-      Msg.Std ("Get_Version - SQLite: " & Sql.Get_Version (DBS_1));
+      Msg.Info ("Get_Version - SQLite: " & Sql.Get_Version (DBS_1));
 
       DBT := Sql.Properties ("v22_testapi_1");
       if DBT.Brand /= None then
-         Msg.Dbg ("Get URI from Properties: " & DBT.URI);
+         Msg.Debug ("Get URI from Properties: " & DBT.URI);
       else
-         Msg.Err ("DB_Properties not found for: v22_testapi");
+         Msg.Error ("DB_Properties not found for: v22_testapi");
       end if;
 
-      Msg.Std ("Test using Execute_Query to insure good freeing of previous results");
-      Msg.Std ("Theses 10 consecutive Execute_Query calls should not raise exception");
+      Msg.Info ("Test using Execute_Query to insure good freeing of previous results");
+      Msg.Info ("Theses 10 consecutive Execute_Query calls should not raise exception");
       for I in 1 .. 10 loop
          DBS_1.Execute_Query ("SELECT * FROM Tbl_Cluster");
       end loop;
 
-      Msg.Std ("Test with empty recordsets");
-      Msg.Std ("Theses consecutive calls should not raise exceptions");
-      Msg.Line;
+      Msg.Info ("Test with empty recordsets");
+      Msg.Info ("Theses consecutive calls should not raise exceptions");
+      Msg.New_Line;
       DBS_1.Execute_Query ("BEGIN TRANSACTION");
       DBS_1.Execute_Query ("SAVEPOINT SV_Index_Exists");
       Result := DBS_1.Execute_Update ("SELECT * FROM Tbl_Cluster");
       DBS_1.Execute_Query ("COMMIT");
-      Msg.Std ("Result for an existant index (must be 1): " & Image (Result));
-      Msg.Line;
+      Msg.Info ("Result for an existant index (must be 1): " & Image (Result));
+      Msg.New_Line;
 
-      Msg.Std ("Table_Exists - SQLite - Existing table: " & Image (Sql.Table_Exists (DBS_1, "Sys_Config")));
-      Msg.Std ("Table_Exists - SQLite - Non existing table: " & Image (Sql.Table_Exists (DBS_1, "Sys_Config_non_existing")));
-      Msg.Line;
+      Msg.Info ("Table_Exists - SQLite - Existing table: " & Image (Sql.Table_Exists (DBS_1, "Sys_Config")));
+      Msg.Info ("Table_Exists - SQLite - Non existing table: " & Image (Sql.Table_Exists (DBS_1, "Sys_Config_non_existing")));
+      Msg.New_Line;
 
-      Msg.Std ("Index_Exists - SQLite - Existing index: " & Image (Sql.Index_Exists (DBS_1, "Sys_Config", "Idx_Config_Parameter")));
-      Msg.Std ("Index_Exists - SQLite - Non existing index: " & Image (Sql.Index_Exists (DBS_1, "Sys_Config", "Idx_Config_Parameter_non_existing")));
-      Msg.Line;
+      Msg.Info ("Index_Exists - SQLite - Existing index: " & Image (Sql.Index_Exists (DBS_1, "Sys_Config", "Idx_Config_Parameter")));
+      Msg.Info ("Index_Exists - SQLite - Non existing index: " & Image (Sql.Index_Exists (DBS_1, "Sys_Config", "Idx_Config_Parameter_non_existing")));
+      Msg.New_Line;
 
-      Msg.Std ("Column_Exists - SQLite - Existing column: " & Image (Sql.Column_Exists (DBS_1, "Sys_Config", "Parameter")));
-      Msg.Std ("Column_Exists - SQLite - Non existing column: " & Image (Sql.Column_Exists (DBS_1, "Sys_Config", "Parameter_non_existing")));
-      Msg.Line;
+      Msg.Info ("Column_Exists - SQLite - Existing column: " & Image (Sql.Column_Exists (DBS_1, "Sys_Config", "Parameter")));
+      Msg.Info ("Column_Exists - SQLite - Non existing column: " & Image (Sql.Column_Exists (DBS_1, "Sys_Config", "Parameter_non_existing")));
+      Msg.New_Line;
 
-      Msg.Std ("Insert - SQLite - Creating lines");
+      Msg.Info ("Insert - SQLite - Creating lines");
       Sql.Insert (DBS_1, "Tbl_Cluster", "Key_Name~Name of the key^Key_Private~Private key");
-      Msg.Std ("Insert - SQLite - One non existing field, check log: an error must appear");
+      Msg.Info ("Insert - SQLite - One non existing field, check log: an error must appear");
       Sql.Insert (DBS_1, "Tbl_Cluster", "Key_Name~Name of the key^Key_Private_non_existing~Private key^Key_Public~Public key");
-      Msg.Line;
+      Msg.New_Line;
 
-      Msg.Std ("Update - SQLite - Existing lines");
+      Msg.Info ("Update - SQLite - Existing lines");
       Sql.Insert (DBS_1, "Tbl_Cluster", "Key_Name~Name of the key (update)^Key_Private~Private key (update)");
-      Msg.Std ("Update - SQLite - One non existing field, check log: an error must appear");
+      Msg.Info ("Update - SQLite - One non existing field, check log: an error must appear");
       Sql.Insert (DBS_1, "Tbl_Cluster", "Key_Name~Name of the key (update)^Key_Private_non_existing~Private key (update)^Key_Public~Public key (update)");
-      Msg.Line;
+      Msg.New_Line;
 
-      Msg.Std ("Last_RowID - SQLite: " & Image (Sql.Last_RowID (DBS_1, "Sys_Config")));
-      Msg.Line;
+      Msg.Info ("Last_RowID - SQLite: " & Image (Sql.Last_RowID (DBS_1, "Sys_Config")));
+      Msg.New_Line;
 
-      Msg.Std ("Read - SQLite:");
-      Msg.Line;
-      Field_Display (Sql.Read (DBS_1, "Tbl_Cluster", "Key_Name, Key_Private", "WHERE Key_Name='Name of the key'"), CD, RD, "Key_Name title, Key_Private  title");
-      Msg.Line;
+      Msg.Info ("Read - SQLite:");
+      Msg.New_Line;
+      Field_Display (Sql.Read (DBS_1, "Tbl_Cluster", "Key_Name, Key_Private",
+                      "WHERE Key_Name='Name of the key'"), CD, RD, "Key_Name title, Key_Private title");
+      Msg.New_Line;
 
-      Msg.Std ("Row_Count - SQLite: " & Image (Sql.Row_Count (DBS_1, "Sys_Config")));
-      Msg.Line;
+      Msg.Info ("Row_Count - SQLite: " & Image (Sql.Row_Count (DBS_1, "Sys_Config")));
+      Msg.New_Line;
 
-      Msg.Std ("Search - SQLite - Existing: " & Image (Sql.Search (DBS_1, "Tbl_Cluster", "Key_Name='Name of the key'")));
-      Msg.Std ("Search - SQLite - Non existing: " & Image (Sql.Search (DBS_1, "Tbl_Cluster", "Key_Name='Non existing'")));
-      Msg.Line;
+      Msg.Info ("Search - SQLite - Existing: " & Image (Sql.Search (DBS_1, "Tbl_Cluster", "Key_Name='Name of the key'")));
+      Msg.Info ("Search - SQLite - Non existing: " & Image (Sql.Search (DBS_1, "Tbl_Cluster", "Key_Name='Non existing'")));
+      Msg.New_Line;
 
-      Msg.Std ("Set_Config - SQLite - Write Test with 1: ");
+      Msg.Info ("Set_Config - SQLite - Write Test with 1: ");
       Sql.Set_Config (DBS_1, "Test", "1");
-      Msg.Std ("Get_Config - SQLite - Read Test: " & Sql.Get_Config (DBS_1, "Test"));
-      Msg.Line;
+      Msg.Info ("Get_Config - SQLite - Read Test: " & Sql.Get_Config (DBS_1, "Test"));
+      Msg.New_Line;
 
       --  Close all opened databases
       Sql.Close;
-      Msg.Line;
+      Msg.New_Line;
 
    end Run;
 
