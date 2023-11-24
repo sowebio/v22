@@ -1,3 +1,3 @@
-[submodule "v22-sqlite"]
-	path = v22-sqlite
+[submodule "lib/sqlite"]
+	path = lib/sqlite
 	url = https://github.com/sowebio/v22-sqlite
