@@ -2855,7 +2855,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Slice : Stream_Element_Array renames
                        Data (Pointer..Data'Last);
             begin
-               exit when Slice'Length = 0;
+               exit Get_Header_Line when Slice'Length = 0;
                Feed
                (  Client.Data.List (Client.Data.Current).all,
                   Slice,
@@ -2873,7 +2873,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Slice : Stream_Element_Array renames
                        Data (Pointer..Pointer + Client.Data_Length - 1);
             begin
-               exit when Slice'Length = 0;
+               exit Get_Header_Line when Slice'Length = 0;
                Feed
                (  Client.Data.List (Client.Data.Current).all,
                   Slice,
@@ -2898,7 +2898,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Client.Data.Current := Client.Data.Current + 1;
             end loop;
          else
-            exit when Pointer > Data'Last;
+            exit Get_Header_Line when Pointer > Data'Last;
             Raise_Exception
             (  Status_Error'Identity,
                (  "Unprocessed data left when after return from "
@@ -4356,7 +4356,7 @@ begin
    Add (Schemes, "mms",                MMS_Scheme);
    Add (Schemes, "modem",              Modem_Scheme);
    Add (Schemes, "mongodb",            Mongodb_Scheme);
-   Add (Schemes, "moz",                Moz_Scheme);
+   Add (Schemes, "moz",                MOZ_Scheme);
 
    Add (Schemes, "ms-access",            MS_Access_Scheme);
    Add (Schemes, "ms-browser-extension", MS_Browser_Extension_Scheme);

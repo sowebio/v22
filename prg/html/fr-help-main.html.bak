@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>fr-help-main</title>
+    <style>
+
+    </style>
+  </head>
+  <body>
+    <p><strong>L'application</strong></p>
+    <p>L'application est compatible avec tous les navigateurs récents
+      d'ordinateurs, de tablettes et de smartphones. L'affichage s'adapte aux
+      différentes tailles et proportions des écrans. La mise en page est
+      composée d'un en-tête en haut, d'un bandeau de menu à gauche et d'un bas
+      de page, en bas de l'écran. Le centre de l'écran est réservé à l'affichage
+      et aux traitements des données de l'application.</p>
+    <p><strong>L'écran</strong></p>
+    <p><i><b>L'en-tête comprend :</b></i></p>
+    <ul>
+      <li>À <i>gauche</i>, l'icône de l'application, cliquable, pour accéder
+        aux différents modules de l'application (utilisateurs, administrateur,
+        etc.) ;</li>
+      <li>Au <i>milieu</i>, un fil d'ariane cliquable permet à l'utilisateur de
+        se situer dans l'application et de se déplacer rapidement ;</li>
+      <li>À <i>droite</i>, l'icône ou l'avatar de l'utilisateur connecté,
+        cliquable, pour accéder à l'aide en ligne, les information courantes et
+        se déconnecter.</li>
+    </ul>
+    <p><i>Le bandeau de menu</i> affiche les icônes et commandes de chaque
+      module applicatif. Ce bandeau peut être réduit aux icônes pour les
+      smartphones. Chaque commande possède un raccourci clavier. Les menus et
+      commandes peuvent être désactivés. Des séparateurs peuvent être créés pour
+      grouper des commandes.</p>
+    <p><i>Le bas de page</i> propose deux zones de texte, justifiées à gauche et
+      à droite, pour des informations diverses, telles le nom de l'application,
+      le nom de l'éditeur du logiciel, etc.</p>
+    <p><i>Le centre de l'écran</i> comporte, en haut, un titre de page centré.
+      Le reste de l'écran peut comporter des affichages, des graphiques, des
+      listes ou des fenêtres de de consultation, modification ou création.</p>
+    <p><strong>Références</strong></p>
+    <p>Sowebio SARL : <a href="https://soweb.io" title="Site Sowebio" target="_blank">site</a>
+      et <a href="https://github.com/sowebio" title="Github Sowebio" target="_blank">github</a>.</p>
+  </body>
+</html>

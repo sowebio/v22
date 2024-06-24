@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+--  @file      pragmas.adc
+--  @copyright See authors list below and README.md file
+--  @licence   LGPL v3
+--  @encoding  UTF-8
+-------------------------------------------------------------------------------
+--  @summary
+--  Pragmas configuration
+--
+--  @description
+--  Local configuration pragmas
+--
+--  @authors
+--  Stéphane Rivière - sr - sriviere@soweb.io
+--
+--  @versions
+--  See git log
+-------------------------------------------------------------------------------
+
+pragma Initialize_Scalars;
+--  https://gcc.gnu.org/onlinedocs/gcc-4.6.3/gnat_rm/Pragma-Initialize_005fScalars.html
+
+pragma  Warnings (Off, "*unimplemented*");
+--  UXStrings unimplemented pragmas
+
+pragma  Warnings (Off, "*Item*");
+--  gnat-sockets-connection_state_machine.adb:808:17: warning: formal parameter "Item" is read but never assigned [-gnatwv]
+
+------------------------------------------------------------------------------
+--  EOF
+------------------------------------------------------------------------------
+

@@ -212,7 +212,7 @@ package body GNAT.Sockets.Connection_State_Machine is
       end Put_Call_Stack;
    end Generic_Dump;
 
-   package Address_Maps Is new Ada.Containers.Ordered_Maps
+   package Address_Maps is new Ada.Containers.Ordered_Maps
       (Key_Type => System.Address, Element_Type => Natural, "<" => System."<");
    Prefixes : Address_Maps.Map;
 

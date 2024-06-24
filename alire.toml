@@ -1,0 +1,16 @@
+name = "v22"
+description = "Bank statement analysis"
+version = "0.1.0-dev"
+
+authors = ["Stéphane Rivière"]
+maintainers = ["Sowebio SARL <development@soweb.io>"]
+maintainers-logins = ["github-username"]
+licenses = "GPL-3.0-or-later"
+website = "https://www.soweb.io"
+tags = []
+
+executables = ["prg/testapi","prg/testgui"]
+
+[[depends-on]]
+gnatcoll = "^24.0.0"
+
