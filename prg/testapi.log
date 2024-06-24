@@ -1,0 +1,1770 @@
+20240410-120505.974 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240410-120505.975 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11272192 ]
+
+20240410-120505.975 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240410-120505.976 - BASE 1  - MSG - Try ./test -h or --help
+20240410-120505.976 - BASE 1  - MSG - Try ./test -badoption
+20240410-120505.976 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240410-120505.976 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240410-120505.977 - BASE 2  - MSG - Program name   : testapi
+20240410-120505.977 - BASE 2  - MSG - User home      : /home/sr
+20240410-120505.977 - BASE 2  - MSG - Library version: v22 v0.5
+20240410-120505.978 - BASE 2  - MSG - A time stamp  : 20240410-120505
+
+20240410-120505.978 - CRL T1  - MSG - CURL DEMO---------------------------------------
+
+20240410-120506.227 - CRL T1  - MSG - cURL components versions: libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.16
+20240410-120506.227 - CRL T1  - MSG - cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files processed successfully
+
+
+20240410-120506.249 - END     - MSG - END OF DEMO-------------------------------------
+20240410-144326.057 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240410-144326.057 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11141120 ]
+
+20240410-144326.057 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240410-144326.058 - BASE 1  - MSG - Try ./test -h or --help
+20240410-144326.058 - BASE 1  - MSG - Try ./test -badoption
+20240410-144326.058 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240410-144326.058 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240410-144326.059 - BASE 2  - MSG - Program name   : testapi
+20240410-144326.059 - BASE 2  - MSG - User home      : /home/sr
+20240410-144326.059 - BASE 2  - MSG - Library version: v22 v0.5
+20240410-144326.059 - BASE 2  - MSG - A time stamp  : 20240410-144326
+
+20240410-144326.060 - CRL T1  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+20240410-144326.327 - CRL T1  - MSG - cURL components versions: libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.16
+20240410-144326.328 - CRL T1  - MSG - cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files created successfully
+
+20240410-144326.349 - CRL T2  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+
+20240410-144326.420 - END     - MSG - END OF DEMO-------------------------------------
+20240410-144403.507 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240410-144403.507 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240410-144403.507 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240410-144403.508 - BASE 1  - MSG - Try ./test -h or --help
+20240410-144403.508 - BASE 1  - MSG - Try ./test -badoption
+20240410-144403.508 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240410-144403.508 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240410-144403.508 - BASE 2  - MSG - Program name   : testapi
+20240410-144403.509 - BASE 2  - MSG - User home      : /home/sr
+20240410-144403.509 - BASE 2  - MSG - Library version: v22 v0.5
+20240410-144403.509 - BASE 2  - MSG - A time stamp  : 20240410-144403
+
+20240410-144403.510 - CRL T1  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+20240410-144403.752 - CRL T1  - MSG - cURL components versions: libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.16
+20240410-144403.752 - CRL T1  - MSG - cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files created successfully
+
+20240410-144403.772 - CRL T2  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+
+20240410-144403.975 - END     - MSG - END OF DEMO-------------------------------------
+20240410-155009.230 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240410-155009.231 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240410-155009.231 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240410-155009.231 - BASE 1  - MSG - Try ./test -h or --help
+20240410-155009.232 - BASE 1  - MSG - Try ./test -badoption
+20240410-155009.232 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240410-155009.232 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240410-155009.232 - BASE 2  - MSG - Program name   : testapi
+20240410-155009.233 - BASE 2  - MSG - User home      : /home/sr
+20240410-155009.233 - BASE 2  - MSG - Library version: v22 v0.5
+20240410-155009.233 - BASE 2  - MSG - A time stamp  : 20240410-155009
+
+20240410-155009.233 - CRL T1  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+20240410-155009.532 - CRL T1  - MSG - cURL components versions: libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.16
+20240410-155009.533 - CRL T1  - MSG - cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files created successfully
+
+20240410-155009.553 - CRL T2  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+
+20240410-155009.689 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240410-155009.689 - EXIT    - MSG - Total execution time: 0h00m00s
+
+20240410-162714.307 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240410-162714.308 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11272192 ]
+
+20240410-162714.308 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240410-162714.308 - BASE 1  - MSG - Try ./test -h or --help
+20240410-162714.308 - BASE 1  - MSG - Try ./test -badoption
+20240410-162714.309 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240410-162714.309 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240410-162714.309 - BASE 2  - MSG - Program name   : testapi
+20240410-162714.309 - BASE 2  - MSG - User home      : /home/sr
+20240410-162714.310 - BASE 2  - MSG - Library version: v22 v0.5
+20240410-162714.310 - BASE 2  - MSG - A time stamp  : 20240410-162714
+
+20240410-162714.310 - CRL T1  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+20240410-162714.563 - CRL T1  - MSG - cURL components versions: libcurl/7.81.0 OpenSSL/3.0.2 zlib/1.2.11 brotli/1.0.9 zstd/1.4.8 libidn2/2.3.2 libpsl/0.21.0 (+libidn2/2.3.2) libssh/0.9.6/openssl/zlib nghttp2/1.43.0 librtmp/2.3 OpenLDAP/2.5.16
+20240410-162714.563 - CRL T1  - MSG - cURL : www-soweb-io-header.txt and www-soweb-io-homepage.html files created successfully
+
+20240410-162714.586 - CRL T2  - MSG - CURL SOWEBIO HEADER AND HOMEPAGE----------------
+
+
+20240410-162714.725 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240410-162714.725 - EXIT    - MSG - Total execution time: 0h00m00s
+
+20240411-104635.672 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-104635.673 - INIT    - MSG - All Cur: [ 11141120 ] Max: [ 11141120 ]
+
+20240411-104635.673 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-104635.673 - BASE 1  - MSG - Try ./test -h or --help
+20240411-104635.674 - BASE 1  - MSG - Try ./test -badoption
+20240411-104635.674 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-104635.674 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-104635.674 - BASE 2  - MSG - Program name   : testapi
+20240411-104635.675 - BASE 2  - MSG - User home      : /home/sr
+20240411-104635.675 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-104635.675 - BASE 2  - MSG - A time stamp  : 20240411-104635
+
+20240411-104635.813 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone++1712823332
+20240411-104635.813 - BASE 2  - MSG - 8e691996a99b5f361fb2f471f9e6c399d5cd12c7
+20240411-104635.813 - BASE 2  - MSG - 
+
+20240411-104635.813 - END     - MSG - END OF DEMO-------------------------------------
+20240411-105051.201 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-105051.201 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11141120 ]
+
+20240411-105051.202 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-105051.202 - BASE 1  - MSG - Try ./test -h or --help
+20240411-105051.202 - BASE 1  - MSG - Try ./test -badoption
+20240411-105051.202 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-105051.203 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-105051.203 - BASE 2  - MSG - Program name   : testapi
+20240411-105051.203 - BASE 2  - MSG - User home      : /home/sr
+20240411-105051.203 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-105051.204 - BASE 2  - MSG - A time stamp  : 20240411-105051
+
+20240411-105051.340 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712823332
+20240411-105051.340 - BASE 2  - MSG - 77442c2cf18fdb4066b915d2e566e953852e9764
+20240411-105051.341 - BASE 2  - MSG - 
+
+20240411-105051.341 - END     - MSG - END OF DEMO-------------------------------------
+20240411-111702.958 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-111702.958 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11272192 ]
+
+20240411-111702.959 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-111702.959 - BASE 1  - MSG - Try ./test -h or --help
+20240411-111702.959 - BASE 1  - MSG - Try ./test -badoption
+20240411-111702.959 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-111702.959 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-111702.960 - BASE 2  - MSG - Program name   : testapi
+20240411-111702.960 - BASE 2  - MSG - User home      : /home/sr
+20240411-111702.960 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-111702.961 - BASE 2  - MSG - A time stamp  : 20240411-111702
+
+20240411-111703.108 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-111703.108 - BASE 2  - MSG - 
+
+20240411-111703.109 - END     - MSG - END OF DEMO-------------------------------------
+20240411-111708.978 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-111708.979 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11534336 ]
+
+20240411-111708.979 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-111708.979 - BASE 1  - MSG - Try ./test -h or --help
+20240411-111708.980 - BASE 1  - MSG - Try ./test -badoption
+20240411-111708.980 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-111708.980 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-111708.980 - BASE 2  - MSG - Program name   : testapi
+20240411-111708.981 - BASE 2  - MSG - User home      : /home/sr
+20240411-111708.981 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-111708.981 - BASE 2  - MSG - A time stamp  : 20240411-111708
+
+20240411-111709.137 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-111709.137 - BASE 2  - MSG - 
+
+20240411-111709.137 - END     - MSG - END OF DEMO-------------------------------------
+20240411-111937.077 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-111937.077 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-111937.078 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-111937.078 - BASE 1  - MSG - Try ./test -h or --help
+20240411-111937.078 - BASE 1  - MSG - Try ./test -badoption
+20240411-111937.078 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-111937.079 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-111937.079 - BASE 2  - MSG - Program name   : testapi
+20240411-111937.079 - BASE 2  - MSG - User home      : /home/sr
+20240411-111937.080 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-111937.080 - BASE 2  - MSG - A time stamp  : 20240411-111937
+
+20240411-111937.221 - BASE 2  - MSG - curl -X GET -H "Content-Type: application/json" -H "X-Ovh-Timestamp: 1712827177" -H "X-Ovh-Signature: $1$abd02220c6ff6ec0f00f5f80257dc12a45c48452" -H "X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5"
+20240411-111937.228 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-111937.229 - BASE 2  - MSG - 
+
+20240411-111937.229 - END     - MSG - END OF DEMO-------------------------------------
+20240411-112754.393 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-112754.393 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-112754.393 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-112754.394 - BASE 1  - MSG - Try ./test -h or --help
+20240411-112754.394 - BASE 1  - MSG - Try ./test -badoption
+20240411-112754.394 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-112754.394 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-112754.395 - BASE 2  - MSG - Program name   : testapi
+20240411-112754.395 - BASE 2  - MSG - User home      : /home/sr
+20240411-112754.395 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-112754.395 - BASE 2  - MSG - A time stamp  : 20240411-112754
+
+20240411-112754.535 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H "Content-Type: application/json" -H "X-Ovh-Timestamp: 1712827674" -H "X-Ovh-Signature: $1$46b8ce585c3ba10d9caaa3b16fa3489a286c172c" -H "X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5"
+20240411-112754.667 - BASE 2  - MSG - <html><body><h1>400 Bad request</h1>
+Your browser sent an invalid request.
+</body></html>
+
+20240411-112754.667 - END     - MSG - END OF DEMO-------------------------------------
+20240411-113052.688 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-113052.688 - INIT    - MSG - All Cur: [ 11141120 ] Max: [ 11141120 ]
+
+20240411-113052.688 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-113052.689 - BASE 1  - MSG - Try ./test -h or --help
+20240411-113052.689 - BASE 1  - MSG - Try ./test -badoption
+20240411-113052.689 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-113052.690 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-113052.690 - BASE 2  - MSG - Program name   : testapi
+20240411-113052.691 - BASE 2  - MSG - User home      : /home/sr
+20240411-113052.691 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-113052.692 - BASE 2  - MSG - A time stamp  : 20240411-113052
+
+20240411-113052.839 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H "Content-Type: application/json" -H "X-Ovh-Application: 4be3bf207dee05b4" -H "X-Ovh-Timestamp: 1712827852" -H "X-Ovh-Signature: $1$1e32ccc6557024f0953d1c38f2caf9f339910fff" -H "X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5"
+20240411-113052.978 - BASE 2  - MSG - <html><body><h1>400 Bad request</h1>
+Your browser sent an invalid request.
+</body></html>
+
+20240411-113052.978 - END     - MSG - END OF DEMO-------------------------------------
+20240411-113057.168 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-113057.169 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11272192 ]
+
+20240411-113057.169 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-113057.169 - BASE 1  - MSG - Try ./test -h or --help
+20240411-113057.170 - BASE 1  - MSG - Try ./test -badoption
+20240411-113057.170 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-113057.170 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-113057.170 - BASE 2  - MSG - Program name   : testapi
+20240411-113057.171 - BASE 2  - MSG - User home      : /home/sr
+20240411-113057.171 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-113057.171 - BASE 2  - MSG - A time stamp  : 20240411-113057
+
+20240411-113057.308 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H "Content-Type: application/json" -H "X-Ovh-Application: 4be3bf207dee05b4" -H "X-Ovh-Timestamp: 1712827857" -H "X-Ovh-Signature: $1$5c0a8678d9a4cc0a4b2b07d0c828d7eefac4e9c4" -H "X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5"
+20240411-113057.435 - BASE 2  - MSG - <html><body><h1>400 Bad request</h1>
+Your browser sent an invalid request.
+</body></html>
+
+20240411-113057.435 - END     - MSG - END OF DEMO-------------------------------------
+20240411-114014.946 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-114014.946 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-114014.946 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-114014.947 - BASE 1  - MSG - Try ./test -h or --help
+20240411-114014.947 - BASE 1  - MSG - Try ./test -badoption
+20240411-114014.947 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-114014.948 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-114014.948 - BASE 2  - MSG - Program name   : testapi
+20240411-114014.948 - BASE 2  - MSG - User home      : /home/sr
+20240411-114014.948 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-114014.949 - BASE 2  - MSG - A time stamp  : 20240411-114014
+
+20240411-114015.095 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H "Content-Type: application/json" -H "X-Ovh-Application: 4be3bf207dee05b4" -H "X-Ovh-Timestamp: 1712828415" -H "X-Ovh-Signature: $1$e24df67ca69ec424de01cd60dcef415c1dcd709b" -H "X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5"
+20240411-114015.224 - BASE 2  - MSG - <html><body><h1>400 Bad request</h1>
+Your browser sent an invalid request.
+</body></html>
+
+20240411-114015.224 - END     - MSG - END OF DEMO-------------------------------------
+20240411-114531.321 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-114531.321 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11534336 ]
+
+20240411-114531.321 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-114531.321 - BASE 1  - MSG - Try ./test -h or --help
+20240411-114531.322 - BASE 1  - MSG - Try ./test -badoption
+20240411-114531.322 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-114531.322 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-114531.323 - BASE 2  - MSG - Program name   : testapi
+20240411-114531.323 - BASE 2  - MSG - User home      : /home/sr
+20240411-114531.323 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-114531.324 - BASE 2  - MSG - A time stamp  : 20240411-114531
+
+20240411-114531.464 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712828731' -H 'X-Ovh-Signature: $1$449ae961174cfa293ce620c264a7e08c4463ac8a' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5'
+20240411-114531.721 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-114531.722 - BASE 2  - MSG - 
+
+20240411-114531.722 - END     - MSG - END OF DEMO-------------------------------------
+20240411-114859.642 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-114859.642 - INIT    - MSG - All Cur: [ 11010048 ] Max: [ 11010048 ]
+
+20240411-114859.643 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-114859.643 - BASE 1  - MSG - Try ./test -h or --help
+20240411-114859.643 - BASE 1  - MSG - Try ./test -badoption
+20240411-114859.643 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-114859.644 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-114859.644 - BASE 2  - MSG - Program name   : testapi
+20240411-114859.644 - BASE 2  - MSG - User home      : /home/sr
+20240411-114859.645 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-114859.645 - BASE 2  - MSG - A time stamp  : 20240411-114859
+
+20240411-114859.791 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712828939' -H 'X-Ovh-Signature: $1$5ffb497fb7cdffede70d861b135a0a87a5d0339a' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5'
+20240411-114859.984 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-114859.984 - BASE 2  - MSG - 
+
+20240411-114859.984 - END     - MSG - END OF DEMO-------------------------------------
+20240411-115237.411 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-115237.412 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11141120 ]
+
+20240411-115237.412 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-115237.412 - BASE 1  - MSG - Try ./test -h or --help
+20240411-115237.412 - BASE 1  - MSG - Try ./test -badoption
+20240411-115237.413 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-115237.413 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-115237.413 - BASE 2  - MSG - Program name   : testapi
+20240411-115237.414 - BASE 2  - MSG - User home      : /home/sr
+20240411-115237.414 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-115237.415 - BASE 2  - MSG - A time stamp  : 20240411-115237
+
+20240411-115237.557 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829157' -H 'X-Ovh-Signature: $1$e6ad3a2c7d3e80b0ec86d7f22e8759f92c34338d' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5'
+20240411-115237.738 - BASE 2  - MSG -  6
+20240411-115237.738 - BASE 2  - MSG - {"class":"Client::Unauthorized","message":"You must login first"}
+
+20240411-115237.739 - END     - MSG - END OF DEMO-------------------------------------
+20240411-115436.639 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-115436.640 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11534336 ]
+
+20240411-115436.640 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-115436.640 - BASE 1  - MSG - Try ./test -h or --help
+20240411-115436.640 - BASE 1  - MSG - Try ./test -badoption
+20240411-115436.641 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-115436.641 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-115436.641 - BASE 2  - MSG - Program name   : testapi
+20240411-115436.641 - BASE 2  - MSG - User home      : /home/sr
+20240411-115436.642 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-115436.642 - BASE 2  - MSG - A time stamp  : 20240411-115436
+
+20240411-115436.788 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829276' -H 'X-Ovh-Signature: $1$445b6262b47eaba1abd113a02b8ef1b5604791f4' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5'
+20240411-115437.984 - BASE 2  - MSG -  6
+20240411-115437.984 - BASE 2  - MSG - {"class":"Client::Unauthorized","message":"You must login first"}
+
+20240411-115437.984 - END     - MSG - END OF DEMO-------------------------------------
+20240411-115634.834 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-115634.834 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11403264 ]
+
+20240411-115634.834 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-115634.834 - BASE 1  - MSG - Try ./test -h or --help
+20240411-115634.835 - BASE 1  - MSG - Try ./test -badoption
+20240411-115634.835 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-115634.835 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-115634.835 - BASE 2  - MSG - Program name   : testapi
+20240411-115634.836 - BASE 2  - MSG - User home      : /home/sr
+20240411-115634.836 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-115634.837 - BASE 2  - MSG - A time stamp  : 20240411-115634
+
+20240411-115634.980 - BASE 2  - MSG - "curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829394' -H 'X-Ovh-Signature: $1$aca15c18b4378dcf8fa32a356045272e5a8444b7' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5'"
+20240411-115635.988 - BASE 2  - MSG -  255
+20240411-115635.989 - BASE 2  - MSG - 
+
+20240411-115635.989 - END     - MSG - END OF DEMO-------------------------------------
+20240411-120102.236 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-120102.236 - INIT    - MSG - All Cur: [ 11141120 ] Max: [ 11141120 ]
+
+20240411-120102.236 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-120102.236 - BASE 1  - MSG - Try ./test -h or --help
+20240411-120102.237 - BASE 1  - MSG - Try ./test -badoption
+20240411-120102.237 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-120102.237 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-120102.238 - BASE 2  - MSG - Program name   : testapi
+20240411-120102.238 - BASE 2  - MSG - User home      : /home/sr
+20240411-120102.238 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-120102.239 - BASE 2  - MSG - A time stamp  : 20240411-120102
+
+20240411-120102.380 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829662' -H 'X-Ovh-Signature: $1$ca236e2f812ae901228af59fe1c34bee49d6c406' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5 > /tmp/20240411-120102.239155000-v22-net-api.output
+20240411-120102.383 - BASE 2  - ERR - v22.Tio.Read_File > File does not exist: /tmp/20240411-120102.239155000-v22-net-api.output
+20240411-120102.383 - BASE 2  - MSG -  512
+20240411-120102.383 - BASE 2  - MSG - 
+
+20240411-120102.383 - END     - MSG - END OF DEMO-------------------------------------
+20240411-120232.633 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-120232.634 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11141120 ]
+
+20240411-120232.634 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-120232.634 - BASE 1  - MSG - Try ./test -h or --help
+20240411-120232.635 - BASE 1  - MSG - Try ./test -badoption
+20240411-120232.635 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-120232.635 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-120232.635 - BASE 2  - MSG - Program name   : testapi
+20240411-120232.636 - BASE 2  - MSG - User home      : /home/sr
+20240411-120232.636 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-120232.636 - BASE 2  - MSG - A time stamp  : 20240411-120232
+
+20240411-120232.780 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829752' -H 'X-Ovh-Signature: $1$4291f6a2573591cf610bc90c7e9e6807d55eabdb' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5 -o /tmp/20240411-120232.636746000-v22-net-api.output
+20240411-120232.783 - BASE 2  - ERR - v22.Tio.Read_File > File does not exist: /tmp/20240411-120232.636746000-v22-net-api.output
+20240411-120232.784 - BASE 2  - MSG -  512
+20240411-120232.784 - BASE 2  - MSG - 
+
+20240411-120232.784 - END     - MSG - END OF DEMO-------------------------------------
+20240411-120321.518 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-120321.518 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-120321.518 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-120321.519 - BASE 1  - MSG - Try ./test -h or --help
+20240411-120321.519 - BASE 1  - MSG - Try ./test -badoption
+20240411-120321.519 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-120321.520 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-120321.520 - BASE 2  - MSG - Program name   : testapi
+20240411-120321.520 - BASE 2  - MSG - User home      : /home/sr
+20240411-120321.520 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-120321.521 - BASE 2  - MSG - A time stamp  : 20240411-120321
+
+20240411-120321.665 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829801' -H 'X-Ovh-Signature: $1$4ec60ffdb8242a909a51dc07d910b266512355a4' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -o /tmp/20240411-120321.521247000-v22-net-api.output
+20240411-120321.986 - BASE 2  - MSG -  0
+20240411-120321.986 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-120321.986 - END     - MSG - END OF DEMO-------------------------------------
+20240411-120433.112 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-120433.113 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11272192 ]
+
+20240411-120433.113 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-120433.113 - BASE 1  - MSG - Try ./test -h or --help
+20240411-120433.114 - BASE 1  - MSG - Try ./test -badoption
+20240411-120433.114 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-120433.114 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-120433.115 - BASE 2  - MSG - Program name   : testapi
+20240411-120433.115 - BASE 2  - MSG - User home      : /home/sr
+20240411-120433.116 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-120433.116 - BASE 2  - MSG - A time stamp  : 20240411-120433
+
+20240411-120433.261 - BASE 2  - MSG - curl -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712829873' -H 'X-Ovh-Signature: $1$b11a2a0e3ff66ad4d231d308ec5b97852bc0b689' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -o /tmp/20240411-120433.117143000-v22-net-api.output
+20240411-120433.564 - BASE 2  - MSG -  0
+20240411-120433.564 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-120433.564 - END     - MSG - END OF DEMO-------------------------------------
+20240411-120911.554 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-120911.554 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11272192 ]
+
+20240411-120911.554 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-120911.554 - BASE 1  - MSG - Try ./test -h or --help
+20240411-120911.555 - BASE 1  - MSG - Try ./test -badoption
+20240411-120911.555 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-120911.555 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-120911.556 - BASE 2  - MSG - Program name   : testapi
+20240411-120911.556 - BASE 2  - MSG - User home      : /home/sr
+20240411-120911.556 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-120911.556 - BASE 2  - MSG - A time stamp  : 20240411-120911
+
+20240411-120912.027 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-120912.027 - END     - MSG - END OF DEMO-------------------------------------
+20240411-121216.436 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-121216.436 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-121216.437 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-121216.437 - BASE 1  - MSG - Try ./test -h or --help
+20240411-121216.437 - BASE 1  - MSG - Try ./test -badoption
+20240411-121216.437 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-121216.438 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-121216.438 - BASE 2  - MSG - Program name   : testapi
+20240411-121216.438 - BASE 2  - MSG - User home      : /home/sr
+20240411-121216.439 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-121216.439 - BASE 2  - MSG - A time stamp  : 20240411-121216
+
+20240411-121217.074 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-121217.075 - END     - MSG - END OF DEMO-------------------------------------
+20240411-121246.613 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-121246.614 - INIT    - MSG - All Cur: [ 11141120 ] Max: [ 11010048 ]
+
+20240411-121246.614 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-121246.614 - BASE 1  - MSG - Try ./test -h or --help
+20240411-121246.615 - BASE 1  - MSG - Try ./test -badoption
+20240411-121246.615 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-121246.615 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-121246.616 - BASE 2  - MSG - Program name   : testapi
+20240411-121246.616 - BASE 2  - MSG - User home      : /home/sr
+20240411-121246.616 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-121246.617 - BASE 2  - MSG - A time stamp  : 20240411-121246
+
+20240411-121246.897 - BASE 2  - MSG - {"class":"Client::BadRequest","message":"Invalid signature"}
+
+
+20240411-121246.897 - END     - MSG - END OF DEMO-------------------------------------
+20240411-121333.505 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-121333.506 - INIT    - MSG - All Cur: [ 11141120 ] Max: [ 11141120 ]
+
+20240411-121333.506 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-121333.506 - BASE 1  - MSG - Try ./test -h or --help
+20240411-121333.506 - BASE 1  - MSG - Try ./test -badoption
+20240411-121333.507 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-121333.507 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-121333.507 - BASE 2  - MSG - Program name   : testapi
+20240411-121333.508 - BASE 2  - MSG - User home      : /home/sr
+20240411-121333.508 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-121333.508 - BASE 2  - MSG - A time stamp  : 20240411-121333
+
+20240411-121333.653 - BASE 2  - ERR - v22.Tio.Read_File > File does not exist: /tmp/20240411-121333.508817000-v22-net-api.output
+20240411-121333.653 - BASE 2  - ERR - v22.Net.Api_Get > Sending query failed
+20240411-121333.653 - BASE 2  - MSG - Error n° 512 
+
+20240411-121333.654 - END     - MSG - END OF DEMO-------------------------------------
+20240411-122430.008 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-122430.008 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11534336 ]
+
+20240411-122430.009 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-122430.009 - BASE 1  - MSG - Try ./test -h or --help
+20240411-122430.009 - BASE 1  - MSG - Try ./test -badoption
+20240411-122430.009 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-122430.010 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-122430.010 - BASE 2  - MSG - Program name   : testapi
+20240411-122430.010 - BASE 2  - MSG - User home      : /home/sr
+20240411-122430.011 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-122430.011 - BASE 2  - MSG - A time stamp  : 20240411-122430
+
+20240411-122430.633 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-122430.634 - END     - MSG - END OF DEMO-------------------------------------
+20240411-140755.805 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-140755.805 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11141120 ]
+
+20240411-140755.805 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-140755.806 - BASE 1  - MSG - Try ./test -h or --help
+20240411-140755.806 - BASE 1  - MSG - Try ./test -badoption
+20240411-140755.806 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-140755.807 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-140755.807 - BASE 2  - MSG - Program name   : testapi
+20240411-140755.807 - BASE 2  - MSG - User home      : /home/sr
+20240411-140755.807 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-140755.808 - BASE 2  - MSG - A time stamp  : 20240411-140755
+
+20240411-140756.525 - BASE 2  - MSG - {"message":"Invalid signature","httpCode":"400 Bad Request","errorCode":"INVALID_SIGNATURE"}
+
+
+20240411-140756.525 - END     - MSG - END OF DEMO-------------------------------------
+20240411-140915.288 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-140915.288 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11665408 ]
+
+20240411-140915.289 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-140915.289 - BASE 1  - MSG - Try ./test -h or --help
+20240411-140915.289 - BASE 1  - MSG - Try ./test -badoption
+20240411-140915.290 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-140915.290 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-140915.291 - BASE 2  - MSG - Program name   : testapi
+20240411-140915.291 - BASE 2  - MSG - User home      : /home/sr
+20240411-140915.291 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-140915.292 - BASE 2  - MSG - A time stamp  : 20240411-140915
+
+20240411-140915.454 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712837355
+20240411-140915.455 - BASE 2  - MSG - GET
+20240411-140915.899 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+POST+https://eu.api.ovh.com/v1/domain/zone/absolem.org/record++1712837355
+20240411-140915.900 - BASE 2  - MSG - POST
+20240411-140916.039 - BASE 2  - MSG - {"message":"Invalid signature","httpCode":"400 Bad Request","errorCode":"INVALID_SIGNATURE"}
+
+
+20240411-140916.039 - END     - MSG - END OF DEMO-------------------------------------
+20240411-140950.899 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-140950.900 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240411-140950.900 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-140950.900 - BASE 1  - MSG - Try ./test -h or --help
+20240411-140950.900 - BASE 1  - MSG - Try ./test -badoption
+20240411-140950.900 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-140950.901 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-140950.901 - BASE 2  - MSG - Program name   : testapi
+20240411-140950.902 - BASE 2  - MSG - User home      : /home/sr
+20240411-140950.902 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-140950.903 - BASE 2  - MSG - A time stamp  : 20240411-140950
+
+20240411-140951.041 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712837391
+20240411-140951.041 - BASE 2  - MSG - GET
+20240411-140951.363 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-140951.498 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+POST+https://eu.api.ovh.com/v1/domain/zone/absolem.org/record++1712837391
+20240411-140951.498 - BASE 2  - MSG - POST
+20240411-140951.640 - BASE 2  - MSG - {"message":"Invalid signature","httpCode":"400 Bad Request","errorCode":"INVALID_SIGNATURE"}
+
+
+20240411-140951.640 - END     - MSG - END OF DEMO-------------------------------------
+20240411-141144.631 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-141144.631 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11403264 ]
+
+20240411-141144.631 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-141144.632 - BASE 1  - MSG - Try ./test -h or --help
+20240411-141144.632 - BASE 1  - MSG - Try ./test -badoption
+20240411-141144.632 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-141144.632 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-141144.633 - BASE 2  - MSG - Program name   : testapi
+20240411-141144.633 - BASE 2  - MSG - User home      : /home/sr
+20240411-141144.633 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-141144.633 - BASE 2  - MSG - A time stamp  : 20240411-141144
+
+20240411-141144.774 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712837504
+20240411-141144.775 - BASE 2  - MSG - GET
+20240411-141145.082 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-141145.221 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+POST+https://eu.api.ovh.com/v1/domain/zone/absolem.org/record+{"fieldType":"TXT","subDomain":"AAAA_X","target":"CCCC_C"}+1712837505
+20240411-141145.221 - BASE 2  - MSG - POST
+20240411-141145.362 - BASE 2  - MSG - {"message":"Invalid signature","httpCode":"400 Bad Request","errorCode":"INVALID_SIGNATURE"}
+
+
+20240411-141145.363 - END     - MSG - END OF DEMO-------------------------------------
+20240411-141911.394 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-141911.395 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11272192 ]
+
+20240411-141911.395 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-141911.395 - BASE 1  - MSG - Try ./test -h or --help
+20240411-141911.395 - BASE 1  - MSG - Try ./test -badoption
+20240411-141911.396 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-141911.396 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-141911.396 - BASE 2  - MSG - Program name   : testapi
+20240411-141911.397 - BASE 2  - MSG - User home      : /home/sr
+20240411-141911.397 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-141911.398 - BASE 2  - MSG - A time stamp  : 20240411-141911
+
+20240411-141911.537 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712837951
+20240411-141911.537 - BASE 2  - MSG - GET
+20240411-141911.538 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712837951' -H 'X-Ovh-Signature: $1$f96e1a4e2a22377f8ade8939aefb95deaaffd8ea' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -o /tmp/20240411-141911.398196000-v22-net-api.output
+20240411-141911.848 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-141911.987 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+POST+https://eu.api.ovh.com/v1/domain/zone/absolem.org/record+{"fieldType":"TXT","subDomain":"AAAA_X","target":"CCCC_C"}+1712837951
+20240411-141911.987 - BASE 2  - MSG - POST
+20240411-141911.988 - BASE 2  - MSG - curl -s -X POST https://eu.api.ovh.com/v1/domain/zone/absolem.org/record -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712837951' -H 'X-Ovh-Signature: $1$35f2214cc66d1c26e546cbf5c19cc7c987cd70f3' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -d {"fieldType":"TXT","subDomain":"AAAA_X","target":"CCCC_C"} -o /tmp/20240411-141911.849131000-v22-net-api.output
+20240411-141912.121 - BASE 2  - MSG - {"message":"Invalid signature","httpCode":"400 Bad Request","errorCode":"INVALID_SIGNATURE"}
+
+
+20240411-141912.121 - END     - MSG - END OF DEMO-------------------------------------
+20240411-142044.872 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-142044.873 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11665408 ]
+
+20240411-142044.873 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-142044.874 - BASE 1  - MSG - Try ./test -h or --help
+20240411-142044.874 - BASE 1  - MSG - Try ./test -badoption
+20240411-142044.874 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-142044.874 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-142044.875 - BASE 2  - MSG - Program name   : testapi
+20240411-142044.875 - BASE 2  - MSG - User home      : /home/sr
+20240411-142044.875 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-142044.876 - BASE 2  - MSG - A time stamp  : 20240411-142044
+
+20240411-142045.019 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+GET+https://eu.api.ovh.com/v1/domain/zone/absolem.org++1712838044
+20240411-142045.019 - BASE 2  - MSG - GET
+20240411-142045.020 - BASE 2  - MSG - curl -s -X GET https://eu.api.ovh.com/v1/domain/zone/absolem.org -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712838044' -H 'X-Ovh-Signature: $1$ea2999fd7e0f62839a29d5e3aa91abcdac5c7528' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -o /tmp/20240411-142044.876279000-v22-net-api.output
+20240411-142045.344 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-142045.491 - BASE 2  - MSG - 0692c39869223c4e3fad3bd029baeb7b+579499cd5add2343a44731c633f5c3d5+POST+https://eu.api.ovh.com/v1/domain/zone/absolem.org/record+{"fieldType":"TXT","subDomain":"AAAA_X","target":"CCCC_C"}+1712838045
+20240411-142045.492 - BASE 2  - MSG - POST
+20240411-142045.492 - BASE 2  - MSG - curl -s -X POST https://eu.api.ovh.com/v1/domain/zone/absolem.org/record -H 'Content-Type: application/json' -H 'X-Ovh-Application: 4be3bf207dee05b4' -H 'X-Ovh-Timestamp: 1712838045' -H 'X-Ovh-Signature: $1$b632b49823c57d9c0301135de19bb46511f9a4e2' -H 'X-Ovh-Consumer: 579499cd5add2343a44731c633f5c3d5' -d '{"fieldType":"TXT","subDomain":"AAAA_X","target":"CCCC_C"}' -o /tmp/20240411-142045.344291000-v22-net-api.output
+20240411-142045.680 - BASE 2  - MSG - {"fieldType":"TXT","id":5308564351,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+
+20240411-142045.681 - END     - MSG - END OF DEMO-------------------------------------
+20240411-155012.744 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-155012.744 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240411-155012.744 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-155012.744 - BASE 1  - MSG - Try ./test -h or --help
+20240411-155012.745 - BASE 1  - MSG - Try ./test -badoption
+20240411-155012.745 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-155012.745 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-155012.746 - BASE 2  - MSG - Program name   : testapi
+20240411-155012.746 - BASE 2  - MSG - User home      : /home/sr
+20240411-155012.746 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-155012.747 - BASE 2  - MSG - A time stamp  : 20240411-155012
+
+20240411-155013.229 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+
+20240411-155013.593 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-155013.594 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-155223.218 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-155223.218 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240411-155223.219 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-155223.219 - BASE 1  - MSG - Try ./test -h or --help
+20240411-155223.219 - BASE 1  - MSG - Try ./test -badoption
+20240411-155223.219 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-155223.220 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-155223.220 - BASE 2  - MSG - Program name   : testapi
+20240411-155223.221 - BASE 2  - MSG - User home      : /home/sr
+20240411-155223.221 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-155223.221 - BASE 2  - MSG - A time stamp  : 20240411-155223
+
+20240411-155223.665 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-155223.971 - BASE 2  - MSG -  1
+20240411-155223.972 - BASE 2  - MSG - +33689298844
+
+20240411-155224.006 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-155224.006 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-155512.687 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-155512.687 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11534336 ]
+
+20240411-155512.688 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-155512.688 - BASE 1  - MSG - Try ./test -h or --help
+20240411-155512.688 - BASE 1  - MSG - Try ./test -badoption
+20240411-155512.688 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-155512.689 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-155512.689 - BASE 2  - MSG - Program name   : testapi
+20240411-155512.689 - BASE 2  - MSG - User home      : /home/sr
+20240411-155512.690 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-155512.690 - BASE 2  - MSG - A time stamp  : 20240411-155512
+
+20240411-155513.133 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-155513.448 - BASE 2  - MSG -  1
+20240411-155513.448 - BASE 2  - MSG - +33689298844
+
+20240411-155513.482 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-155513.483 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-155617.242 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-155617.242 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240411-155617.243 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-155617.243 - BASE 1  - MSG - Try ./test -h or --help
+20240411-155617.243 - BASE 1  - MSG - Try ./test -badoption
+20240411-155617.243 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-155617.244 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-155617.244 - BASE 2  - MSG - Program name   : testapi
+20240411-155617.244 - BASE 2  - MSG - User home      : /home/sr
+20240411-155617.244 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-155617.245 - BASE 2  - MSG - A time stamp  : 20240411-155617
+
+20240411-155617.927 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-155618.229 - BASE 2  - MSG -  1
+
+20240411-155618.260 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-155618.260 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-160112.827 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-160112.828 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11534336 ]
+
+20240411-160112.828 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-160112.828 - BASE 1  - MSG - Try ./test -h or --help
+20240411-160112.828 - BASE 1  - MSG - Try ./test -badoption
+20240411-160112.829 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-160112.829 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-160112.829 - BASE 2  - MSG - Program name   : testapi
+20240411-160112.830 - BASE 2  - MSG - User home      : /home/sr
+20240411-160112.830 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-160112.830 - BASE 2  - MSG - A time stamp  : 20240411-160112
+
+20240411-160113.268 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-160113.603 - BASE 2  - MSG -  1
+20240411-160113.603 - BASE 2  - MSG - +33689298844
+
+20240411-160113.636 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-160113.636 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-160851.466 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-160851.466 - INIT    - MSG - All Cur: [ 11665408 ] Max: [ 11665408 ]
+
+20240411-160851.466 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-160851.467 - BASE 1  - MSG - Try ./test -h or --help
+20240411-160851.467 - BASE 1  - MSG - Try ./test -badoption
+20240411-160851.467 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-160851.467 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-160851.468 - BASE 2  - MSG - Program name   : testapi
+20240411-160851.468 - BASE 2  - MSG - User home      : /home/sr
+20240411-160851.468 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-160851.468 - BASE 2  - MSG - A time stamp  : 20240411-160851
+
+20240411-160851.900 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-160852.209 - BASE 2  - MSG -  1
+20240411-160852.210 - BASE 2  - MSG - +33689298844
+
+20240411-160852.242 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-160852.243 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-161104.855 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-161104.855 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11403264 ]
+
+20240411-161104.855 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-161104.856 - BASE 1  - MSG - Try ./test -h or --help
+20240411-161104.856 - BASE 1  - MSG - Try ./test -badoption
+20240411-161104.856 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-161104.856 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-161104.857 - BASE 2  - MSG - Program name   : testapi
+20240411-161104.857 - BASE 2  - MSG - User home      : /home/sr
+20240411-161104.857 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-161104.857 - BASE 2  - MSG - A time stamp  : 20240411-161104
+
+20240411-161105.315 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-161105.646 - BASE 2  - MSG -  1
+20240411-161105.646 - BASE 2  - MSG - +33689298844
+
+20240411-161105.680 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-161105.680 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-162013.486 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-162013.486 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240411-162013.486 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-162013.486 - BASE 1  - MSG - Try ./test -h or --help
+20240411-162013.487 - BASE 1  - MSG - Try ./test -badoption
+20240411-162013.487 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-162013.487 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-162013.487 - BASE 2  - MSG - Program name   : testapi
+20240411-162013.488 - BASE 2  - MSG - User home      : /home/sr
+20240411-162013.488 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-162013.488 - BASE 2  - MSG - A time stamp  : 20240411-162013
+
+20240411-162013.945 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-162014.464 - BASE 2  - MSG -  1
+20240411-162014.464 - BASE 2  - MSG - +33689298844
+
+20240411-162014.506 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-162014.506 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-171144.725 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-171144.725 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11403264 ]
+
+20240411-171144.726 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-171144.726 - BASE 1  - MSG - Try ./test -h or --help
+20240411-171144.726 - BASE 1  - MSG - Try ./test -badoption
+20240411-171144.726 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-171144.727 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-171144.727 - BASE 2  - MSG - Program name   : testapi
+20240411-171144.727 - BASE 2  - MSG - User home      : /home/sr
+20240411-171144.727 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-171144.728 - BASE 2  - MSG - A time stamp  : 20240411-171144
+
+20240411-171145.178 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-171145.492 - BASE 2  - MSG -  1
+20240411-171145.493 - BASE 2  - MSG - +33689298844
+
+20240411-171145.538 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-171145.539 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-171213.231 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-171213.232 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240411-171213.232 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-171213.232 - BASE 1  - MSG - Try ./test -h or --help
+20240411-171213.233 - BASE 1  - MSG - Try ./test -badoption
+20240411-171213.233 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-171213.233 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-171213.234 - BASE 2  - MSG - Program name   : testapi
+20240411-171213.234 - BASE 2  - MSG - User home      : /home/sr
+20240411-171213.234 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-171213.235 - BASE 2  - MSG - A time stamp  : 20240411-171213
+
+20240411-171213.683 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-171213.986 - BASE 2  - MSG -  1
+20240411-171213.986 - BASE 2  - MSG - +33689298844
+
+20240411-171214.019 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240411-171214.019 - EXIT    - MSG - Total execution time: 0h00m01s
+
+20240411-171552.083 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-171552.083 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11665408 ]
+
+20240411-171552.083 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-171552.084 - BASE 1  - MSG - Try ./test -h or --help
+20240411-171552.084 - BASE 1  - MSG - Try ./test -badoption
+20240411-171552.084 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-171552.084 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-171552.085 - BASE 2  - MSG - Program name   : testapi
+20240411-171552.085 - BASE 2  - MSG - User home      : /home/sr
+20240411-171552.085 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-171552.085 - BASE 2  - MSG - A time stamp  : 20240411-171552
+
+20240411-171552.514 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-171552.845 - BASE 2  - MSG -  1
+20240411-171552.846 - BASE 2  - MSG - +33689298844
+20240411-171552.846 - BASE 2  - MSG - 
+
+20240411-171552.847 - END     - MSG - END OF DEMO-------------------------------------
+20240411-171638.147 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-171638.147 - INIT    - MSG - All Cur: [ 11272192 ] Max: [ 11272192 ]
+
+20240411-171638.147 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-171638.148 - BASE 1  - MSG - Try ./test -h or --help
+20240411-171638.148 - BASE 1  - MSG - Try ./test -badoption
+20240411-171638.148 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-171638.149 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-171638.149 - BASE 2  - MSG - Program name   : testapi
+20240411-171638.149 - BASE 2  - MSG - User home      : /home/sr
+20240411-171638.150 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-171638.150 - BASE 2  - MSG - A time stamp  : 20240411-171638
+
+20240411-171638.600 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-171638.906 - BASE 2  - MSG -  1
+20240411-171638.906 - BASE 2  - MSG - +33689298844
+20240411-171638.907 - BASE 2  - MSG - {"charset":"UTF-8","class":"flash","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844"],"message":"Message SMS de test avec accents en UTF-8 : \u0000\u0000\u0000\u0000\u0000 et...\r...saut de ligne !"}
+20240411-171638.907 - BASE 2  - MSG - 
+
+20240411-171638.907 - END     - MSG - END OF DEMO-------------------------------------
+20240411-171749.971 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-171749.972 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11665408 ]
+
+20240411-171749.972 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-171749.972 - BASE 1  - MSG - Try ./test -h or --help
+20240411-171749.972 - BASE 1  - MSG - Try ./test -badoption
+20240411-171749.973 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-171749.973 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-171749.973 - BASE 2  - MSG - Program name   : testapi
+20240411-171749.973 - BASE 2  - MSG - User home      : /home/sr
+20240411-171749.974 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-171749.974 - BASE 2  - MSG - A time stamp  : 20240411-171749
+
+20240411-171750.413 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-171750.720 - BASE 2  - MSG -  1
+20240411-171750.721 - BASE 2  - MSG - +33689298844
+20240411-171750.721 - BASE 2  - MSG - {"charset":"UTF-8","class":"flash","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844"],"message":"Message SMS de test avec accents en UTF-8 : \u0000\u0000\u0000\u0000\u0000 et...\r...saut de ligne !"}
+20240411-171751.409 - BASE 2  - MSG - {"totalCreditsRemoved":2,"tag":"kcmy8npx4ep79ovy","validReceivers":["+33689298844"],"ids":[572930932],"invalidReceivers":[]}
+
+
+20240411-171751.409 - END     - MSG - END OF DEMO-------------------------------------
+20240411-172322.417 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-172322.417 - INIT    - MSG - All Cur: [ 11534336 ] Max: [ 11403264 ]
+
+20240411-172322.418 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-172322.418 - BASE 1  - MSG - Try ./test -h or --help
+20240411-172322.419 - BASE 1  - MSG - Try ./test -badoption
+20240411-172322.419 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-172322.419 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-172322.419 - BASE 2  - MSG - Program name   : testapi
+20240411-172322.420 - BASE 2  - MSG - User home      : /home/sr
+20240411-172322.420 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-172322.420 - BASE 2  - MSG - A time stamp  : 20240411-172322
+
+20240411-172322.880 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-172323.197 - BASE 2  - MSG -  1
+20240411-172323.198 - BASE 2  - MSG - +33689298844
+20240411-172323.198 - BASE 2  - MSG - {"charset":"UTF-8","class":"flash","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844"],"message":"Message SMS de test avec accents en UTF-8 : \u0000\u0000\u0000\u0000\u0000 et...\n...saut de ligne ! g\u0000rant, r\u0000che, ap\u0000tre"}
+20240411-172323.907 - BASE 2  - MSG - {"invalidReceivers":[],"totalCreditsRemoved":2,"validReceivers":["+33689298844"],"tag":"7moo3tclcq94u8r9","ids":[572932210]}
+
+
+20240411-172323.908 - END     - MSG - END OF DEMO-------------------------------------
+20240411-173840.327 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-173840.327 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11665408 ]
+
+20240411-173840.327 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-173840.327 - BASE 1  - MSG - Try ./test -h or --help
+20240411-173840.328 - BASE 1  - MSG - Try ./test -badoption
+20240411-173840.328 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-173840.328 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-173840.328 - BASE 2  - MSG - Program name   : testapi
+20240411-173840.329 - BASE 2  - MSG - User home      : /home/sr
+20240411-173840.329 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-173840.329 - BASE 2  - MSG - A time stamp  : 20240411-173840
+
+20240411-173840.767 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-173841.108 - BASE 2  - MSG -  1
+20240411-173841.108 - BASE 2  - MSG - +33689298844
+20240411-173841.109 - BASE 2  - MSG - {"charset":"UTF-8","class":"flash","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844"],"message":"Message SMS de test avec accents en UTF-8 : \u00E9\u00E8\u00E0\u00F9\u00F4 et...\n...saut de ligne ! g\u00E9rant, r\u00E8che, ap\u00F4tre"}
+20240411-173841.109 - BASE 2  - MSG - 
+
+20240411-173841.109 - END     - MSG - END OF DEMO-------------------------------------
+20240411-173927.809 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-173927.809 - INIT    - MSG - All Cur: [ 12189696 ] Max: [ 12058624 ]
+
+20240411-173927.810 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-173927.810 - BASE 1  - MSG - Try ./test -h or --help
+20240411-173927.810 - BASE 1  - MSG - Try ./test -badoption
+20240411-173927.810 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-173927.811 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-173927.811 - BASE 2  - MSG - Program name   : testapi
+20240411-173927.811 - BASE 2  - MSG - User home      : /home/sr
+20240411-173927.812 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-173927.812 - BASE 2  - MSG - A time stamp  : 20240411-173927
+
+20240411-173928.241 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-173928.555 - BASE 2  - MSG -  1
+20240411-173928.555 - BASE 2  - MSG - +33689298844
+20240411-173928.556 - BASE 2  - MSG - {"charset":"UTF-8","class":"flash","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844"],"message":"Message SMS de test avec accents en UTF-8 : \u00E9\u00E8\u00E0\u00F9\u00F4 et...\n...saut de ligne ! g\u00E9rant, r\u00E8che, ap\u00F4tre"}
+20240411-173929.154 - BASE 2  - MSG - {"validReceivers":["+33689298844"],"invalidReceivers":[],"tag":"193qwl3ac1nwqna3","totalCreditsRemoved":2,"ids":[572938307]}
+
+
+20240411-173929.154 - END     - MSG - END OF DEMO-------------------------------------
+20240411-174821.456 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240411-174821.457 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11272192 ]
+
+20240411-174821.457 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240411-174821.458 - BASE 1  - MSG - Try ./test -h or --help
+20240411-174821.458 - BASE 1  - MSG - Try ./test -badoption
+20240411-174821.458 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240411-174821.459 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240411-174821.459 - BASE 2  - MSG - Program name   : testapi
+20240411-174821.460 - BASE 2  - MSG - User home      : /home/sr
+20240411-174821.460 - BASE 2  - MSG - Library version: v22 v0.5
+20240411-174821.460 - BASE 2  - MSG - A time stamp  : 20240411-174821
+
+20240411-174821.908 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240411-174822.215 - BASE 2  - MSG -  1
+20240411-174822.216 - BASE 2  - MSG - +33689298844
+20240411-174822.216 - BASE 2  - MSG -  2
+20240411-174822.216 - BASE 2  - MSG - +33609422700
+20240411-174822.217 - BASE 2  - MSG - {"charset":"UTF-8","priority":"high","coding":"7bit","differedPeriod":"0","noStopClause":"true","sender":"VMIVISU.COM","receivers":["+33689298844","+33609422700"],"message":"Message SMS multiple avec accents en UTF-8 (\u00E9\u00E8\u00E0\u00F9\u00F4\u00F6\u0153\u00EF) \u00E0 Olivier et St\u00E9phane et...\n...saut de ligne !\n\nSign\u00E9 : le canard en plastique :)"}
+20240411-174823.114 - BASE 2  - MSG - {"ids":[572940644,572940647],"tag":"ja0jfkwkqqj38d4r","validReceivers":["+33689298844","+33609422700"],"totalCreditsRemoved":6,"invalidReceivers":[]}
+
+
+20240411-174823.114 - END     - MSG - END OF DEMO-------------------------------------
+20240412-161609.479 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240412-161609.480 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240412-161609.480 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240412-161609.480 - BASE 1  - MSG - Try ./test -h or --help
+20240412-161609.481 - BASE 1  - MSG - Try ./test -badoption
+20240412-161609.481 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240412-161609.481 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240412-161609.481 - BASE 2  - MSG - Program name   : testapi
+20240412-161609.482 - BASE 2  - MSG - User home      : /home/sr
+20240412-161609.482 - BASE 2  - MSG - Library version: v22 v0.5
+20240412-161609.482 - BASE 2  - MSG - A time stamp  : 20240412-161609
+
+20240412-161609.979 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240412-161610.316 - BASE 2  - MSG - {"fieldType":"TXT","id":5308681860,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+20240412-161610.628 - BASE 2  - MSG - {"fieldType":"TXT","id":5308681861,"subDomain":"BBBB_Y","target":"DDDD_D","ttl":0,"zone":"absolem.org"}
+
+
+20240412-161610.629 - END     - MSG - END OF DEMO-------------------------------------
+20240412-164509.798 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240412-164509.798 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 39059456 ]
+
+20240412-164509.799 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240412-164509.799 - BASE 1  - MSG - Try ./test -h or --help
+20240412-164509.799 - BASE 1  - MSG - Try ./test -badoption
+20240412-164509.799 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240412-164509.800 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240412-164509.800 - BASE 2  - MSG - Program name   : testapi
+20240412-164509.800 - BASE 2  - MSG - User home      : /home/sr
+20240412-164509.800 - BASE 2  - MSG - Library version: v22 v0.5
+20240412-164509.801 - BASE 2  - MSG - A time stamp  : 20240412-164509
+
+20240412-164510.247 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240412-164510.575 - BASE 2  - MSG - {"fieldType":"TXT","id":5308685743,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+20240412-164510.876 - BASE 2  - MSG - {"fieldType":"TXT","id":5308685745,"subDomain":"BBBB_Y","target":"DDDD_D","ttl":0,"zone":"absolem.org"}
+
+
+20240412-164510.877 - END     - MSG - END OF DEMO-------------------------------------
+20240412-164559.213 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240412-164559.214 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11665408 ]
+
+20240412-164559.214 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240412-164559.214 - BASE 1  - MSG - Try ./test -h or --help
+20240412-164559.215 - BASE 1  - MSG - Try ./test -badoption
+20240412-164559.215 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240412-164559.216 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240412-164559.216 - BASE 2  - MSG - Program name   : testapi
+20240412-164559.217 - BASE 2  - MSG - User home      : /home/sr
+20240412-164559.217 - BASE 2  - MSG - Library version: v22 v0.5
+20240412-164559.218 - BASE 2  - MSG - A time stamp  : 20240412-164559
+
+20240412-164559.644 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240412-164559.959 - BASE 2  - MSG - {"fieldType":"TXT","id":5308685843,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+20240412-164600.257 - BASE 2  - MSG - {"fieldType":"TXT","id":5308685844,"subDomain":"BBBB_Y","target":"DDDD_D","ttl":0,"zone":"absolem.org"}
+
+
+20240412-164600.257 - END     - MSG - END OF DEMO-------------------------------------
+20240412-164759.838 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240412-164759.838 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 39329792 ]
+
+20240412-164759.839 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240412-164759.839 - BASE 1  - MSG - Try ./test -h or --help
+20240412-164759.840 - BASE 1  - MSG - Try ./test -badoption
+20240412-164759.840 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240412-164759.841 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240412-164759.841 - BASE 2  - MSG - Program name   : testapi
+20240412-164759.842 - BASE 2  - MSG - User home      : /home/sr
+20240412-164759.842 - BASE 2  - MSG - Library version: v22 v0.5
+20240412-164759.843 - BASE 2  - MSG - A time stamp  : 20240412-164759
+
+20240412-164800.341 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240412-164800.659 - BASE 2  - MSG - {"fieldType":"TXT","id":5308686136,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+20240412-164800.966 - BASE 2  - MSG - {"fieldType":"TXT","id":5308686137,"subDomain":"BBBB_Y","target":"DDDD_D","ttl":0,"zone":"absolem.org"}
+
+
+20240412-164800.966 - END     - MSG - END OF DEMO-------------------------------------
+20240412-165144.883 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240412-165144.884 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 39444480 ]
+
+20240412-165144.884 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240412-165144.884 - BASE 1  - MSG - Try ./test -h or --help
+20240412-165144.884 - BASE 1  - MSG - Try ./test -badoption
+20240412-165144.885 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240412-165144.885 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240412-165144.885 - BASE 2  - MSG - Program name   : testapi
+20240412-165144.886 - BASE 2  - MSG - User home      : /home/sr
+20240412-165144.886 - BASE 2  - MSG - Library version: v22 v0.5
+20240412-165144.886 - BASE 2  - MSG - A time stamp  : 20240412-165144
+
+20240412-165145.350 - BASE 2  - MSG - {"dnssecSupported":true,"hasDnsAnycast":false,"lastUpdate":"2024-04-05T12:20:07.175425+02:00","name":"absolem.org","nameServers":["ns19.ovh.net","dns19.ovh.net"],"iam":{"id":"2922cef9-963e-4f50-b0ef-0aeb430d5ea7","urn":"urn:v1:eu:resource:dnsZone:absolem.org"}}
+
+20240412-165145.658 - BASE 2  - MSG - {"fieldType":"TXT","id":5308686480,"subDomain":"AAAA_X","target":"CCCC_C","ttl":0,"zone":"absolem.org"}
+
+20240412-165145.979 - BASE 2  - MSG - {"fieldType":"TXT","id":5308686481,"subDomain":"BBBB_Y","target":"DDDD_D","ttl":0,"zone":"absolem.org"}
+
+
+20240412-165145.979 - END     - MSG - END OF DEMO-------------------------------------
+20240507-163948.302 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-163948.302 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240507-163948.303 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-163948.303 - BASE 1  - MSG - Try ./test -h or --help
+20240507-163948.303 - BASE 1  - MSG - Try ./test -badoption
+20240507-163948.303 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-163948.304 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-163948.304 - BASE 2  - MSG - Program name   : testapi
+20240507-163948.304 - BASE 2  - MSG - User home      : /home/sr
+20240507-163948.305 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-163948.305 - BASE 2  - MSG - A time stamp  : 20240507-163948
+
+20240507-163948.305 - BASE 2  - MSG - 29
+
+20240507-163948.305 - END     - MSG - END OF DEMO-------------------------------------
+20240507-164125.220 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-164125.220 - INIT    - MSG - All Cur: [ 11403264 ] Max: [ 11272192 ]
+
+20240507-164125.220 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-164125.221 - BASE 1  - MSG - Try ./test -h or --help
+20240507-164125.221 - BASE 1  - MSG - Try ./test -badoption
+20240507-164125.221 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-164125.222 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-164125.222 - BASE 2  - MSG - Program name   : testapi
+20240507-164125.222 - BASE 2  - MSG - User home      : /home/sr
+20240507-164125.223 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-164125.223 - BASE 2  - MSG - A time stamp  : 20240507-164125
+
+20240507-164125.223 - BASE 2  - MSG - 30
+
+20240507-164125.223 - END     - MSG - END OF DEMO-------------------------------------
+20240507-164151.121 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-164151.121 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240507-164151.122 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-164151.122 - BASE 1  - MSG - Try ./test -h or --help
+20240507-164151.122 - BASE 1  - MSG - Try ./test -badoption
+20240507-164151.122 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-164151.123 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-164151.123 - BASE 2  - MSG - Program name   : testapi
+20240507-164151.123 - BASE 2  - MSG - User home      : /home/sr
+20240507-164151.124 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-164151.124 - BASE 2  - MSG - A time stamp  : 20240507-164151
+
+20240507-164151.124 - BASE 2  - MSG - 30
+
+20240507-164151.124 - END     - MSG - END OF DEMO-------------------------------------
+20240507-164212.083 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-164212.083 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240507-164212.084 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-164212.084 - BASE 1  - MSG - Try ./test -h or --help
+20240507-164212.084 - BASE 1  - MSG - Try ./test -badoption
+20240507-164212.085 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-164212.085 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-164212.086 - BASE 2  - MSG - Program name   : testapi
+20240507-164212.086 - BASE 2  - MSG - User home      : /home/sr
+20240507-164212.086 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-164212.086 - BASE 2  - MSG - A time stamp  : 20240507-164212
+
+20240507-164212.087 - BASE 2  - MSG - 30
+
+20240507-164212.087 - END     - MSG - END OF DEMO-------------------------------------
+20240507-164238.095 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-164238.096 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11927552 ]
+
+20240507-164238.096 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-164238.096 - BASE 1  - MSG - Try ./test -h or --help
+20240507-164238.096 - BASE 1  - MSG - Try ./test -badoption
+20240507-164238.097 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-164238.097 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-164238.097 - BASE 2  - MSG - Program name   : testapi
+20240507-164238.098 - BASE 2  - MSG - User home      : /home/sr
+20240507-164238.098 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-164238.098 - BASE 2  - MSG - A time stamp  : 20240507-164238
+
+20240507-164238.098 - BASE 2  - MSG - 29
+
+20240507-164238.099 - END     - MSG - END OF DEMO-------------------------------------
+20240507-170613.208 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-170613.208 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240507-170613.209 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-170613.209 - BASE 1  - MSG - Try ./test -h or --help
+20240507-170613.209 - BASE 1  - MSG - Try ./test -badoption
+20240507-170613.209 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-170613.210 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-170613.210 - BASE 2  - MSG - Program name   : testapi
+20240507-170613.210 - BASE 2  - MSG - User home      : /home/sr
+20240507-170613.211 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-170613.211 - BASE 2  - MSG - A time stamp  : 20240507-170613
+
+
+20240507-170613.252 - EXIT    - MSG - testapi > Exception detected, finalize application
+20240507-170613.252 - EXIT    - MSG - Total execution time: 0h00m00s
+
+20240507-170633.984 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240507-170633.984 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240507-170633.984 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240507-170633.985 - BASE 1  - MSG - Try ./test -h or --help
+20240507-170633.985 - BASE 1  - MSG - Try ./test -badoption
+20240507-170633.985 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240507-170633.986 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240507-170633.986 - BASE 2  - MSG - Program name   : testapi
+20240507-170633.986 - BASE 2  - MSG - User home      : /home/sr
+20240507-170633.986 - BASE 2  - MSG - Library version: v22 v0.5
+20240507-170633.987 - BASE 2  - MSG - A time stamp  : 20240507-170633
+
+20240507-170633.987 - BASE 2  - MSG - 29
+
+20240507-170633.987 - END     - MSG - END OF DEMO-------------------------------------
+20240508-104557.813 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-104557.814 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-104557.814 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-104557.814 - BASE 1  - MSG - Try ./test -h or --help
+20240508-104557.814 - BASE 1  - MSG - Try ./test -badoption
+20240508-104557.815 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-104557.815 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-104557.815 - BASE 2  - MSG - Program name   : testapi
+20240508-104557.816 - BASE 2  - MSG - User home      : /home/sr
+20240508-104557.816 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-104557.816 - BASE 2  - MSG - A time stamp  : 20240508-104557
+
+20240508-104557.817 - BASE 2  - MSG - Date: 20240508
+20240508-104557.817 - BASE 2  - MSG - Day_Previous: 202457
+
+20240508-104557.817 - END     - MSG - END OF DEMO-------------------------------------
+20240508-104809.973 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-104809.973 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-104809.974 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-104809.974 - BASE 1  - MSG - Try ./test -h or --help
+20240508-104809.974 - BASE 1  - MSG - Try ./test -badoption
+20240508-104809.974 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-104809.975 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-104809.975 - BASE 2  - MSG - Program name   : testapi
+20240508-104809.975 - BASE 2  - MSG - User home      : /home/sr
+20240508-104809.975 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-104809.976 - BASE 2  - MSG - A time stamp  : 20240508-104809
+
+20240508-104809.976 - BASE 2  - MSG - Date: 20240508
+20240508-104809.976 - BASE 2  - MSG - Day_Previous: 20240507
+
+20240508-104809.977 - END     - MSG - END OF DEMO-------------------------------------
+20240508-104912.442 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-104912.442 - INIT    - MSG - All Cur: [ 12451840 ] Max: [ 12320768 ]
+
+20240508-104912.442 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-104912.443 - BASE 1  - MSG - Try ./test -h or --help
+20240508-104912.443 - BASE 1  - MSG - Try ./test -badoption
+20240508-104912.443 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-104912.443 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-104912.444 - BASE 2  - MSG - Program name   : testapi
+20240508-104912.444 - BASE 2  - MSG - User home      : /home/sr
+20240508-104912.444 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-104912.444 - BASE 2  - MSG - A time stamp  : 20240508-104912
+
+20240508-104912.445 - BASE 2  - MSG - Date: 20240508
+20240508-104912.445 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-104912.445 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-104912.445 - BASE 2  - MSG - Day_Previous: 20231231
+
+20240508-104912.446 - END     - MSG - END OF DEMO-------------------------------------
+20240508-111446.487 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-111446.487 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240508-111446.488 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-111446.488 - BASE 1  - MSG - Try ./test -h or --help
+20240508-111446.488 - BASE 1  - MSG - Try ./test -badoption
+20240508-111446.488 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-111446.489 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-111446.489 - BASE 2  - MSG - Program name   : testapi
+20240508-111446.489 - BASE 2  - MSG - User home      : /home/sr
+20240508-111446.490 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-111446.490 - BASE 2  - MSG - A time stamp  : 20240508-111446
+
+20240508-111446.490 - BASE 2  - MSG - Date: 20240508
+20240508-111446.491 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-111446.491 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-111446.491 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-111446.491 - BASE 2  - MSG - Dow_Number: 6
+
+20240508-111446.492 - END     - MSG - END OF DEMO-------------------------------------
+20240508-111540.650 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-111540.651 - INIT    - MSG - All Cur: [ 12189696 ] Max: [ 12058624 ]
+
+20240508-111540.651 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-111540.651 - BASE 1  - MSG - Try ./test -h or --help
+20240508-111540.652 - BASE 1  - MSG - Try ./test -badoption
+20240508-111540.652 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-111540.652 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-111540.652 - BASE 2  - MSG - Program name   : testapi
+20240508-111540.653 - BASE 2  - MSG - User home      : /home/sr
+20240508-111540.653 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-111540.653 - BASE 2  - MSG - A time stamp  : 20240508-111540
+
+20240508-111540.653 - BASE 2  - MSG - Date: 20240508
+20240508-111540.654 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-111540.654 - BASE 2  - MSG - Dow_Number: 1
+20240508-111540.654 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-111540.654 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-111540.655 - BASE 2  - MSG - Dow_Number: 6
+
+20240508-111540.655 - END     - MSG - END OF DEMO-------------------------------------
+20240508-112547.735 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-112547.736 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 11927552 ]
+
+20240508-112547.736 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-112547.736 - BASE 1  - MSG - Try ./test -h or --help
+20240508-112547.736 - BASE 1  - MSG - Try ./test -badoption
+20240508-112547.736 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-112547.737 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-112547.737 - BASE 2  - MSG - Program name   : testapi
+20240508-112547.737 - BASE 2  - MSG - User home      : /home/sr
+20240508-112547.738 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-112547.738 - BASE 2  - MSG - A time stamp  : 20240508-112547
+
+20240508-112547.738 - BASE 2  - MSG - Date: 20240508
+20240508-112547.738 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-112547.739 - BASE 2  - MSG - Dow_Name: TUESDAY
+20240508-112547.739 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-112547.739 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-112547.739 - BASE 2  - MSG - Dow_Number: 6
+
+20240508-112547.740 - END     - MSG - END OF DEMO-------------------------------------
+20240508-112707.752 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-112707.752 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-112707.753 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-112707.753 - BASE 1  - MSG - Try ./test -h or --help
+20240508-112707.753 - BASE 1  - MSG - Try ./test -badoption
+20240508-112707.754 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-112707.754 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-112707.754 - BASE 2  - MSG - Program name   : testapi
+20240508-112707.754 - BASE 2  - MSG - User home      : /home/sr
+20240508-112707.755 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-112707.755 - BASE 2  - MSG - A time stamp  : 20240508-112707
+
+20240508-112707.755 - BASE 2  - MSG - Date: 20240508
+20240508-112707.756 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-112707.756 - BASE 2  - MSG - Dow_Name: TUESDAY
+20240508-112707.756 - BASE 2  - MSG - Dow_Name: TUESDAY
+20240508-112707.756 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-112707.757 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-112707.757 - BASE 2  - MSG - Dow_Number: 6
+
+20240508-112707.757 - END     - MSG - END OF DEMO-------------------------------------
+20240508-113045.217 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-113045.217 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 11927552 ]
+
+20240508-113045.218 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-113045.218 - BASE 1  - MSG - Try ./test -h or --help
+20240508-113045.218 - BASE 1  - MSG - Try ./test -badoption
+20240508-113045.218 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-113045.219 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-113045.219 - BASE 2  - MSG - Program name   : testapi
+20240508-113045.219 - BASE 2  - MSG - User home      : /home/sr
+20240508-113045.219 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-113045.220 - BASE 2  - MSG - A time stamp  : 20240508-113045
+
+20240508-113045.220 - BASE 2  - MSG - Date: 20240508
+20240508-113045.220 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-113045.220 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-113045.221 - BASE 2  - MSG - Dow_Number: 1
+20240508-113045.221 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-113045.221 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-113045.221 - BASE 2  - MSG - Dow_Number: 3
+20240508-113045.222 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-113045.222 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-113045.222 - BASE 2  - MSG - Dow_Number: 6
+
+20240508-113045.223 - END     - MSG - END OF DEMO-------------------------------------
+20240508-114534.238 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-114534.238 - INIT    - MSG - All Cur: [ 11796480 ] Max: [ 11796480 ]
+
+20240508-114534.239 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-114534.239 - BASE 1  - MSG - Try ./test -h or --help
+20240508-114534.239 - BASE 1  - MSG - Try ./test -badoption
+20240508-114534.239 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-114534.240 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-114534.240 - BASE 2  - MSG - Program name   : testapi
+20240508-114534.240 - BASE 2  - MSG - User home      : /home/sr
+20240508-114534.240 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-114534.241 - BASE 2  - MSG - A time stamp  : 20240508-114534
+
+20240508-114534.241 - BASE 2  - MSG - Date: 20240508
+20240508-114534.241 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-114534.242 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-114534.242 - BASE 2  - MSG - Dow_Number: 2
+20240508-114534.242 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-114534.242 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-114534.243 - BASE 2  - MSG - Dow_Number: 4
+20240508-114534.243 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-114534.243 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-114534.243 - BASE 2  - MSG - Dow_Number: 7
+
+20240508-114534.244 - END     - MSG - END OF DEMO-------------------------------------
+20240508-135517.462 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-135517.463 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-135517.463 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-135517.463 - BASE 1  - MSG - Try ./test -h or --help
+20240508-135517.464 - BASE 1  - MSG - Try ./test -badoption
+20240508-135517.464 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-135517.464 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-135517.465 - BASE 2  - MSG - Program name   : testapi
+20240508-135517.465 - BASE 2  - MSG - User home      : /home/sr
+20240508-135517.465 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-135517.466 - BASE 2  - MSG - A time stamp  : 20240508-135517
+
+20240508-135517.466 - BASE 2  - MSG - Date: 20240508
+20240508-135517.466 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-135517.466 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-135517.467 - BASE 2  - MSG - DOW_Number: 2
+20240508-135517.467 - BASE 2  - MSG - Day_SOW: 20240506
+20240508-135517.467 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-135517.468 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-135517.468 - BASE 2  - MSG - DOW_Number: 4
+20240508-135517.468 - BASE 2  - MSG - Day_SOW: 20240226
+20240508-135517.469 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-135517.469 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-135517.469 - BASE 2  - MSG - DOW_Number: 7
+20240508-135517.469 - BASE 2  - MSG - Day_SOW: 20231225
+
+20240508-135517.470 - END     - MSG - END OF DEMO-------------------------------------
+20240508-144926.710 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-144926.711 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-144926.711 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-144926.711 - BASE 1  - MSG - Try ./test -h or --help
+20240508-144926.711 - BASE 1  - MSG - Try ./test -badoption
+20240508-144926.712 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-144926.712 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-144926.712 - BASE 2  - MSG - Program name   : testapi
+20240508-144926.713 - BASE 2  - MSG - User home      : /home/sr
+20240508-144926.713 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-144926.713 - BASE 2  - MSG - A time stamp  : 20240508-144926
+
+20240508-144926.714 - BASE 2  - MSG - Date: 20240508
+20240508-144926.714 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-144926.715 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-144926.715 - BASE 2  - MSG - DOW_Number: 2
+20240508-144926.715 - BASE 2  - MSG - Day_SOW: 20240506
+20240508-144926.715 - BASE 2  - MSG - Day_EOW: 20240512
+20240508-144926.716 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-144926.716 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-144926.716 - BASE 2  - MSG - DOW_Number: 4
+20240508-144926.717 - BASE 2  - MSG - Day_SOW: 20240226
+20240508-144926.717 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-144926.717 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-144926.718 - BASE 2  - MSG - DOW_Number: 7
+20240508-144926.718 - BASE 2  - MSG - Day_SOW: 20231225
+
+20240508-144926.718 - END     - MSG - END OF DEMO-------------------------------------
+20240508-145237.555 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-145237.555 - INIT    - MSG - All Cur: [ 12058624 ] Max: [ 12058624 ]
+
+20240508-145237.556 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-145237.556 - BASE 1  - MSG - Try ./test -h or --help
+20240508-145237.556 - BASE 1  - MSG - Try ./test -badoption
+20240508-145237.556 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-145237.557 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-145237.557 - BASE 2  - MSG - Program name   : testapi
+20240508-145237.557 - BASE 2  - MSG - User home      : /home/sr
+20240508-145237.558 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-145237.558 - BASE 2  - MSG - A time stamp  : 20240508-145237
+
+20240508-145237.558 - BASE 2  - MSG - Date: 20240508
+20240508-145237.559 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-145237.559 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-145237.559 - BASE 2  - MSG - DOW_Number: 2
+20240508-145237.559 - BASE 2  - MSG - Day_SOW: 20240506
+20240508-145237.560 - BASE 2  - MSG - Day_EOW: 20240512
+20240508-145237.560 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-145237.560 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-145237.561 - BASE 2  - MSG - DOW_Number: 4
+20240508-145237.561 - BASE 2  - MSG - Day_SOW: 20240226
+20240508-145237.561 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-145237.561 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-145237.562 - BASE 2  - MSG - DOW_Number: 7
+20240508-145237.562 - BASE 2  - MSG - Day_SOW: 20231225
+
+20240508-145237.562 - END     - MSG - END OF DEMO-------------------------------------
+20240508-145739.751 - INIT    - MSG - Ada Cur: [ 1088 ] Max: [ 1616 ]
+20240508-145739.751 - INIT    - MSG - All Cur: [ 11927552 ] Max: [ 11796480 ]
+
+20240508-145739.751 - BASE 1  - MSG - GET OPTION DEMO---------------------------------
+
+20240508-145739.752 - BASE 1  - MSG - Try ./test -h or --help
+20240508-145739.752 - BASE 1  - MSG - Try ./test -badoption
+20240508-145739.752 - BASE 1  - MSG - Try ./test -s=toto --long=123456 -1 -2 (or -12 instead)
+
+20240508-145739.752 - BASE 2  - MSG - BASIC INFORMATIONS------------------------------
+
+20240508-145739.753 - BASE 2  - MSG - Program name   : testapi
+20240508-145739.753 - BASE 2  - MSG - User home      : /home/sr
+20240508-145739.753 - BASE 2  - MSG - Library version: v22 v0.5
+20240508-145739.753 - BASE 2  - MSG - A time stamp  : 20240508-145739
+
+20240508-145739.754 - BASE 2  - MSG - Date: 20240508
+20240508-145739.754 - BASE 2  - MSG - Day_Previous: 20240507
+20240508-145739.754 - BASE 2  - MSG - DOW_Name: TUESDAY
+20240508-145739.755 - BASE 2  - MSG - DOW_Number: 2
+20240508-145739.755 - BASE 2  - MSG - Day_SOW: 20240506
+20240508-145739.755 - BASE 2  - MSG - Day_EOW: 20240512
+20240508-145739.755 - BASE 2  - MSG - Day_Previous: 20240229
+20240508-145739.756 - BASE 2  - MSG - DOW_Name: THURSDAY
+20240508-145739.756 - BASE 2  - MSG - DOW_Number: 4
+20240508-145739.756 - BASE 2  - MSG - Day_SOW: 20240226
+20240508-145739.756 - BASE 2  - MSG - Day_Previous: 20231231
+20240508-145739.757 - BASE 2  - MSG - DOW_Name: SUNDAY
+20240508-145739.757 - BASE 2  - MSG - DOW_Number: 7
+20240508-145739.757 - BASE 2  - MSG - Day_SOW: 20231225
+20240508-145739.757 - BASE 2  - MSG - Month: 202405%
+
+20240508-145739.758 - END     - MSG - END OF DEMO-------------------------------------

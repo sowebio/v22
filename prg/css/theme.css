@@ -1,0 +1,136 @@
+/*-----------------------------------------------------------------------------
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
+--
+--  @file      theme.css
+--  @copyright See authors list below and v22.copyrights file
+--  @licence   LGPL v3
+--  @encoding  UTF-8
+-------------------------------------------------------------------------------
+--  @summary
+--  V22 framework - Gnoga User Interface - main-menu package
+--
+--  @description
+--  Basic theme
+--  Color selection: https://www.w3schools.com/colors/colors_picker.asp
+--  #636480: nice background color but too pale for the buttons 
+--
+--  @authors
+--  Arthur Le Floch - alf - developpement@soweb.io
+--  Stéphane Rivière - sr - sriviere@soweb.io
+--
+--  @versions
+--  See git log
+-----------------------------------------------------------------------------*/
+
+:root {
+
+    /*--------------------------------------------------------  
+      --  Framework (buttons, link, responsive)
+      --------------------------------------------------------*/
+    
+    /* (24) Framework inactive button background */
+    --framework-unclickable-color: #769198ff;
+    
+    /* (25) Framework button hover background */
+    --framework-hover-color: #9ebaa0ff;
+    
+    /* (26) Framework button hover border */
+    --framework-hover-border-color: #dfe9e0ff;
+    
+    /* (29) Framework clicked button border */
+    --framework-active-border-color: #597278ff;
+    
+    /* ? */
+    --framework-link-active-color: #9accff;
+    
+    /* ? */
+    --framework-link-color: #ffffff;
+
+    /* ? */    
+    --input-invalid-color: #ffc0df;
+    --input-invalid-border-color: #ff6080;
+
+    /*--------------------------------------------------------  
+      --  Header                                                  
+      --------------------------------------------------------*/
+    
+    /* (01) Header background */
+    --header-color: #7e989eff;
+    --header-icon-hover-color: #627c83ff;
+    --header-icon-active-color: #627c83ff;
+    --header-app-browse-color: #636480;
+    --header-user-browse-color: #636480;
+    --header-user-name-color: #ffffff;
+    
+    /*--------------------------------------------------------  
+      --  Main menu                                                  
+      --------------------------------------------------------*/
+    
+    /* (21) Main menu bar background */
+    --main-menu-color: #627c83ff;
+    
+    /* (22) Main menu button background */
+    --framework-button-color: #627c83ff;
+            
+    /* (23) Main menu bar selected button background */
+    --main-menu-selected-button-color: #7e989eff;
+    
+    /* (27) Main menu delimiter */
+    --main-menu-delimiter-color: #597278ff;
+    
+    /* (28) Main menu button letter */
+    --main-menu-shortcut-color: #5fffd8ff;
+    
+    /* ? */
+    --main-menu-extension-color: #636480;
+
+    /*--------------------------------------------------------  
+      --  Content                                                  
+      --------------------------------------------------------*/
+    
+    --content-color: #f2f2ff;
+    --content-group-color: #e6f4fa;
+    --content-group-header-color: #96b0b6;
+    --content-group-title-color: #b5d0d7;
+    --content-group-warning-color: #ff405f;
+    --content-group-link-color: #767696;
+    --content-group-link-active-color: #767696;
+
+    /* (31) List background and odd listed items */
+    --content-list-color: #e6f4fa;
+    
+    /* (32) List header font color */
+    --content-list-header-color: white;
+    
+    /* (33) List header background color */
+    --content-list-header-color-background: #96b0b6;
+    
+    /* (34) List selected font color */
+    --content-list-selected-color: white;
+    
+    /* (35) List selected background color */
+    --content-list-selected-color-background: #66a8a8;
+    
+    /* (36) List even listed items */
+    --content-list-secondary-color: #b5d0d7;
+
+
+    /*--------------------------------------------------------  
+      --  Footer                                                  
+      --------------------------------------------------------*/
+      
+    /* (41) Footer background */
+    --footer-color: #627c83ff;
+    
+    --footer-left-color: #ffffff;
+    --footer-right-color: #ffffff;
+}
+
+/*------------------------------------------------------------ 
+  --  EOF                                                  
+  ------------------------------------------------------------*/

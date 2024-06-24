@@ -1,0 +1,1051 @@
+2024-01-26 11:57:37.46 : ------------------------------------------------------------------------
+2024-01-26 11:57:37.46 : Starting Gnoga server
+2024-01-26 14:02:04.20 : ------------------------------------------------------------------------
+2024-01-26 14:02:04.20 : Starting Gnoga server
+2024-01-26 14:05:45.83 : ------------------------------------------------------------------------
+2024-01-26 14:05:45.83 : Starting Gnoga server
+2024-01-26 15:54:55.78 : ------------------------------------------------------------------------
+2024-01-26 15:54:55.79 : Starting Gnoga server
+2024-01-26 17:05:46.80 : ------------------------------------------------------------------------
+2024-01-26 17:05:46.80 : Starting Gnoga server
+2024-01-27 09:01:51.66 : ------------------------------------------------------------------------
+2024-01-27 09:01:51.66 : Starting Gnoga server
+2024-01-27 14:01:58.54 : ------------------------------------------------------------------------
+2024-01-27 14:01:58.54 : Starting Gnoga server
+2024-01-27 14:03:05.62 : ------------------------------------------------------------------------
+2024-01-27 14:03:05.63 : Starting Gnoga server
+2024-01-27 14:03:08.64 : Shutting down long polling connection ID 2
+2024-01-27 14:03:08.74 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:51770
+2024-01-27 14:04:05.63 : Deleting connection ID 2
+2024-01-27 14:05:13.77 : Deleting connection ID 1
+2024-01-27 14:05:13.77 : Connection_Data freed on ID 1
+2024-01-27 14:05:14.21 : Shutting down long polling connection ID 4
+2024-01-27 14:05:14.22 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:60806
+2024-01-27 14:05:15.25 : Deleting connection ID 3
+2024-01-27 14:05:15.25 : Connection_Data freed on ID 3
+2024-01-27 14:05:15.67 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:60808
+2024-01-27 14:05:15.74 : Shutting down long polling connection ID 6
+2024-01-27 14:10:07.93 : ------------------------------------------------------------------------
+2024-01-27 14:10:07.93 : Starting Gnoga server
+2024-01-27 14:10:10.45 : Shutting down long polling connection ID 2
+2024-01-27 14:10:10.55 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:48596
+2024-01-27 14:11:07.93 : Deleting connection ID 2
+2024-01-27 14:11:27.75 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:53550
+2024-01-27 14:11:27.86 : Shutting down long polling connection ID 4
+2024-01-27 14:11:40.85 : Deleting connection ID 3
+2024-01-27 14:11:40.85 : Connection_Data freed on ID 3
+2024-01-27 14:11:40.88 : Deleting connection during finalize ID 4
+2024-01-27 14:11:40.88 : Deleting connection ID 4
+2024-01-27 14:12:10.94 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:58662
+2024-01-27 14:12:11.08 : Shutting down long polling connection ID 6
+2024-01-27 14:12:15.47 : Deleting connection ID 5
+2024-01-27 14:12:15.47 : Connection_Data freed on ID 5
+2024-01-27 14:12:15.62 : Shutting down long polling connection ID 6
+2024-01-27 14:12:15.86 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:40762
+2024-01-27 14:12:16.47 : Deleting connection ID 7
+2024-01-27 14:12:16.48 : Connection_Data freed on ID 7
+2024-01-27 14:12:16.64 : Shutting down long polling connection ID 10
+2024-01-27 14:12:16.86 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:40768
+2024-01-27 14:13:02.69 : Deleting connection ID 9
+2024-01-27 14:13:02.69 : Connection_Data freed on ID 9
+2024-01-27 14:13:02.94 : Shutting down long polling connection ID 6
+2024-01-27 14:13:03.08 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:43060
+2024-01-27 14:13:03.63 : Deleting connection ID 11
+2024-01-27 14:13:03.63 : Connection_Data freed on ID 11
+2024-01-27 14:13:03.97 : Shutting down long polling connection ID 14
+2024-01-27 14:13:04.01 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:43068
+2024-01-27 14:13:07.94 : Deleting connection ID 6
+2024-01-27 14:13:07.94 : Deleting connection ID 8
+2024-01-27 14:13:07.94 : Deleting connection ID 10
+2024-01-27 14:13:07.94 : Deleting connection ID 12
+2024-01-27 14:13:07.94 : Deleting connection ID 14
+2024-01-27 14:13:24.62 : Deleting connection ID 13
+2024-01-27 14:13:24.63 : Connection_Data freed on ID 13
+2024-01-27 14:13:27.92 : Error Try_Execute ID 15
+2024-01-27 14:13:28.05 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S105|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:28.05 : Error Execute_Script ID 15
+2024-01-27 14:13:28.05 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:33.06 : Error Try_Execute ID 15
+2024-01-27 14:13:33.06 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S106|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:33.06 : Error Execute_Script after retrying ID 15
+2024-01-27 14:13:33.06 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:33.06 : Error connection15 browser window was closed.
+2024-01-27 14:13:33.06 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 15
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:33.17 : Shutting down long polling connection ID 15
+2024-01-27 14:13:36.49 : Error Try_Execute ID 16
+2024-01-27 14:13:36.49 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S107|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:36.49 : Error Execute_Script ID 16
+2024-01-27 14:13:36.49 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:41.49 : Error Try_Execute ID 16
+2024-01-27 14:13:41.49 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S108|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:41.49 : Error Execute_Script after retrying ID 16
+2024-01-27 14:13:41.49 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:41.49 : Error connection16 browser window was closed.
+2024-01-27 14:13:41.49 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 16
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:13:41.70 : Shutting down long polling connection ID 15
+2024-01-27 14:13:47.23 : Shutting down long polling connection ID 15
+2024-01-27 14:13:47.48 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:39886
+2024-01-27 14:14:04.98 : Deleting connection ID 17
+2024-01-27 14:14:04.98 : Connection_Data freed on ID 17
+2024-01-27 14:14:05.36 : Shutting down long polling connection ID 20
+2024-01-27 14:14:05.36 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:53724
+2024-01-27 14:14:06.23 : Deleting connection ID 1
+2024-01-27 14:14:06.23 : Connection_Data freed on ID 1
+2024-01-27 14:14:06.68 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:53794
+2024-01-27 14:14:06.89 : Shutting down long polling connection ID 22
+2024-01-27 14:14:07.94 : Deleting connection ID 15
+2024-01-27 14:14:07.94 : Deleting connection ID 16
+2024-01-27 14:14:07.94 : Deleting connection ID 18
+2024-01-27 14:14:07.94 : Deleting connection ID 20
+2024-01-27 14:14:07.94 : Deleting connection ID 22
+2024-01-27 14:14:08.06 : Deleting connection ID 21
+2024-01-27 14:14:08.06 : Connection_Data freed on ID 21
+2024-01-27 14:14:08.40 : Shutting down long polling connection ID 24
+2024-01-27 14:14:08.50 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:53820
+2024-01-27 14:14:13.91 : Deleting connection ID 19
+2024-01-27 14:14:13.91 : Connection_Data freed on ID 19
+2024-01-27 14:14:14.29 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:48314
+2024-01-27 14:14:14.43 : Shutting down long polling connection ID 26
+2024-01-27 14:15:07.94 : Deleting connection ID 24
+2024-01-27 14:15:07.94 : Deleting connection ID 26
+2024-01-27 14:18:06.36 : Deleting connection ID 23
+2024-01-27 14:18:06.36 : Connection_Data freed on ID 23
+2024-01-27 14:18:06.80 : Shutting down long polling connection ID 28
+2024-01-27 14:18:06.81 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:60190
+2024-01-27 14:18:07.94 : Deleting connection ID 28
+2024-01-27 14:18:08.07 : Deleting connection ID 27
+2024-01-27 14:18:08.07 : Connection_Data freed on ID 27
+2024-01-27 14:18:08.51 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:60214
+2024-01-27 14:18:08.81 : Shutting down long polling connection ID 30
+2024-01-27 14:19:07.94 : Deleting connection ID 30
+2024-01-27 14:21:12.77 : Shutting down long polling connection ID 32
+2024-01-27 14:21:12.98 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52526
+2024-01-27 14:21:16.07 : Error Try_Execute ID 33
+2024-01-27 14:21:16.07 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S157|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:21:16.07 : Error Execute_Script ID 33
+2024-01-27 14:21:16.07 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:21:20.67 : Deleting connection ID 31
+2024-01-27 14:21:20.67 : Connection_Data freed on ID 31
+2024-01-27 14:21:20.67 : Deleting connection during finalize ID 33
+2024-01-27 14:21:20.67 : Deleting connection ID 33
+2024-01-27 14:21:21.07 : Error Try_Execute ID 33
+2024-01-27 14:21:21.07 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S158|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:21:21.07 : Error Execute_Script after retrying ID 33
+2024-01-27 14:21:21.08 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:21:21.08 : Error connection33 browser window was closed.
+2024-01-27 14:21:21.08 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 33
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:21:21.08 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52546
+2024-01-27 14:21:21.34 : Shutting down long polling connection ID 35
+2024-01-27 14:21:41.04 : Deleting connection ID 34
+2024-01-27 14:21:41.04 : Connection_Data freed on ID 34
+2024-01-27 14:21:41.45 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:55840
+2024-01-27 14:21:41.47 : Shutting down long polling connection ID 37
+2024-01-27 14:22:05.18 : Deleting connection ID 36
+2024-01-27 14:22:05.18 : Connection_Data freed on ID 36
+2024-01-27 14:22:05.59 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:59012
+2024-01-27 14:22:05.63 : Shutting down long polling connection ID 37
+2024-01-27 14:22:06.84 : Deleting connection ID 38
+2024-01-27 14:22:06.84 : Connection_Data freed on ID 38
+2024-01-27 14:22:07.15 : Shutting down long polling connection ID 41
+2024-01-27 14:22:07.24 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:59024
+2024-01-27 14:22:07.94 : Deleting connection ID 32
+2024-01-27 14:22:07.94 : Deleting connection ID 35
+2024-01-27 14:22:07.94 : Deleting connection ID 37
+2024-01-27 14:22:07.94 : Deleting connection ID 39
+2024-01-27 14:22:07.94 : Deleting connection ID 41
+2024-01-27 14:22:11.66 : Deleting connection ID 40
+2024-01-27 14:22:11.66 : Connection_Data freed on ID 40
+2024-01-27 14:22:12.06 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:59078
+2024-01-27 14:22:12.19 : Shutting down long polling connection ID 43
+2024-01-27 14:22:13.05 : Deleting connection ID 42
+2024-01-27 14:22:13.05 : Connection_Data freed on ID 42
+2024-01-27 14:22:13.22 : Shutting down long polling connection ID 45
+2024-01-27 14:22:13.46 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57410
+2024-01-27 14:22:14.44 : Deleting connection ID 44
+2024-01-27 14:22:14.44 : Connection_Data freed on ID 44
+2024-01-27 14:22:14.75 : Shutting down long polling connection ID 47
+2024-01-27 14:22:14.84 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57424
+2024-01-27 14:22:15.65 : Deleting connection ID 46
+2024-01-27 14:22:15.65 : Connection_Data freed on ID 46
+2024-01-27 14:22:16.06 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57438
+2024-01-27 14:22:16.28 : Shutting down long polling connection ID 49
+2024-01-27 14:22:46.47 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4950.0 Iron Safari/537.36 on Linux x86_64 from 127.0.0.1:37040
+2024-01-27 14:22:46.52 : Shutting down long polling connection ID 51
+2024-01-27 14:22:48.52 : Deleting connection ID 50
+2024-01-27 14:22:48.52 : Connection_Data freed on ID 50
+2024-01-27 14:23:07.94 : Deleting connection ID 43
+2024-01-27 14:23:07.94 : Deleting connection ID 45
+2024-01-27 14:23:07.94 : Deleting connection ID 47
+2024-01-27 14:23:07.94 : Deleting connection ID 49
+2024-01-27 14:23:07.94 : Deleting connection ID 51
+2024-01-27 14:23:40.03 : Deleting connection ID 48
+2024-01-27 14:23:40.03 : Connection_Data freed on ID 48
+2024-01-27 14:23:40.38 : Shutting down long polling connection ID 53
+2024-01-27 14:23:40.44 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:38380
+2024-01-27 14:23:41.08 : Deleting connection ID 52
+2024-01-27 14:23:41.08 : Connection_Data freed on ID 52
+2024-01-27 14:23:41.41 : Shutting down long polling connection ID 55
+2024-01-27 14:23:41.48 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:38382
+2024-01-27 14:23:43.16 : Deleting connection ID 54
+2024-01-27 14:23:43.16 : Connection_Data freed on ID 54
+2024-01-27 14:23:43.17 : Deleting connection during finalize ID 53
+2024-01-27 14:23:43.17 : Deleting connection ID 53
+2024-01-27 14:23:43.17 : Deleting connection during finalize ID 55
+2024-01-27 14:23:43.17 : Deleting connection ID 55
+2024-01-27 14:23:45.78 : Deleting connection ID 25
+2024-01-27 14:23:45.78 : Connection_Data freed on ID 25
+2024-01-27 14:24:02.55 : Shutting down long polling connection ID 57
+2024-01-27 14:24:02.66 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:48918
+2024-01-27 14:24:07.94 : Deleting connection ID 57
+2024-01-27 14:24:40.09 : Deleting connection ID 56
+2024-01-27 14:24:40.09 : Connection_Data freed on ID 56
+2024-01-27 14:24:40.28 : Shutting down long polling connection ID 59
+2024-01-27 14:24:40.49 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52408
+2024-01-27 14:24:41.77 : Deleting connection ID 58
+2024-01-27 14:24:41.77 : Connection_Data freed on ID 58
+2024-01-27 14:24:41.77 : Deleting connection during finalize ID 59
+2024-01-27 14:24:41.77 : Deleting connection ID 59
+2024-01-27 14:24:42.18 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52418
+2024-01-27 14:24:42.29 : Shutting down long polling connection ID 62
+2024-01-27 14:24:43.10 : Deleting connection ID 61
+2024-01-27 14:24:43.10 : Connection_Data freed on ID 61
+2024-01-27 14:24:43.10 : Deleting connection during finalize ID 60
+2024-01-27 14:24:43.10 : Deleting connection ID 60
+2024-01-27 14:24:43.31 : Shutting down long polling connection ID 62
+2024-01-27 14:24:43.49 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52110
+2024-01-27 14:24:43.61 : Error Try_Execute ID 60
+2024-01-27 14:24:43.61 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S407|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:43.61 : Error Execute_Script ID 60
+2024-01-27 14:24:43.61 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:45.60 : Error Try_Execute ID 63
+2024-01-27 14:24:45.60 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S414|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:45.60 : Error Execute_Script ID 63
+2024-01-27 14:24:45.60 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:45.61 : Error Connection_Socket ID 60 not found in connection map. 
+2024-01-27 14:24:45.61 : Error Try_Execute ID 60
+2024-01-27 14:24:45.61 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Connection ID 60 not found in connection map. Connection most likely was previously closed.
+[./testgui]
+0x7c3131 gnoga__server__connection__connection_manager__connection_socketN at ???
+0x7c3748 gnoga__server__connection__connection_manager__connection_socketP at ???
+0x7edf5f gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:45.61 : Error Execute_Script after retrying ID 60
+2024-01-27 14:24:45.61 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:45.61 : Error connection60 browser window was closed.
+2024-01-27 14:24:45.61 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 60
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:46.61 : Error Try_Execute ID 66
+2024-01-27 14:24:46.62 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S421|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:46.62 : Error Execute_Script ID 66
+2024-01-27 14:24:46.62 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:50.60 : Error Try_Execute ID 63
+2024-01-27 14:24:50.60 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S422|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:50.60 : Error Execute_Script after retrying ID 63
+2024-01-27 14:24:50.60 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:50.60 : Error connection63 browser window was closed.
+2024-01-27 14:24:50.60 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 63
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:51.62 : Error Try_Execute ID 66
+2024-01-27 14:24:51.62 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S423|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:51.62 : Error Execute_Script after retrying ID 66
+2024-01-27 14:24:51.62 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:51.62 : Error connection66 browser window was closed.
+2024-01-27 14:24:51.62 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 66
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 14:24:51.86 : Shutting down long polling connection ID 66
+2024-01-27 14:25:01.00 : Deleting connection ID 64
+2024-01-27 14:25:01.00 : Connection_Data freed on ID 64
+2024-01-27 14:25:01.41 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:41178
+2024-01-27 14:25:01.43 : Shutting down long polling connection ID 62
+2024-01-27 14:25:02.42 : Deleting connection ID 67
+2024-01-27 14:25:02.42 : Connection_Data freed on ID 67
+2024-01-27 14:25:02.82 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:46470
+2024-01-27 14:25:02.95 : Shutting down long polling connection ID 62
+2024-01-27 14:25:07.94 : Deleting connection ID 62
+2024-01-27 14:25:07.94 : Deleting connection ID 63
+2024-01-27 14:25:07.94 : Deleting connection ID 65
+2024-01-27 14:25:07.94 : Deleting connection ID 66
+2024-01-27 14:25:07.94 : Deleting connection ID 68
+2024-01-27 14:25:07.94 : Deleting connection ID 70
+2024-01-27 14:25:17.12 : Deleting connection ID 69
+2024-01-27 14:25:17.12 : Connection_Data freed on ID 69
+2024-01-27 14:25:17.53 : Shutting down long polling connection ID 72
+2024-01-27 14:25:17.53 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52206
+2024-01-27 14:25:18.31 : Deleting connection ID 71
+2024-01-27 14:25:18.31 : Connection_Data freed on ID 71
+2024-01-27 14:25:18.54 : Shutting down long polling connection ID 72
+2024-01-27 14:25:18.71 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:52214
+2024-01-27 14:26:07.94 : Deleting connection ID 72
+2024-01-27 14:26:07.94 : Deleting connection ID 74
+2024-01-27 14:26:56.04 : Deleting connection ID 73
+2024-01-27 14:26:56.05 : Connection_Data freed on ID 73
+2024-01-27 14:26:56.45 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57678
+2024-01-27 14:26:56.63 : Shutting down long polling connection ID 76
+2024-01-27 14:26:57.35 : Deleting connection ID 75
+2024-01-27 14:26:57.35 : Connection_Data freed on ID 75
+2024-01-27 14:26:57.63 : Shutting down long polling connection ID 78
+2024-01-27 14:26:57.76 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57686
+2024-01-27 14:26:58.55 : Deleting connection ID 77
+2024-01-27 14:26:58.55 : Connection_Data freed on ID 77
+2024-01-27 14:26:58.95 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:57702
+2024-01-27 14:26:59.16 : Shutting down long polling connection ID 76
+2024-01-27 14:27:07.94 : Deleting connection ID 76
+2024-01-27 14:27:07.94 : Deleting connection ID 78
+2024-01-27 14:27:07.94 : Deleting connection ID 80
+2024-01-27 14:27:43.00 : Deleting connection ID 79
+2024-01-27 14:27:43.00 : Connection_Data freed on ID 79
+2024-01-27 14:27:43.41 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:37020
+2024-01-27 14:27:43.47 : Shutting down long polling connection ID 82
+2024-01-27 14:27:44.30 : Deleting connection ID 81
+2024-01-27 14:27:44.30 : Connection_Data freed on ID 81
+2024-01-27 14:27:44.49 : Shutting down long polling connection ID 84
+2024-01-27 14:27:44.70 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:37024
+2024-01-27 14:27:59.04 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:39198
+2024-01-27 14:27:59.09 : Shutting down long polling connection ID 86
+2024-01-27 14:28:06.51 : Deleting connection ID 83
+2024-01-27 14:28:06.51 : Connection_Data freed on ID 83
+2024-01-27 14:28:06.66 : Shutting down long polling connection ID 88
+2024-01-27 14:28:06.90 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:47588
+2024-01-27 14:28:07.94 : Deleting connection ID 82
+2024-01-27 14:28:07.94 : Deleting connection ID 84
+2024-01-27 14:28:07.94 : Deleting connection ID 86
+2024-01-27 14:28:07.94 : Deleting connection ID 88
+2024-01-27 17:05:50.36 : Deleting connection ID 85
+2024-01-27 17:05:50.36 : Connection_Data freed on ID 85
+2024-01-27 17:05:50.68 : Shutting down long polling connection ID 90
+2024-01-27 17:05:50.75 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:53114
+2024-01-27 17:05:51.37 : Deleting connection ID 89
+2024-01-27 17:05:51.37 : Connection_Data freed on ID 89
+2024-01-27 17:05:51.69 : Shutting down long polling connection ID 92
+2024-01-27 17:05:51.76 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:53120
+2024-01-27 17:05:52.68 : Deleting connection ID 91
+2024-01-27 17:05:52.68 : Connection_Data freed on ID 91
+2024-01-27 17:05:53.06 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:56170
+2024-01-27 17:05:53.23 : Shutting down long polling connection ID 94
+2024-01-27 17:05:55.06 : Deleting connection ID 93
+2024-01-27 17:05:55.06 : Connection_Data freed on ID 93
+2024-01-27 17:05:55.26 : Shutting down long polling connection ID 94
+2024-01-27 17:05:55.44 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:56172
+2024-01-27 17:05:56.11 : Deleting connection ID 95
+2024-01-27 17:05:56.11 : Connection_Data freed on ID 95
+2024-01-27 17:05:56.30 : Shutting down long polling connection ID 90
+2024-01-27 17:05:56.50 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:56174
+2024-01-27 17:06:07.96 : Deleting connection ID 90
+2024-01-27 17:06:07.96 : Deleting connection ID 92
+2024-01-27 17:06:07.96 : Deleting connection ID 94
+2024-01-27 17:06:07.96 : Deleting connection ID 96
+2024-01-27 17:06:07.96 : Deleting connection ID 98
+2024-01-27 17:08:27.80 : Deleting connection ID 97
+2024-01-27 17:08:27.80 : Connection_Data freed on ID 97
+2024-01-27 17:08:28.20 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:47158
+2024-01-27 17:08:28.24 : Shutting down long polling connection ID 100
+2024-01-27 17:08:31.54 : Error Try_Execute ID 101
+2024-01-27 17:08:31.54 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S556|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:31.54 : Error Execute_Script ID 101
+2024-01-27 17:08:31.54 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:36.54 : Error Try_Execute ID 101
+2024-01-27 17:08:36.54 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S557|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:36.54 : Error Execute_Script after retrying ID 101
+2024-01-27 17:08:36.55 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:36.55 : Error connection101 browser window was closed.
+2024-01-27 17:08:36.55 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 101
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:36.80 : Shutting down long polling connection ID 100
+2024-01-27 17:08:38.88 : Deleting connection ID 99
+2024-01-27 17:08:38.88 : Connection_Data freed on ID 99
+2024-01-27 17:08:42.09 : Deleting connection during finalize ID 100
+2024-01-27 17:08:42.09 : Deleting connection ID 100
+2024-01-27 17:08:46.82 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:37122
+2024-01-27 17:08:46.89 : Shutting down long polling connection ID 103
+2024-01-27 17:08:50.19 : Error Try_Execute ID 104
+2024-01-27 17:08:50.19 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S564|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:50.19 : Error Execute_Script ID 104
+2024-01-27 17:08:50.20 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:55.20 : Error Try_Execute ID 104
+2024-01-27 17:08:55.20 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S565|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:55.20 : Error Execute_Script after retrying ID 104
+2024-01-27 17:08:55.20 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:55.20 : Error connection104 browser window was closed.
+2024-01-27 17:08:55.20 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 104
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:08:55.45 : Shutting down long polling connection ID 103
+2024-01-27 17:09:07.96 : Deleting connection ID 103
+2024-01-27 17:09:07.96 : Deleting connection ID 104
+2024-01-27 17:09:11.18 : Deleting connection ID 102
+2024-01-27 17:09:11.18 : Connection_Data freed on ID 102
+2024-01-27 17:09:11.56 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:567942024-01-27 17:09:11.56 : Shutting down long polling connection ID 106
+
+2024-01-27 17:09:12.54 : Deleting connection during finalize ID 106
+2024-01-27 17:09:12.54 : Deleting connection ID 106
+2024-01-27 17:09:12.55 : Deleting connection ID 105
+2024-01-27 17:09:12.55 : Connection_Data freed on ID 105
+2024-01-27 17:09:12.92 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:40714
+2024-01-27 17:09:13.08 : Shutting down long polling connection ID 109
+2024-01-27 17:09:14.87 : Error Try_Execute ID 107
+2024-01-27 17:09:14.87 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S572|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:14.87 : Error Execute_Script ID 107
+2024-01-27 17:09:14.87 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:16.39 : Error Try_Execute ID 110
+2024-01-27 17:09:16.39 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S579|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:16.39 : Error Execute_Script ID 110
+2024-01-27 17:09:16.39 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f0e98 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:16.92 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:40714
+2024-01-27 17:09:21.39 : Error Try_Execute ID 110
+2024-01-27 17:09:21.39 : raised GNOGA.SERVER.CONNECTION.SCRIPT_ERROR : Timeout error, no browser response for: ws.send ("S585|"+eval ("navigator.userAgent"));
+[./testgui]
+0x7eec40 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:21.39 : Error Execute_Script after retrying ID 110
+2024-01-27 17:09:21.39 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Socket Error during execute of : navigator.userAgent
+[./testgui]
+0x7f0709 gnoga__server__connection__execute_script__try_execute__2.721 at ???
+0x7f1302 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:21.39 : Error connection110 browser window was closed.
+2024-01-27 17:09:21.40 : raised GNOGA.SERVER.CONNECTION.CONNECTION_ERROR : Invalid ID 110
+[./testgui]
+0x7f1a36 gnoga__server__connection__execute_script__2 at ???
+0x91cb2d gnoga__gui__navigator__user_agent at ???
+0x92cdc0 gnoga__application__multi_connect__on_connect at ???
+0x7c4382 gnoga__server__connection__event_task_typeTB at ???
+0xc2025b system__tasking__stages__task_wrapper at ???
+[/lib/x86_64-linux-gnu/libc.so.6]
+0x7fc3ca894ac1
+0x7fc3ca92684e
+0xfffffffffffffffe
+
+2024-01-27 17:09:21.62 : Shutting down long polling connection ID 109
+2024-01-27 17:09:21.89 : Deleting connection ID 107
+2024-01-27 17:09:21.89 : Connection_Data freed on ID 107
+2024-01-27 17:09:21.89 : Deleting connection during finalize ID 108
+2024-01-27 17:09:21.89 : Deleting connection ID 108
+2024-01-27 17:09:21.89 : Connection_Data freed on ID 108
+2024-01-27 17:09:22.13 : Shutting down long polling connection ID 109
+2024-01-27 17:09:22.27 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:40720
+2024-01-27 17:09:27.48 : Deleting connection ID 87
+2024-01-27 17:09:27.48 : Connection_Data freed on ID 87
+2024-01-27 17:09:27.67 : Shutting down long polling connection ID 114
+2024-01-27 17:09:27.89 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:59200
+2024-01-27 17:09:42.05 : Deleting connection ID 113
+2024-01-27 17:09:42.05 : Connection_Data freed on ID 113
+2024-01-27 17:09:42.31 : Shutting down long polling connection ID 116
+2024-01-27 17:09:42.46 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:37060
+2024-01-27 17:09:43.06 : Deleting connection ID 115
+2024-01-27 17:09:43.06 : Connection_Data freed on ID 115
+2024-01-27 17:09:43.33 : Shutting down long polling connection ID 116
+2024-01-27 17:09:43.46 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:37064
+2024-01-27 17:10:07.97 : Deleting connection ID 109
+2024-01-27 17:10:07.97 : Deleting connection ID 110
+2024-01-27 17:10:07.97 : Deleting connection ID 112
+2024-01-27 17:10:07.97 : Deleting connection ID 114
+2024-01-27 17:10:07.97 : Deleting connection ID 116
+2024-01-27 17:10:07.97 : Deleting connection ID 118
+2024-01-27 17:10:25.23 : Deleting connection ID 117
+2024-01-27 17:10:25.23 : Connection_Data freed on ID 117
+2024-01-27 17:10:25.63 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:51202
+2024-01-27 17:10:25.67 : Shutting down long polling connection ID 120
+2024-01-27 17:10:26.51 : Deleting connection ID 119
+2024-01-27 17:10:26.51 : Connection_Data freed on ID 119
+2024-01-27 17:10:26.69 : Shutting down long polling connection ID 122
+2024-01-27 17:10:26.92 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:51212
+2024-01-27 17:10:27.38 : Deleting connection ID 121
+2024-01-27 17:10:27.38 : Connection_Data freed on ID 121
+2024-01-27 17:10:27.70 : Shutting down long polling connection ID 120
+2024-01-27 17:10:27.77 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:51222
+2024-01-27 17:10:28.39 : Deleting connection ID 123
+2024-01-27 17:10:28.39 : Connection_Data freed on ID 123
+2024-01-27 17:10:28.74 : Shutting down long polling connection ID 120
+2024-01-27 17:10:28.79 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:51234
+2024-01-27 17:10:30.63 : Deleting connection ID 125
+2024-01-27 17:10:30.63 : Connection_Data freed on ID 125
+2024-01-27 17:10:31.04 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:51236
+2024-01-27 17:10:31.27 : Shutting down long polling connection ID 120
+2024-01-27 17:10:32.26 : Deleting connection ID 127
+2024-01-27 17:10:32.26 : Connection_Data freed on ID 127
+2024-01-27 17:10:32.66 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:34780
+2024-01-27 17:10:32.78 : Shutting down long polling connection ID 130
+2024-01-27 17:10:33.80 : Deleting connection ID 129
+2024-01-27 17:10:33.80 : Connection_Data freed on ID 129
+2024-01-27 17:10:34.21 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:34790
+2024-01-27 17:10:34.30 : Shutting down long polling connection ID 130
+2024-01-27 17:10:35.70 : Deleting connection ID 131
+2024-01-27 17:10:35.70 : Connection_Data freed on ID 131
+2024-01-27 17:10:36.11 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:34804
+2024-01-27 17:10:36.32 : Shutting down long polling connection ID 130
+2024-01-27 17:10:38.73 : Deleting connection ID 111
+2024-01-27 17:10:38.73 : Connection_Data freed on ID 111
+2024-01-27 17:10:39.12 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 on Linux x86_64 from 127.0.0.1:34822
+2024-01-27 17:10:39.36 : Shutting down long polling connection ID 136
+2024-01-27 17:11:07.97 : Deleting connection ID 120
+2024-01-27 17:11:07.97 : Deleting connection ID 122
+2024-01-27 17:11:07.97 : Deleting connection ID 124
+2024-01-27 17:11:07.97 : Deleting connection ID 126
+2024-01-27 17:11:07.97 : Deleting connection ID 128
+2024-01-27 17:11:07.97 : Deleting connection ID 130
+2024-01-27 17:11:07.97 : Deleting connection ID 132
+2024-01-27 17:11:07.97 : Deleting connection ID 134
+2024-01-27 17:11:07.97 : Deleting connection ID 136
+2024-01-27 17:20:13.68 : Deleting connection ID 133
+2024-01-27 17:20:13.68 : Connection_Data freed on ID 133
+2024-01-27 17:20:14.01 : Shutting down long polling connection ID 138
+2024-01-27 17:20:14.08 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:59890
+2024-01-27 17:20:16.39 : Deleting connection ID 137
+2024-01-27 17:20:16.39 : Connection_Data freed on ID 137
+2024-01-27 17:20:16.42 : Deleting connection during finalize ID 138
+2024-01-27 17:20:16.42 : Deleting connection ID 138
+2024-01-27 17:20:23.08 : Shutting down long polling connection ID 140
+2024-01-27 17:20:23.10 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:121.0) Gecko/20100101 Firefox/121.0 on Linux x86_64 from 127.0.0.1:49110
+2024-01-27 17:21:07.97 : Deleting connection ID 140
+2024-01-27 17:41:43.64 : Deleting connection during finalize ID 101
+2024-01-27 17:41:43.64 : Deleting connection ID 101
+2024-01-28 10:29:33.51 : Deleting connection ID 29
+2024-01-28 10:29:33.51 : Connection_Data freed on ID 29
+2024-01-28 10:29:34.03 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:45572
+2024-01-28 10:29:34.18 : Shutting down long polling connection ID 142
+2024-01-28 10:29:45.24 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:46072
+2024-01-28 10:29:45.26 : Shutting down long polling connection ID 144
+2024-01-28 10:29:55.91 : Deleting connection ID 139
+2024-01-28 10:29:55.91 : Connection_Data freed on ID 139
+2024-01-28 10:30:03.89 : Deleting connection ID 135
+2024-01-28 10:30:03.89 : Connection_Data freed on ID 135
+2024-01-28 10:30:08.13 : Deleting connection ID 142
+2024-01-28 10:30:08.13 : Deleting connection ID 144
+2024-01-28 14:06:24.23 : ------------------------------------------------------------------------
+2024-01-28 14:06:24.25 : Starting Gnoga server
+2024-01-28 14:06:29.53 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:47254
+2024-01-28 14:06:29.79 : Shutting down long polling connection ID 2
+2024-01-28 14:07:14.95 : Deleting connection ID 1
+2024-01-28 14:07:14.95 : Connection_Data freed on ID 1
+2024-01-28 14:07:15.30 : Shutting down long polling connection ID 4
+2024-01-28 14:07:15.42 : Sending to default route for Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0 on Linux x86_64 from 127.0.0.1:40038
+2024-01-28 14:07:24.25 : Deleting connection ID 2
+2024-01-28 14:07:24.25 : Deleting connection ID 4

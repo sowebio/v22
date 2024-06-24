@@ -1918,7 +1918,7 @@ private
       Max_Length   : WebSocket_Message_Size;  -- Maximal message length
       Frame        : WebSocket_Message_Ptr;   -- Current frame buffer
       Data         : WebSocket_Message_Ptr;   -- Incoming messages frame
-      Context      : Task_ID := Null_Task_Id; -- Calling context
+      Context      : Task_Id := Null_Task_Id; -- Calling context
       Mask_Index   : WebSocket_Mask_Index;    -- Mask index
       Mask         : WebSocket_Mask_Array;    -- Mask
       Control      : aliased WebSocket_Message (125);

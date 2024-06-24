@@ -1,0 +1,202 @@
+
+20240126-115734 - INIT    - MSG - v22 Framework - GUI test program
+20240126-115734 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240126-115734 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240126-115735 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg has been created
+20240126-115735 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240126-115735 - INIT    - MSG - Database testgui needs creation or update
+20240126-115735 - INIT    - MSG - Create Table: Sys_Config - Create Column: Parameter VARCHAR(40) UNIQUE PRIMARY KEY
+20240126-115735 - INIT    - MSG - Table: Sys_Config - Create Column: Value TEXT 
+20240126-115735 - INIT    - MSG - Table: Sys_Config - Creating Index: Idx_Config_Parameter Parameter 
+20240126-115735 - INIT    - MSG - Create Table: Sys_Schema - Create Column: Table_Name VARCHAR(40)  
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Create Column: Column_Name VARCHAR(40) 
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Create Column: Column_Type TEXT 
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Create Column: Column_Constraint TEXT 
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Create Column: Version TEXT 
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Create Column: Comment TEXT 
+20240126-115735 - INIT    - MSG - Table: Sys_Schema - Creating Index: Idx_Schema_Table_Name Table_Name, Column_Name 
+20240126-115735 - INIT    - MSG - Create Table: Sys_Users - Create Column: Login VARCHAR(40) UNIQUE PRIMARY KEY
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: First_Name TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Last_Name TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Phone TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Email TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Password TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Grants TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Properties TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Language TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Time_Zone TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Theme TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Notes TEXT 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: DTS_Creation VARCHAR(15) 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: DTS_Update VARCHAR(15) 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Connection_Timeout INTEGER 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Connection_Total INTEGER 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Connection_Counter INTEGER 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Create Column: Connection_Info INTEGER 
+20240126-115736 - INIT    - MSG - Table: Sys_Users - Creating Index: Idx_User_Login Login UNIQUE
+20240126-115737 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240126-120012 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240126-140204 - INIT    - MSG - v22 Framework - GUI test program
+20240126-140204 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240126-140204 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240126-140204 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240126-140204 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240126-140537 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240126-140545 - INIT    - MSG - v22 Framework - GUI test program
+20240126-140545 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240126-140545 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240126-140545 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240126-140545 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240126-152427 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240126-155455 - INIT    - MSG - v22 Framework - GUI test program
+20240126-155455 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240126-155455 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240126-155455 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240126-155455 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240126-155526 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240126-170546 - INIT    - MSG - v22 Framework - GUI test program
+20240126-170546 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240126-170546 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240126-170546 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240126-170546 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240127-090151 - INIT    - MSG - v22 Framework - GUI test program
+20240127-090151 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240127-090151 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240127-090151 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240127-090151 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240127-090217 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240127-140158 - INIT    - MSG - v22 Framework - GUI test program
+20240127-140158 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240127-140158 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240127-140158 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240127-140158 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+
+20240127-140233 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240127-140305 - INIT    - MSG - v22 Framework - GUI test program
+20240127-140305 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240127-140305 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240127-140305 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240127-140305 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+20240127-140308 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-140514 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-140515 - INIT    - MSG - TestGui.On_Connect > Login screen
+
+20240127-140531 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240127-141007 - INIT    - MSG - v22 Framework - GUI test program
+20240127-141007 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240127-141007 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240127-141007 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240127-141007 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+20240127-141010 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141127 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141211 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141216 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141217 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141303 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141304 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141347 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141405 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141406 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141408 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141414 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141806 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-141808 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142113 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142121 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142141 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142205 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142207 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142212 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142213 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142214 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142216 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142246 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142340 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142341 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142402 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142440 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142442 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142443 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142501 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142502 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142517 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142518 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142656 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142657 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142659 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142743 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142744 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142759 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-142807 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170550 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170551 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170553 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170555 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170556 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170828 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170846 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170911 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170913 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170917 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170922 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170928 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170942 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-170943 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171025 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171027 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171027 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171028 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171031 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171032 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171034 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171036 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-171039 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-172014 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240127-172023 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240128-102934 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240128-102945 - INIT    - MSG - TestGui.On_Connect > Login screen
+
+20240128-103017 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application
+
+20240128-140624 - INIT    - MSG - v22 Framework - GUI test program
+20240128-140624 - INIT    - MSG - Copyright (C) Sowebio SARL 2020-2024, under LGPLv3
+20240128-140624 - INIT    - MSG - testgui v0.2 - v22 v0.2 - build 2024-01-26 11:47:12
+
+20240128-140624 - INIT    - MSG - TestGui.Init.App > Configuration file testgui.cfg loaded
+20240128-140624 - INIT    - MSG - TestGui.On_Connect > Starting Gnoga server
+20240128-140629 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240128-140642 - INIT    - MSG - Gui.User_Login > New user on logging screen
+20240128-140642 - INIT    - MSG - Gui.User_Login > User alpha found but password not match, connection rejected
+20240128-140651 - INIT    - MSG - Gui.User_Login > New user on logging screen
+20240128-140651 - INIT    - MSG - Gui.User_Login > User alpha found but password not match, connection rejected
+20240128-140705 - INIT    - MSG - Gui.User_Login > New user on logging screen
+20240128-140705 - INIT    - MSG - Gui.User_Login > User alpha found but password not match, connection rejected
+20240128-140715 - INIT    - MSG - TestGui.On_Connect > Login screen
+20240128-140726 - INIT    - MSG - Gui.User_Login > New user on logging screen
+20240128-140726 - INIT    - MSG - Gui.User_Login > User alpha found but password not match, connection rejected
+20240128-140813 - INIT    - MSG - Gui.User_Login > New user on logging screen
+20240128-140813 - INIT    - MSG - Gui.User_Login > User alpha connected
+
+20240128-140855 - EXIT    - MSG - testgui > Ctrl-C detected, finalize application

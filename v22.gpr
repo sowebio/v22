@@ -1,10 +1,10 @@
 ------------------------------------------------------------------------------
--- 
---  _|      _|    _|_|      _|_|    
---  _|      _|  _|    _|  _|    _| 
---  _|      _|      _|        _|    
---    _|  _|      _|        _|      
---      _|      _|_|_|_|  _|_|_|_|  
+--
+--  _|      _|    _|_|      _|_|
+--  _|      _|  _|    _|  _|    _|
+--  _|      _|      _|        _|
+--    _|  _|      _|        _|
+--      _|      _|_|_|_|  _|_|_|_|
 --
 --  @file      v22.gpr
 --  @copyright See authors list below and v22.copyrights file
@@ -15,8 +15,8 @@
 --  V22 framework
 --
 --  @description
---  The project should be called from command line, at the root of the project, 
---  (the v22.gpr directory level) ideally with .gpr extension associated with 
+--  The project should be called from command line, at the root of the project,
+--  (the v22.gpr directory level) ideally with .gpr extension associated with
 --  GnatStudio IDE. A manual command could be : nohup gnatstudio -Pv22.gpr &
 --
 --  Note that all specified paths are relative to the root directory project.
@@ -29,44 +29,45 @@
 -------------------------------------------------------------------------------
 
 with "gnatcoll";
---with "gnoga";
 
 project v22 is
 
    for Languages use ("Ada", "C");
-   
+
    type v22_Build_Type is ("Style", "Debug", "Fast", "Small");
 
-   --  Add -Xv22_Build=Style|Fast|Small in the GNATStudio 
+   --  Add -Xv22_Build=Style|Fast|Small in the GNATStudio
    --  "build all" window to control the build behaviour. Example:
    --  %builder -Xv22_Build=Style -d %eL -P%PP %config %autoconf %X
-   
+
    v22_Build : v22_Build_Type := external ("v22_Build", "Debug");
 
-   for Source_Dirs use ("src/**","tests/src-testgui","tests/src-testapi","lib/**");
+   --for Source_Dirs use ("src/testgui","src/testapi","lib/**");
+   for Source_Dirs use ("src/testapi","lib/**");
 
    case v22_Build is
-      when "Style" => 
+      when "Style" =>
          for Object_Dir use "obj/style";
-      when "Debug" => 
+      when "Debug" =>
          for Object_Dir use "obj/debug";
-      when "Fast"  => 
+      when "Fast"  =>
          for Object_Dir use "obj/fast";
-      when "Small" => 
+      when "Small" =>
          for Object_Dir use "obj/small";
    end case;
-   
-   for Exec_Dir use "tests";
+
+   for Exec_Dir use "prg";
    for Create_Missing_Dirs use "True";
-   
-   for Main use ("tests/src-testgui/testgui.adb", "tests/src-testapi/testapi.adb");
-   
+
+   --for Main use ("src/testgui/testgui.adb", "src/testapi/testapi.adb");
+   for Main use ("src/testapi/testapi.adb");
+
    ----------------------------------------------------------------------------
    --  Compiler options (Gnat)
    ----------------------------------------------------------------------------
-   
+
    Common_Compiler_Options := (
-    -- General 
+    -- General
     "-gnat2020",
     "-gnatW8",           --  Both brackets and UTF-8 encodings will be recognized (1)
     -- Warnings & Errors
@@ -74,7 +75,7 @@ project v22 is
     "-gnatf",            --  Full errors. Verbose details, all undefined references
     "-gnatq",            --  Don't quit, try semantics, even if parse errors
     "-gnatQ",            --  Don't quit, write ali/tree file even if compile errors
-    "-gnatVaep",         --  Enable selected validity checking mode (2)   
+    "-gnatVaep",         --  Enable selected validity checking mode (2)
     "-gnatwDH.Y",      --  Enable selected warning modes (3)
     -- "-Wall",          --  Enable most warning messages
     -- Style
@@ -83,12 +84,12 @@ project v22 is
 
    Fast_Compiler_Options := (
     "-O2",
-    "-gnatpn", 
-    "-fipa-cp-clone", "-fgcse-after-reload", 
-    "-funroll-loops", "-fpeel-loops", "-funswitch-loops", 
+    "-gnatpn",
+    "-fipa-cp-clone", "-fgcse-after-reload",
+    "-funroll-loops", "-fpeel-loops", "-funswitch-loops",
     "-ftracer", "-fweb", "-ftree-vectorize",
     "-frename-registers", "-ffunction-sections",
-    "-g"     
+    "-g"
    );
 
    Debug_Compiler_Options := (
@@ -99,8 +100,6 @@ project v22 is
     "-gnatVa",           --  Enable all validity checking options
     "-fstack-check",
     "-fno-inline",
-    --
-    "-gnatec=" & project'Project_Dir & "v22.dbg",
     "-g"                 --  Generate debugging information
    );
 
@@ -139,24 +138,25 @@ project v22 is
 
    package Compiler is
       case v22_Build is
-      when "Style"   => 
+      when "Style"   =>
          for Default_Switches ("ada") use Common_Compiler_Options & Debug_Compiler_Options & Style_Compiler_Options;
-      when "Debug" => 
+      when "Debug" =>
          for Default_Switches ("ada") use Common_Compiler_Options & Debug_Compiler_Options;
-         for Switches ("s-memory.adb") use ("-gnatg");    
-      when "Fast"  => 
+         for Switches ("s-memory.adb") use ("-gnatg");
+         for Local_Configuration_Pragmas use "pragmas.adc";
+      when "Fast"  =>
          for Default_Switches ("ada") use Common_Compiler_Options & Fast_Compiler_Options;
-         for Switches ("s-memory.adb") use ("-gnatg");      
+         for Switches ("s-memory.adb") use ("-gnatg");
       when "Small" =>
          for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
-         for Switches ("s-memory.adb") use ("-gnatg");                  
+         for Switches ("s-memory.adb") use ("-gnatg");
       end case;
    end Compiler;
-   
+
    ----------------------------------------------------------------------------
    --  Binder options (gnatbind)
    ----------------------------------------------------------------------------
-   
+
    Common_Binder_Options := (""); -- RTS statically linked ("-static");
    package Binder is
       case v22_Build is
@@ -174,7 +174,7 @@ project v22 is
    --  Libmysql handling
    Common_Linker_Options := Common_Linker_Options & ("-lmysqlclient"); 
    --  SQLite C source handling
-   Common_Linker_Options := Common_Linker_Options & ("-L./src/sql", "-lsqlite3", "-lcurl"); 
+   Common_Linker_Options := Common_Linker_Options & ("-L./lib/sqlite", "-lsqlite3", "-lcurl"); 
    --  Libcurl handling
    Common_Linker_Options := Common_Linker_Options & ("-lcurl"); 
 
@@ -194,34 +194,29 @@ project v22 is
   -----------------------------------------------------------------------------
   --  Builder options (gprbuild)
   -----------------------------------------------------------------------------
-  
+
    package Builder is
       -- -d   Display compilation process
       -- -j0  Use num processes to compile 0=all platform cores are used
       -- -s   Recompile if compiler switches have changed
       for Default_Switches ("ada") use ("-d", "-j0", "-s");
    end Builder;
-  
+
    ----------------------------------------------------------------------------
    --  Document options (gnatdoc)
    ----------------------------------------------------------------------------
-   
+
    package Documentation is
       for Documentation_Dir use "doc-generated";
    end Documentation;
-  
+
    ----------------------------------------------------------------------------
    --  Printer options (gnatpp)
    ----------------------------------------------------------------------------
-   
+
    package Pretty_Printer is
       for Default_Switches ("ada") use ("-M120", "-W8", "--comments-unchanged");
    end Pretty_Printer;
-
-   --  gps options (to be reworked with appropriate options)
-   --  package Ide is
-   --   for Default_Switches ("adacontrol") use ("-f", "v22.aru", "-r");
-   --  end Ide;
 
 ------------------------------------------------------------------------------
 end v22;
