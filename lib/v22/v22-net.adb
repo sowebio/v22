@@ -125,8 +125,9 @@ package body v22.Net is
       if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
-         Command_String := "ssh";
       end if;
+
+      Command_String := "ssh";
 
       if not Is_Empty (SSH_Password) then
          Command_String := "sshpass -p" & SP & DQ & SSH_Password & DQ & SP & "ssh";
@@ -179,8 +180,9 @@ package body v22.Net is
       if not Is_Empty (SSH_Key) then
          Tio.Write_File (Temp_Key_Name, SSH_Key, "0600");
          Key_To_Use := "-i " & Temp_Key_Name & " ";
-         Command_String := "ssh";
       end if;
+
+      Command_String := "ssh";
 
       if not Is_Empty (SSH_Password) then
          Command_String := "sshpass -p" & SP & DQ & SSH_Password & DQ & SP & "ssh";
@@ -572,7 +574,7 @@ package body v22.Net is
          end if;
 
          -- Mount
-         Command_String := "sshfs " & Target & ":/ " & Mount_Point & Key_To_Use &
+         Command_String := "sshfs" & SP & Target & ":/ " & Mount_Point & Key_To_Use &
                                 (if (SSH_Output = On) then Null_String else STD_ERR_OUT_REDIRECT);
          Sys.Shell_Execute (Command_String, Exec_Error);
 

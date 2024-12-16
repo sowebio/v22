@@ -449,7 +449,7 @@ package body v22.Sql is
          declare
          begin
 
-            --  IL SERAIT BON DE TESTER ICI LA RÉSOLUTION DU NOM DE HOST mai
+            --  IL SERAIT BON DE TESTER ICI LA RÉSOLUTION DU NOM DE HOST mais
             --  ping i188c1 (non résolvable dans ro6.genesix.org) est traduit par ce dernier i188c1.genesix.org
             --  alors que genesix.org est la racine du nom de host ro6.genesix.org... Est-ce bien normal ?
             -- Règles ? Soit le nom est une IP et on pingue soit c'est un nom et on nslookup le nom
@@ -700,7 +700,7 @@ package body v22.Sql is
                               Current_Column_Type & "', '" &
                               Current_Column_Constraint & "', '" &
                               "+" & DB_Version  & "', '" &
-                              Current_Column_Comment & "')";
+                              Replace (Current_Column_Comment, "'", " ") & "')";
       begin
          --Msg.Debug ("Entry: " & DB_Query);
          if Table_Exists (DB, Table_Sys_Schema) then
@@ -1173,9 +1173,14 @@ package body v22.Sql is
       DB_Schema_Version : Natural;
       DB_DBS : GSD.SQLite.Connection;
       DB_DBM : GSD.MySQL.Connection;
-      DB_Major : constant Natural := To_Integer (Field_By_Index (DB_Version,1,"."));
-      DB_Minor : constant Natural := To_Integer (Field_By_Index (DB_Version,2,"."));
-      Schema_Version : constant Natural := (DB_Major * 10) + DB_Minor;
+
+      --  DB_Major : constant Natural := To_Integer (Field_By_Index (DB_Version, 1, "."));
+      --  DB_Minor : constant Natural := To_Integer (Field_By_Index (DB_Version, 2, "."));
+      --  Schema_Version : Natural := (DB_Major * 10) + DB_Minor;
+
+      DB_Version_Level : String := DB_Version;
+      Schema_Version : Natural := (To_Integer (Field_By_Index (DB_Version, 1, ".")) * 10) +
+                                   To_Integer (Field_By_Index (DB_Version, 2, "."));
    begin
 
       if Sys_Tables = No_Create then
@@ -1208,90 +1213,98 @@ package body v22.Sql is
 
       if Database_With_Sys_Tables then
 
-      --  Load if exists current database schema version else Database_Version=0
-      Get_Schema_Version := Get_Config (DB, "Schema_Version");
-      DB_Schema_Version := (To_Integer (Field_By_Index (Get_Schema_Version, 1, ".")) * 10) +
-                            To_Integer (Field_By_Index (Get_Schema_Version, 2, "."));
-      --  False if DB_Schema_Version is >= Schema_Version => no need updating
-      if (DB_Schema_Version < Schema_Version) then
-         DB_Status := Open_Need_Update;
-         --  System tables creation only for main database
-         if Rank = Main then
+         if Table_Exists (DB, Table_Sys_Config) then
+            --  Load if exists current database schema version else Database_Version = 0
+            Get_Schema_Version := Get_Config (DB, "Schema_Version");
+         else
+            Get_Schema_Version := "0.0";
+            Schema_Version := (if Schema_Version = 0 then 1 else Schema_Version);
+            DB_Version_Level := "0.1";
+         end if;
 
-            -- Preload Sys_Config table definition
-            Schema_Load (Table_Name, Table_Sys_Config, Comment => "System config table");
-            Sql.Schema_Load (Sql.Column_Name, "Id", "INTEGER", "Primary key");
-            Sql.Schema_Load (Table_Constraint, "Id", "PRIMARY KEY");
-            Sql.Schema_Load (Sql.Column_Constraint, "Id", "AUTO_INCREMENT");
+         DB_Schema_Version := (To_Integer (Field_By_Index (Get_Schema_Version, 1, ".")) * 10) +
+                               To_Integer (Field_By_Index (Get_Schema_Version, 2, "."));
 
-            Schema_Load (Column_Name, "Parameter", "VARCHAR(40)");
-            -- SQLite: raised GNOGA.SERVER.DATABASE.QUERY_ERROR : ALTER TABLE Sys_Config ADD COLUMN
-            --                                                      Parameter VARCHAR(40) UNIQUE => Cannot add a UNIQUE column
-            -- Schema_Load (Column_Constraint, "Parameter", "UNIQUE", "Parameter name");
-            Schema_Load (Column_Name, "Value", "TEXT", "Parameter value");
-            Schema_Load (Index_Name, "Idx_Config_Parameter","Parameter");
+         --  False if DB_Schema_Version is >= Schema_Version => no need updating
+         if (DB_Schema_Version < Schema_Version) then
+            DB_Status := Open_Need_Update;
+            --  System tables creation only for main database
+            if Rank = Main then
 
-            if Sys_Tables = Auto_Create then
-               -- Preload Sys_Schema table definition
-               Schema_Load (Table_Name, Table_Sys_Schema, Comment => "System schema table");
+               -- Preload Sys_Config table definition
+               Schema_Load (Table_Name, Table_Sys_Config, Comment => "System config table");
                Sql.Schema_Load (Sql.Column_Name, "Id", "INTEGER", "Primary key");
                Sql.Schema_Load (Table_Constraint, "Id", "PRIMARY KEY");
                Sql.Schema_Load (Sql.Column_Constraint, "Id", "AUTO_INCREMENT");
 
-               Schema_Load (Column_Name, "Table_Name", "VARCHAR(40)");
-               Schema_Load (Column_Name, "Column_Name", "VARCHAR(40)");
-               Schema_Load (Column_Name, "Column_Type", "VARCHAR(20)");
-               Schema_Load (Column_Name, "Column_Constraint", "VARCHAR(20)");
-               Schema_Load (Column_Name, "Version", "VARCHAR(10)");
-               Schema_Load (Column_Name, "Comment", "TEXT");
-               Schema_Load (Index_Name, "Idx_Schema_Table_Name", "Table_Name, Column_Name");
+               Schema_Load (Column_Name, "Parameter", "VARCHAR(40)");
+               -- SQLite: raised GNOGA.SERVER.DATABASE.QUERY_ERROR : ALTER TABLE Sys_Config ADD COLUMN
+               --                                                      Parameter VARCHAR(40) UNIQUE => Cannot add a UNIQUE column
+               -- Schema_Load (Column_Constraint, "Parameter", "UNIQUE", "Parameter name");
+               Schema_Load (Column_Name, "Value", "TEXT", "Parameter value");
+               Schema_Load (Index_Name, "Idx_Config_Parameter","Parameter");
 
-               --  Preload Sys_User table definition
-               Schema_Load (Sql.Table_Name, Table_Sys_Users, Comment => "System user table");
-               Sql.Schema_Load (Sql.Column_Name, "Id", "INTEGER", "Primary key - User number");
-               Sql.Schema_Load (Table_Constraint, "Id", "PRIMARY KEY");
-               Sql.Schema_Load (Sql.Column_Constraint, "Id", "AUTO_INCREMENT");
+               if Sys_Tables = Auto_Create then
+                  -- Preload Sys_Schema table definition
+                  Schema_Load (Table_Name, Table_Sys_Schema, Comment => "System schema table");
+                  Sql.Schema_Load (Sql.Column_Name, "Id", "INTEGER", "Primary key");
+                  Sql.Schema_Load (Table_Constraint, "Id", "PRIMARY KEY");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Id", "AUTO_INCREMENT");
 
-               Schema_Load (Sql.Column_Name, "DTS_Creation", "VARCHAR(15)", "User creation date time stamp");
-               Schema_Load (Sql.Column_Name, "DTS_Update", "VARCHAR(15)", "User update date time stamp");
+                  Schema_Load (Column_Name, "Table_Name", "VARCHAR(40)");
+                  Schema_Load (Column_Name, "Column_Name", "VARCHAR(40)");
+                  Schema_Load (Column_Name, "Column_Type", "VARCHAR(20)");
+                  Schema_Load (Column_Name, "Column_Constraint", "VARCHAR(20)");
+                  Schema_Load (Column_Name, "Version", "VARCHAR(10)");
+                  Schema_Load (Column_Name, "Comment", "TEXT");
+                  Schema_Load (Index_Name, "Idx_Schema_Table_Name", "Table_Name, Column_Name");
 
-               Schema_Load (Sql.Column_Name, "Login", "VARCHAR(40)", "User login");
-               --  SQLite: raised GNOGA.SERVER.DATABASE.QUERY_ERROR :
-               --  ALTER TABLE Sys_Config ADD COLUMN Parameter VARCHAR(40) UNIQUE => Cannot add a UNIQUE column
-               --  Schema_Load (Column_Constraint, "Login", "UNIQUE");
-               Schema_Load (Sql.Column_Name, "First_Name", "VARCHAR(40)", "User surname");
-               Schema_Load (Sql.Column_Name, "Last_Name", "VARCHAR(40)", "User name");
-               Schema_Load (Sql.Column_Name, "Phone", "VARCHAR(20)", "User phone");
-               Schema_Load (Sql.Column_Name, "Email", "VARCHAR(40)", "User email");
-               Schema_Load (Sql.Column_Name, "Password", "VARCHAR(128)", "User hasched password");
+                  --  Preload Sys_User table definition
+                  Schema_Load (Sql.Table_Name, Table_Sys_Users, Comment => "System user table");
+                  Sql.Schema_Load (Sql.Column_Name, "Id", "INTEGER", "Primary key - User number");
+                  Sql.Schema_Load (Table_Constraint, "Id", "PRIMARY KEY");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Id", "AUTO_INCREMENT");
 
-               Schema_Load (Sql.Column_Name, "Password_Errors", "INTEGER", "Password errors counter");
-               Sql.Schema_Load (Sql.Column_Constraint, "Password_Errors", "DEFAULT 0");
-               Schema_Load (Sql.Column_Name, "Password_Validity", "INTEGER", "Password validity in seconds");
-               Sql.Schema_Load (Sql.Column_Constraint, "Password_Validity", "DEFAULT 0");
+                  Schema_Load (Sql.Column_Name, "DTS_Creation", "VARCHAR(15)", "User creation date time stamp");
+                  Schema_Load (Sql.Column_Name, "DTS_Update", "VARCHAR(15)", "User update date time stamp");
 
-               Schema_Load (Sql.Column_Name, "Grants", "VARCHAR(20)", "See v22.ads definitions");
-               Schema_Load (Sql.Column_Name, "Properties", "VARCHAR(40)", "Property_1:Value,Property_2:value...Property_N");
-               Schema_Load (Sql.Column_Name, "Language", "VARCHAR(5)", "Language from country code ISO 3166-1 alpha-2");
-               Schema_Load (Sql.Column_Name, "Time_Zone", "VARCHAR(10)", "Time zone TZ Database compliant see Wikipedia page");
-               Schema_Load (Sql.Column_Name, "Theme", "VARCHAR(20)", "Theme name");
-               Schema_Load (Sql.Column_Name, "Notes", "TEXT", "Notes");
+                  Schema_Load (Sql.Column_Name, "Login", "VARCHAR(40)", "User login");
+                  --  SQLite: raised GNOGA.SERVER.DATABASE.QUERY_ERROR :
+                  --  ALTER TABLE Sys_Config ADD COLUMN Parameter VARCHAR(40) UNIQUE => Cannot add a UNIQUE column
+                  --  Schema_Load (Column_Constraint, "Login", "UNIQUE");
+                  Schema_Load (Sql.Column_Name, "First_Name", "VARCHAR(40)", "User surname");
+                  Schema_Load (Sql.Column_Name, "Last_Name", "VARCHAR(40)", "User name");
+                  Schema_Load (Sql.Column_Name, "Phone", "VARCHAR(20)", "User phone");
+                  Schema_Load (Sql.Column_Name, "Email", "VARCHAR(40)", "User email");
+                  Schema_Load (Sql.Column_Name, "Password", "VARCHAR(128)", "User hasched password");
 
-               Schema_Load (Sql.Column_Name, "Connection_Total", "INTEGER", "Duration of cumulated connections");
-               Sql.Schema_Load (Sql.Column_Constraint, "Connection_Total", "DEFAULT 0");
-               Schema_Load (Sql.Column_Name, "Connection_Counter", "INTEGER", "Total number of connections");
-               Sql.Schema_Load (Sql.Column_Constraint, "Connection_Counter", "DEFAULT 0");
+                  Schema_Load (Sql.Column_Name, "Password_Errors", "INTEGER", "Password errors counter");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Password_Errors", "DEFAULT 0");
+                  Schema_Load (Sql.Column_Name, "Password_Validity", "INTEGER", "Password validity in seconds");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Password_Validity", "DEFAULT 0");
 
-               Schema_Load (Sql.Column_Name, "Connection_Info", "VARCHAR(15)", "Current or last connection info (Datetime, IP, etc.");
+                  Schema_Load (Sql.Column_Name, "Grants", "VARCHAR(20)", "See v22.ads definitions");
+                  Schema_Load (Sql.Column_Name, "Properties", "VARCHAR(40)", "Property_1:Value,Property_2:value...Property_N");
+                  Schema_Load (Sql.Column_Name, "Language", "VARCHAR(5)", "Language from country code ISO 3166-1 alpha-2");
+                  Schema_Load (Sql.Column_Name, "Time_Zone", "VARCHAR(10)", "Time zone TZ Database compliant see Wikipedia page");
+                  Schema_Load (Sql.Column_Name, "Theme", "VARCHAR(20)", "Theme name");
+                  Schema_Load (Sql.Column_Name, "Notes", "TEXT", "Notes");
 
-               Schema_Load (Sql.Index_Name, "Idx_User_Login", "Login");
-               --Schema_Load (Sql.Index_Constraint, "Idx_User_Login", "UNIQUE");
+                  Schema_Load (Sql.Column_Name, "Connection_Total", "INTEGER", "Duration of cumulated connections");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Connection_Total", "DEFAULT 0");
+                  Schema_Load (Sql.Column_Name, "Connection_Counter", "INTEGER", "Total number of connections");
+                  Sql.Schema_Load (Sql.Column_Constraint, "Connection_Counter", "DEFAULT 0");
+
+                  Schema_Load (Sql.Column_Name, "Connection_Info", "VARCHAR(15)", "Current or last connection info (Datetime, IP, etc.");
+
+                  Schema_Load (Sql.Index_Name, "Idx_User_Login", "Login");
+                  --Schema_Load (Sql.Index_Constraint, "Idx_User_Login", "UNIQUE");
+               end if;
             end if;
          end if;
-      end if;
 
       else
-         DB_Status := Open_Need_Update;
+         DB_Status := Open_Success; --Open_Need_Update;
       end if;
 
       --  Database_Line'(record) mandatory with GCC 11,
@@ -1308,7 +1321,7 @@ package body v22.Sql is
                                        --  Store DB_Version for later writing in Schema_Update,
                                        --  which must be done at the very end of the update
                                        --  process to ensure update completion
-                                       Version => DB_Version,
+                                       Version => DB_Version_Level,
                                        DBS => DB_DBS,
                                        DBM => DB_DBM
                                        ));

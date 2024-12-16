@@ -246,13 +246,40 @@ package body v22.Uxs is
    end Field_Included;
 
    ----------------------------------------------------------------------------
-   function Field_Search (String_To_Process : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean is
+   --  Bad algo
+   -- "a" should not be found in "span" so search "a & delimiter" (that's the silly trick)
+   -- "0" should not be found in "01" => trick ok
+   -- "1" should not be found un "01" => trick ko
+   --  function Field_Search (String_To_Process : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean is
+   --     Result : Boolean := False;
+   --  begin
+   --     if (Index (String_To_Process & Field_Delimiter, Field_To_Search & Field_Delimiter) > 0) then
+   --        Result := True;
+   --     end if;
+   --     return Result;
+   --  end Field_Search;
+
+   -- Good algo
+   function Field_Search (String_Input : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean is
+      Index_Count, Index_Next : Integer := 1;
+      Result_String : String := "";
+      String_To_Process : String := String_Input & Field_Delimiter;
       Result : Boolean := False;
    begin
-      -- "a" should not be found in "span" so search "a & delimiter"
-      if (Index (String_To_Process & Field_Delimiter, Field_To_Search & Field_Delimiter) > 0) then
-         Result := True;
-      end if;
+      while True loop
+         Index_Next := Index (String_To_Process, Field_Delimiter);
+         Result_String := Slice (String_To_Process, 1, Index_Next - 1);
+         if Result_String = Field_To_Search then
+            Result := True;
+            exit;
+         end if;
+         Index_Count := Index_Count + 1;
+         String_To_Process := Slice (String_To_Process, Index_Next + 1, Length (String_To_Process));
+         if Length (String_To_Process) <= 1 then -- Last field reached
+            Result_String := "";
+            exit;
+         end if;
+      end loop;
       return Result;
    end Field_Search;
 

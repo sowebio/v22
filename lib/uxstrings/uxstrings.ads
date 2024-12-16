@@ -187,9 +187,9 @@ package UXStrings is
    procedure Replace_Unicode (Source : in out UXString; Index : Positive; By : Unicode_Character);
    -- Update Source such as the character at Index position is set to the Unicode character parameter By
 
-   function Slice (Source : UXString; Low : Positive; High : Natural) return UXString;
+   function Slice (Source : UXString; Low : Positive; High : Integer) return UXString;
    -- Return the slice at positions Low through High from Source
-   procedure Slice (Source : UXString; Target : out UXString; Low : Positive; High : Natural);
+   procedure Slice (Source : UXString; Target : out UXString; Low : Integer; High : Natural);
    -- Set Target to the slice at positions Low through High from Source
 
    function "=" (Left : UXString; Right : UXString) return Boolean;
@@ -404,19 +404,22 @@ package UXStrings is
    ------------------------------
 
    function Split
-     (Source : UXString; Separator : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive)
-      return UXStrings.Lists.UXString_List;
+     (Source           : UXString; Separator : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
    -- Return a string list resulting in spliting Source into substrings wherever Separator occurs
    function Split
-     (Source : UXString; Separator : UXString; Sensitivity : Case_Sensitivity := Sensitive) return UXStrings.Lists.UXString_List;
+     (Source           : UXString; Separator : UXString; Sensitivity : Case_Sensitivity := Sensitive;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
    -- Return a string list resulting in spliting Source into substrings wherever Separator occurs
    function Split
-     (Source : UXString; Separator : Wide_Wide_Character_Set; Test : Membership := Inside) return UXStrings.Lists.UXString_List;
+     (Source           : UXString; Separator : Wide_Wide_Character_Set; Test : Membership := Inside;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
    -- Return a string list resulting in spliting Source into substrings wherever Separator occurs with respect of Test membership
 
 private
 
    type UTF_8_Characters_Access is access UTF_8_Character_Array;
+
    type UXString is tagged record
       Chars : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
    end record;

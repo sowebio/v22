@@ -25,6 +25,7 @@
 
 with Interfaces;
 with Ada.Exceptions;
+
 with UXStrings; use UXStrings;
 
 package v22 is
@@ -222,7 +223,7 @@ private
    Version_Major : constant Natural := 0;
    --  Library major version number
 
-   Version_Minor : constant Natural := 5;
+   Version_Minor : constant Natural := 6;
    --  Library minor version number
 
    --  135 cols width is the max full screen standard console on a rather old,

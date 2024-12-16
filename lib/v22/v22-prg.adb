@@ -24,6 +24,8 @@
 -------------------------------------------------------------------------------
 
 with Ada.Calendar.Formatting;
+with Ada.Calendar.Time_Zones; use Ada.Calendar.Time_Zones; -- Use for operation on Ada.Calendar.Time_Zones
+
 with Ada.Numerics.Discrete_Random;
 with Ada.Strings.Fixed;
 
@@ -40,6 +42,7 @@ with v22.Tio;
 package body v22.Prg is
 
    package ACF renames Ada.Calendar.Formatting;
+   package ACT renames Ada.Calendar.Time_Zones;
    package GCT renames GNAT.Calendar.Time_IO;
 
    ----------------------------------------------------------------------------
@@ -109,9 +112,80 @@ package body v22.Prg is
    end Date_Not_Reached;
 
    ----------------------------------------------------------------------------
-   function Date_Time_Stamp return String is
+   function Date_Time_Stamp_Reached (DTS : String ; Zone : Time_UTC_Local := Local) return Boolean is
+      UTC_Offset : ACT.Time_Offset := ACT.UTC_Time_Offset;
+      DTS_Time_Of : AC.Time;
+      DTS_UTC_Numeric, CLK_UTC_Numeric, DTS_Local_Numeric, CLK_Local_Numeric : Long_Long_Integer;
+      DTS_UTC, DTS_Local, CLK_UTC, CLK_Local : String;
    begin
-      return From_ASCII (GCT.Image (AC.Clock, "%Y%m%d-%H%M%S"));
+
+      --  Spent half a day implementing (horribly) something that doesn't bug and behaves correctly
+      --  when you change the time zones. The world isn't perfect, even on planet Ada :)
+
+      if DTS.Length = 15 and Slice (DTS, 9, 9) = "-" then
+
+         --  0   0 0 01 1 11
+         --  1   5 7 90 2 45
+         --  YYYYMMDD-HHMMSS
+
+         DTS_Time_Of := ACF.Time_Of ( AC.Year_Number   (To_Integer (Slice (DTS, 1, 4))),
+                                      AC.Month_Number  (To_Integer (Slice (DTS, 5, 6))),
+                                      AC.Day_Number    (To_Integer (Slice (DTS, 7, 8))),
+                                     ACF.Hour_Number   (To_Integer (Slice (DTS, 10, 11))),
+                                     ACF.Minute_Number (To_Integer (Slice (DTS, 12, 13))),
+                                     ACF.Second_Number (To_Integer (Slice (DTS, 14, 15))));
+
+         DTS_UTC := From_ASCII (GCT.Image (DTS_Time_Of, "%Y%m%d-%H%M%S", 0));
+         DTS_Local := From_ASCII (GCT.Image (DTS_Time_Of, "%Y%m%d-%H%M%S", UTC_Offset));
+         CLK_UTC := From_ASCII (GCT.Image (AC.Clock,"%Y%m%d-%H%M%S", 0));
+         CLK_Local := From_ASCII (GCT.Image (AC.Clock,"%Y%m%d-%H%M%S", UTC_Offset));
+
+         --               Winter time     Summer time
+         --  DTS:       20241209-120530 20241209-120530
+         --  DTS_UTC:   20241209-120530 20241209-120530
+         --  DTS_Local: 20241209-130530 20241209-140530
+         --  CLK_UTC:   20241209-145948 20240809-145738
+         --  CLK_Local: 20241209-155948 20240809-165738
+
+         Msg.Debug ("DTS:       " & DTS);
+         Msg.Debug ("DTS_UTC:   " & DTS_UTC);
+         Msg.Debug ("DTS_Local: " & DTS_Local);
+         Msg.Debug ("CLK_UTC:   " & CLK_UTC);
+         Msg.Debug ("CLK_Local: " & CLK_Local);
+
+         if Zone = UTC then
+            DTS_UTC_Numeric := To_Long_Long_Integer (Replace (DTS_UTC, "-", ""));
+            CLK_UTC_Numeric := To_Long_Long_Integer (Replace (CLK_UTC, "-", ""));
+            Msg.Debug ("DTS_UTC_Numeric: " & To_String (DTS_UTC_Numeric));
+            Msg.Debug ("DTS_CLK_Numeric: " & To_String (CLK_UTC_Numeric));
+            Msg.Debug ((DTS_UTC_Numeric <= CLK_UTC_Numeric));
+         else
+            DTS_Local_Numeric := To_Long_Long_Integer (Replace (DTS_Local, "-", ""));
+            CLK_Local_Numeric := To_Long_Long_Integer (Replace (CLK_Local, "-", ""));
+            Msg.Debug ("DTS_LOC_Numeric: " & To_String (DTS_Local_Numeric));
+            Msg.Debug ("DTS_CLK_Numeric: " & To_String (CLK_Local_Numeric));
+            Msg.Debug ((DTS_Local_Numeric <= CLK_Local_Numeric));
+         end if;
+
+      else
+         Msg.Error ("Date_Time_Stamp_Not_Reached > Input string not compliant: " & DTS);
+      end if;
+      if Zone = UTC then
+         return (DTS_UTC_Numeric <= CLK_UTC_Numeric);
+      else
+         return (DTS_Local_Numeric <= CLK_Local_Numeric);
+      end if;
+   end Date_Time_Stamp_Reached;
+
+   ----------------------------------------------------------------------------
+   function Date_Time_Stamp (Zone : Time_UTC_Local := Local) return String is
+      UTC_Offset : ACT.Time_Offset := ACT.UTC_Time_Offset;
+   begin
+      if Zone = UTC then
+         return From_ASCII (GCT.Image (AC.Clock, "%Y%m%d-%H%M%S", 0));
+      else
+         return From_ASCII (GCT.Image (AC.Clock, "%Y%m%d-%H%M%S", UTC_Offset));
+      end if;
    end Date_Time_Stamp;
 
    ----------------------------------------------------------------------------
