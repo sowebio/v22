@@ -322,11 +322,11 @@ private
    --
    -- GetDigit -- Get one digit
    --
-   --    Symbol - To be decoded
+   --	   Symbol - To be decoded
    --
    -- Returns :
    --
-   --  [0..15]  The decoded digit value
+   --	 [0..15]  The decoded digit value
    --    [16]   The Symbol is not a digit
    --
    function GetDigit (Symbol : Character) return Natural;

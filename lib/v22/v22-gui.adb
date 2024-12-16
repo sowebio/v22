@@ -20,6 +20,7 @@
 --  Théodore Gigault - tg - developpement@soweb.io
 --  Arthur Le Floch - alf - developpement@soweb.io
 --  Stéphane Rivière - sr - sriviere@soweb.io
+--  Xavier Petit - xp - developpement@soweb.io
 --
 --  @versions
 --  See git log
@@ -785,13 +786,13 @@ package body v22.Gui is
    end Content_List_Add_Column;
 
    ----------------------------------------------------------------------------
-   function Content_List_Add_Item (Object : in out GGB.Base_Type'Class; Parent_Key : String; Style : String := "") return Integer is
+   function Content_List_Add_Item (Object : in out GGB.Base_Type'Class; Parent_Key : String; Row_Index : Integer; Style : String := "") return Integer is
       App : constant App_Access := App_Access (Object.Connection_Data);
       Table_Element : constant GGE.Pointer_To_Element_Class := App.Content_Text.Element ("List_" & Parent_Key);
       Table : constant GGE.Table.Table_Access := GGE.Table.Table_Access (Table_Element);
       Row_Element : constant GGE.Pointer_To_Element_Class := new GGE.Table.Table_Row_Type;
       Row : constant GGE.Table.Table_Row_Access := GGE.Table.Table_Row_Access (Row_Element);
-      Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('last_index')")) + 1;
+      -- Row_Index : constant Integer := Int_Value (Table.jQuery_Execute ("data('last_index')")) + 1;
    begin
       Row_Element.Dynamic;
       Row.Create (Table.all);
@@ -1208,7 +1209,7 @@ package body v22.Gui is
             Gui.Connection_Data_Set (Object, List_Key & "_First", "");
             while RS.Next loop
                Lines_Count := Lines_Count + 1;
-               Index_Lines := Gui.Content_List_Add_Item (Object, List_Key);
+               Index_Lines := Gui.Content_List_Add_Item (Object, List_Key, Index_Lines + 1);
                --  Msg.Debug ("Index_Lines: " & To_String (Index_Lines));
                for Index_Columns in 1..RS.Number_Of_Fields loop
                   Column_Name := Field_By_Index (List_Columns_In, Index_Columns, VD);

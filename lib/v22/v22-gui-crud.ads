@@ -133,7 +133,7 @@ private
 
    --procedure Set_Limits (Object : in out GGB.Base_Type'Class);
 
-   List_Length : Positive := 20;
+   List_Length : Positive := 100;
 
 -------------------------------------------------------------------------------
 end v22.Gui.Crud;

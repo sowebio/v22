@@ -33,6 +33,8 @@ package v22.Prg is
 
    package AC renames Ada.Calendar;
 
+   type Time_UTC_Local is (UTC, Local);
+
    ----------------------------------------------------------------------------
    --  API
    ----------------------------------------------------------------------------
@@ -55,7 +57,10 @@ package v22.Prg is
    function Date_Not_Reached (DTS : String) return Boolean;
    --  Returns true if YYYY-MM-DD Date_ISO is still to come.
 
-   function Date_Time_Stamp return String;
+   function Date_Time_Stamp_Reached (DTS : String ; Zone : Time_UTC_Local := Local) return Boolean;
+   --  Returns true if YYYYMMDD:HHMMSS Date_Time_Stamp has passed.
+
+   function Date_Time_Stamp (Zone : Time_UTC_Local := Local) return String;
    --  Returns current datetime stamp as YYYYMMDD-HHMMSS.
 
    function Date_Time_Stamp_From_ISO (DTS : String) return String;

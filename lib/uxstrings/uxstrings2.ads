@@ -9,6 +9,8 @@ private with Ada.Streams;
 
 package UXStrings is
 
+   type Case_Sensitivity is (Insensitive, Sensitive);
+
    type Encoding_Scheme is (ASCII_7, Latin_1, UTF_8, UTF_16BE, UTF_16LE);
    -- Supported encoding schemes
    subtype UTF_16_Encoding_Scheme is Encoding_Scheme range UTF_16BE .. UTF_16LE;
@@ -183,9 +185,9 @@ package UXStrings is
    procedure Replace_Unicode (Source : in out UXString; Index : Positive; By : Unicode_Character);
    -- Update Source such as the character at Index position is set to the Unicode character parameter By
 
-   function Slice (Source : UXString; Low : Positive; High : Natural) return UXString;
+   function Slice (Source : UXString; Low : Positive; High : Integer) return UXString;
    -- Return the slice at positions Low through High from Source
-   procedure Slice (Source : UXString; Target : out UXString; Low : Positive; High : Natural);
+   procedure Slice (Source : UXString; Target : out UXString; Low : Positive; High : Integer);
    -- Set Target to the slice at positions Low through High from Source
 
    function "=" (Left : UXString; Right : UXString) return Boolean;
@@ -337,6 +339,12 @@ package UXStrings is
    function To_Basic (Item : UXString) return UXString;
    -- Returns the letter corresponding to Item but with no diacritical mark,
    -- if Item is a letter but not a basic letter; returns Item otherwise.
+
+   -----------------------------------
+   -- String additional Subprograms --
+   -----------------------------------
+
+   procedure Replace (Source : in out UXString; Before, After : UXString; Sensitivity : Case_Sensitivity := Sensitive);
 
 private
 

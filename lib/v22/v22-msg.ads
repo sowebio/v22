@@ -36,6 +36,7 @@ package v22.Msg is
    procedure Debug (Message : Boolean);
    procedure Debug (Message : On_Off);
    procedure Debug (Message : String);
+   procedure Debug (Message : Integer);
    procedure Debug_Latin_1 (Message : Standard.String);
    --  Log a debug message.
 

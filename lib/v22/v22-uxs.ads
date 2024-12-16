@@ -63,7 +63,7 @@ package v22.Uxs is
    function Field_Included (String_To_Process : String ; Items_List  : String ; Field_Delimiter : String) return Boolean;
    --  Returns True if all Items_List are included in String_To_Process list, which is delimited by Field_Delimiter.
 
-   function Field_Search (String_To_Process : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean;
+   function Field_Search (String_Input : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean;
    --  Search Field_To_Search in String_To_Process and return True if found.
 
    function From_DB_To_Date_String (DB_Value : String; Separator : String := "/") return String;

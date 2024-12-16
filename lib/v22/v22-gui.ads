@@ -20,6 +20,7 @@
 --  Théodore Gigault - tg - developpement@soweb.io
 --  Arthur Le Floch - alf - developpement@soweb.io
 --  Stéphane Rivière - sr - sriviere@soweb.io
+--  Xavier Petit - xp - developpement@soweb.io
 --
 --  @versions
 --  See git log
@@ -246,10 +247,10 @@ package v22.Gui is
    --            > Content_List_Create (*, key);
    --  ┌───┬───┐ > Content_List_Add_Column (*, "A", key);
    --  │ A │ B │ > Content_List_Add_Column (*, "B", key);
-   --  ├───┼───┤ > R1 := Content_List_Add_Item (*, key);
+   --  ├───┼───┤ > R1 := Content_List_Add_Item (*, key, 1);
    --  │ 1 | 2 | > Content_List_Add_Text (*, "1", R1, key);
    --  ├───┼───┤ > Content_List_Add_Text (*, "2", R1, key);
-   --  │ 3 | 4 | > R2 := Content_List_Add_Item (*, key);
+   --  │ 3 | 4 | > R2 := Content_List_Add_Item (*, key, 2);
    --  └───┴───┘ > Content_List_Add_Text (*, "3", R2, key);
    --            > Content_List_Add_Text (*, "4", R2, key);
    --------------------------------------------------------
@@ -259,7 +260,7 @@ package v22.Gui is
    --  Must be called as much as needed before using Content_List_Add_Item.
 
 
-   function Content_List_Add_Item (Object : in out GGB.Base_Type'Class; Parent_Key : String; Style : String := "") return Integer;
+   function Content_List_Add_Item (Object : in out GGB.Base_Type'Class; Parent_Key : String; Row_Index : Integer; Style : String := "") return Integer;
    --  Returns the item index in list.
    --  Columns must be added before using Content_List_Add_Column.
    --  Style controls the row text alignment (left, center, right). Center is the default.

@@ -4,8 +4,10 @@ with Ada.Strings.UTF_Encoding;
 with Ada.Characters.Handling;
 with Ada.Characters.Latin_1;
 with Ada.Characters.Wide_Latin_1;
-private with Ada.Finalization;
+with Ada.Containers.Vectors;
 private with Ada.Streams;
+
+limited with UXStrings.Lists;
 
 package UXStrings is
 
@@ -39,11 +41,24 @@ package UXStrings is
    subtype UTF_16_Character_Array is Ada.Strings.UTF_Encoding.UTF_String;
    -- Array of 8 bits values representing UTF encodings (UTF-8, UTF-16BE, or UTF-16LE)
 
+   package UXString_Vector is new Ada.Containers.Vectors (Positive, Unicode_Character);
    type UXString is tagged private with
-     Constant_Indexing => Element,
-     Iterable          => (First => First, Next => Next, Has_Element => Has_Element, Element => Element),
+     Constant_Indexing => Constant_Reference, Variable_Indexing => Reference, Default_Iterator => Iterate,
+     Iterator_Element  => Unicode_Character,
+     Aggregate => (Empty => Empty, Add_Unnamed => Append, New_Indexed => New_Vector, Assign_Indexed => Replace_Element),
      String_Literal    => From_Unicode;
    -- Container type of Unicode characters with dynamic size usually named string
+
+   function Constant_Reference
+     (Container : aliased UXString; Index : Positive) return UXString_Vector.Constant_Reference_Type;
+   function Reference (Container : aliased in out UXString; Index : Positive) return UXString_Vector.Reference_Type;
+   function Iterate (Container : UXString) return UXString_Vector.Vector_Iterator_Interfaces.Reversible_Iterator'Class;
+   function Iterate
+     (Container : UXString; Start : UXString_Vector.Cursor)
+      return UXString_Vector.Vector_Iterator_Interfaces.Reversible_Iterator'Class;
+   function Empty (Capacity : Natural := 10) return UXString;
+   function New_Vector (First, Last : Positive) return UXString;
+   procedure Replace_Element (Container : in out UXString; Index : Positive; New_Item : Unicode_Character);
 
    Null_UXString : constant UXString;
    -- Represent the null string
@@ -284,7 +299,7 @@ package UXStrings is
    -- Update Source whom characters with positions from Low to High are replaced with parameter By
    function Insert (Source : UXString; Before : Positive; New_Item : UXString) return UXString;
    -- Return Source with New_Item inserted at position ahead of parameter Before
-   procedure Insert (Source : in out UXString; Before : Positive; New_Item : UXString);
+   procedure Insert (Source : in out UXString; Before : Natural; New_Item : UXString);
    -- Update Source with New_Item inserted at position ahead of parameter Before
    function Overwrite (Source : UXString; Position : Positive; New_Item : UXString) return UXString;
    -- Return Source whom characters starting at Position are replaced with parameter New_Item
@@ -344,18 +359,79 @@ package UXStrings is
    -- String additional Subprograms --
    -----------------------------------
 
+   function Contains
+     (Source : UXString; Pattern : UXString; Sensitivity : Case_Sensitivity := Sensitive) return Boolean;
+   -- Return True if Source contains Pattern with respect case of sensitivity
+
+   function Ends_With
+     (Source : UXString; Pattern : UXString; Sensitivity : Case_Sensitivity := Sensitive) return Boolean;
+   -- Return True if Source ends with pattern with respect case of sensitivity
+
+   function Starts_With
+     (Source : UXString; Pattern : UXString; Sensitivity : Case_Sensitivity := Sensitive) return Boolean;
+   -- Return True if Source starts with Pattern with respect case of sensitivity
+
+   function Is_Lower (Source : UXString) return Boolean;
+   -- Return True if Source is lowercase
+
+   function Is_Upper (Source : UXString) return Boolean;
+   -- Return True if Source is uppercase
+
+   function Is_Basic (Source : UXString) return Boolean;
+   -- Return True if source is basic (with no diacritical mark)
+
+   function Is_Empty (Source : UXString) return Boolean;
+   -- Return True is Source is empty (equal to Null_UXString)
+
+   function Remove
+     (Source : UXString; Pattern : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive) return UXString;
+   -- Return Source where every occurrence of Pattern have been removed with respect of case sensitivity
+   procedure Remove
+     (Source : in out UXString; Pattern : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive);
+   -- Update Source where every occurrence of Pattern have been removed with respect of case sensitivity
+
+   function Remove (Source : UXString; Pattern : UXString; Sensitivity : Case_Sensitivity := Sensitive) return UXString;
+   -- Return Source where every occurrence of Pattern have been removed with respect of case sensitivity
+   procedure Remove (Source : in out UXString; Pattern : UXString; Sensitivity : Case_Sensitivity := Sensitive);
+   -- Update Source where every occurrence of Pattern have been removed with respect of case sensitivity
+
+   function Replace
+     (Source : UXString; Before, After : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive)
+      return UXString;
+   -- Return a string which has had the before character replaced with the after character
+   -- wherever the before character is found with respect of sensitivity
+   procedure Replace
+     (Source : in out UXString; Before, After : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive);
+   -- Update Source which has had the before character replaced with the after character
+   -- wherever the before character is found with respect of sensitivity
+   function Replace
+     (Source : UXString; Before, After : UXString; Sensitivity : Case_Sensitivity := Sensitive) return UXString;
+   -- Return a string which has had the before text replaced with the after text
+   -- wherever the before text is found with respect of sensitivity
    procedure Replace (Source : in out UXString; Before, After : UXString; Sensitivity : Case_Sensitivity := Sensitive);
+   -- Update Source which has had the before text replaced with the after text
+   -- wherever the before text is found with respect of case sensitivity
+
+   ------------------------------
+   -- String split Subprograms --
+   ------------------------------
+
+   function Split
+     (Source           : UXString; Separator : Unicode_Character; Sensitivity : Case_Sensitivity := Sensitive;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
+   -- Return a string list resulting in spliting Source into substrings wherever Separator occurs
+   function Split
+     (Source           : UXString; Separator : UXString; Sensitivity : Case_Sensitivity := Sensitive;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
+   -- Return a string list resulting in spliting Source into substrings wherever Separator occurs
+   function Split
+     (Source           : UXString; Separator : Wide_Wide_Character_Set; Test : Membership := Inside;
+      Keep_Empty_Parts : Boolean := True) return UXStrings.Lists.UXString_List;
+   -- Return a string list resulting in spliting Source into substrings wherever Separator occurs with respect of Test membership
 
 private
 
-   type UTF_8_Characters_Access is access UTF_8_Character_Array;
-   type UXString is new Ada.Finalization.Controlled with record
-      Chars     : UTF_8_Characters_Access := new UTF_8_Character_Array (2 .. 1);
-      Finalized : Boolean                 := False;
-   end record;
-
-   procedure Adjust (Object : in out UXString);
-   procedure Finalize (Object : in out UXString);
+   type UXString is new UXString_Vector.Vector with null record;
 
    procedure Bounded_Move (Source : in out UXString; Target : out UXString; Max : Natural; Last : out Natural);
 
@@ -365,7 +441,6 @@ private
    procedure UXString_Write (Stream : not null access Ada.Streams.Root_Stream_Type'Class; Item : UXString);
    for UXString'Write use UXString_Write;
 
-   Null_UXString : constant UXString :=
-     (Ada.Finalization.Controlled with Chars => new UTF_8_Character_Array (2 .. 1), Finalized => False);
+   Null_UXString : constant UXString := (UXString_Vector.Empty_Vector with null record);
 
 end UXStrings;

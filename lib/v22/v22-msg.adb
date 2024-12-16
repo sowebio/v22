@@ -61,6 +61,13 @@ package body v22.Msg is
       Msg_Mutex.Unlock;
    end Debug;
    
+   procedure Debug (Message : Integer) is
+   begin
+      Msg_Mutex.Lock;
+      Put (To_String (Message), "MSG");
+      Msg_Mutex.Unlock;
+   end Debug;
+   
    procedure Debug_Latin_1 (Message : Standard.String) is
    begin
       Msg_Mutex.Lock;   
