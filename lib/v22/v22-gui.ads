@@ -161,8 +161,8 @@ package v22.Gui is
                                                           Column_Display : String) return String;
    --  Returns the Column_Key from Table where Column_Display = Selected value from Key drop down menu.
 
-   procedure Content_Group_Drop_Down_Menu_Set_Selected (Object : in out GGB.Base_Type'Class; Name : String; Index : in Positive;
-                                                       Value : in Boolean := True);
+   procedure Content_Group_Drop_Down_Menu_Set_Selected (Object : in out GGB.Base_Type'Class; Name : String; Index : Positive;
+                                                       Value : Boolean := True);
    --  Set selected or un-selected item in a drop-down menu.
 
    procedure Content_Group_Email_Add (Object : in out GGB.Base_Type'Class; Name : String; Parent_Key : String;
@@ -318,7 +318,7 @@ package v22.Gui is
                           Height : Natural := 150;
                           Width : Natural := 300;
                           Position_My : String := "center top+40";
-                          Position_At: String := "center top+40");
+                          Position_At : String := "center top+40");
    --  Create a jQuery dialog, with two potential buttons. Buttons are displayed
    --  if their corresponding handler is not null. Confirm button is focused.
    --  It is advised to use Close_Dialog in On_Confirm and On_Cancel handlers.
@@ -417,7 +417,7 @@ package v22.Gui is
    --  Set an element (or sub-element) unclickable.
 
    procedure Pop_Up (Object : in out Gnoga.Gui.Base.Base_Type'Class; Text : String; Title : String := "Message");
-   -- Display a pop-up message with a title defaulted to "Message".
+   --  Display a pop-up message with a title defaulted to "Message".
 
    procedure Print (Object : in out GGB.Base_Type'Class);
    --  Call system printing on current web view.
@@ -453,7 +453,7 @@ package v22.Gui is
    procedure Setup (On_User_Connect : GGB.Action_Event;
                     Host : String := "";
                     Port : Integer := 8_080;
-                    Boot : in String := "boot_jqueryui.html";
+                    Boot : String := "boot_jqueryui.html";
                     Title : String := "";
                     Server_Closed_Content : String := "Server closed.");
    --  Set application connection parameters
@@ -466,7 +466,7 @@ package v22.Gui is
 private
 
    procedure Test_Plot (Object : in out GGB.Base_Type'Class);
-   -- Plot test routine
+   --  Plot test routine
 
    Access_Control : On_Off := Off;
    Debug_Control : On_Off := Off;

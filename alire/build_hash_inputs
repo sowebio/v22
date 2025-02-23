@@ -1,0 +1,5 @@
+dependency:gnatcoll=25.0.0=02755e1b834aef38ef9fb72a4ed720b29ac424f527765424f9541328a6bb85af
+external:LIBRARY_TYPE=default
+external:V22_LIBRARY_TYPE=default
+profile:v22=DEVELOPMENT
+switches:v22=-Og,-fno-inline,-fstack-check,-g,-gnat2022,-gnatVa,-gnatW8,-gnata,-gnateE,-gnateF,-gnato,-gnatw.Y,-gnatwD,-gnatwH,-gnatyM160,-gnatya,-gnatye,-gnatyf,-gnatyh,-gnatyk,-gnatyn,-gnatyp,-gnatyr

@@ -47,10 +47,10 @@ package body v22.Net is
    function Api (Api_Provider : Api_Providers;
                  Api_End_Point : String;
                  Api_Consumer_Key : String;
-                 Api_Application_Key : String;
+                 Api_Application_Key : String := "";
                  Api_Application_Secret : String := "";
                  Api_Method : Api_Methods;
-                 Api_Query : String;
+                 Api_Query : String :="";
                  Api_Body : String := ""
                 ) return String is
       Temp_Output : constant String := v22.Get_Tmp_Dir & Prg.Date_Time_Nano_Stamp & "-v22-net-api.output";
@@ -61,7 +61,7 @@ package body v22.Net is
       SE_Output : String;
       Result : String := "";
    begin
-      if Api_Provider = OVHcloud then
+      if Api_Provider = Ovh then
          declare
             OVHcloud_Time, OVHcloud_Signature : String;
             OVHcloud_End_Point : String := "https://" & Api_End_Point & "/";
@@ -105,6 +105,37 @@ package body v22.Net is
                Msg.Error ("v22.Net.Api_Get > Can't get OVH time");
             end if;
          end;
+      elsif Api_Provider = Matomo then
+------------------------------------------------------------
+         declare
+            SOWEBIOanalytics_End_Point : String := "https://" & Api_End_Point & "/";
+            SOWEBIOanalytics_Method : String := To_Upper (From_Latin_1 (Api_Method'Image));
+         begin
+
+            SE_Command := Curl_Command &
+              "-X " & SOWEBIOanalytics_Method &
+              " " & SOWEBIOanalytics_End_Point &
+              " -d module=API" &
+              " -d token_auth=" & Api_Consumer_Key &
+              " -d format=JSON" &
+              " -d period=range" &
+              Api_Body &
+              " -o " & Temp_Output;
+
+            Sys.Shell_Execute (SE_Command, SE_Result);
+            SE_Output := Tio.Read_File (Temp_Output);
+            Fls.Delete_File (Temp_Output);
+
+            if (SE_Result = 0) then
+               Result := SE_Output;
+            else
+               Result := "Error n°" & From_Latin_1 (SE_Result'Image) & " " & SE_Output;
+               Msg.Error ("v22.Net.Api_Get > Sending query failed");
+            end if;
+         end;
+------------------------------------------------------------
+
+
       else
          Msg.Error ("v22.Net.Api_Get > Provider " & From_Latin_1 (Api_Provider'Image) & " not found");
       end if;
@@ -691,7 +722,7 @@ package body v22.Net is
       Sms_Query : String := "sms/" & Sms_Account & "/jobs";
       Result : String := "";
    begin
-      if Api_Provider = OVHcloud then
+      if Api_Provider = Ovh then
          Sms_Receivers_Count := Field_Count (Sms_Receivers_List, SD);
          if Sms_Receivers_Count > 0 then
             --  Populate phone numbers

@@ -48,9 +48,9 @@ package v22.Tio is
    ----------------------------------------------------------------------------
 
    procedure Animated_Delay (Delay_Seconds : Positive);
-   -- Animated delay in seconds with markers each 5 and 10 seconds.
-   -- ....!....|....!....|....!./ < animated wheel with /-\|/-| characters
-   -- .1s !5s  |10s
+   --  Animated delay in seconds with markers each 5 and 10 seconds.
+   --  ....!....|....!....|....!./ < animated wheel with /-\|/-| characters
+   --  .1s !5s  |10s
 
    procedure Beep;
    --  Send a beep.
@@ -61,8 +61,8 @@ package v22.Tio is
    procedure Clear_Screen;
    --  Clear the screen.
 
-   function Confirm_Twice (User_Prompt_1 : String ; User_Prompt_2 : String) return Boolean;
-   -- Double check by user before action. Returns True if user has validate.
+   function Confirm_Twice (User_Prompt_1 : String; User_Prompt_2 : String) return Boolean;
+   --  Double check by user before action. Returns True if user has validate.
 
    procedure Cursor_Move (X : Row; Y : Column);
    --  Move the cursor at the specified X,Y coordinates.
@@ -158,7 +158,7 @@ package v22.Tio is
    procedure New_Line (Handle : File; Spacing : ATI.Positive_Count := 1) renames ATI.New_Line;
    --  Add a new line to a file.
 
-   procedure Open_Conf (Handle : in out File; Name : String ; Wipe_Before_Process : Boolean := False ; Permissions : String := "");
+   procedure Open_Conf (Handle : in out File; Name : String; Wipe_Before_Process : Boolean := False; Permissions : String := "");
    --  Special Open procedure for config files. Creates or Append if needed.
    --  Ensure that the complete directory tree structure exists before
    --  creating file. Creating this directory tree if needed.
@@ -188,7 +188,7 @@ package v22.Tio is
    procedure Reset (Handle : in out File) renames ATI.Reset;
    --  Reset the file pointer to the start of the file
 
-   procedure Write_File (File_Name : String ; Content : String ; Permissions : String := "");
+   procedure Write_File (File_Name : String; Content : String; Permissions : String := "");
    --  Write a text file File_To_Write with Content. LF in content are
    --  preserved and used as line feed. Read Open_Conf documentation for
    --  implementation details.

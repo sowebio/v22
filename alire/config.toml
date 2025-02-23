@@ -1,2 +1,3 @@
-last_build_profile = "DEVELOPMENT"
+# config.toml has been replaced by settings.toml after alr 2.0
 
+last_build_profile = "DEVELOPMENT"

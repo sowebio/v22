@@ -39,7 +39,7 @@ package body Generic_Unbounded_Ptr_Array is
    procedure Finalize (Container : in out Unbounded_Ptr_Array) is
    begin
       if Container.Vector /= null then
-         for Index in Container.Vector'range loop
+         for Index in Container.Vector'Range loop
             Delete (Container.Vector (Index));
          end loop;
       end if;
@@ -52,7 +52,7 @@ package body Generic_Unbounded_Ptr_Array is
    begin
       if (  Container.Vector = null
          or else
-            Index not in Container.Vector'range
+            Index not in Container.Vector'Range
          )
       then
          return null;

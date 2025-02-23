@@ -54,7 +54,7 @@ package v22.Sys is
    ----------------------------------------------------------------------------
 
    function Command_Path (Command_Name : String) return String;
-   -- Return full qualified command path.
+   --  Return full qualified command path.
 
    procedure CRC16_Initialize (Mode_In : CRC16_Mode_Type := CRC16_CCITT_AUG);
    --  Initialize CRC16 computing with one of theses modes: 
@@ -65,9 +65,9 @@ package v22.Sys is
    --  Return the CRC16 of String_Hex.
    --
    --  With Payload : constant String := (104 bytes long)
-   -- "2312031913270025196200070510001D0000000000000510001E0000000000000510001F00000000000005100020000000000000";
-   -- CRC16_CCITT_AUG mode : result is 56C1h 
-   -- CRC16_BUYPASS_VERIPHONE : result is BA56h
+   --  "2312031913270025196200070510001D0000000000000510001E0000000000000510001F00000000000005100020000000000000";
+   --  CRC16_CCITT_AUG mode : result is 56C1h 
+   --  CRC16_BUYPASS_VERIPHONE : result is BA56h
    --
    --  Usage:
    --  CRC : Sys.CRC16_Type;
@@ -150,7 +150,7 @@ package v22.Sys is
    --  the executed command output is return in this parameter.
    
    function To_Unsigned_16 (High, Low : Unsigned_8) return Unsigned_16;
-    -- Assemble an Unsigned_16 from two High and Low bytes.
+   --  Assemble an Unsigned_16 from two High and Low bytes.
 
    function To_Unsigned_16 (String_In : String) return Unsigned_16;
    --  Return an Unsigned_16 from a String type of one character.

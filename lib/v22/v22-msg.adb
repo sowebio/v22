@@ -32,6 +32,12 @@ package body v22.Msg is
    ----------------------------------------------------------------------------
    --  API
    ----------------------------------------------------------------------------
+     
+   ----------------------------------------------------------------------------
+   procedure Clear_Info_Exception is
+   begin
+      Msg_Exception := "";
+   end Clear_Info_Exception;
    
    ----------------------------------------------------------------------------
    procedure Debug (Message : Boolean) is
@@ -91,6 +97,12 @@ package body v22.Msg is
       Put (From_Latin_1 (Message), "ERR");
       Msg_Mutex.Unlock;
    end Error_Latin_1;
+   
+   ----------------------------------------------------------------------------
+   function Get_Dir return String is
+   begin
+      return Log_Dir_Store;
+   end Get_Dir;
 
    ----------------------------------------------------------------------------
    procedure Info (Message : Boolean) is
@@ -162,6 +174,12 @@ package body v22.Msg is
       Put (From_Latin_1 (Message), "MSG"); 
       Msg_Mutex.Unlock;
    end Info_Latin_1;
+   
+   ----------------------------------------------------------------------------
+   procedure Info_Exception (Message : String := "") is
+   begin
+      Msg_Exception := Message;
+   end Info_Exception;
    
    ----------------------------------------------------------------------------
    function Is_Debug return On_Off is
@@ -242,11 +260,6 @@ package body v22.Msg is
       Log_Dir_Store := Dir_In;
       Msg_Mutex.Unlock;
    end Set_Dir;
-
-   function Get_Dir return String is
-   begin
-      return Log_Dir_Store;
-   end Get_Dir;
    
    ----------------------------------------------------------------------------
    procedure Set_Task (New_Task : String) is
@@ -260,7 +273,7 @@ package body v22.Msg is
    procedure Title (Message : String) is
    begin
       Msg_Mutex.Lock;
-      Put (To_Upper (Message), "MSG", True);
+      Put (To_Upper (Message), "---", True);
       Msg_Mutex.Unlock;
    end Title;
    
@@ -310,12 +323,12 @@ package body v22.Msg is
          end if;
 
          if Title_On then
-            if (Header_Length + Length (Line) + 1) < Title_Max_Length then
-               Line := Line &
-                      (Title_Max_Length - Header_Length - Length (Line)) * "-";
+            if (Header_Length + Length (Line) + 2) < Title_Max_Length then
+               Line := Line & " " & 
+                      (Title_Max_Length - Header_Length - Length (Line) - 1) * "-";
             end if;
          end if;
-         
+
          if Display_On then
             --  Console write with limited length line and ansi fancy
             Tio.Put_Line (Prg.Date_Time_Milli_Stamp & " - " &

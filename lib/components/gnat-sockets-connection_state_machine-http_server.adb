@@ -2830,7 +2830,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Client.Data.Current := Client.Data.Current + 1;
             end loop;
          else
-            exit when Pointer > Data'Last; -- All data consumed
+            exit Get_Header_Line when Pointer > Data'Last; -- All data consumed
             Raise_Exception
             (  Status_Error'Identity,
                (  "Unprocessed data left when after return from "

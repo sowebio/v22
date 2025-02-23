@@ -296,6 +296,18 @@ package body v22.Prg is
    end Date_To_ISO;
 
    ----------------------------------------------------------------------------
+   function Date_ISO_To_Local (DTS : String) return String is
+         Result : String := "";
+      begin
+      if DTS.Length >= 10 then
+         Result := Slice (DTS, 9, 10) & "/" & Slice (DTS, 6, 7)  & "/" & Slice (DTS, 1, 4);
+      else
+         Msg.Error ("Date_To_ISO > Input string too short: " & DTS);
+      end if;
+         return Result;
+      end Date_ISO_To_Local;
+
+   ----------------------------------------------------------------------------
    function Duration_Stamp (Time : Ada.Calendar.Time) return String is
       Day_Secs : Natural;
    begin

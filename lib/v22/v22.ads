@@ -41,7 +41,7 @@ package v22 is
    --  Type money (14 digits including decimals)
 
    type On_Off is (On, Off);
-   -- To replace True/False in setters functions
+   --  To replace True/False in setters functions
 
    ----------------------------------------------------------------------------
    --  PUBLIC CONSTANTS
@@ -52,7 +52,7 @@ package v22 is
    ERR_OUT_REDIRECT  : constant String := " 2>/dev/null";
    STD_ERR_OUT_REDIRECT : constant String := " 2>/dev/null 1>/dev/null";
 
-   -- Flag files
+   --  Flag files
    ACCESS_OK : constant String := "access_ok_dont_delete_this_file";
    INSTALL_OK : constant String := "install_ok_dont_delete_this_file";
 
@@ -76,7 +76,7 @@ package v22 is
    CD   : constant String := "^"; --  94d 5Eh Column delimiter
    ND   : constant String := "~"; -- 126d 7Eh Name/value delimiter
 
-   -- Signs
+   --  Signs
    SIGN_MINUS : constant String := "-";
    SIGN_PLUS : constant String := "&#x2004"; -- 2x 2009, 2007, 2004
 
@@ -217,13 +217,15 @@ private
    Msg_Mutex_Owned : Boolean := False;
    Sql_Mutex_Owned : Boolean := False;
 
+   Msg_Exception : String := "";
+
    Name : constant String := "v22";
    --  Library's name
 
    Version_Major : constant Natural := 0;
    --  Library major version number
 
-   Version_Minor : constant Natural := 6;
+   Version_Minor : constant Natural := 7;
    --  Library minor version number
 
    --  135 cols width is the max full screen standard console on a rather old,

@@ -44,7 +44,7 @@ package v22.Msg is
    procedure Error_Latin_1 (Message : Standard.String);
    --  Log a error message.
       
-  function Get_Dir return String;
+   function Get_Dir return String;
    --  Returns log file directory.
    
    procedure New_Line;
@@ -62,6 +62,9 @@ package v22.Msg is
    procedure Info_Latin_1 (Message : Standard.String);
    --  Log an information message.
    
+   procedure Info_Exception (Message : String := "");
+   --  Set exception message
+   
    function Is_Debug return On_Off;
    --  Return debug status.
    
@@ -70,16 +73,16 @@ package v22.Msg is
    
    procedure Set_Display (Switch : On_Off);
    --  Log to display on/[off].
+         
+   procedure Set_Dir (Dir_In : String);
+   --  Set log file directory.
 
    procedure Set_Disk (Switch : On_Off);
    --  Log to disk on/[off].
       
    procedure Set_Header (Switch : On_Off);
    --  Line header on/[off].
-   
-   procedure Set_Dir (Dir_In : String);
-   --  Set log file directory.
-   
+
    procedure Set_Task (New_Task : String);
    --  Set new current log task.
 

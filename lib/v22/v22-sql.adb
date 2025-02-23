@@ -546,7 +546,8 @@ package body v22.Sql is
 
    ----------------------------------------------------------------------------
    task body Ping is
-      Delay_Value : Duration := 3600.0;  -- Wait 1 hour between pings
+      --  Delay_Value : Duration := 3600.0;  -- Wait 1 hour between pings
+      Delay_Value : Duration := 900.0;  -- Wait 15 minutes between pings
       function Image is new UXStrings.Conversions.Fixed_Point_Image (Duration);
    begin
       accept Start;
@@ -1354,13 +1355,20 @@ package body v22.Sql is
       Msg.Debug ("Ping on databases triggered");
       for C in Databases.Iterate loop
          if Databases(C).Brand = MySQL then
+            Sql_Mutex.Lock;
             Databases(C).DBM.Execute_Query ("SELECT 1");
+            Sql_Mutex.Unlock;
             Msg.Debug ("Ping on " & From_Latin_1 (Databases(C).Brand'Image) & " database: " & Databases(C).Name);
          elsif Databases(C).Brand = SQLite then
             --  Not applicable
             null;
          end if;
       end loop;
+
+   exception
+      when E : others =>
+         Msg.Error_Latin_1 ("Sql.Insert > Error: " & Ada.Exceptions.Exception_Information(E));
+         Sql_Mutex.Unlock;
    end Ping_Send;
 
 ------------------------------------------------------------------------------
