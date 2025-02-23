@@ -246,12 +246,12 @@ exception
    --  -h or --help switches
    when GCL.Exit_From_Command_Line =>
       Msg.New_Line;
-      GOL.OS_Exit (Exit_Code_After_Help);
+      GOL.OS_Exit (EXIT_CODE_AFTER_HELP);
 
    --  Invalid switches
    when GCL.Invalid_Switch =>
       Msg.New_Line;
-      GOL.OS_Exit (Exit_Code_Invalid_Parameter);
+      GOL.OS_Exit (EXIT_CODE_INVALID_PARAMETER);
 
    --  Non permissive runtime error handling with trace (application stops)
    when Error : others =>

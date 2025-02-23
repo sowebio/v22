@@ -376,7 +376,7 @@ package body Parsers.Generic_Source.XPM is
       Got_It   : Boolean;
    begin
       Skip (Code, True);
-      Color_Types.Get (Code, Mode, Got_it);
+      Color_Types.Get (Code, Mode, Got_It);
       if not Got_It then
          Raise_Exception
          (  Syntax_Error'Identity,

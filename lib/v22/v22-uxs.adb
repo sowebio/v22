@@ -31,6 +31,8 @@ with UXStrings;
 with v22.Msg;
 with v22.Tio;
 
+with Ada.Float_Text_IO;
+
 package body v22.Uxs is
 
    use Interfaces;

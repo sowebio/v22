@@ -140,6 +140,12 @@ package body v22 is
       Tio.Put_Line ("Home directory         : " & Sys.Get_Home);
       Tio.Put_Line ("Ada mem. alloc. (bytes): " & Sys.Get_Alloc_Ada);
       Tio.Put_Line ("All mem. alloc. (bytes): " & Sys.Get_Alloc_All);
+      Tio.Put_Line ("Msg Info Exception     : " & (if Is_Empty (Msg_Exception) then "No info message set" else Msg_Exception));
+
+      Tio.New_Line;
+      Tio.Put_Line (Trace_Output);
+      Tio.Put_Line (Title_Max_Length * "-");
+      Tio.New_Line;
 
       --  See v22 Ada Framework User Manual > Architecture > Design > Exceptions
       if (Trace_Lines > 0) and Sys.Is_Command ("addr2line") then
@@ -190,6 +196,7 @@ package body v22 is
             Tio.Put_Line (Exception_Handle, "Home directory         : " & Sys.Get_Home);
             Tio.Put_Line (Exception_Handle, "Ada mem. alloc. (bytes): " & Sys.Get_Alloc_Ada);
             Tio.Put_Line (Exception_Handle, "All mem. alloc. (bytes): " & Sys.Get_Alloc_All);
+            Tio.Put_Line (Exception_Handle, "Msg Info Exception     : " & (if Is_Empty (Msg_Exception) then "No info message set" else Msg_Exception));
             Tio.New_Line (Exception_Handle);
             Tio.Put_Line (Exception_Handle, Trace_Output);
             Tio.Put_Line (Exception_Handle, Title_Max_Length * "-");

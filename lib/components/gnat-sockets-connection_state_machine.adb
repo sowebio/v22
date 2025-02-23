@@ -270,7 +270,7 @@ package body GNAT.Sockets.Connection_State_Machine is
    begin
 Align_To_The_Margin :
       for Index in 1..Alignment loop
-         exit when Length >= Buffer'Last;
+         exit Align_To_The_Margin when Length >= Buffer'Last;
          if Buffer (Length + 1)'Address mod Alignment = 0 then
             Last := Length + Natural (Size_In_Characters);
             loop

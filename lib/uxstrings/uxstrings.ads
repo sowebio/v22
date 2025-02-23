@@ -419,7 +419,6 @@ package UXStrings is
 private
 
    type UTF_8_Characters_Access is access UTF_8_Character_Array;
-
    type UXString is tagged record
       Chars : Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String;
    end record;

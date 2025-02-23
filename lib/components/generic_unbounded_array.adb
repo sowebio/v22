@@ -137,7 +137,7 @@ package body Generic_Unbounded_Array is
          Container.Vector :=
             new Object_Array_Type'
                 (Index..Index + Minimal_Size => Null_Element);
-      elsif Index not in Container.Vector'range then
+      elsif Index not in Container.Vector'Range then
          declare
             New_Vector : Object_Array_Ptr;
             Inc : constant Natural :=
@@ -164,7 +164,7 @@ package body Generic_Unbounded_Array is
                       => Null_Element
                       );
             end if;
-            New_Vector (Container.Vector'range) :=
+            New_Vector (Container.Vector'Range) :=
                Container.Vector.all;
             Delete (Container.Vector);
             Container.Vector := New_Vector;

@@ -33,13 +33,13 @@ package v22.Fls is
    package AD renames Ada.Directories;
    subtype FKind is AD.File_Kind;
    
-   ----------------------------------------------------------------------------
+   --  ------------------------------------------------------------------------
    --  API
-   ----------------------------------------------------------------------------   
+   --  ------------------------------------------------------------------------   
    
    procedure Backup_File (File_To_Backup : String);
-   -- Rename file with .bak.n suffix. Iterate n=0..9 searching a free n bak 
-   -- file. If n is free then write .bak.n, if n=9, delete .bak.0
+   --  Rename file with .bak.n suffix. Iterate n=0..9 searching a free n bak 
+   --  file. If n is free then write .bak.n, if n=9, delete .bak.0
 
    procedure Copy_File (Source_Name, Target_Name : String);
    --  Copy a Source_Name file to a Target_Name file destination with no
@@ -95,8 +95,7 @@ package v22.Fls is
    --  Size equals DlSize. Name is used to named file in text messages and is 
    --  purely informational. If Name empty, use Url as default.
 
-
-   --function Exists (Name : String) return Boolean renames AD.Exists;
+   --  function Exists (Name : String) return Boolean renames AD.Exists;
    function Exists (Name : String) return Boolean;
    --  Returns True if file or directory Name exists.
 
@@ -109,7 +108,7 @@ package v22.Fls is
    function File_Size (Name : String) return Integer;
    --  Size of file
 
-   --function Get_Directory return String renames AD.Current_Directory;
+   --  function Get_Directory return String renames AD.Current_Directory;
    function Get_Directory return String;
    --  Returns the full directory name for the current default directory.
    

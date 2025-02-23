@@ -28,167 +28,48 @@
 --  See git log
 -------------------------------------------------------------------------------
 
-with "gnatcoll";
+with "config/v22_config.gpr";
 
 project v22 is
 
    for Languages use ("Ada", "C");
+   for Source_Dirs use ("src/**", "lib/**");
 
-   type v22_Build_Type is ("Style", "Debug", "Fast", "Small");
-
-   --  Add -Xv22_Build=Style|Fast|Small in the GNATStudio
-   --  "build all" window to control the build behaviour. Example:
-   --  %builder -Xv22_Build=Style -d %eL -P%PP %config %autoconf %X
-
-   v22_Build : v22_Build_Type := external ("v22_Build", "Debug");
-
-   --for Source_Dirs use ("src/testgui","src/testapi","lib/**");
-   for Source_Dirs use ("src/testapi","lib/**");
-
-   case v22_Build is
-      when "Style" =>
-         for Object_Dir use "obj/style";
-      when "Debug" =>
-         for Object_Dir use "obj/debug";
-      when "Fast"  =>
-         for Object_Dir use "obj/fast";
-      when "Small" =>
-         for Object_Dir use "obj/small";
-   end case;
-
-   for Exec_Dir use "prg";
    for Create_Missing_Dirs use "True";
-
-   --for Main use ("src/testgui/testgui.adb", "src/testapi/testapi.adb");
-   for Main use ("src/testapi/testapi.adb");
-
+   for Object_Dir use "obj/" & v22_Config.Build_Profile;
+   for Exec_Dir use "prg";
+   
+   for Main use ("testgui", "testapi");
+   
    ----------------------------------------------------------------------------
    --  Compiler options (Gnat)
    ----------------------------------------------------------------------------
 
-   Common_Compiler_Options := (
-    -- General
-    "-gnat2020",
-    "-gnatW8",           --  Both brackets and UTF-8 encodings will be recognized (1)
-    -- Warnings & Errors
-    "-gnatU",            --  Enable unique tag for error messages
-    "-gnatf",            --  Full errors. Verbose details, all undefined references
-    "-gnatq",            --  Don't quit, try semantics, even if parse errors
-    "-gnatQ",            --  Don't quit, write ali/tree file even if compile errors
-    "-gnatVaep",         --  Enable selected validity checking mode (2)
-    "-gnatwDH.Y",      --  Enable selected warning modes (3)
-    -- "-Wall",          --  Enable most warning messages
-    -- Style
-    "-gnatyaefhkM160npr" --  Enable selected style checks (4)
-   );
-
-   Fast_Compiler_Options := (
-    "-O2",
-    "-gnatpn",
-    "-fipa-cp-clone", "-fgcse-after-reload",
-    "-funroll-loops", "-fpeel-loops", "-funswitch-loops",
-    "-ftracer", "-fweb", "-ftree-vectorize",
-    "-frename-registers", "-ffunction-sections",
-    "-g"
-   );
-
-   Debug_Compiler_Options := (
-    "-gnata",            --  Assertions enabled
-    "-gnato",            --  Enable overflow checking in STRICT mode
-    "-gnateE",           --  Generate extra information in exception messages 
-    "-gnateF",           --  Check overflow on predefined Float types
-    "-gnatVa",           --  Enable all validity checking options
-    "-fstack-check",
-    "-fno-inline",
-    "-g"                 --  Generate debugging information
-   );
-
-   Style_Compiler_Options := (
-   "-gnatg"              --  RTS Style (6)
-   );
-
-   --  (1)
-   --  https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gnat_ugn_unw/Character-Set-Control.html
-   --  https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gnat_ugn_unw/Wide-Character-Encodings.html#Wide-Character-Encodings
-   --  (2) 
-   --  a turn on all validity checking options
-   --  e turn on checking for elementary components
-   --  p turn on checking for parameters
-   --  (3)
-   --  .e turn on every optional info/warning (no exceptions)
-   --  D  turn off warnings for implicit dereference (default)
-   --  H  turn off warnings for hiding declarations (default)
-   --  .Y turn off info messages for why pkg body needed (default)
-   --  (4)
-   --  a  check attribute casing
-   --  e  check end/exit labels present
-   --  f  check no form feeds/vertical tabs in source
-   --  h  no horizontal tabs in source
-   --  k  check casing rules for keywords
-   --  Mn check line length <= n characters
-   --  n  check casing of package Standard identifiers
-   --  p  check pragma casing
-   --  r  check casing for identifier references
-   --  (5)
-   --  Options starting with -g, -f, -m, -O, -W, or --param are automatically passed on to the various sub-processes 
-   --  invoked by gcc.  In order to pass  other options on to these processes the -W<letter> options must be used.
-   --  (6) All warnings and style messages are treated as errors. -gnatg implies -gnatw.ge and -gnatyg so that all
-   --  standard warnings and all standard style options are turned on. All warnings and style messages are treated
-   --  as errors.'
-
    package Compiler is
-      case v22_Build is
-      when "Style"   =>
-         for Default_Switches ("ada") use Common_Compiler_Options & Debug_Compiler_Options & Style_Compiler_Options;
-      when "Debug" =>
-         for Default_Switches ("ada") use Common_Compiler_Options & Debug_Compiler_Options;
-         for Switches ("s-memory.adb") use ("-gnatg");
-         for Local_Configuration_Pragmas use "pragmas.adc";
-      when "Fast"  =>
-         for Default_Switches ("ada") use Common_Compiler_Options & Fast_Compiler_Options;
-         for Switches ("s-memory.adb") use ("-gnatg");
-      when "Small" =>
-         for Default_Switches ("ada") use Common_Compiler_Options & "-Os";
-         for Switches ("s-memory.adb") use ("-gnatg");
-      end case;
+      for Default_Switches ("Ada") use v22_Config.Ada_Compiler_Switches;
+      for Switches ("s-memory.adb") use ("-gnatg");    
+      for Local_Configuration_Pragmas use "pragmas.adc";
    end Compiler;
 
    ----------------------------------------------------------------------------
    --  Binder options (gnatbind)
    ----------------------------------------------------------------------------
 
-   Common_Binder_Options := (""); -- RTS statically linked ("-static");
    package Binder is
-      case v22_Build is
-      when "Small" => for Default_Switches ("ada") use Common_Binder_Options;
-         --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
-      when others  => for Default_Switches ("ada") use Common_Binder_Options & ("-Es");
-      end case;
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
+      for Default_Switches ("Ada") use ("-Es");
    end Binder;
 
    ----------------------------------------------------------------------------
    --  Linker options (ld)
    ----------------------------------------------------------------------------
 
-   Common_Linker_Options := (""); -- RTS statically linked ("-static");
+   Common_Linker_Options := (""); -- -static : program statically linked
    --  Libmysql handling
    Common_Linker_Options := Common_Linker_Options & ("-lmysqlclient"); 
-   --  SQLite C source handling
-   Common_Linker_Options := Common_Linker_Options & ("-L./lib/sqlite", "-lsqlite3", "-lcurl"); 
-   --  Libcurl handling
-   Common_Linker_Options := Common_Linker_Options & ("-lcurl"); 
 
    package Linker is
-      case v22_Build is
-      when "Style" => 
-         for Default_Switches ("ada") use Common_Linker_Options & ("-g");
-      when "Debug" => 
-         for Default_Switches ("ada") use Common_Linker_Options & ("-g");
-      when "Fast"  => 
-         for Default_Switches ("ada") use Common_Linker_Options & ("-g", "-Wl,--gc-sections");
-      when "Small" => 
-         for Default_Switches ("ada") use Common_Linker_Options & ("-Wl,--gc-sections");
-      end case;
+      for Default_Switches ("ada") use Common_Linker_Options & ("-g");
    end Linker;
 
   -----------------------------------------------------------------------------
@@ -199,7 +80,7 @@ project v22 is
       -- -d   Display compilation process
       -- -j0  Use num processes to compile 0=all platform cores are used
       -- -s   Recompile if compiler switches have changed
-      for Default_Switches ("ada") use ("-d", "-j0", "-s");
+      for Default_Switches ("ada") use ("-j0", "-s");
    end Builder;
 
    ----------------------------------------------------------------------------

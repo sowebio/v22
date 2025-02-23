@@ -60,14 +60,14 @@ package body Strings_Edit.Float_Edit is
    --
    -- GetExponentField -- Calculate the length of the exponent
    --
-   --	 Base	- Of the number
+   -- Base - Of the number
    --
    -- This  function  calculates  how  many  digits  are  necessary   to
    -- represent any Base-radix exponent in decimal the format.
    --
    -- Returns :
    --
-   --	 The exponent length
+   -- The exponent length
    --
    function GetExponentField (Base : NumberBase) return Natural is
    begin
@@ -101,9 +101,9 @@ package body Strings_Edit.Float_Edit is
    --
    -- GetExponent -- Get the exponent part from the string
    --
-   --	    Source  - The string
-   --	    Pointer - Within the string
-   --	    Value   - Of the exponent (output)
+   --  Source  - The string
+   --  Pointer - Within the string
+   --  Value   - Of the exponent (output)
    --
    -- This procedure scans the Source string starting from  the  Pointer
    -- position  for  the  exponent  part of a number. Spaces are skipped
@@ -430,7 +430,7 @@ package body Strings_Edit.Float_Edit is
       if Mantissa >= 1.0 then
          Mantissa  := Mantissa / Radix;
          Exponent  := Exponent + 1;
-	 Precision := Precision + Increment;
+         Precision := Precision + Increment;
       end if;
       if Precision > 0 then
          declare
@@ -442,7 +442,7 @@ package body Strings_Edit.Float_Edit is
             --
             -- Convert the Mantissa to character string
             --
-            for Index in MantissaPart'range loop
+            for Index in MantissaPart'Range loop
                Mantissa := Mantissa * Radix;
                Digit := Integer (Mantissa);
                if Number'Base (Digit) > Mantissa then
@@ -460,7 +460,7 @@ package body Strings_Edit.Float_Edit is
                --
                Put
                (  Destination,
-	            Pointer,
+                  Pointer,
                   (  Sign (Value, PutPlus)
                   &  MantissaPart (MantissaPart'First)
                   &  '.'
@@ -485,7 +485,7 @@ package body Strings_Edit.Float_Edit is
                   Field,
                   Justify,
                   Fill
-	         );
+                 );
             elsif Exponent > 0 then
                --
                -- Format: XXXX.XXX

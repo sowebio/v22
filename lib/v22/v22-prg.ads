@@ -57,7 +57,7 @@ package v22.Prg is
    function Date_Not_Reached (DTS : String) return Boolean;
    --  Returns true if YYYY-MM-DD Date_ISO is still to come.
 
-   function Date_Time_Stamp_Reached (DTS : String ; Zone : Time_UTC_Local := Local) return Boolean;
+   function Date_Time_Stamp_Reached (DTS : String; Zone : Time_UTC_Local := Local) return Boolean;
    --  Returns true if YYYYMMDD:HHMMSS Date_Time_Stamp has passed.
 
    function Date_Time_Stamp (Zone : Time_UTC_Local := Local) return String;
@@ -88,6 +88,9 @@ package v22.Prg is
 
    function Date_To_ISO (DTS : String) return String;
    --  Returns “YYYY-MM-DD” from a string date as “DD?MM?YYYY” (? is any character).
+
+   function Date_ISO_To_Local (DTS : String) return String;
+   -- Returns "DD/MM/YYYY" from a string date as "YYYY?MM?DD" (? is any character).
 
    function Duration_Stamp (Time : Ada.Calendar.Time) return String;
    --  Returns a duration as HHhMMmSSs since Time.

@@ -25,6 +25,8 @@
 
 with Ada.Integer_Text_IO;
 
+with UXStrings.Text_IO;
+
 with v22.Fls;
 with v22.Msg;
 with v22.Prg;
@@ -32,6 +34,8 @@ with v22.Sys;
 with v22.Tio;
 
 package body v22.Tio is
+
+   package UTI renames UXStrings.Text_IO;
 
    ----------------------------------------------------------------------------
    --  API - Terminal
@@ -237,7 +241,8 @@ package body v22.Tio is
 
    procedure Put (V : String) is
    begin
-      ATI.Put (To_Latin_1 (Trim_Left (V))); -- Suppress the space left for positive sign
+      --  ATI.Put (To_Latin_1 (Trim_Left (V))); -- Suppress the space left for positive sign
+      UTI.Put (V);
    end Put;
 
    procedure Put (I : Integer) is
@@ -274,7 +279,7 @@ package body v22.Tio is
 
    procedure Put_Line (V : String) is
    begin
-      ATI.Put_Line (To_Latin_1 (Trim_Left (V))); -- Suppress the space left for positive sign
+      UTI.Put_Line (V);
    end Put_Line;
 
    procedure Put_Line (I : Integer) is

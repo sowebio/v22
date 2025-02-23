@@ -25,6 +25,8 @@
 
 with Ada.Text_IO;
 
+
+
 with UXStrings.Text_IO;
 with UXStrings.Text_IO.Text_Streams;
 with UXStrings.Conversions;
@@ -33,7 +35,7 @@ with Interfaces;
 
 with v22.Uxs; use v22.Uxs;
 
-package v22.Utf is
+package v22.Uxf is
 
    package UXS  renames UXStrings;
    package UTI  renames UXStrings.Text_IO;
@@ -70,7 +72,7 @@ package v22.Utf is
 
    function Get_Line (Handle : in out File) return String;
    procedure Get_Line (Handle : in out File; V : in out String);
-   --  Read a line then move the file pointer to the next line.
+   --  Read a line and then move the file pointer to the next line.
 
    function Is_Open (Handle : File) return Boolean renames UTI.Is_Open;
    --  Test if a file is open.
@@ -78,8 +80,8 @@ package v22.Utf is
    procedure New_Line (Handle : in File; Spacing : UTI.Positive_Count := 1) renames UTI.New_Line;
    --  Add a new line to a file.
 
-   procedure Open_Read (Handle : in out File; Name : String);
-   --  Open a file in read mode.
+   procedure Open_Read (Handle : in out File; Name : String; Scheme : Encoding_Scheme := UTF_8);
+   --  Open a file in read mode. Maximum file length is one petabyte (1024 TB).
 
    procedure Put (Handle : File; S : String) renames UTI.Put;
    --  Write to a file.
@@ -96,5 +98,5 @@ private
    Ansi_State : Boolean := True;
 
 -------------------------------------------------------------------------------
-end v22.Utf;
+end v22.Uxf;
 -------------------------------------------------------------------------------

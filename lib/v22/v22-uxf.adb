@@ -31,7 +31,7 @@ with v22.Prg;
 with v22.Sys;
 with v22.Tio;
 
-package body v22.Utf is
+package body v22.Uxf is
 
    function Image is new UXStrings.Conversions.Scalar_Image (Encoding_Scheme);
    function Value is new UXStrings.Conversions.Scalar_Value (Encoding_Scheme);
@@ -66,14 +66,19 @@ package body v22.Utf is
    procedure Get_Line (Handle : in out File; V : in out String) is
    begin
       V := UTI.Get_Line (Handle);
+   exception
+      when Constraint_Error =>
+         Msg.Error ("Exception catched in v22.Uxf.Get_Line: CONSTRAINT_ERROR");
+         V := "";
    end Get_Line;
 
    ----------------------------------------------------------------------------
-   procedure Open_Read (Handle : in out File; Name : String) is
+
+   procedure Open_Read (Handle : in out File; Name : String; Scheme : Encoding_Scheme := UTF_8) is
    begin
-      UTI.Open (Handle, UTI.In_File, Name, UTF_8, UTI.LF_Ending);
+      UTI.Open (Handle, UTI.In_File, Name, Scheme, UTI.LF_Ending);
    end Open_Read;
 
 ------------------------------------------------------------------------------
-end v22.Utf;
+end v22.Uxf;
 ------------------------------------------------------------------------------

@@ -65,8 +65,8 @@ separate (TestGui) package body Usr is
    procedure Information (Object : in out GGB.Base_Type'Class) is
    begin
       Gui.Header_Notify_User_Menu_Click (Object);
-      Gui.Dialog_Popup (Object, "Droits d'accès", "Ajouter les droits d'accès ici", "Confirmer", "Annuler",
-                         On_Dialog_Confirm'Unrestricted_Access, On_Dialog_Cancel'Unrestricted_Access);
+      Gui.Dialog_Popup (Object, "Droits d'accès", "Ajouter les droits d'accès ici", "Confirmer",
+                         On_Dialog_Confirm'Unrestricted_Access, "Annuler", On_Dialog_Cancel'Unrestricted_Access);
    end Information;
 
    ----------------------------------------------------------------------------

@@ -38,32 +38,32 @@ package v22.Uxs is
    --  API
    ----------------------------------------------------------------------------
 
-   function Char_Count (String_To_Process : String ; Char_Set_Pattern : String) return Integer;
+   function Char_Count (String_To_Process : String; Char_Set_Pattern : String) return Integer;
    --  Count each char in String_To_Process relative to Char_Set_Pattern.
 
    function Ends_With (Item : String; Pattern : ASCII_Character) return Boolean;
    --  Check if String Item ends with another String or String Pattern.
 
-   function Field_By_Index (String_Input : String ; Index_Field : Integer ; Field_Delimiter : String) return String;
+   function Field_By_Index (String_Input : String; Index_Field : Integer; Field_Delimiter : String) return String;
    --  Return a field indexed by Index_Field and delimited by Field_Delimiter
    --  from String_To_Process.
 
-   function Field_By_Name (String_Input : String ; Field_To_Search : String ; Field_Delimiter : String) return String;
+   function Field_By_Name (String_Input : String; Field_To_Search : String; Field_Delimiter : String) return String;
    --  Return a field from a search string and delimited by Field_Delimiter.
 
-   function Field_Count (String_To_Process : String ; Field_Delimiter : String) return Integer;
+   function Field_Count (String_To_Process : String; Field_Delimiter : String) return Integer;
    --  Count fields in String_To_Process and return fields number.
 
    procedure Field_Display (String_To_Process : String; Column_Delimiter : String; Row_Delimiter : String; Custom_Header : String := "");
    --  Formatted display of a string fields structured in rows and columns
 
-   function Field_Get_Data (Datas : String ; Field_Name : String) return String;
+   function Field_Get_Data (Datas : String; Field_Name : String) return String;
    --  Return space trimmed datas from Field_Name identifier in Datas or an empty string if  Field_Name not found.
 
-   function Field_Included (String_To_Process : String ; Items_List  : String ; Field_Delimiter : String) return Boolean;
+   function Field_Included (String_To_Process : String; Items_List  : String; Field_Delimiter : String) return Boolean;
    --  Returns True if all Items_List are included in String_To_Process list, which is delimited by Field_Delimiter.
 
-   function Field_Search (String_Input : String ; Field_To_Search : String ; Field_Delimiter : String) return Boolean;
+   function Field_Search (String_Input : String; Field_To_Search : String; Field_Delimiter : String) return Boolean;
    --  Search Field_To_Search in String_To_Process and return True if found.
 
    function From_DB_To_Date_String (DB_Value : String; Separator : String := "/") return String;
@@ -115,19 +115,19 @@ package v22.Uxs is
    --    -.       =>  000
    --    -        =>  000
 
-   function Is_Numeric (Item : in String; Signs : String := "") return Boolean;
+   function Is_Numeric (Item : String; Signs : String := "") return Boolean;
    --  Returns True if Item string is numeric (i.e. contains only digits with or without leading signs like space, plus ou minus).
 
-   function Padding_Left (String_To_Process : String ; Padding_Character : String ; Result_Length : Positive) return String;
+   function Padding_Left (String_To_Process : String; Padding_Character : String; Result_Length : Positive) return String;
    --  Left padding untill Result_Length a String_To_Process with a Padding_Character.
 
-   function Replace_Char (String_To_Process : String ; Char_In : ASCII_Character ; Char_Out : ASCII_Character) return String;
+   function Replace_Char (String_To_Process : String; Char_In : ASCII_Character; Char_Out : ASCII_Character) return String;
    --  Replace all Char_In by Char_Out in String_To_Process
 
    function Starts_With (Item : String; Pattern : ASCII_Character) return Boolean;
    --  Check if String Item starts with another String or String Pattern.
 
-   function Stript_Chars (String_To_Process : String ; Char_List : String) return String;
+   function Stript_Chars (String_To_Process : String; Char_List : String) return String;
    --  Stript each char in String_To_Process relative to Char_List
 
    function Tail_After_Match (Source : String; Pattern : ASCII_Character) return String;
@@ -148,7 +148,7 @@ package v22.Uxs is
    --  Convert a Byte to a String hexadecimal output.
 
    function To_Hex (String_In : String) return String;
-   -- Convert a String to a String hexadecimal formatted output.
+   --  Convert a String to a String hexadecimal formatted output.
 
    function To_Hex_From_Val (Input : String) return String;
    --  Convert an ASCII String value ranging 0..127 to a String hexadecimal
@@ -199,7 +199,7 @@ package v22.Uxs is
    --  ' ' space for plus and '-' for minus
 
    function To_Val (String_To_Convert : String) return String;
-   -- Convert a String to String ASCII decimal values formatted output.
+   --  Convert a String to String ASCII decimal values formatted output.
 
    function Trim_Both  (Source : String) return String;
    --  Returns an all trimmed spaces String of String Source.

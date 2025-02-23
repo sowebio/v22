@@ -46,7 +46,7 @@ separate (TestGui) package body Adm_Users is
    procedure On_Validate_Delete (Object : in out Gnoga.Gui.Base.Base_Type'Class);
 
    procedure Put_Error_Message (Object : in out Gnoga.Gui.Base.Base_Type'Class; Error : String);
-   procedure Put_Form (Object : in out Gnoga.Gui.Base.Base_Type'Class; Mode : Db_Mode := None; Key : String := "");
+   procedure Put_Form (Object : in out Gnoga.Gui.Base.Base_Type'Class; Mode : String := DB_NONE; Key : String := "");
    procedure Put_List (Object : in out GGB.Base_Type'Class; Condition : String := "ORDER BY " & Users_Key_Main & " LIMIT " &
                       To_String_Unsigned (Users_List_Length));
 
@@ -75,7 +75,7 @@ separate (TestGui) package body Adm_Users is
 
    ----------------------------------------------------------------------------
    procedure On_Cancel (Object : in out Gnoga.Gui.Base.Base_Type'Class) is
-      Data_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_Select");
+      Data_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_Select");
    begin
       Msg.Debug ("Users > Cancel_Read with Value: " & Data_Value);
       Put_List (Object,"WHERE Login >= '" & Data_Value & "' ORDER BY " &
@@ -86,21 +86,21 @@ separate (TestGui) package body Adm_Users is
    procedure On_Create (Object : in out GGB.Base_Type'Class) is
    begin
       Msg.Debug ("Users > Create");
-      Put_Form (Object, Create);
+      Put_Form (Object, DB_CREATE);
    end On_Create;
 
    ----------------------------------------------------------------------------
    procedure On_Delete (Object : in out GGB.Base_Type'Class) is
       Data_Index : constant Integer := Gui.Content_List_Selected_Row (Object, Users_List_Key);
-      Data_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
+      Data_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
    begin
       Msg.Debug ("Users > Delete with Key/Value: " & Users_List_Key & "_" & To_String_Unsigned (Data_Index) & "/" & Data_Value);
-      Put_Form (Object, Delete, Data_Value);
+      Put_Form (Object, DB_DELETE, Data_Value);
    end On_Delete;
 
    ----------------------------------------------------------------------------
    procedure On_Down (Object : in out GGB.Base_Type'Class) is
-      Last_Line_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_Last");
+      Last_Line_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_Last");
       Query_Result : String := "";
       Query_Result_Count : Natural;
    begin
@@ -129,23 +129,23 @@ separate (TestGui) package body Adm_Users is
    ----------------------------------------------------------------------------
    procedure On_Read (Object : in out GGB.Base_Type'Class) is
       Data_Index : constant Integer := Gui.Content_List_Selected_Row (Object, Users_List_Key);
-      Data_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
+      Data_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
    begin
-      Gui.Set_Connection_Data (Object, Users_List_Key & "_Select", Data_Value);
+      Gui.Connection_Data_Set (Object, Users_List_Key & "_Select", Data_Value);
       Msg.Debug ("Users > Edit with Key/Value: " & Users_List_Key & "_" & To_String_Unsigned (Data_Index) & "/" & Data_Value);
-      Put_Form (Object, Read, Data_Value);
+      Put_Form (Object, DB_READ, Data_Value);
    end On_Read;
 
    ----------------------------------------------------------------------------
    procedure On_Search (Object : in out GGB.Base_Type'Class) is
    begin
       Msg.Debug ("Users > Search");
-      Put_Form (Object, Search);
+      Put_Form (Object, DB_SEARCH);
    end On_Search;
 
    ----------------------------------------------------------------------------
    procedure On_Up (Object : in out GGB.Base_Type'Class) is
-      First_Line_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_First");
+      First_Line_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_First");
       Query_Result : String := "";
       Query_Result_Count : Natural;
    begin
@@ -166,11 +166,11 @@ separate (TestGui) package body Adm_Users is
    ----------------------------------------------------------------------------
    procedure On_Update (Object : in out GGB.Base_Type'Class) is
       Data_Index : constant Integer := Gui.Content_List_Selected_Row (Object, Users_List_Key);
-      Data_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
+      Data_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_" & To_String_Unsigned (Data_Index));
    begin
-      Gui.Set_Connection_Data (Object, Users_List_Key & "_Select", Data_Value);
+      Gui.Connection_Data_Set (Object, Users_List_Key & "_Select", Data_Value);
       Msg.Debug ("Users > Edit with Key/Value: " & Users_List_Key & "_" & To_String_Unsigned (Data_Index) & "/" & Data_Value);
-      Put_Form (Object, Update, Data_Value);
+      Put_Form (Object, DB_UPDATE, Data_Value);
    end On_Update;
 
    ----------------------------------------------------------------------------
@@ -232,7 +232,7 @@ separate (TestGui) package body Adm_Users is
       Msg.Debug ("Users > Validate_Search");
       if not Is_Empty (Login) then
          if Sql.Search (DB, "Sys_Users", Users_Key_Main & " = '" &  Login & "'") then
-            Put_Form (Object, Read, Login);
+            Put_Form (Object, DB_READ, Login);
          else
             Put_Error_Message (Object, "Identifiant non trouvé");
          end if;
@@ -250,7 +250,7 @@ separate (TestGui) package body Adm_Users is
       Password_2 : String := Gui.Content_Group_Password_Get (Object, "Mot de passe (confirmation)");
       Password : String := From_UTF_8 (GNAT.SHA512.Digest (To_UTF_8 (Password_1)));
       Query : String := "";
-      Data_Value : String := Gui.Get_Connection_Data (Object, Users_List_Key & "_Select");
+      Data_Value : String := Gui.Connection_Data_Get (Object, Users_List_Key & "_Select");
    begin
       Msg.Debug ("Users > Validate_Update");
 
@@ -291,7 +291,7 @@ separate (TestGui) package body Adm_Users is
    end Put_Error_Message;
 
    ----------------------------------------------------------------------------
-   procedure Put_Form (Object : in out Gnoga.Gui.Base.Base_Type'Class; Mode : Db_Mode := None; Key : String := "") is
+   procedure Put_Form (Object : in out Gnoga.Gui.Base.Base_Type'Class; Mode : String := DB_NONE; Key : String := "") is
       Edit_Title : String := "Gestion des utilisateurs";
       Query : String := "";
       Query_Result : String := "";
@@ -301,20 +301,20 @@ separate (TestGui) package body Adm_Users is
       Gui.Content_Clear_Text (Object);
 
       Gui.Content_Group_Create (Object, Edit_Title);
-      if Mode = Create then
+      if Mode = DB_CREATE then
          Gui.Content_Group_Add_Title (Object, "Création", Edit_Title);
-      elsif Mode = Read then
+      elsif Mode = DB_READ then
          Gui.Content_Group_Add_Title (Object, "Visualisation", Edit_Title);
-      elsif Mode = Update then
+      elsif Mode = DB_UPDATE then
          Gui.Content_Group_Add_Title (Object,"Modification", Edit_Title);
-      elsif Mode = Delete then
+      elsif Mode = DB_DELETE then
          Gui.Content_Group_Add_Title (Object,"Confirmer la suppression ?", Edit_Title);
-      elsif Mode = Search then
+      elsif Mode = DB_SEARCH then
          Gui.Content_Group_Add_Title (Object,"Recherche", Edit_Title);
       end if;
 
       Gui.Content_Group_Text_Add (Object, "Identifiant", Edit_Title);
-      if not (Mode = Search) then
+      if not (Mode = DB_SEARCH) then
          Gui.Content_Group_Text_Add (Object, "Prénom", Edit_Title);
          Gui.Content_Group_Text_Add (Object, "Nom", Edit_Title);
          Gui.Content_Group_Phone_Add (Object, "Téléphone", Edit_Title);
@@ -323,10 +323,10 @@ separate (TestGui) package body Adm_Users is
          Gui.Content_Group_Password_Add (Object, "Mot de passe (confirmation)", Edit_Title);
       end if;
 
-      if Mode = Create then
+      if Mode = DB_CREATE then
          Gui.Dialog_Buttons (Object, Edit_Title, "Annuler", On_Cancel'Unrestricted_Access,
                                                  "Créer", On_Validate_Create'Unrestricted_Access);
-      elsif Mode = Search then
+      elsif Mode = DB_SEARCH then
          Gui.Dialog_Buttons (Object, Edit_Title, "Annuler", On_Cancel'Unrestricted_Access,
                                                  "Chercher", On_Validate_Search'Unrestricted_Access);
       else
@@ -340,7 +340,7 @@ separate (TestGui) package body Adm_Users is
          Query_Result := Sql.Read (DB, "Sys_Users", Query,"WHERE " & Users_Key_Main & " = '" & Key & "'");
 
          Gui.Content_Group_Item_Lock (Object, "Identifiant");
-         if not (Mode = Update) then
+         if not (Mode = DB_UPDATE) then
             Gui.Content_Group_Item_Lock (Object, "Prénom");
             Gui.Content_Group_Item_Lock (Object, "Nom");
             Gui.Content_Group_Item_Lock (Object, "Téléphone");
@@ -357,12 +357,12 @@ separate (TestGui) package body Adm_Users is
          Gui.Content_Group_Password_Set (Object, "Mot de passe", 20 * "-");
          Gui.Content_Group_Password_Set (Object, "Mot de passe (confirmation)", 20 * "-");
 
-         if Mode = Read then
+         if Mode = DB_READ then
             Gui.Dialog_Buttons (Object, Edit_Title, "Quitter", On_Cancel'Unrestricted_Access);
-         elsif Mode = Update then
+         elsif Mode = DB_UPDATE then
             Gui.Dialog_Buttons (Object, Edit_Title, "Annuler", On_Cancel'Unrestricted_Access,
                                                     "Modifier",On_Validate_Update'Unrestricted_Access);
-         elsif Mode = Delete then
+         elsif Mode = DB_DELETE then
             Gui.Dialog_Buttons (Object, Edit_Title, "Annuler", On_Cancel'Unrestricted_Access,
                                                     "Supprimer",On_Validate_Delete'Unrestricted_Access);
          end if;

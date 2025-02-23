@@ -91,7 +91,7 @@ package v22.Sql is
 
    procedure Close (DB : in out GSD.Connection'Class);
    procedure Close;
-   -- Close a database or all data database without passing database handle.
+   --  Close a database or all data database without passing database handle.
 
    function Column_Exists (DB : in out GSD.Connection'Class; Table_Name : String; Column_Name : String) return Boolean;
    --  Return true if Column_Name exists in Table_Name.
@@ -125,7 +125,7 @@ package v22.Sql is
    function Get_Database_Brand (DB : in out GSD.Connection'Class) return Database_Brand;
    --  Returns the Database_Type of DB
 
-  function Get_Database_Main return String;
+   function Get_Database_Main return String;
    --  Get the main application database. The main database owns Sys_Config,
    --  Sys_Schema and Sys_Users system tables.
 
@@ -149,7 +149,7 @@ package v22.Sql is
    --  but an error is logged.
 
    function Last_RowID (DB : in out GSD.Connection'Class; Table_Name : String) return Integer;
-   -- Returns last existing RowID in Table_Name.
+   --  Returns last existing RowID in Table_Name.
 
    --  function Open (DBM : in out GSD.MySQL.Connection;
    --                 URI : String := "";
@@ -197,11 +197,11 @@ package v22.Sql is
    function Row_Count (DB : in out GSD.Connection'Class; Table_Name : String; Option : String := "*") return Integer;
    --  Returns counted rows in Table_Name with Options All and Distinct.
 
-   procedure Schema_Load (Command : in Schema_Command := Null_Command;
-                             Name : in String := "";
-                        Attribute : in String := "";
-                          Comment : in String := "");
-   -- Load a schema line. Commands will be executed with Schema_Update in code source order
+   procedure Schema_Load (Command : Schema_Command := Null_Command;
+                             Name : String := "";
+                        Attribute : String := "";
+                          Comment : String := "");
+   --  Load a schema line. Commands will be executed with Schema_Update in code source order
 
    procedure Schema_Update (DB : in out GSD.Connection'Class);
    --  Create, read, update and delete operations on database schema after loading schema by Schema_Load
@@ -327,7 +327,7 @@ private
                         DB_Status : in out Database_Status;
                         DB_URI : String;
                         DB_Name : String;
-                        DB_Host: String;
+                        DB_Host : String;
                         DB_Port : Natural;
                         DB_User : String;
                         DB_Password : String;

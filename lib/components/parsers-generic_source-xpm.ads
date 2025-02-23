@@ -153,7 +153,7 @@ private
    type Color_Type is (m, s, g4, g, c);
    package Color_Types is new Keywords (Color_Type);
 
-   type Color_Name is (none, white, black, red, green, blue);
+   type Color_Name is (None, White, Black, Red, Green, Blue);
    package Color_Names is new Keywords (Color_Name);
 
    procedure Skip is new Parsers.Generic_Source.Get_Cpp_Blank;

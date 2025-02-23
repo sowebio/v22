@@ -168,7 +168,7 @@ package body Tables is
    begin
       if Folder.Size > 0 then
          List := new TokenList (1..Folder.Size);
-         for Index in List'range loop
+         for Index in List'Range loop
             List (Index) := new Token'(Folder.List (Index).all);
          end loop;
          Folder.List := List;
