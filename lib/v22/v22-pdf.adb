@@ -173,8 +173,8 @@ package body v22.Pdf is
             Object.Font_Size (11.0);
             Percentage := Integer (Data(Slice).Value * 100.0 / Total_Value);
             Second_Angle := Second_Angle + Real (Data(Slice).Value / Total_Value) * 360.0 ;
-            Move (Object, Center);
             Filling_Color (Object, Data(Slice).Color);
+            Move (Object, Center);
             Arc (Object, Center, Radius, First_Angle, Second_Angle, True);
             Middle_Angle := (First_Angle + Second_Angle) / 2.0;
             Label_X := (Center.x + (Radius * 0.75) * Cos(Middle_Angle * Radian));

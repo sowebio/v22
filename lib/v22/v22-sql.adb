@@ -1277,7 +1277,7 @@ package body v22.Sql is
                   Schema_Load (Sql.Column_Name, "Last_Name", "VARCHAR(40)", "User name");
                   Schema_Load (Sql.Column_Name, "Phone", "VARCHAR(20)", "User phone");
                   Schema_Load (Sql.Column_Name, "Email", "VARCHAR(40)", "User email");
-                  Schema_Load (Sql.Column_Name, "Password", "VARCHAR(128)", "User hasched password");
+                  Schema_Load (Sql.Column_Name, "Password", "VARCHAR(128)", "User hashed password");
 
                   Schema_Load (Sql.Column_Name, "Password_Errors", "INTEGER", "Password errors counter");
                   Sql.Schema_Load (Sql.Column_Constraint, "Password_Errors", "DEFAULT 0");
