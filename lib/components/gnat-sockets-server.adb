@@ -3,7 +3,7 @@
 --  Implementation                                 Luebeck            --
 --                                                 Winter, 2012       --
 --                                                                    --
---                                Last revision :  14:53 29 Feb 2020  --
+--                                Last revision :  10:37 10 Mar 2023  --
 --                                                                    --
 --  This  library  is  free software; you can redistribute it and/or  --
 --  modify it under the terms of the GNU General Public  License  as  --
@@ -31,6 +31,7 @@ with Ada.IO_Exceptions;        use Ada.IO_Exceptions;
 with Strings_Edit;             use Strings_Edit;
 with Strings_Edit.Integers;    use Strings_Edit.Integers;
 
+with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 
 package body GNAT.Sockets.Server is
@@ -91,7 +92,7 @@ package body GNAT.Sockets.Server is
       return Free (Client.Written);
    end Available_To_Send;
 
-   procedure Clear (Client : in out Connection'Class) is
+   procedure Clear (Client : in out Connection) is
    begin
       Client.Failed                := False; -- Clean I/O state
       Client.External_Action       := False;
@@ -298,6 +299,9 @@ package body GNAT.Sockets.Server is
       null;
    end Downed;
 
+   function "+" is
+      new Ada.Unchecked_Conversion (System.Address, Selector_Access);
+
    procedure Do_Connect
              (  Listener : in out Connections_Server'Class;
                 Client   : in out Connection_Ptr
@@ -316,7 +320,9 @@ package body GNAT.Sockets.Server is
          (  Socket   => Client.Socket,
             Server   => Client.Client_Address,
             Timeout  => 0.0,
-            Selector => Listener.Selector'Unrestricted_Access,
+--          Selector => Listener.Selector'Unchecked_Access,
+--          Selector => +Listener.Selector'Address, -- GNAT 12.1 bug
+            Selector => Listener.Selector'Unrestricted_Access, -- ditto
             Status   => Status
          );
          if Status = Completed then
@@ -766,7 +772,9 @@ package body GNAT.Sockets.Server is
                Client'Unchecked_Access
             );
       end if;
-      Set (Listener.Read_Sockets, Client.Socket);
+      if Client.Socket /= No_Socket then
+         Set (Listener.Read_Sockets, Client.Socket);
+      end if;
       if Client.Transport = null then -- No handshaking
          declare
             Saved : constant Session_State := Client.Session;
@@ -1305,7 +1313,7 @@ package body GNAT.Sockets.Server is
          or else
             (  Pointer > Data'Last
             and then
-               Pointer - 1 > Data'Last
+               Pointer - Data'Last /= 1
          )  )
       then
          Raise_Exception (Layout_Error'Identity, "Subscript error");
@@ -1775,16 +1783,29 @@ package body GNAT.Sockets.Server is
          end;
       end if;
       if Client.Client then -- Try to reconnect
-         if Reconnect                      and then
-            not Listener.Finalizing        and then
-            Client.Try_To_Reconnect        and then
-            Client.Session /= Session_Down and then
-            Client.Action_Request /= Shutdown_Connection
+         if (  Reconnect
+            and then
+               not Listener.Finalizing
+            and then
+               Client.Try_To_Reconnect
+            and then
+               Client.Session /= Session_Down
+            and then
+               Client.Action_Request /= Shutdown_Connection
+            )
          then
             begin
                Close (Client.Socket);
-               Create_Socket (Client.Socket);
-               Set_Socket_Option (Client.Socket, Socket_Level, (Reuse_Address, True) );
+               declare
+                  Option : Request_Type := (Non_Blocking_IO, True);
+               begin
+                  Create_Socket (Client.Socket);
+                  Set_Socket_Option
+                  (  Client.Socket,
+                     Socket_Level,
+                     (Reuse_Address, True)
+                  );
+               end;
                if Old_Socket /= Client.Socket then -- Move client
                   Put (Listener.Connections, Client.Socket, Client);
                   Put (Listener.Connections, Old_Socket,    null);

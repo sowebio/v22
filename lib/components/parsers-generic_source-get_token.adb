@@ -44,5 +44,5 @@ begin
    Set_Pointer (Code, Pointer);
 exception
    when End_Error =>
-      Got_It := False;   
+      Got_It := False;
 end Parsers.Generic_Source.Get_Token;

@@ -32,7 +32,7 @@ with Ada.Task_Identification;        use Ada.Task_Identification;
 with Strings_Edit.Time_Conversions;  use Strings_Edit.Time_Conversions;
 
 with Ada.Finalization;
-with Ada.Containers.Ordered_Sets; -- Changed to use standard library by J. Carter 2021
+with Generic_Discrete_Set;
 with GNAT.Sockets.Connection_State_Machine.Expected_Sequence;
 with GNAT.Sockets.Connection_State_Machine.Terminated_Strings;
 with Stack_Storage;
@@ -500,7 +500,8 @@ package GNAT.Sockets.Connection_State_Machine.HTTP_Server is
 --
 -- Content_Ranges -- Ranges of content bytes
 --
-   package Content_Ranges is new Ada.Containers.Ordered_Sets (Element_Type => Stream_Element_Count);
+   package Content_Ranges is
+      new Generic_Discrete_Set (Stream_Element_Count);
 --
 -- Range_Type -- Type of range
 --
@@ -1918,7 +1919,7 @@ private
       Max_Length   : WebSocket_Message_Size;  -- Maximal message length
       Frame        : WebSocket_Message_Ptr;   -- Current frame buffer
       Data         : WebSocket_Message_Ptr;   -- Incoming messages frame
-      Context      : Task_Id := Null_Task_Id; -- Calling context
+      Context      : Task_ID := Null_Task_Id; -- Calling context
       Mask_Index   : WebSocket_Mask_Index;    -- Mask index
       Mask         : WebSocket_Mask_Array;    -- Mask
       Control      : aliased WebSocket_Message (125);

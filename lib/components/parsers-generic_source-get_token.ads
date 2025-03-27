@@ -40,7 +40,7 @@
 --  Got_It is set to False. The procedure is generic. The  parameter  is
 --  an instance of the package Tables.  Note  that  Folder  can  be  any
 --  descendant of the table type defined in Tables.  This  includes  the
---  case-insensitive tables provided by Tables.Names. 
+--  case-insensitive tables provided by Tables.Names.
 --
 with Tables;
 

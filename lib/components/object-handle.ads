@@ -3,7 +3,7 @@
 --  Interface                                      Luebeck            --
 --                                                 Winter, 2002       --
 --                                                                    --
---                                Last revision :  20:41 21 Jul 2017  --
+--                                Last revision :  22:39 14 Dec 2024  --
 --                                                                    --
 --  This  library  is  free software; you can redistribute it and/or  --
 --  modify it under the terms of the GNU General Public  License  as  --
@@ -150,7 +150,6 @@ private
    pragma Inline (Ref);
    pragma Inline (Set);
    pragma Inline ("<=", "<", "=", ">", ">=");
-   pragma Inline ("=");
 
    type Handle is new Ada.Finalization.Controlled with record
       Ptr : Object_Type_Ptr := null;

@@ -3,7 +3,7 @@
 --  Interface                                      Luebeck            --
 --                                                 Winter, 2012       --
 --                                                                    --
---                                Last revision :  14:52 29 Feb 2020  --
+--                                Last revision :  18:40 23 Oct 2021  --
 --                                                                    --
 --  This  library  is  free software; you can redistribute it and/or  --
 --  modify it under the terms of the GNU General Public  License  as  --
@@ -150,6 +150,12 @@ package GNAT.Sockets.Server is
 --
    function Available_To_Send (Client : Connection)
       return Stream_Element_Count;
+--
+-- Clear -- Clear the client internal state
+--
+--    Client - The client connection object
+--
+   procedure Clear (Client : in out Connection);
 --
 -- Connect -- Connect to a server
 --
@@ -672,7 +678,7 @@ package GNAT.Sockets.Server is
 --
 -- Returns :
 --
---    True if client handles and incoming connection
+--    True if client handles an incoming connection
 --
    function Is_Incoming (Client : Connection) return Boolean;
 --
@@ -1624,7 +1630,7 @@ private
 
    package Connection_Handles is
       new Object.Handle (Connection, Connection_Ptr);
-   --  use Connection_Handles;
+   use Connection_Handles;
 
    package Connection_Arrays is
       new Connection_Handles.Generic_Unbounded_Array

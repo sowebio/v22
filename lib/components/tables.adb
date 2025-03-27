@@ -3,7 +3,7 @@
 --  Implementation                                 Luebeck            --
 --                                                 Spring, 2000       --
 --                                                                    --
---                                Last revision :  13:11 14 Sep 2019  --
+--                                Last revision :  09:15 26 Nov 2022  --
 --                                                                    --
 --  This  library  is  free software; you can redistribute it and/or  --
 --  modify it under the terms of the GNU General Public  License  as  --
@@ -209,12 +209,8 @@ package body Tables is
 
    procedure Finalize (Folder : in out Table) is
    begin
-      for Index in 1..Folder.Size loop
-         Free (Folder.List (Index));
-      end loop;
-      if Folder.List /= null then
-         Free (Folder.List);
-      end if;
+      Erase (Folder);
+      Free (Folder.List);
    end Finalize;
 
    function Find (Folder : Table; Name : String) return Tag is
@@ -406,6 +402,7 @@ package body Tables is
    begin
       if Index > 0 then
          Folder.List (Index).Data := Data;
+         Offset := Index;
       else
          Index := -Index;
          Insert (Folder, Index, Name, Data);

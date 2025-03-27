@@ -27,7 +27,7 @@
 --
 --  This generic package is used for matching keywords.  An  enumeration
 --  type  is  the  generic parameter of the package. The literals of the
---  type are the keywords to match. For example: 
+--  type are the keywords to match. For example:
 --
 --     with Parsers.Multiline_Source; -- Muilti-line sources
 --     ...
@@ -63,7 +63,7 @@ package Parsers.Generic_Source.Keywords is
 -- case-insensitive.  When  matched  the keyword value is set into Token
 -- and Got_It is set to True. The source cursor is then advanced  behind
 -- the text matched. The longest possible token is always matched.  When
--- no token matches the source Got_It is set to False. 
+-- no token matches the source Got_It is set to False.
 --
    procedure Get
              (  Code   : in out Source_Type;

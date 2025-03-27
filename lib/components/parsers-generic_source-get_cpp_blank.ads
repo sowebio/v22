@@ -42,7 +42,7 @@
 --  code  lines. Upon an unclosed /*..*/ comment the source is read till
 --  the end. In this case Got_It is false, Error is true and Error_At is
 --  the  location of /* in the source. In all other cases Error is false
---  and Error_At should be ignored.    
+--  and Error_At should be ignored.
 --
 generic
 procedure Parsers.Generic_Source.Get_Cpp_Blank

@@ -31,7 +31,7 @@ with Parsers.Generic_Source.Get_Token;
 
 package body Parsers.Generic_Source.Keywords is
    use Keyword_Tables;
-   
+
    Folder : Dictionary;
 
    procedure Check_Spelling (Name : String) is

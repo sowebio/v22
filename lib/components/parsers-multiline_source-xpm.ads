@@ -26,5 +26,5 @@
 --____________________________________________________________________--
 
 with Parsers.Generic_Source.XPM;
- 
+
 package Parsers.Multiline_Source.XPM is new Code.XPM;

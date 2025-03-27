@@ -47,7 +47,7 @@ package body Object.Handle.Generic_Unbounded_Array is
                   raise Program_Error;
                when 1 =>
                   Object.Use_Count := 0;
-                  if Ptr.Data.Vector /= null then
+	          if Ptr.Data.Vector /= null then
                      declare
                         Vector : Object_Ptr_Array_Type renames
                                  Ptr.Data.Vector.all;
@@ -136,11 +136,11 @@ package body Object.Handle.Generic_Unbounded_Array is
                --
                declare
                   Source : Object_Ptr_Array_Type
-                  renames Container.Ptr.Data.Vector.all;
+		      renames Container.Ptr.Data.Vector.all;
                begin
                   Container.Ptr := new Unbounded_Array_Body;
                   Container.Ptr.Data.Vector :=
-                    new Object_Ptr_Array_Type'(Source);
+		         new Object_Ptr_Array_Type'(Source);
                   for Index in Source'Range loop
                      if Source (Index) /= null then
                         Increment_Count (Source (Index).all);

@@ -28,17 +28,17 @@
 --  This generic package provides abstract interface for the source code
 --  readers. The package is abstract and provides no  functionality.  An
 --  instance should implement its  interface  by  defining  the  generic
---  parameters:   
+--  parameters:
 --
 --  (o)  Source_Type  is  the  type  of  code  source. An implementation
---       should maintain two source code cursors (pointers); 
+--       should maintain two source code cursors (pointers);
 --  (o)  Location_Type is the type used for  source  code  locations.  A
 --       source code location refers a code slice. The slice may  occupy
 --       several line if the source is multiline;
 --  (o)  Line_Ptr_Type is the pointer type to refer source lines.
 --
 --  The following generic formal  subroutines  are  used  to  manipulate
---  source code: 
+--  source code:
 --
 --  (o)  End_Of returns True at the source end;
 --  (o)  Get_Backup_Pointer  is  used to get the saved cursor. It is one
@@ -47,7 +47,7 @@
 --  (o)  Get_Line  is a function to get the current source code line. It
 --       remains valid until the first call to Next_Line.  End_Error  is
 --       propagated when the source end was reached either  because  the
---       source is empty or because of a call to Next_Line before; 
+--       source is empty or because of a call to Next_Line before;
 --  (o)  Get_Line  is  another  variant  in the form of procedure. It is
 --       similar to  Get_Line  but  returns  a  pointer  to  the  buffer
 --       containing  the  current  source  code line, the current cursor
@@ -63,7 +63,7 @@
 --       shift  the  lower  bound of the result to 1. Thus it is safe to
 --       use  plain  slicing  there.  Like  the  function, the procedure
 --       Get_Line raises End_Error at the source end or  else  when  the
---       source is empty; 
+--       source is empty;
 --  (o)  Get_Pointer is used to get the current cursor. The result is an
 --       index in the current line which would be returned by  Get_Line.
 --       It  is  in the range Line'First..Line'Last+1 provided that Line
@@ -77,7 +77,7 @@
 --       recognized lexical token. It includes the character pointed  by
 --       the  first cursor,  and does not one pointed by the second one.
 --       Empty slices are allowed, so Link should never fail even at the
---       end of a source; 
+--       end of a source;
 --  (o)  Next_Line  is  used  to  advance to the next source line. After
 --       successful  completion Get_Line can be used to access the newly
 --       read  source  line.  Both cursors are set to Get_Line'First. So
@@ -89,12 +89,12 @@
 --       first  cursor.  The  depth of the "unget" need not to be deeper
 --       than 1. Consequent calls to Reset_Pointer may have  no  effect.
 --       It  is  also  not  required to implement return to the previous
---       line;   
+--       line;
 --  (o)  Set_Pointer move  the  second  cursor forward. The new position
 --       should be  in  the  range  between  the  position  returned  by
 --       Get_Pointer and the position following the  last  character  of
 --       the current line, i.e.  Get_Line  (Code)'Last  +  1.  Otherwise
---       Layout_Error is propagated; 
+--       Layout_Error is propagated;
 --
 --  The following generic formal  subroutines  are  used  to  manipulate
 --  source code locations:
@@ -105,10 +105,10 @@
 --       locations. The result is a consecutive code fragment containing
 --       positions  from  both  Left and Right locations. For example if
 --       Left and Right are locations of "(" and ")" then the result  is
---       everything in the brackets including the brackets. 
+--       everything in the brackets including the brackets.
 --
 --  The  following  small  example  illustrates  an  implementation of a
---  routine to skip spaces in the source line:  
+--  routine to skip spaces in the source line:
 --
 --     procedure Skip (Code : in out Source_Type) is
 --        Line    : String renames Get_Line (Code);
@@ -123,7 +123,7 @@
 --  Should  Link  (Code) be called immediately after this implementation
 --  of  Skip  it  would  return  a  location identifying the blank slice
 --  matched  by  Skip  in  the  source code line. The same example using
---  Get_Line_Ptr instead of Get_Line: 
+--  Get_Line_Ptr instead of Get_Line:
 --
 --     procedure Skip (Code : in out Source_Type) is
 --        Line    : Line_Ptr_Type;

@@ -36,7 +36,7 @@
 --  character  equivalence.  A  character  in the source and in Text are
 --  equivalent  when  they  are  equivalent  in  Map.  The default value
 --  considers  all  characters  distinct. To have case-insensitive match
---  one can use Ada.Strings.Maps.Constants.Lower_Case_Map. 
+--  one can use Ada.Strings.Maps.Constants.Lower_Case_Map.
 --
 with Ada.Strings.Maps;  use Ada.Strings.Maps;
 

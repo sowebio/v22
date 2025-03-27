@@ -3,7 +3,7 @@
 --     GNAT.Sockets.Connection_State_Machine.      Luebeck            --
 --     HTTP_Server                                 Winter, 2013       --
 --  Implementation                                                    --
---                                Last revision :  20:46 27 Aug 2020  --
+--                                Last revision :  17:53 15 Jan 2025  --
 --                                                                    --
 --  This  library  is  free software; you can redistribute it and/or  --
 --  modify it under the terms of the GNU General Public  License  as  --
@@ -40,10 +40,6 @@ with Ada.Unchecked_Conversion;
 with Ada.Unchecked_Deallocation;
 with GNAT.Sockets.Connection_State_Machine.Big_Endian.Unsigneds;
 with Strings_Edit.UTF8;
-
--------------------------------------------------------
--- GNAT.Sockets.Connection_State_Machine.HTTP_Server --
--------------------------------------------------------
 
 package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
    use CGI_Keys;
@@ -1072,9 +1068,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                            );
                      end;
                      begin
-                        for I in From .. To loop
-                           Client.Ranges.Include (New_Item => I);
-                        end loop;
+                        Add (Client.Ranges, From, To);
                      exception
                         when others =>
                            Raise_Exception
@@ -1562,7 +1556,9 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
       Client.Specific           := (others => False);
       Client.Suffix             := Stream_Element_Count'First;
       Client.CGI.Keys           := null;
-      Client.Ranges.Clear;
+      Client.Stub               := null;
+      Deallocate_All (Client.Pool);
+      Erase (Client.Ranges);
       if Request (Pointer) = '*' then
          Pointer := Pointer + 1;
          Status_Line_Received (Client, Client.Method, Get_Version);
@@ -2830,7 +2826,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Client.Data.Current := Client.Data.Current + 1;
             end loop;
          else
-            exit Get_Header_Line when Pointer > Data'Last; -- All data consumed
+            exit when Pointer > Data'Last; -- All data consumed
             Raise_Exception
             (  Status_Error'Identity,
                (  "Unprocessed data left when after return from "
@@ -2855,7 +2851,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Slice : Stream_Element_Array renames
                        Data (Pointer..Data'Last);
             begin
-               exit Get_Header_Line when Slice'Length = 0;
+               exit when Slice'Length = 0;
                Feed
                (  Client.Data.List (Client.Data.Current).all,
                   Slice,
@@ -2873,7 +2869,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Slice : Stream_Element_Array renames
                        Data (Pointer..Pointer + Client.Data_Length - 1);
             begin
-               exit Get_Header_Line when Slice'Length = 0;
+               exit when Slice'Length = 0;
                Feed
                (  Client.Data.List (Client.Data.Current).all,
                   Slice,
@@ -2898,7 +2894,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                Client.Data.Current := Client.Data.Current + 1;
             end loop;
          else
-            exit Get_Header_Line when Pointer > Data'Last;
+            exit when Pointer > Data'Last;
             Raise_Exception
             (  Status_Error'Identity,
                (  "Unprocessed data left when after return from "
@@ -2937,9 +2933,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
       Send_Date (Client);
       Send_Content_Type (Client, "text/html");
       Send_Connection (Client, False);
-      if Get then
-         Send_Body (Client, Message);
-      end if;
+      Send_Body (Client, Message, Get);
    end Reply_HTML;
 
    procedure Reply_Text
@@ -2954,9 +2948,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
       Send_Date (Client);
       Send_Content_Type (Client, "text/plain");
       Send_Connection (Client, False);
-      if Get then
-         Send_Body (Client, Message);
-      end if;
+      Send_Body (Client, Message, Get);
    end Reply_Text;
 
    procedure Send
@@ -4356,7 +4348,7 @@ begin
    Add (Schemes, "mms",                MMS_Scheme);
    Add (Schemes, "modem",              Modem_Scheme);
    Add (Schemes, "mongodb",            Mongodb_Scheme);
-   Add (Schemes, "moz",                MOZ_Scheme);
+   Add (Schemes, "moz",                Moz_Scheme);
 
    Add (Schemes, "ms-access",            MS_Access_Scheme);
    Add (Schemes, "ms-browser-extension", MS_Browser_Extension_Scheme);
