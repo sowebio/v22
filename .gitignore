@@ -1,0 +1,13 @@
+*.aru
+*.db
+*.dbg
+*.lock*
+*.log
+/alire/
+/bin/
+/config/
+/obj/
+/prg/testapi
+/prg/testgui
+nohup.out
+testgui.cfg
