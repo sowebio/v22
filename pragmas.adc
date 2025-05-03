@@ -20,10 +20,10 @@
 pragma Initialize_Scalars;
 --  https://gcc.gnu.org/onlinedocs/gcc-4.6.3/gnat_rm/Pragma-Initialize_005fScalars.html
 
-pragma  Warnings (Off, "*unimplemented*");
+--pragma  Warnings (Off, "*unimplemented*");
 --  UXStrings unimplemented pragmas
 
-pragma  Warnings (Off, "*Item*");
+--pragma  Warnings (Off, "*Item*");
 --  gnat-sockets-connection_state_machine.adb:808:17: warning: formal parameter "Item" is read but never assigned [-gnatwv]
 
 ------------------------------------------------------------------------------

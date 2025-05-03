@@ -1,105 +1,34 @@
-------------------------------------------------------------------------------
---
---  _|      _|    _|_|      _|_|
---  _|      _|  _|    _|  _|    _|
---  _|      _|      _|        _|
---    _|  _|      _|        _|
---      _|      _|_|_|_|  _|_|_|_|
---
---  @file      v22.gpr
---  @copyright See authors list below and v22.copyrights file
---  @licence   LGPL v3
---  @encoding  UTF-8
--------------------------------------------------------------------------------
---  @summary
---  V22 framework
---
---  @description
---  The project should be called from command line, at the root of the project,
---  (the v22.gpr directory level) ideally with .gpr extension associated with
---  GnatStudio IDE. A manual command could be : nohup gnatstudio -Pv22.gpr &
---
---  Note that all specified paths are relative to the root directory project.
---
---  @authors
---  Stéphane Rivière - sr - sriviere@soweb.io
---
---  @versions
---  See git log
--------------------------------------------------------------------------------
-
 with "config/v22_config.gpr";
 
-project v22 is
+project V22 is
 
-   for Languages use ("Ada", "C");
    for Source_Dirs use ("src/**", "lib/**");
-
-   for Create_Missing_Dirs use "True";
-   for Object_Dir use "obj/" & v22_Config.Build_Profile;
-   for Exec_Dir use "prg";
-   
-   for Main use ("testgui", "testapi");
-   
-   ----------------------------------------------------------------------------
-   --  Compiler options (Gnat)
-   ----------------------------------------------------------------------------
+   for Object_Dir use "obj";
+   for Main use ("main.adb");
+   for Exec_Dir use "bin";
 
    package Compiler is
-      for Default_Switches ("Ada") use v22_Config.Ada_Compiler_Switches;
-      for Switches ("s-memory.adb") use ("-gnatg");    
+      for Default_Switches ("ada") use ("-funroll-loops", "-gnatf", "-gnatn", "-gnat2022", "-gnato", "-fstack-check", "-g", "-gnata", "-gnatVa", "-gnatwa");
+      --for Switches ("s-memory.adb") use ("-gnatg");
       for Local_Configuration_Pragmas use "pragmas.adc";
    end Compiler;
 
-   ----------------------------------------------------------------------------
-   --  Binder options (gnatbind)
-   ----------------------------------------------------------------------------
-
    package Binder is
-      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
-      for Default_Switches ("Ada") use ("-Es");
+      for Switches ("ada") use ("-Es");
    end Binder;
 
-   ----------------------------------------------------------------------------
-   --  Linker options (ld)
-   ----------------------------------------------------------------------------
-
-   Common_Linker_Options := (""); -- -static : program statically linked
-   --  Libmysql handling
-   Common_Linker_Options := Common_Linker_Options & ("-lmysqlclient"); 
-
    package Linker is
-      for Default_Switches ("ada") use Common_Linker_Options & ("-g");
    end Linker;
 
-  -----------------------------------------------------------------------------
-  --  Builder options (gprbuild)
-  -----------------------------------------------------------------------------
-
    package Builder is
-      -- -d   Display compilation process
-      -- -j0  Use num processes to compile 0=all platform cores are used
-      -- -s   Recompile if compiler switches have changed
-      for Default_Switches ("ada") use ("-j0", "-s");
+      for Default_Switches ("ada") use ("-s", "-j2");
    end Builder;
 
-   ----------------------------------------------------------------------------
-   --  Document options (gnatdoc)
-   ----------------------------------------------------------------------------
-
-   package Documentation is
-      for Documentation_Dir use "doc-generated";
-   end Documentation;
-
-   ----------------------------------------------------------------------------
-   --  Printer options (gnatpp)
-   ----------------------------------------------------------------------------
+   package Ide is
+      for Artifacts_Dir use ".gnatstudio";
+   end Ide;
 
    package Pretty_Printer is
-      for Default_Switches ("ada") use ("-M120", "-W8", "--comments-unchanged");
    end Pretty_Printer;
 
-------------------------------------------------------------------------------
-end v22;
-------------------------------------------------------------------------------
-
+end V22;

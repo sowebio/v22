@@ -1,87 +1,14 @@
 name = "v22"
-description = "Bank statement analysis"
+description = ""
 version = "0.1.0-dev"
 
-authors = ["Stéphane Rivière"]
-maintainers = ["Sowebio SARL <development@soweb.io>"]
-maintainers-logins = ["github-username"]
-licenses = "GPL-3.0-or-later"
-website = "https://www.soweb.io"
+authors = ["xav"]
+maintainers = ["xav <example@example.com>"]
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+website = ""
 tags = []
 
-executables = ["prg/testapi","prg/testgui"]
-
-[[depends-on]]
-gnat = "^14"
+executables = ["v22"]
 
 [[depends-on]]
 gnatcoll = "^25.0.0"
-
-[build-switches]
-# Ada 2022
-development.ada_version = "Ada2022"
-# Both brackets and UTF-8 encodings will be recognized (1)
-development.source_encoding = "utf_8"
-# Debug on, assertions enabled, pragma Assert and pragma Debug to be activated
-development.debug_info = ["-g","-gnata"]
-# Enable selected validity checking mode (2)
-development.runtime_checks = ["-gnatVa","-fstack-check","-gnato", "-gnateE","-gnateF"]
-# Enable selected warning modes (3)
-development.compile_checks = ["-gnatwD","-gnatwH","-gnatw.Y"]
-# Enable selected style checks (4)
-development.style_checks = ["-gnatya","-gnatye","-gnatyf","-gnatyh","-gnatyk","-gnatyM160","-gnatyn","-gnatyp","-gnatyr"]
-# No inlining of subprograms, optimize when debugging
-development.optimization = ["-fno-inline", "-Og"]
-
-#  https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gnat_ugn/Alphabetical-List-of-All-Switches.html
-#
-#  (1)
-#  https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gnat_ugn_unw/Character-Set-Control.html
-#  https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gnat_ugn_unw/Wide-Character-Encodings.html#Wide-Character-Encodings
-#  (2)
-#  https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gnat_ugn/Validity-Checking.html
-#  a turn on all validity checking options
-#  -fstack-check wise when using pragma Initialize_Scalars
-#  -gnato  enable overflow checking in STRICT mode
-#  -gnateE generate extra information in exception messages
-#  -gnateF check overflow on predefined Float types
-#  (3)
-#  https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gnat_ugn/Warning-Message-Control.html#ed
-#  .e turn on every optional info/warning (no exceptions)
-#  D  turn off warnings for implicit dereference (default)
-#  H  turn off warnings for hiding declarations (default)
-#  .Y turn off info messages for why pkg body needed (default)
-#  (4)
-#  https://gcc.gnu.org/onlinedocs/gcc-14.1.0/gnat_ugn/Style-Checking.html#ee
-#  a  check attribute casing
-#  e  check end/exit labels present
-#  f  check no form feeds/vertical tabs in source
-#  h  no horizontal tabs in source
-#  k  check casing rules for keywords
-#  Mn check line length <= n characters
-#  n  check casing of package Standard identifiers
-#  p  check pragma casing
-#  r  check casing for identifier references
-#  (5)
-#  Options starting with -g, -f, -m, -O, -W, or --param are automatically passed on to the various
-#  sub-processes invoked by gcc.  In order to pass  other options on to these processes the
-#  -W<letter> options must be used.
-#  (6) All warnings and style messages are treated as errors. -gnatg implies -gnatw.ge and -gnatyg
-#  so that all standard warnings and all standard style options are turned on. All warnings and
-#  style messages are treated as errors.
-
-
-#    "-gnatU",         #  Enable unique tag for error messages
-#    "-gnatf",         #  Full errors. Verbose details, all undefined references
-#    "-gnatq",         #  Don't quit, try semantics, even if parse errors
-#    "-gnatQ",         #  Don't quit, write ali/tree file even if compile errors
-
-# -gnaty-b : Don't check : Blanks not allowed at statement end
-# -gnaty-c : Don't check : Comments
-# -gnaty-I : Don't check : Mode IN keywords
-# -gnaty-m : Don't check : Maximum line length
-# -gnaty-t : Don't check : Token spacing
-# -gnaty-u : Don't check : Unnecessary blank lines
-# -gnaty-z : Don't check : Unnecessary parentheses according to operator precedence rules
-# development.style_checks = ["-gnaty-b","-gnaty-c","-gnaty-I","-gnaty-m","-gnaty-t","-gnaty-u","-gnaty-z"]
-
