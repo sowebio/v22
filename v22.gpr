@@ -2,13 +2,13 @@ with "config/v22_config.gpr";
 
 project V22 is
 
-   for Source_Dirs use ("src/**", "lib/**");
+   for Source_Dirs use ("lib/**", "src/x", "src/examples/**");
    for Object_Dir use "obj";
-   for Main use ("main.adb");
+   for Main use ("counter.adb", "temperature.adb", "travel.adb", "views.adb", "state.adb", "complete.adb");
    for Exec_Dir use "bin";
 
    package Compiler is
-      for Default_Switches ("ada") use ("-funroll-loops", "-gnatf", "-gnatn", "-gnat2022", "-gnato", "-fstack-check", "-g", "-gnata", "-gnatVa", "-gnatwa");
+      for Default_Switches ("ada") use ("-gnat2022", "-gnato", "-fstack-check", "-g", "-gnata", "-gnatVa", "-gnatwa");
       --for Switches ("s-memory.adb") use ("-gnatg");
       for Local_Configuration_Pragmas use "pragmas.adc";
    end Compiler;
@@ -21,14 +21,16 @@ project V22 is
    end Linker;
 
    package Builder is
-      for Default_Switches ("ada") use ("-s", "-j2");
+      for Default_Switches ("ada") use ("-j4", "-s");
    end Builder;
 
    package Ide is
       for Artifacts_Dir use ".gnatstudio";
    end Ide;
 
-   package Pretty_Printer is
-   end Pretty_Printer;
+   package Format is
+      for Width ("Ada") use "119";
+      for Charset ("Ada") use "utf-8";
+   end Format;
 
 end V22;

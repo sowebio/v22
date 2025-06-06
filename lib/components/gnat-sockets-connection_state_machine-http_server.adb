@@ -3951,7 +3951,7 @@ package body GNAT.Sockets.Connection_State_Machine.HTTP_Server is
                WebSocket_Header (Message'Length, WebSocket_Text_Type);
    begin
       if Client.WebSocket.Duplex then
-         if Client.WebSocket.Context = Current_Task then
+         if True then -- TODO: figure out why the condition was: Client.WebSocket.Context = Current_Task
             if Client.WebSocket.State = Open_Socket then
                declare
                   Seized : Boolean;

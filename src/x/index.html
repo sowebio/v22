@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1" />
+		<meta name="color-scheme" content="dark light" />
+		<meta name="format-detection" content="telephone=no" />
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+		<!-- <title></title> -->
+		<style>
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+			}
+			* {
+				margin: 0;
+			}
+			img,
+			picture,
+			video,
+			canvas,
+			svg {
+				display: block;
+				max-width: 100%;
+			}
+			input,
+			button,
+			textarea,
+			select {
+				font: inherit;
+			}
+			@media (prefers-color-scheme: light) {
+				:root {
+					--half: oklch(0 0 0 / 0.5);
+					--third: oklch(0 0 0 / 0.3);
+					--bg-brightest: oklch(1 0 0);
+					--bg-bright: oklch(0.96 0 0);
+					--bg: oklch(1 0 0);
+					--bg-border: oklch(0.7 0 0);
+					--bg-border-bright: oklch(0.75 0 0);
+					--widget-border: oklch(0.6 0 0);
+					--text: oklch(0 0 0);
+					--hole: oklch(1 0 0);
+					--meter: oklch(0.75 0 0);
+					--highlighted: oklch(0.45 0.2655 264.1);
+				}
+				.shadow {
+					box-shadow: 0px 2px 7px 0px oklch(0 0 0 / 0.3);
+				}
+				.link {
+					color: oklch(0.45 0.2655 264.1);
+				}
+				.currentLink {
+					color: oklch(0.45 0.0885 264.1);
+				}
+				#imwui_root:disabled .link {
+					color: oklch(0.65 0 264.1);
+				}
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--half: oklch(1 0 0 / 0.5);
+					--third: oklch(1 0 0 / 0.3);
+					--bg-brightest: oklch(0.2 0 0);
+					--bg-bright: oklch(0.15 0 0);
+					--bg: oklch(0.22 0 0);
+					--bg-border: oklch(0.4 0 0);
+					--bg-border-bright: oklch(0.5 0 0);
+					--widget-border: oklch(0.6 0 0);
+					--text: oklch(1 0 0);
+					--hole: oklch(0 0 0);
+					--meter: oklch(0.45 0 0);
+					--highlighted: oklch(0.65 0.2655 264.1);
+				}
+				.shadow {
+					box-shadow: 1px 3px 10px 3px oklch(0 0 0 / 0.6);
+				}
+				.link {
+					color: oklch(0.65 0.2655 264.1);
+				}
+				.currentLink {
+					color: oklch(0.65 0.0928 264.1);
+				}
+				#imwui_root:disabled .link {
+					color: oklch(0.55 0 264.1);
+				}
+			}
+			* {
+				font-family: sans-serif;
+			}
+			pre {
+				tab-size: 4;
+				font-size: 14px;
+			}
+			pre,
+			code {
+				font-family: monospace;
+			}
+			p {
+				white-space: pre;
+			}
+			html {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				height: 100%;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				height: 100%;
+				-webkit-text-size-adjust: 100%; /* Fix iPhone inconsistent font-sizes */
+				background-color: var(--bg);
+			}
+			.bordered {
+				border: 1px solid var(--third);
+				border-radius: 5px;
+			}
+			.separator {
+				align-self: stretch;
+			}
+			.link {
+				cursor: pointer;
+				text-decoration-line: underline;
+				touch-action: none;
+				white-space: nowrap;
+			}
+			.currentLink {
+				cursor: default;
+				text-decoration-line: none;
+			}
+			span {
+				white-space: pre-wrap;
+				min-height: 1lh;
+				color: var(--text);
+			}
+			#imwui_root:disabled button,
+			#imwui_root:disabled input,
+			#imwui_root:disabled label,
+			#imwui_root:disabled .link {
+				cursor: default;
+			}
+			button:disabled {
+				cursor: default;
+			}
+			button {
+				cursor: pointer;
+				white-space: nowrap;
+				height: 1.5lh;
+				min-height: 1.5lh;
+				padding-left: 1ch;
+				padding-right: 1ch;
+				border: 1px solid var(--widget-border);
+				border-radius: 3px;
+			}
+			fieldset:not(#imwui_root) {
+				width: fit-content;
+				display: flex;
+				flex-direction: column;
+				border: 1px solid var(--third);
+				border-radius: 5px;
+				padding-top: 4px;
+				padding-bottom: 4px;
+				padding-left: 1ch;
+				padding-right: 1ch;
+			}
+			#imwui_root {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				height: 100%;
+				border-width: 0px;
+				padding: 0px;
+			}
+			#imwui_conn {
+				position: fixed;
+				right: 1lh;
+				bottom: 4px;
+				width: 1em;
+				height: 1em;
+				background: #00db00;
+				border: 1px solid var(--widget-border);
+				border-radius: 1em;
+			}
+			input[type="number"]::-webkit-inner-spin-button,
+			input[type="number"]::-webkit-outer-spin-button {
+				opacity: 1;
+			}
+			input[type="text"],
+			input[type="range"],
+			input[type="password"] {
+				margin-left: 1ch;
+				width: 18ch;
+			}
+			input[type="date"] {
+				width: 15ch;
+			}
+			label:has(input[type="date"]:invalid) {
+				text-decoration-line: underline;
+				text-decoration-style: wavy;
+			}
+			input[type="date"],
+			input[type="number"] {
+				margin-left: 1ch;
+			}
+			input[type="text"],
+			input[type="password"],
+			input[type="number"] {
+				border: 1px solid var(--widget-border);
+				border-radius: 0px;
+				padding: 1px;
+				background-color: var(--hole);
+			}
+			input[type="radio"],
+			input[type="checkbox"] {
+				cursor: pointer;
+				margin: 0px;
+				width: 1lh;
+				height: 1lh;
+			}
+			.meter {
+				height: 1ch;
+				box-sizing: content-box;
+			}
+			.meter-out {
+				border: 1px solid var(--widget-border);
+				width: 22ch;
+				background-color: var(--hole);
+			}
+			.striped {
+				background-image: repeating-linear-gradient(135deg, var(--meter), var(--meter) 1ch, transparent 1ch, transparent 2ch) !important;
+			}
+			.meter-in {
+				background: var(--meter);
+			}
+			label {
+				cursor: pointer;
+			}
+			select,
+			button,
+			input {
+				touch-action: none;
+				font-size: unset;
+			}
+			button {
+				user-select: none;
+			}
+			label {
+				touch-action: none;
+				display: flex;
+				align-items: center;
+				user-select: none;
+				font-weight: normal;
+				white-space: nowrap;
+			}
+			table {
+				border: 1px solid var(--widget-border);
+				border-collapse: collapse;
+			}
+			code {
+				white-space: break-spaces;
+			}
+		</style>
+	</head>
+	<body>
+		<fieldset id="imwui_root"></fieldset>
+		<div id="imwui_conn"></div>
+	</body>
+	<script type="module">
+		let logging = false
+		const log = (...args) => true && logging && console.log(...args)
+		window.onpopstate = () => window.open(document.location, "_self")
+		const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+		const assert = (cond, s) => {
+			if (!cond) throw Error(`Assertion failed, reason: "${s}"`)
+		}
+		const deepMerge = (a, b) => {
+			for (const k in b) {
+				if (b[k] instanceof Object && a[k] instanceof Object) deepMerge(a[k], b[k])
+				else a[k] = b[k]
+			}
+			return a
+		}
+		const elem = new Proxy(
+			{},
+			{
+				get:
+					(_, tagName) =>
+					(props, ...children) => {
+						const element = document.createElement(tagName)
+						element.append(...children)
+						return deepMerge(element, props)
+					},
+			},
+		)
+		const newLocker = () => {
+			let mutex = Promise.resolve()
+			return () =>
+				new Promise((resolve) => {
+					mutex = mutex.then(() => new Promise(resolve))
+				})
+		}
+		const debounceIDs = {}
+		const debounce = (s, timeout, fn) => {
+			clearTimeout(debounceIDs[s])
+			debounceIDs[s] = setTimeout(fn, timeout)
+		}
+		const debounceEvent = (fn) => debounce("event", 30, fn)
+
+		const byteArrayToHex = (bytes) => [...bytes].map((byte) => byte.toString(16).padStart(2, "0")).join("")
+		const hexToByteArray = (hex) => {
+			const bytes = []
+			for (let i = 0; i < hex.length; i += 2) {
+				bytes.push(parseInt(hex.substring(i, i + 2), 16))
+			}
+			return Uint8Array.from(bytes)
+		}
+
+		const promisifyMessages = (ws) => {
+			const messages = []
+			const resolvers = []
+			ws.onmessage = (event) => {
+				if (resolvers.length) resolvers.shift()(event.data)
+				else messages.push(event.data)
+			}
+			return async () => {
+				if (messages.length) return messages.shift()
+				return new Promise((resolve) => resolvers.push(resolve))
+			}
+		}
+
+		const placeElement = (element, alignment) => {
+			const mainAxis = element.style.flexDirection === "row" ? "justifyContent" : "alignItems"
+			const crossAxis = element.style.flexDirection === "row" ? "alignItems" : "justifyContent"
+			if (alignment.includes("LEFT")) element.style[mainAxis] = "flex-start"
+			else if (alignment.includes("CENTER")) element.style[mainAxis] = "center"
+			else if (alignment.includes("RIGHT")) element.style[mainAxis] = "flex-end"
+			if (alignment.includes("TOP")) element.style[crossAxis] = "flex-start"
+			else if (alignment.includes("MIDDLE")) element.style[crossAxis] = "center"
+			else if (alignment.includes("BOTTOM")) element.style[crossAxis] = "flex-end"
+		}
+
+		const unixTimeToLocalISODateString = (unix) => {
+			if (unix === -2177452800) return "" // 1901-01-01 00:00:00
+			const d = new Date(unix * 1000)
+			const pad = (nb, width) => String(nb).padStart(width, "0")
+			return `${pad(d.getFullYear(), 4)}-${pad(d.getMonth() + 1, 2)}-${pad(d.getDate(), 2)}`
+		}
+
+		const ws = new WebSocket(`${window.location.protocol.replace("http", "ws")}//${window.location.host}/ws`)
+		const connIndicator = document.getElementById("imwui_conn")
+		ws.onerror = (e) => {
+			connIndicator.style.backgroundColor = "#f33"
+			console.error("ws error:", e)
+		}
+		let appName = ""
+		let currentPath = ""
+		const views = []
+		const viewsByPath = {}
+
+		ws.onopen = async () => {
+			const getMessage = promisifyMessages(ws)
+
+			views.push(...JSON.parse(await getMessage()))
+			for (const { path, name } of views) viewsByPath[path] = name
+			const path = window.location.pathname.split("/").filter(Boolean).join("/").toLowerCase()
+			if (!(path in viewsByPath)) {
+				rootElement.append("404 Not Found")
+				ws.close()
+				return
+			}
+			currentPath = path
+			appName = views[0].name
+			const name = views.filter((view) => view.path === path)?.[0]?.name
+			document.title = name !== appName ? `${name} - ${appName}` : appName
+
+			const clientID = localStorage.getItem("client_id")
+			const bytesToSend = [...hexToByteArray("F465D8E5127044C5876658817829CCC8"), clientID ? 1 : 0]
+			if (clientID) bytesToSend.push(...hexToByteArray(clientID))
+			bytesToSend.push(...new Uint8Array(await new Blob([path]).arrayBuffer()))
+			ws.send(new Uint8Array([...bytesToSend]))
+			if (!clientID) {
+				const buffer = await (await getMessage()).arrayBuffer()
+				localStorage.setItem("client_id", byteArrayToHex(new Uint8Array(buffer)))
+			}
+			ws.onmessage = handleMessage
+			ws.send(new Uint8Array([24]))
+		}
+		ws.onclose = (e) => {
+			connIndicator.style.backgroundColor = "#f33"
+			console.error(`close: code: ${e.code}, reason: "${e.reason}", clean: ${e.wasClean}, state: ${["Connecting", "Open", "Closing", "Closed"][ws.readyState]}`)
+		}
+
+		const lockSend = newLocker()
+		const pendingIDs = new Set()
+		let activeWidget
+		const rootElement = document.getElementById("imwui_root")
+		const widgets = { 4: { kind: "root", element: document.getElementById("imwui_root") } }
+		const percentFormatter = Intl.NumberFormat(undefined, { style: "percent", minimumFractionDigits: 2 })
+		let timeBeforeSending
+		let latencies = []
+		let mouseDownID
+
+		const send = async (id, data) => {
+			// TODO: return early if the conn is dead
+			const findSiblingElement = Boolean(activeWidget)
+			if (!findSiblingElement && document.activeElement !== document.body) activeWidget = { element: document.activeElement }
+			rootElement.disabled = true
+			pendingIDs.add(id)
+			const unlock = await lockSend()
+			if (findSiblingElement) {
+				const elems = [...rootElement.querySelectorAll(`a:not([disabled]), button:not([disabled]), input:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])`)]
+				const i = elems.indexOf(activeWidget.element)
+				assert(i !== -1)
+				if (activeWidget.before) {
+					if (i === 0) activeWidget.element = elems[elems.length - 1]
+					else activeWidget.element = elems[i - 1]
+				} else {
+					if (i === elems.length - 1) activeWidget.element = elems[0]
+					else activeWidget.element = elems[i + 1]
+				}
+			}
+			const sendData = (id, data) => {
+				const obj = { id }
+				if (data !== undefined) obj.data = data
+				try {
+					timeBeforeSending = performance.now()
+					ws.send(new Blob([JSON.stringify(obj)]))
+				} catch (e) {
+					connIndicator.style.backgroundColor = "#f33"
+					connIndicator.title = "Connection interrupted"
+					console.error("send error:", e)
+				}
+			}
+			sendData(id, data)
+			if (mouseDownID) {
+				const id = mouseDownID
+				mouseDownID = 0
+				pendingIDs.add(id)
+				sendData(id)
+			}
+			unlock()
+		}
+
+		let sendingButtonID = false
+
+		const emulateLink = (fn) => (e) => {
+			if (e.altKey | e.ctrlKey | e.metaKey | e.shiftKey) return true
+			fn()
+			return false
+		}
+
+		const dateFormatter = new Intl.DateTimeFormat()
+
+		const createElement = (id, kind, text, data) => {
+			switch (kind) {
+				case "text": {
+					assert(typeof text === "string")
+					if (text) return elem.span({}, text)
+					return elem.span()
+				}
+				case "rich": {
+					const segments = []
+					let newLine = false
+					for (let i = 0; i < data.segments.length; i++) {
+						const segment = data.segments[i]
+						if (segment.date) segment.text = dateFormatter.format(new Date(1000 * segment.date))
+						if (i === 0) {
+							if (segment.new_line) {
+								segment.text = "\n"
+								newLine = true
+							}
+							segments.push(segment)
+						} else {
+							const prev = segments[segments.length - 1]
+							if (segment.new_line) {
+								newLine = true
+								prev.text += "\n"
+								prev.new_line = true
+							} else if (segment.highlighted === prev.highlighted) {
+								if (newLine) {
+									newLine = false
+									segments.push(segment)
+								} else {
+									prev.text += segment.text
+								}
+							} else {
+								segments.push(segment)
+							}
+						}
+					}
+					if (!segments.length) return
+
+					const div = elem.div({}, data.fixed_width ? elem.pre() : elem.p())
+					const target = div.children[0]
+
+					let newSegments = []
+					let highlighted = segments[0].highlighted
+					const appendSegments = () => {
+						if (!newSegments.length) return
+						const text = newSegments.map((segment) => segment.text).join("")
+						if (highlighted) {
+							if (data.fixed_width) target.append(elem.code({ style: { color: "var(--highlighted)" } }, text))
+							else target.append(elem.span({ style: { color: "var(--highlighted)" } }, text))
+						} else {
+							target.append(text)
+						}
+						newSegments = []
+						highlighted = !highlighted
+					}
+					for (const segment of segments) {
+						if ((!highlighted && segment.highlighted) || (highlighted && !segment.highlighted)) appendSegments()
+						newSegments.push(segment)
+					}
+					appendSegments()
+					return div
+				}
+				case "separator": {
+					const div = elem.div({ className: "separator" })
+					if (data.visible) div.classList.add("bordered")
+					switch (data.size) {
+						case "ZERO":
+							div.style.removeProperty("flex")
+							div.style.removeProperty("margin")
+							break
+						case "DEFAULT":
+							div.style.margin = "0.5ch"
+							div.style.removeProperty("flex")
+							break
+						case "FILL":
+							div.style.flex = 1
+							div.style.removeProperty("margin")
+							break
+						default:
+							throw Error("unreachable")
+					}
+					return div
+				}
+				case "button": {
+					assert(typeof text === "string")
+					const button = elem.button(
+						{
+							disabled: !data.enabled,
+							onmousedown: (e) => {
+								if (e.button !== 0) return
+								if (!mouseDownID) mouseDownID = id
+								else console.error("WTF mousedown", mouseDownID, id)
+							},
+							onmouseup: (e) => {
+								if (e.button !== 0) return
+								if (!mouseDownID) {
+								} else if (mouseDownID !== id) {
+									console.error("WTF mouseup", mouseDownID, id)
+								} else {
+									mouseDownID = 0
+									sendingButtonID = true
+									send(id)
+								}
+							},
+							onclick: () => {
+								if (!sendingButtonID) send(id)
+							},
+						},
+						text,
+					)
+					if (data.size === "FILL") {
+						button.style.alignSelf = "stretch"
+						button.style.flex = 1
+						button.style.removeProperty("width")
+					} else {
+						button.style.width = "fit-content"
+					}
+					return button
+				}
+				case "checkbox": {
+					assert(typeof text === "string" && typeof data.checked === "boolean")
+					const input = elem.input({ id: `imwui_widget_${id}`, type: "checkbox", checked: data.checked, onchange: () => send(id) })
+					if (text) return elem.div({ style: { display: "flex", alignItems: "center" } }, input, elem.label({ htmlFor: `imwui_widget_${id}`, style: { paddingLeft: "4px" } }, text))
+					input.style.margin = "1px"
+					return input
+				}
+				case "bar": {
+					const inner = elem.div({ className: "meter meter-in" })
+					const div = elem.div({ className: "meter meter-out", style: { marginLeft: "1ch" } }, inner)
+					if (data.value >= 0 && data.value <= 1) {
+						div.title = percentFormatter.format(data.value)
+						inner.style.width = `${22 * data.value}ch`
+					} else if (data.value === -1) {
+						div.title = "?"
+						inner.style.width = "0px"
+						div.classList.add("striped")
+					} else {
+						throw Error(`Invalid bar value: "${data.value}"`)
+					}
+					return elem.div({ style: { display: "flex", alignItems: "center" } }, text, div)
+				}
+				case "integer_field": {
+					const { value, min, max } = data
+					let number, range
+					const onchange = ({ target }) =>
+						debounceEvent(async () => {
+							if (!target.value.length) target.value = target.min
+							const nb = Number(target.value)
+							if (nb < target.min) {
+								target.value = target.min
+							} else if (nb > target.max) {
+								target.value = target.max
+							}
+							number.value = target.value
+							range.value = target.value
+							await send(id, Number(target.value))
+						})
+					number = elem.input({
+						type: "number",
+						value,
+						min,
+						max,
+						onchange,
+						style: { width: `${3 + Math.max(min.toString().length, max.toString().length)}ch` },
+					})
+					range = elem.input({
+						type: "range",
+						value,
+						min,
+						max,
+						onchange,
+						oninput: ({ target }) => {
+							number.value = target.value
+						},
+					})
+					return elem.div({ style: { display: "flex", alignItems: "center" } }, elem.label({ className: "integer_field" }, text, number), range)
+				}
+				case "text_field":
+				case "password_field": {
+					let active
+					return elem.label(
+						{ className: kind },
+						text,
+						elem.input({
+							type: kind === "text_field" ? "text" : "password",
+							spellcheck: false,
+							value: data.value,
+							onkeydown: ({ key, shiftKey, target }) => {
+								switch (key) {
+									case "Tab":
+										active = { before: shiftKey, element: target }
+										break
+									case "Enter":
+										active = null
+										break
+								}
+							},
+							onchange: async ({ target }) => {
+								if (active) {
+									activeWidget = active
+									active = null
+								}
+								await send(id, target.value)
+							},
+						}),
+					)
+				}
+				case "option_field": {
+					return elem.fieldset(
+						{},
+						elem.legend({}, text),
+						...data.labels.map((label, i) =>
+							elem.div(
+								{ style: { display: "flex", alignItems: "center" } },
+								elem.input({
+									id: `imwui_widget_${id}_${i}`,
+									name: `imwui_widget_${id}`,
+									checked: data.index === i,
+									type: "radio",
+									onchange: () => {
+										send(id, i)
+									},
+								}),
+								elem.label({ htmlFor: `imwui_widget_${id}_${i}`, style: { flex: 1, padding: "4px" } }, label),
+							),
+						),
+					)
+				}
+				case "breadcrumb": {
+					const paths = views[data.index].path.split("/").filter(Boolean)
+					const paths2 = [appName, ...paths]
+					let elements = []
+					for (const i of paths2.keys()) {
+						const path = i === 0 ? "" : paths.slice(0, i).join("/")
+						const a = elem.a(
+							{
+								className: "link",
+								href: `/${path}`,
+								onclick: emulateLink(() => {
+									if (!rootElement.disabled && i < paths.length) send(id, path) // TODO: send only path index instead of the full string
+								}),
+							},
+							viewsByPath[path],
+						)
+						if (i === paths.length) {
+							a.title = "Current view"
+							a.classList.add("currentLink")
+						}
+						elements.push(a, elem.span({ style: { userSelect: "none" } }, "/"))
+					}
+					return elem.div({ style: { display: "flex", flexDirection: "row", gap: "1ch" } }, ...elements.slice(0, -1))
+				}
+				case "box": {
+					const div = elem.div({ className: `box ${data.axis}`, style: { display: "flex", flexDirection: data.axis === "VERTICAL" ? "column" : "row" } })
+					placeElement(div, data.content_alignment)
+					if (data.fill) Object.assign(div.style, { flex: 1, alignSelf: "stretch" })
+					if (data.spacing) Object.assign(div.style, { gap: "0.75lh", padding: "1.5ch" })
+					if (data.bordered) div.classList.add("bordered", "shadow")
+					return div
+				}
+				case "date_field": {
+					// TODO: fix keyboard input
+					const dateInput = elem.input({ disabled: !data.enabled, type: "date", min: unixTimeToLocalISODateString(data.min), max: "2399-12-31", value: unixTimeToLocalISODateString(data.date) })
+					dateInput.onchange = () => {
+						const unix = Date.parse(dateInput.value + "T00:00") / 1000
+						if (unix > -2177452800 && unix < 9223372036) send(id, unix)
+						else send(id, -2177452800)
+					}
+					return elem.label({ className: "date_field", style: { cursor: data.enabled ? "pointer" : "default" } }, text, dateInput)
+				}
+				case "view": {
+					const view = views[data.index]
+					const div = elem.a(
+						{
+							href: `/${view.path}`,
+							className: "link",
+							onclick: emulateLink(() => {
+								if (!rootElement.disabled && currentPath !== view.path) {
+									send(id)
+									div.title = "Current view"
+									div.classList.remove("currentLink")
+								}
+							}),
+						},
+						data.description ? view.name + data.description : view.name,
+					)
+					if (currentPath === view.path) {
+						div.title = "Current view"
+						div.classList.add("currentLink")
+					}
+					return div
+				}
+			}
+			throw Error(`Widget kind "${kind}" not implemented`)
+		}
+
+		const insert = (kind, element, precedingID, parentID) => {
+			if (precedingID) widgets[precedingID].element.after(element)
+			else {
+				const parent = widgets[parentID]
+				switch (parent.kind) {
+					case "root":
+					case "box":
+						parent.element.prepend(element)
+						break
+					default:
+						throw Error("unreachable")
+				}
+			}
+		}
+
+		const handleMessage = async ({ data }) => {
+			if (timeBeforeSending) {
+				const timeBeforeSendingValue = timeBeforeSending
+				timeBeforeSending = 0
+				const latency = performance.now() - timeBeforeSendingValue
+				latencies.push(latency)
+				latencies = latencies.slice(-10)
+				const avg = latencies.reduce((total, latency) => total + latency) / latencies.length
+				if (avg >= 150) connIndicator.style.backgroundColor = "#de8f00"
+				else if (avg < 150) connIndicator.style.backgroundColor = "#00db00"
+				connIndicator.title = `Latency: ${Math.ceil(latency)}ms (average: ${Math.ceil(avg)}ms)`
+			}
+			const updates = JSON.parse(data)
+			for (const update of updates) {
+				const { type, id, ...args } = update
+				switch (type) {
+					case "navigation": {
+						const view = views[args.index]
+						if (document.location.pathname.slice(1) === view.path) {
+							// TODO: can the server check this instead to avoid creating this event altogether?
+							console.log("useless navigation, aborting")
+							break
+						}
+						const url = new URL(document.location)
+						url.pathname = view.path
+						currentPath = view.path
+						history.pushState({}, "", url)
+						document.title = view.name !== appName ? `${view.name} - ${appName}` : appName
+						break
+					}
+					case "create": {
+						assert(!widgets[id])
+						const { kind, text, data, parent_id: parentID, preceding_id: precedingID } = args
+						const element = createElement(id, kind, text, data)
+						insert(kind, element, precedingID, parentID)
+						widgets[id] = { kind, element, parentID, precedingID, data }
+						break
+					}
+					case "update": {
+						const existing = widgets[id]
+						const { kind, text, data, parent_id: parentID, preceding_id: precedingID } = args
+						const reposition = existing.parentID !== parentID || existing.precedingID !== precedingID
+						if (kind === existing.kind) {
+							switch (kind) {
+								case "text": {
+									existing.element.innerText = text
+									break
+								}
+								case "separator": {
+									switch (data.size) {
+										case "ZERO":
+											existing.element.style.removeProperty("margin")
+											existing.element.style.removeProperty("flex")
+											break
+										case "DEFAULT":
+											existing.element.style.margin = "0.5ch"
+											existing.element.style.removeProperty("flex")
+											break
+										case "FILL":
+											existing.element.style.flex = 1
+											existing.element.style.removeProperty("margin")
+											break
+										default:
+											throw Error("unreachable")
+									}
+									if (data.visible) existing.element.classList.add("bordered")
+									else existing.element.classList.remove("bordered")
+									break
+								}
+								case "button": {
+									existing.element.disabled = !data.enabled
+									existing.element.innerText = text
+									if (data.size === "FILL") {
+										existing.element.style.alignSelf = "stretch"
+										existing.element.style.flex = 1
+										existing.element.style.removeProperty("width")
+									} else {
+										existing.element.style.removeProperty("align-self")
+										existing.element.style.removeProperty("flex")
+										existing.element.style.width = "fit-content"
+									}
+									break
+								}
+								case "checkbox": {
+									assert(typeof data.checked === "boolean")
+									if (existing.element.children.length) {
+										existing.element.children[0].checked = data.checked
+										existing.element.children[1].innerText = text
+									} else {
+										existing.element.checked = data.checked
+									}
+									break
+								}
+								case "bar": {
+									const div = existing.element.children[0]
+									const inner = div.children[0]
+									if (data.value >= 0 && data.value <= 1) {
+										div.title = percentFormatter.format(data.value)
+										inner.style.width = `${22 * data.value}ch`
+										div.classList.remove("striped")
+									} else if (data.value === -1) {
+										div.title = "?"
+										inner.style.width = "0px"
+										div.classList.add("striped")
+									} else {
+										throw Error(`Invalid bar value: "${data.value}"`)
+									}
+									break
+								}
+								case "integer_field": {
+									const label = existing.element.children[0].childNodes[0]
+									label.nodeValue = text
+									const number = existing.element.children[0].children[0]
+									const range = existing.element.children[1]
+									const { value, min, max } = data
+									Object.assign(number, { value, min, max })
+									Object.assign(range, { value, min, max })
+									number.style.width = `${3 + Math.max(min.toString().length, max.toString().length)}ch`
+									break
+								}
+								case "text_field":
+								case "password_field": {
+									existing.element.childNodes[0].nodeValue = text
+									if (data.value !== undefined) existing.element.children[0].value = data.value
+									break
+								}
+								case "box": {
+									existing.element.style.flexDirection = data.axis === "VERTICAL" ? "column" : "row"
+									placeElement(existing.element, data.content_alignment)
+									if (data.fill) {
+										Object.assign(existing.element.style, { flex: 1, alignSelf: "stretch" })
+									} else {
+										existing.element.style.removeProperty("flex")
+										existing.element.style.removeProperty("align-self")
+									}
+									if (data.spacing) {
+										Object.assign(existing.element.style, { gap: "0.75lh", padding: "1.5ch" })
+									} else {
+										existing.element.style.removeProperty("gap")
+										existing.element.style.removeProperty("padding")
+									}
+									if (data.bordered) existing.element.classList.add("bordered", "shadow")
+									else existing.element.classList.remove("bordered", "shadow")
+									break
+								}
+								case "date_field": {
+									existing.element.childNodes[0].nodeValue = text
+									existing.element.children[0].min = unixTimeToLocalISODateString(data.min)
+									existing.element.children[0].value = unixTimeToLocalISODateString(data.date)
+									existing.element.children[0].disabled = !data.enabled
+									existing.element.style.cursor = data.enabled ? "pointer" : "default"
+									break
+								}
+								case "rich":
+								case "option_field":
+								case "breadcrumb":
+								case "view": {
+									const e = createElement(id, kind, text, data)
+									existing.element.replaceWith(e)
+									existing.element = e
+									break
+								}
+								default:
+									throw Error(`Widget kind "${kind}" cannot be updated`)
+							}
+							insert(existing.kind, existing.element, precedingID, parentID)
+							existing.parentID = parentID
+							existing.precedingID = precedingID
+						} else {
+							// kind != existing.kind
+							if (existing.kind === "box") existing.element.after(...[...existing.element.children])
+							const element = createElement(id, kind, text, data)
+							existing.element.replaceWith(element)
+							insert(kind, element, precedingID, parentID)
+							widgets[id] = { kind, element, parentID, precedingID, data }
+						}
+						break
+					}
+					case "delete": {
+						for (const id of args.ids) {
+							widgets[id].element.remove()
+							delete widgets[id]
+						}
+						break
+					}
+					case "keep": {
+						const existing = widgets[id]
+						const { parent_id: parentID, preceding_id: precedingID } = args
+						const reposition = existing.parentID !== parentID || existing.precedingID !== precedingID
+						if (reposition) {
+							insert(existing.kind, existing.element, precedingID, parentID)
+							existing.parentID = parentID
+							existing.precedingID = precedingID
+						}
+						if (existing.kind === "view") {
+							if (currentPath === views[existing.data.index].path) {
+								existing.element.classList.add("currentLink")
+								existing.element.title = "Current view"
+							} else {
+								existing.element.classList.remove("currentLink")
+								existing.element.title = ""
+							}
+						}
+						break
+					}
+					case "ack": {
+						assert(pendingIDs.delete(id))
+						if (pendingIDs.size) break
+						sendingButtonID = false
+						rootElement.disabled = false
+						if (activeWidget) {
+							let focusVisible = true
+							if (activeWidget.element.tagName === "INPUT") {
+								switch (activeWidget.element.type) {
+									case "checkbox":
+									case "radio":
+										focusVisible = false
+								}
+							}
+							activeWidget.element.focus({ focusVisible })
+							activeWidget = null
+						}
+						break
+					}
+					default:
+						throw Error(`Update "${type}" not implemented`)
+				} // switch (type)
+			} // for (const update of updates)
+
+			// Post-processing
+			const iterateWidgets = (children) => {
+				let x = 0
+				for (const e of children) {
+					if (e.classList.contains("integer_field")) {
+						const x2 = e.children[0].getBoundingClientRect().x
+						if (x === 0 || x2 < x) x = x2
+					} else {
+						x = 0
+					}
+					if (e.classList.contains("box")) iterateWidgets([...e.children])
+				}
+				console.log("x", x)
+			}
+			// iterateWidgets(rootElement.children)
+		} // handleMessage
+	</script>
+</html>
