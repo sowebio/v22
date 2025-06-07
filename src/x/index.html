@@ -120,6 +120,7 @@
 			}
 			.separator {
 				align-self: stretch;
+				/* background-color: var(--third); TODO: apply classes to set the color of filling & visible separators */
 			}
 			.link {
 				text-decoration-line: underline;
@@ -864,6 +865,7 @@
 										existing.element.children[0].disabled = !data.enabled
 										existing.element.children[0].checked = data.checked
 										existing.element.children[1].innerText = text
+										existing.element.children[1].style.cursor = data.enabled ? "pointer" : "default"
 									} else {
 										existing.element.disabled = !data.enabled
 										existing.element.checked = data.checked
@@ -889,6 +891,7 @@
 								case "integer_field": {
 									const label = existing.element.children[0].childNodes[0]
 									label.nodeValue = text
+									existing.element.children[0].style.cursor = data.enabled ? "pointer" : "default"
 									const number = existing.element.children[0].children[0]
 									const range = existing.element.children[1]
 									const { value, min, max, enabled } = data
@@ -901,6 +904,7 @@
 								case "password_field": {
 									existing.element.childNodes[0].nodeValue = text
 									existing.element.children[0].disabled = !data.enabled
+									existing.element.style.cursor = data.enabled ? "pointer" : "default"
 									if (data.value !== undefined) existing.element.children[0].value = data.value
 									break
 								}
