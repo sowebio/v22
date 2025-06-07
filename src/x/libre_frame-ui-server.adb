@@ -19,17 +19,15 @@ package body Libre_Frame.UI.Server is
 
    package Connections_By_ID_Maps is new
      Containers.Ordered_Maps (Key_Type => Natural, Element_Type => Connection_Access);
-   subtype Connections_By_ID_Map is Connections_By_ID_Maps.Map;
-   use type Connections_By_ID_Map;
 
    package Connections_By_Client_ID_Maps is new
-     Containers.Ordered_Maps (Key_Type => Client_ID_Type, Element_Type => Connections_By_ID_Map);
-   subtype Connections_By_Client_ID_Map is Connections_By_Client_ID_Maps.Map;
-   use type Connections_By_Client_ID_Map;
+     Containers.Ordered_Maps
+       (Key_Type     => Client_ID_Type,
+        Element_Type => Connections_By_ID_Maps.Map,
+        "="          => Connections_By_ID_Maps."=");
 
-   Connections_By_Client_ID : Connections_By_Client_ID_Map;
-
-   Client_Datas_By_ID : Client_Datas_By_ID_Maps.Map;
+   Client_Datas_By_ID       : Client_Datas_By_ID_Maps.Map;
+   Connections_By_Client_ID : Connections_By_Client_ID_Maps.Map;
 
    Current_Connection_ID : Natural := 0;
 
@@ -435,7 +433,7 @@ package body Libre_Frame.UI.Server is
                Connections_By_Client_ID (Connection.Client_ID).Insert (Connection.ID, Connection.Self);
             else
                declare
-                  Map : Connections_By_ID_Map;
+                  Map : Connections_By_ID_Maps.Map;
                begin
                   Map.Insert (Connection.ID, Connection.Self);
                   Connections_By_Client_ID.Insert (Connection.Client_ID, Map);
