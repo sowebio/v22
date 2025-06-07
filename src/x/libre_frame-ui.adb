@@ -175,16 +175,16 @@ package body Libre_Frame.UI is
       Target.Segments.Append_Vector (Item.Segments);
    end Append;
 
-   function Text (Label : String; Fixed_Width : Boolean := False) return Widget_Type is
+   function Text (Value : String; Fixed_Width : Boolean := False) return Widget_Type is
    begin
       if not Fixed_Width then
-         return Widget_Type'(Kind => Text, Label => To_Unbounded_String (Label), others => <>);
+         return Widget_Type'(Kind => Text, Label => To_Unbounded_String (Value), others => <>);
       end if;
 
       declare
          Segments : Rich_Text_Vector;
       begin
-         Segments.Append (Rich_Text_Segment'(Text => To_Unbounded_String (Label), others => <>));
+         Segments.Append (Rich_Text_Segment'(Text => To_Unbounded_String (Value), others => <>));
          return Widget_Type'(Kind => Rich, Rich => (Segments => Segments, Fixed_Width => True), others => <>);
       end;
    end Text;
@@ -342,15 +342,15 @@ package body Libre_Frame.UI is
       end loop;
    end Append;
 
-   procedure Text (Target : in out Container; Label : String; Fixed_Width : Boolean := False) is
+   procedure Text (Target : in out Container; Value : String; Fixed_Width : Boolean := False) is
    begin
       if not Fixed_Width then
-         Make_Widget (Target, Text, Label);
+         Make_Widget (Target, Text, Value);
       else
          declare
             Widget : constant Widget_Access := Make_Widget (Target, Rich, "");
          begin
-            Widget.Rich.Segments.Append (Rich_Text_Segment'(Text => To_Unbounded_String (Label), others => <>));
+            Widget.Rich.Segments.Append (Rich_Text_Segment'(Text => To_Unbounded_String (Value), others => <>));
             Widget.Rich.Fixed_Width := True;
          end;
       end if;

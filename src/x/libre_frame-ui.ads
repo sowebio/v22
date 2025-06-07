@@ -71,8 +71,8 @@ is
 
    Unset_Time : constant Calendar.Time := Time_First;
 
-   function Text (Label : String; Fixed_Width : Boolean := False) return Widget_Type
-   with Pre => Label /= "";
+   function Text (Value : String; Fixed_Width : Boolean := False) return Widget_Type
+   with Pre => Value /= "";
 
    function Text (Value : Rich_Text; Fixed_Width : Boolean := False) return Widget_Type;
 
@@ -109,8 +109,8 @@ is
    procedure Append (Target : in out Container; Widget : Widget_Type);
    procedure Append (Target : in out Container; Widgets : Widget_List);
 
-   procedure Text (Target : in out Container; Label : String; Fixed_Width : Boolean := False)
-   with Pre => Label /= "";
+   procedure Text (Target : in out Container; Value : String; Fixed_Width : Boolean := False)
+   with Pre => Value /= "";
 
    procedure Text (Target : in out Container; Value : Rich_Text; Fixed_Width : Boolean := False);
 
