@@ -73,16 +73,20 @@ is
    function Bar (Label : String; Proportion : Proportion_Type) return Widget_Type
    with Pre => Label /= "";
 
-   function Checkbox (Label : String; Value : not null access Boolean) return Widget_Type
+   function Checkbox (Label : String; Value : not null access Boolean; Enabled : Boolean := True) return Widget_Type
    with Pre => Label /= "";
 
-   function Integer_Field (Label : String; Value : not null access Integer; Min, Max : Integer) return Widget_Type
+   function Integer_Field
+     (Label : String; Value : not null access Integer; Min, Max : Integer; Enabled : Boolean := True)
+      return Widget_Type
    with Pre => Label /= "" and Min <= Max;
 
-   function Text_Field (Label : String; Value : not null access Unbounded_String) return Widget_Type
+   function Text_Field
+     (Label : String; Value : not null access Unbounded_String; Enabled : Boolean := True) return Widget_Type
    with Pre => Label /= "";
 
-   function Password_Field (Label : String; Value : not null access Unbounded_String) return Widget_Type
+   function Password_Field
+     (Label : String; Value : not null access Unbounded_String; Enabled : Boolean := True) return Widget_Type
    with Pre => Label /= "";
 
    function Date_Field
@@ -114,29 +118,38 @@ is
       return Boolean
    with Pre => Label /= "";
 
-   function Checkbox (Target : in out Container; Label : String; Value : in out Boolean) return Boolean
+   function Checkbox
+     (Target : in out Container; Label : String; Value : in out Boolean; Enabled : Boolean := True) return Boolean
    with Pre => Label /= "";
 
-   procedure Checkbox (Target : in out Container; Label : String; Value : in out Boolean)
+   procedure Checkbox (Target : in out Container; Label : String; Value : in out Boolean; Enabled : Boolean := True)
    with Pre => Label /= "";
 
    function Integer_Field
-     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer) return Boolean
+     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer; Enabled : Boolean := True)
+      return Boolean
    with Pre => Label /= "" and Min <= Max;
 
-   procedure Integer_Field (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer)
+   procedure Integer_Field
+     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer; Enabled : Boolean := True)
    with Pre => Label /= "" and Min <= Max;
 
-   function Text_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) return Boolean
+   function Text_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+      return Boolean
    with Pre => Label /= "";
 
-   procedure Text_Field (Target : in out Container; Label : String; Value : in out Unbounded_String)
+   procedure Text_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
    with Pre => Label /= "";
 
-   function Password_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) return Boolean
+   function Password_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+      return Boolean
    with Pre => Label /= "";
 
-   procedure Password_Field (Target : in out Container; Label : String; Value : in out Unbounded_String)
+   procedure Password_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
    with Pre => Label /= "";
 
    function Date_Field
@@ -163,12 +176,19 @@ is
       type Labels is array (Options) of Unbounded_String;
 
       function Option_Field
-        (Target : in out Container; Label : String; Value : in out Options; Custom_Labels : Labels := [others => <>])
-         return Boolean
+        (Target        : in out Container;
+         Label         : String;
+         Value         : in out Options;
+         Custom_Labels : Labels := [others => <>];
+         Enabled       : Boolean := True) return Boolean
       with Pre => Label /= "";
 
       procedure Option_Field
-        (Target : in out Container; Label : String; Value : in out Options; Custom_Labels : Labels := [others => <>])
+        (Target        : in out Container;
+         Label         : String;
+         Value         : in out Options;
+         Custom_Labels : Labels := [others => <>];
+         Enabled       : Boolean := True)
       with Pre => Label /= "";
    end Choice;
 

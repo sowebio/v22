@@ -199,31 +199,43 @@ package body Libre_Frame.UI is
           Bar_Value => (if Proportion.Valid then Proportion.Value else -1.0),
           others    => <>));
 
-   function Checkbox (Label : String; Value : not null access Boolean) return Widget_Type
-   is (Widget_Type'(Kind => Checkbox, Label => To_Unbounded_String (Label), Checkbox_Access => Value, others => <>));
+   function Checkbox (Label : String; Value : not null access Boolean; Enabled : Boolean := True) return Widget_Type
+   is (Widget_Type'
+         (Kind            => Checkbox,
+          Label           => To_Unbounded_String (Label),
+          Enabled         => Enabled,
+          Checkbox_Access => Value,
+          others          => <>));
 
-   function Integer_Field (Label : String; Value : not null access Integer; Min, Max : Integer) return Widget_Type
+   function Integer_Field
+     (Label : String; Value : not null access Integer; Min, Max : Integer; Enabled : Boolean := True)
+      return Widget_Type
    is (Widget_Type'
          (Kind           => Integer_Field,
           Label          => To_Unbounded_String (Label),
+          Enabled        => Enabled,
           Min            => Min,
           Max            => Max,
           Integer_Value  => Value.all,
           Integer_Access => Value,
           others         => <>));
 
-   function Text_Field (Label : String; Value : not null access Unbounded_String) return Widget_Type
+   function Text_Field
+     (Label : String; Value : not null access Unbounded_String; Enabled : Boolean := True) return Widget_Type
    is (Widget_Type'
          (Kind        => Text_Field,
           Label       => To_Unbounded_String (Label),
+          Enabled     => Enabled,
           Text_Value  => Value.all,
           Text_Access => Value,
           others      => <>));
 
-   function Password_Field (Label : String; Value : not null access Unbounded_String) return Widget_Type
+   function Password_Field
+     (Label : String; Value : not null access Unbounded_String; Enabled : Boolean := True) return Widget_Type
    is (Widget_Type'
          (Kind        => Password_Field,
           Label       => To_Unbounded_String (Label),
+          Enabled     => Enabled,
           Text_Value  => Value.all,
           Text_Access => Value,
           others      => <>));
@@ -281,6 +293,7 @@ package body Libre_Frame.UI is
                   when Checkbox =>
                      Item.Checkbox_Value := Item.Checkbox_Access.all;
                      Item.Checkbox_Access.all := not Item.Checkbox_Access.all;
+                     Existing_Widget.Enabled := Item.Enabled;
                      Existing_Widget.Checkbox_Value := Item.Checkbox_Access.all;
 
                   when Integer_Field =>
@@ -293,6 +306,7 @@ package body Libre_Frame.UI is
                      end if;
 
                      Item.Integer_Access.all := Item.Integer_Value;
+                     Existing_Widget.Enabled := Item.Enabled;
                      Existing_Widget.Integer_Value := Item.Integer_Value;
                      Existing_Widget.Min := Item.Min;
                      Existing_Widget.Max := Item.Max;
@@ -300,6 +314,7 @@ package body Libre_Frame.UI is
                   when Text_Field | Password_Field =>
                      Item.Text_Value := Target.Window.Event_Data.Get;
                      Item.Text_Access.all := Item.Text_Value;
+                     Existing_Widget.Enabled := Item.Enabled;
                      Existing_Widget.Text_Value := Item.Text_Value;
 
                   when Date_Field =>
@@ -373,9 +388,12 @@ package body Libre_Frame.UI is
         Target.Window.Event_ID > 0 and then Same_Path (Widget, Target.Window.Widgets_By_ID (Target.Window.Event_ID));
    end Button;
 
-   function Checkbox (Target : in out Container; Label : String; Value : in out Boolean) return Boolean is
+   function Checkbox
+     (Target : in out Container; Label : String; Value : in out Boolean; Enabled : Boolean := True) return Boolean
+   is
       Widget : constant Widget_Access := Make_Widget (Target, Checkbox, Label);
    begin
+      Widget.Enabled := Enabled;
       Widget.Checkbox_Value := Value;
 
       return Interacted_With : Boolean := False do
@@ -389,28 +407,29 @@ package body Libre_Frame.UI is
       end return;
    end Checkbox;
 
-   procedure Checkbox (Target : in out Container; Label : String; Value : in out Boolean) is
-      Ignored : constant Boolean := Target.Checkbox (Label, Value)
+   procedure Checkbox (Target : in out Container; Label : String; Value : in out Boolean; Enabled : Boolean := True) is
+      Ignored : constant Boolean := Target.Checkbox (Label, Value, Enabled)
       with Unreferenced;
    begin
       null;
    end Checkbox;
 
    function Integer_Field
-     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer) return Boolean
+     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer; Enabled : Boolean := True)
+      return Boolean
    is
       Widget : constant Widget_Access := Make_Widget (Target, Integer_Field, Label);
    begin
-      Widget.Min := Min;
-      Widget.Max := Max;
-
       if Value < Min then
          Value := Min;
       elsif Value > Max then
          Value := Max;
       end if;
 
+      Widget.Enabled := Enabled;
       Widget.Integer_Value := Value;
+      Widget.Min := Min;
+      Widget.Max := Max;
 
       return Interacted_With : Boolean := False do
          if Target.Window.Event_ID > 0
@@ -429,16 +448,22 @@ package body Libre_Frame.UI is
       end return;
    end Integer_Field;
 
-   procedure Integer_Field (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer) is
-      Ignored : constant Boolean := Target.Integer_Field (Label, Value, Min, Max)
+   procedure Integer_Field
+     (Target : in out Container; Label : String; Value : in out Integer; Min, Max : Integer; Enabled : Boolean := True)
+   is
+      Ignored : constant Boolean := Target.Integer_Field (Label, Value, Min, Max, Enabled)
       with Unreferenced;
    begin
       null;
    end Integer_Field;
 
-   function Text_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) return Boolean is
+   function Text_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+      return Boolean
+   is
       Widget : constant Widget_Access := Make_Widget (Target, Text_Field, Label);
    begin
+      Widget.Enabled := Enabled;
       Widget.Text_Value := Value;
 
       return Interacted_With : Boolean := False do
@@ -452,17 +477,22 @@ package body Libre_Frame.UI is
       end return;
    end Text_Field;
 
-   procedure Text_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) is
-      Ignored : constant Boolean := Target.Text_Field (Label, Value)
+   procedure Text_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+   is
+      Ignored : constant Boolean := Target.Text_Field (Label, Value, Enabled)
       with Unreferenced;
    begin
       null;
    end Text_Field;
 
-   function Password_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) return Boolean
+   function Password_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+      return Boolean
    is
       Widget : constant Widget_Access := Make_Widget (Target, Password_Field, Label);
    begin
+      Widget.Enabled := Enabled;
       Widget.Text_Value := Value;
 
       return Interacted_With : Boolean := False do
@@ -476,8 +506,10 @@ package body Libre_Frame.UI is
       end return;
    end Password_Field;
 
-   procedure Password_Field (Target : in out Container; Label : String; Value : in out Unbounded_String) is
-      Ignored : constant Boolean := Target.Password_Field (Label, Value)
+   procedure Password_Field
+     (Target : in out Container; Label : String; Value : in out Unbounded_String; Enabled : Boolean := True)
+   is
+      Ignored : constant Boolean := Target.Password_Field (Label, Value, Enabled)
       with Unreferenced;
    begin
       null;
@@ -539,11 +571,15 @@ package body Libre_Frame.UI is
       Saved_Labels : String_Vectors.Vector;
 
       function Option_Field
-        (Target : in out Container; Label : String; Value : in out Options; Custom_Labels : Labels := [others => <>])
-         return Boolean
+        (Target        : in out Container;
+         Label         : String;
+         Value         : in out Options;
+         Custom_Labels : Labels := [others => <>];
+         Enabled       : Boolean := True) return Boolean
       is
          Widget : constant Widget_Access := Make_Widget (Target, Option_Field, Label);
       begin
+         Widget.Enabled := Enabled;
          Widget.Index := Options'Pos (Value);
 
          if Custom_Labels = Labels'[others => <>] then
@@ -572,9 +608,13 @@ package body Libre_Frame.UI is
       end Option_Field;
 
       procedure Option_Field
-        (Target : in out Container; Label : String; Value : in out Options; Custom_Labels : Labels := [others => <>])
+        (Target        : in out Container;
+         Label         : String;
+         Value         : in out Options;
+         Custom_Labels : Labels := [others => <>];
+         Enabled       : Boolean := True)
       is
-         Ignored : constant Boolean := Option_Field (Target, Label, Value, Custom_Labels)
+         Ignored : constant Boolean := Option_Field (Target, Label, Value, Custom_Labels, Enabled)
          with Unreferenced;
       begin
          null;

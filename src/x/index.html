@@ -122,7 +122,6 @@
 				align-self: stretch;
 			}
 			.link {
-				cursor: pointer;
 				text-decoration-line: underline;
 				touch-action: none;
 				white-space: nowrap;
@@ -142,11 +141,18 @@
 			#imwui_root:disabled .link {
 				cursor: default;
 			}
-			button:disabled {
+			button:enabled,
+			.link:enabled,
+			input[type="radio"]:enabled,
+			input[type="range"]:enabled,
+			input[type="checkbox"]:enabled {
+				cursor: pointer;
+			}
+			button:disabled,
+			input:disabled {
 				cursor: default;
 			}
 			button {
-				cursor: pointer;
 				white-space: nowrap;
 				height: 1.5lh;
 				min-height: 1.5lh;
@@ -215,7 +221,6 @@
 			}
 			input[type="radio"],
 			input[type="checkbox"] {
-				cursor: pointer;
 				margin: 0px;
 				width: 1lh;
 				height: 1lh;
@@ -576,8 +581,8 @@
 				}
 				case "checkbox": {
 					assert(typeof text === "string" && typeof data.checked === "boolean")
-					const input = elem.input({ id: `imwui_widget_${id}`, type: "checkbox", checked: data.checked, onchange: () => send(id) })
-					if (text) return elem.div({ style: { display: "flex", alignItems: "center" } }, input, elem.label({ htmlFor: `imwui_widget_${id}`, style: { paddingLeft: "4px" } }, text))
+					const input = elem.input({ disabled: !data.enabled, id: `imwui_widget_${id}`, type: "checkbox", checked: data.checked, onchange: () => send(id) })
+					if (text) return elem.div({ style: { display: "flex", alignItems: "center" } }, input, elem.label({ htmlFor: `imwui_widget_${id}`, style: { paddingLeft: "4px", cursor: data.enabled ? "pointer" : "default" } }, text))
 					input.style.margin = "1px"
 					return input
 				}
@@ -614,6 +619,7 @@
 						})
 					number = elem.input({
 						type: "number",
+						disabled: !data.enabled,
 						value,
 						min,
 						max,
@@ -622,6 +628,7 @@
 					})
 					range = elem.input({
 						type: "range",
+						disabled: !data.enabled,
 						value,
 						min,
 						max,
@@ -630,16 +637,17 @@
 							number.value = target.value
 						},
 					})
-					return elem.div({ style: { display: "flex", alignItems: "center" } }, elem.label({ className: "integer_field" }, text, number), range)
+					return elem.div({ style: { display: "flex", alignItems: "center" } }, elem.label({ className: "integer_field", style: { cursor: data.enabled ? "pointer" : "default" } }, text, number), range)
 				}
 				case "text_field":
 				case "password_field": {
 					let active
 					return elem.label(
-						{ className: kind },
+						{ className: kind, style: { cursor: data.enabled ? "pointer" : "default" } },
 						text,
 						elem.input({
 							type: kind === "text_field" ? "text" : "password",
+							disabled: !data.enabled,
 							spellcheck: false,
 							value: data.value,
 							onkeydown: ({ key, shiftKey, target }) => {
@@ -670,6 +678,7 @@
 							elem.div(
 								{ style: { display: "flex", alignItems: "center" } },
 								elem.input({
+									disabled: !data.enabled,
 									id: `imwui_widget_${id}_${i}`,
 									name: `imwui_widget_${id}`,
 									checked: data.index === i,
@@ -678,7 +687,7 @@
 										send(id, i)
 									},
 								}),
-								elem.label({ htmlFor: `imwui_widget_${id}_${i}`, style: { flex: 1, padding: "4px" } }, label),
+								elem.label({ htmlFor: `imwui_widget_${id}_${i}`, style: { flex: 1, padding: "4px", cursor: data.enabled ? "pointer" : "default" } }, label),
 							),
 						),
 					)
@@ -852,9 +861,11 @@
 								case "checkbox": {
 									assert(typeof data.checked === "boolean")
 									if (existing.element.children.length) {
+										existing.element.children[0].disabled = !data.enabled
 										existing.element.children[0].checked = data.checked
 										existing.element.children[1].innerText = text
 									} else {
+										existing.element.disabled = !data.enabled
 										existing.element.checked = data.checked
 									}
 									break
@@ -880,15 +891,16 @@
 									label.nodeValue = text
 									const number = existing.element.children[0].children[0]
 									const range = existing.element.children[1]
-									const { value, min, max } = data
-									Object.assign(number, { value, min, max })
-									Object.assign(range, { value, min, max })
+									const { value, min, max, enabled } = data
+									Object.assign(number, { value, min, max, disabled: !enabled })
+									Object.assign(range, { value, min, max, disabled: !enabled })
 									number.style.width = `${3 + Math.max(min.toString().length, max.toString().length)}ch`
 									break
 								}
 								case "text_field":
 								case "password_field": {
 									existing.element.childNodes[0].nodeValue = text
+									existing.element.children[0].disabled = !data.enabled
 									if (data.value !== undefined) existing.element.children[0].value = data.value
 									break
 								}
