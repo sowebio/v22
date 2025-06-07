@@ -31,8 +31,8 @@ package body Libre_Frame.UI.Server is
 
    Current_Connection_ID : Natural := 0;
 
-   Initialized_View_Names : View_Labels := View_Names;
-   Initialized_View_Paths : View_Labels := View_Paths;
+   Initialized_View_Names : View_Labels;
+   Initialized_View_Paths : View_Labels;
 
    Views_JSON_Object : Unbounded_String;
 
@@ -484,7 +484,10 @@ package body Libre_Frame.UI.Server is
       delay Duration'Last;
    end Run;
 begin
-   if Initialized_View_Names = View_Labels'[others => <>] then
+   if View_Names /= View_Labels'[others => <>] then
+      Initialized_View_Names := View_Names;
+   elsif Views'Pos (Views'Last) > 0 then
+      -- Generate the view names (if we have more than one view)
       for View in Views loop
          declare
             Result : String := Characters.Handling.To_Lower (View'Image);
@@ -500,7 +503,10 @@ begin
       end loop;
    end if;
 
-   if Initialized_View_Paths = View_Labels'[others => <>] then
+   if View_Paths /= View_Labels'[others => <>] then
+      Initialized_View_Paths := View_Paths;
+   else
+      -- Generate the view paths
       for View in Views loop
          if View /= Views'First then
             declare
@@ -538,6 +544,10 @@ begin
          Obj.Set_Field ("path", Initialized_View_Paths (View));
          JSON.Append (List, Obj);
       end loop;
-      Views_JSON_Object := JSON.Create (List).Write;
+
+      Obj := JSON.Create_Object;
+      Obj.Set_Field ("views", List);
+      Obj.Set_Field ("app_name", Strings.Fixed.Trim (Application_Name, Side => Strings.Both));
+      Views_JSON_Object := Obj.Write;
    end;
 end Libre_Frame.UI.Server;

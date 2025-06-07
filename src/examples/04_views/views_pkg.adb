@@ -50,7 +50,11 @@ package body Views_Pkg is
    end Redraw_Window;
 
    package Server is new
-     UI.Server (Client_Data => Null_Record, Window_Data => Null_Record, Redraw_Window => Redraw_Window);
+     UI.Server
+       (Client_Data      => Null_Record,
+        Window_Data      => Null_Record,
+        Redraw_Window    => Redraw_Window,
+        Application_Name => "Views");
 
    procedure Run renames Server.Run;
 

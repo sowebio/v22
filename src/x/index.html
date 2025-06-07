@@ -367,8 +367,8 @@
 
 		ws.onopen = async () => {
 			const getMessage = promisifyMessages(ws)
-
-			views.push(...JSON.parse(await getMessage()))
+			const obj = JSON.parse(await getMessage())
+			views.push(...obj.views)
 			for (const { path, name } of views) viewsByPath[path] = name
 			const path = window.location.pathname.split("/").filter(Boolean).join("/").toLowerCase()
 			if (!(path in viewsByPath)) {
@@ -377,9 +377,9 @@
 				return
 			}
 			currentPath = path
-			appName = views[0].name
+			appName = obj.app_name
 			const name = views.filter((view) => view.path === path)?.[0]?.name
-			document.title = name !== appName ? `${name} - ${appName}` : appName
+			document.title = name ? `${name} - ${appName}` : appName
 
 			const clientID = localStorage.getItem("client_id")
 			const bytesToSend = [...hexToByteArray("F465D8E5127044C5876658817829CCC8"), clientID ? 1 : 0]
@@ -706,7 +706,7 @@
 									if (!rootElement.disabled && i < paths.length) send(id, path) // TODO: send only path index instead of the full string
 								}),
 							},
-							viewsByPath[path],
+							i === 0 ? appName : viewsByPath[path],
 						)
 						if (i === paths.length) {
 							a.title = "Current view"
@@ -802,7 +802,7 @@
 						url.pathname = view.path
 						currentPath = view.path
 						history.pushState({}, "", url)
-						document.title = view.name !== appName ? `${view.name} - ${appName}` : appName
+						document.title = view.name ? `${view.name} - ${appName}` : appName
 						break
 					}
 					case "create": {

@@ -103,7 +103,7 @@ package body Complete_Pkg is
       Examples_Slider  => To_Unbounded_String ("examples/slider")];
 
    View_Names : constant View_Labels :=
-     [Main             => To_Unbounded_String ("LFM.GUI"),
+     [Main             => To_Unbounded_String (""),
       Login            => To_Unbounded_String ("Login"),
       Profile          => To_Unbounded_String ("Profile"),
       Passwords        => To_Unbounded_String ("Passwords"),
@@ -391,11 +391,12 @@ package body Complete_Pkg is
 
    package Server is new
      UI.Server
-       (Client_Data   => Client_Data,
-        Window_Data   => Window_Data,
-        Redraw_Window => Redraw_Window,
-        View_Names    => View_Names,
-        View_Paths    => View_Paths);
+       (Client_Data      => Client_Data,
+        Window_Data      => Window_Data,
+        Redraw_Window    => Redraw_Window,
+        View_Names       => View_Names,
+        View_Paths       => View_Paths,
+        Application_Name => "SaaS");
 
    procedure Run renames Server.Run;
 

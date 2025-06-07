@@ -16,6 +16,8 @@ generic
 
    Port : Positive := 8080;
 
+   Application_Name : Non_Blank_String := "App";
+
 package Libre_Frame.UI.Server
 is
    procedure Run;

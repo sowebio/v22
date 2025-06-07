@@ -1,4 +1,5 @@
 with Ada.Calendar;
+with Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;
 
 private with Ada.Containers.Ordered_Maps;
@@ -12,6 +13,11 @@ generic
 package Libre_Frame.UI
 is
    use Ada, Ada.Strings.Unbounded;
+
+   function Valid_Name (Source : String) return Boolean
+   is (Strings.Fixed.Index_Non_Blank (Source) > 0);
+
+   subtype Non_Blank_String is String with Dynamic_Predicate => Valid_Name (Non_Blank_String);
 
    type View_Labels is array (Views) of Unbounded_String;
 
