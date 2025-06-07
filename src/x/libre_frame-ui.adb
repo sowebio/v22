@@ -1,4 +1,5 @@
 with Ada.Calendar.Conversions;
+with Ada.Characters.Handling;
 with Interfaces.C;
 
 package body Libre_Frame.UI is
@@ -568,7 +569,7 @@ package body Libre_Frame.UI is
    end Make_Parent;
 
    package body Choice is
-      Saved_Labels : String_Vectors.Vector;
+      Default_Labels_Vector : String_Vectors.Vector;
 
       function Option_Field
         (Target        : in out Container;
@@ -583,13 +584,12 @@ package body Libre_Frame.UI is
          Widget.Index := Options'Pos (Value);
 
          if Custom_Labels = Labels'[others => <>] then
-            Widget.Labels := Saved_Labels;
+            Widget.Labels := Default_Labels_Vector;
          else
-            Saved_Labels.Clear;
+            Widget.Labels.Clear;
             for Option in Options loop
-               Saved_Labels.Append (Custom_Labels (Option));
+               Widget.Labels.Append (Custom_Labels (Option));
             end loop;
-            Widget.Labels.Move (Saved_Labels);
          end if;
 
          return Interacted_With : Boolean := False do
@@ -621,7 +621,19 @@ package body Libre_Frame.UI is
       end Option_Field;
    begin
       for Option in Options loop
-         Saved_Labels.Append (To_Unbounded_String (Option'Image));
+         declare
+            Result : String := Option'Image;
+            Index  : Natural := Strings.Fixed.Index (Result, "_");
+         begin
+            Result (Result'First + 1 .. Result'Last) :=
+              Characters.Handling.To_Lower (Result (Result'First + 1 .. Result'Last));
+            while Index > 0 loop
+               Result (Index) := ' ';
+               Index := Strings.Fixed.Index (Result, "_", From => Index + 1);
+            end loop;
+            Default_Labels_Vector.Append (To_Unbounded_String (Result));
+            Default_Labels (Option) := To_Unbounded_String (Result);
+         end;
       end loop;
    end Choice;
 

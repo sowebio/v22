@@ -181,6 +181,8 @@ is
    is
       type Labels is array (Options) of Unbounded_String;
 
+      Default_Labels : Labels;
+
       function Option_Field
         (Target        : in out Container;
          Label         : String;
