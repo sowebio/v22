@@ -24,7 +24,7 @@ package body Views_Pkg is
 
       case Current_View is
          when First =>
-            Frame.Bar ("One-third:", UI.Proportion_Type'(Valid => True, Value => 0.3333));
+            Frame.Bar ("One-third:", (Valid => True, Value => 0.3333));
 
          when Second =>
             Frame.Text ("This is the second view");
