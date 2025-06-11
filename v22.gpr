@@ -2,7 +2,7 @@ with "config/v22_config.gpr";
 
 project V22 is
 
-   for Source_Dirs use ("lib/**", "src/x", "src/examples/**");
+   for Source_Dirs use ("lib/**", "src/libre_frame", "src/examples/**");
    for Object_Dir use "obj";
    for Main use ("counter.adb", "temperature.adb", "travel.adb", "views.adb", "state.adb", "widgets.adb", "complete.adb");
    for Exec_Dir use "bin";
