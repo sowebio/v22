@@ -14,11 +14,11 @@ package body Views_Pkg is
       Header : UI.Container := Frame.Box ("header", UI.Horizontal, Spacing => True);
    begin
       Header.Text ("View:");
-      if Header.View (First) then
+      if Header.Navigation_Button (First) then
          return First;
-      elsif Header.View (Second) then
+      elsif Header.Navigation_Button (Second) then
          return Second;
-      elsif Header.View (Third) then
+      elsif Header.Navigation_Button (Third) then
          return Third;
       end if;
 

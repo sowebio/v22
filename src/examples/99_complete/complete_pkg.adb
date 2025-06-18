@@ -190,11 +190,11 @@ package body Complete_Pkg is
 
    function Examples (Frame : in out Container; Client : in out Client_Data; View : in out Null_Record) return Views is
    begin
-      if Frame.View (Examples_Hello) then
+      if Frame.Navigation_Button (Examples_Hello) then
          return Examples_Hello;
-      elsif Frame.View (Examples_Counter) then
+      elsif Frame.Navigation_Button (Examples_Counter) then
          return Examples_Counter;
-      elsif Frame.View (Examples_Slider) then
+      elsif Frame.Navigation_Button (Examples_Slider) then
          return Examples_Slider;
       end if;
 
@@ -334,7 +334,7 @@ package body Complete_Pkg is
          end if;
 
          Header.Separator (Size => Fill);
-         if Header.View (Profile, " (" & To_String (Global.Username) & ")") then
+         if Header.Navigation_Button (Profile, " (" & To_String (Global.Username) & ")") then
             return Profile;
          end if;
 
@@ -355,9 +355,9 @@ package body Complete_Pkg is
          Main_Area := Lower.Box ("content", Vertical, Fill => True);
          Content := Main_Area.Box ("content", Vertical, Spacing => True);
 
-         if Sidebar.View (Examples) then
+         if Sidebar.Navigation_Button (Examples) then
             return Examples;
-         elsif Sidebar.View (Passwords) then
+         elsif Sidebar.Navigation_Button (Passwords) then
             return Passwords;
          end if;
 

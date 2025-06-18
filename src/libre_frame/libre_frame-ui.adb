@@ -57,7 +57,7 @@ package body Libre_Frame.UI is
          when Breadcrumb =>
             return Left.Index = Right.Index;
 
-         when View =>
+         when Navigation_Button =>
             return Left.Index = Right.Index and Left.Description = Right.Description;
 
          when Box =>
@@ -743,15 +743,16 @@ package body Libre_Frame.UI is
       return Target.Window.Current_View;
    end Breadcrumb;
 
-   function View (Target : in out Container; View : Views; Description : String := "") return Boolean is
+   function Navigation_Button (Target : in out Container; View : Views; Description : String := "") return Boolean is
       Widget : constant Widget_Access :=
-        Make_Widget (Target, UI.View, "SjeQ1S0QrQAT_" & To_String (Target.Window.View_Names (View)) & Description);
+        Make_Widget
+          (Target, UI.Navigation_Button, "SjeQ1S0QrQAT_" & To_String (Target.Window.View_Names (View)) & Description);
    begin
       Widget.Index := Views'Pos (View);
       Widget.Description := To_Unbounded_String (Description);
       return
         Target.Window.Event_ID > 0 and then Same_Path (Widget, Target.Window.Widgets_By_ID (Target.Window.Event_ID));
-   end View;
+   end Navigation_Button;
 
    function Group
      (Target : in out Container; Label : String; Content_Alignment : Alignment_Type := Top_Left) return Container

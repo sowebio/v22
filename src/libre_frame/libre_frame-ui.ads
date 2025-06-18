@@ -14,10 +14,10 @@ package Libre_Frame.UI
 is
    use Ada, Ada.Strings.Unbounded;
 
-   function Valid_Name (Source : String) return Boolean
+   function Non_Blank (Source : String) return Boolean
    is (Strings.Fixed.Index_Non_Blank (Source) > 0);
 
-   subtype Non_Blank_String is String with Dynamic_Predicate => Valid_Name (Non_Blank_String);
+   subtype Non_Blank_String is String with Dynamic_Predicate => Non_Blank (Non_Blank_String);
 
    type View_Labels is array (Views) of Unbounded_String;
 
@@ -254,7 +254,7 @@ is
 
    function Breadcrumb (Target : in out Container) return Views;
 
-   function View (Target : in out Container; View : Views; Description : String := "") return Boolean;
+   function Navigation_Button (Target : in out Container; View : Views; Description : String := "") return Boolean;
 
    -- Helpers
    function Group
@@ -277,12 +277,12 @@ private
       Date_Field,
       Option_Field,
       Breadcrumb,
-      View,
+      Navigation_Button,
       Box,
       Separator,
       Rich);
 
-   subtype Interactive_Widget is Widget_Kind range Button .. View;
+   subtype Interactive_Widget is Widget_Kind range Button .. Navigation_Button;
    subtype Labeled_Widget is Widget_Kind range Text .. Box;
 
    subtype Extended_Proportion is Float range -1.0 .. 1.0;
@@ -347,14 +347,14 @@ private
             Date_Value  : Calendar.Time;
             Date_Access : access Calendar.Time;
 
-         when Option_Field | Breadcrumb | View =>
+         when Option_Field | Breadcrumb | Navigation_Button =>
             Index : Integer;
 
             case Kind is
                when Option_Field =>
                   Labels : String_Vectors.Vector;
 
-               when View =>
+               when Navigation_Button =>
                   Description : Unbounded_String;
 
                when others =>

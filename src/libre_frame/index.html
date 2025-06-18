@@ -735,7 +735,7 @@
 					}
 					return elem.label({ className: "date_field", style: { cursor: data.enabled ? "pointer" : "default" } }, text, dateInput)
 				}
-				case "view": {
+				case "navigation_button": {
 					const view = views[data.index]
 					const div = elem.a(
 						{
@@ -938,7 +938,7 @@
 								case "rich":
 								case "option_field":
 								case "breadcrumb":
-								case "view": {
+								case "navigation_button": {
 									const e = createElement(id, kind, text, data)
 									existing.element.replaceWith(e)
 									existing.element = e
@@ -976,7 +976,7 @@
 							existing.parentID = parentID
 							existing.precedingID = precedingID
 						}
-						if (existing.kind === "view") {
+						if (existing.kind === "navigation_button") {
 							if (currentPath === views[existing.data.index].path) {
 								existing.element.classList.add("currentLink")
 								existing.element.title = "Current view"

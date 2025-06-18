@@ -94,7 +94,7 @@ package body Libre_Frame.UI.Server is
             when Breadcrumb =>
                Obj.Set_Field ("index", Source.Index);
 
-            when View =>
+            when Navigation_Button =>
                Obj.Set_Field ("index", Source.Index);
                Obj.Set_Field_If_Not_Empty ("description", Source.Description);
 
