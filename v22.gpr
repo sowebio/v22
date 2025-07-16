@@ -67,6 +67,8 @@ project v22 is
    Common_Linker_Options := (""); -- -static : program statically linked
    --  Libmysql handling
    Common_Linker_Options := Common_Linker_Options & ("-lmysqlclient"); 
+   --  SQLite C source handling
+   Common_Linker_Options := Common_Linker_Options & ("-L./lib/sqlite", "-lsqlite3"); 
 
    package Linker is
       for Default_Switches ("ada") use Common_Linker_Options & ("-g");

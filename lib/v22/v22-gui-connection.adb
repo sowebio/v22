@@ -159,7 +159,7 @@ separate (v22.Gui) package body Connection is
          end if;
          --  Test Login
          if not Is_Empty (DB_Result) then
-            Msg.Info (DB_Result);
+            Msg.Info ("DB_Result: " & DB_Result);
             DB_Id := Field_By_Index (DB_Result, 1, CD);
             DB_First_Name := Field_By_Index (DB_Result, 2, CD);
             DB_Last_Name := Field_By_Index (DB_Result, 3, CD);
@@ -177,9 +177,11 @@ separate (v22.Gui) package body Connection is
                DB_Password_Errors_Max := 5;
             end if;
 
+            Msg.Info ("DB_Password_Errors: " & To_String (DB_Password_Errors));
+            Msg.Info ("DB_Password_Errorss_Max: " & To_String (DB_Password_Errors_Max));
+
             if DB_Password_Errors <= DB_Password_Errors_Max then
-               Msg.Debug ("DB_Password_Errors: " & To_String (DB_Password_Errors));
-               Msg.Debug ("DB_Connection_Counter: " & To_String (DB_Connection_Counter));
+               Msg.Info ("DB_Connection_Counter: " & To_String (DB_Connection_Counter));
                --  Test Password
                if DB_Password = From_Latin_1 (GNAT.SHA512.Digest (To_Latin_1 (Password))) then
                   --  Regular connection or forgotten password connection

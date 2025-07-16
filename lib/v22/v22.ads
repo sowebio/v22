@@ -225,7 +225,7 @@ private
    Version_Major : constant Natural := 0;
    --  Library major version number
 
-   Version_Minor : constant Natural := 7;
+   Version_Minor : constant Natural := 8;
    --  Library minor version number
 
    --  135 cols width is the max full screen standard console on a rather old,

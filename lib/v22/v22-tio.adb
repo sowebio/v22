@@ -170,24 +170,6 @@ package body v22.Tio is
    end Cursor_Restore;
 
    ----------------------------------------------------------------------------
-   procedure Set_Ansi (Switch : On_Off)  is
-   begin
-      Ansi_State := (Switch = On);
-   end Set_Ansi;
-
-   ----------------------------------------------------------------------------
-   procedure Set_Cursor (Switch : On_Off) is
-   begin
-      if Tio.Get_Ansi then
-         if Switch = On then
-            ATI.Put (ASCII.ESC & "[?25h");
-         else
-            ATI.Put (ASCII.ESC & "[?25l");
-         end if;
-      end if;
-   end Set_Cursor;
-
-   ----------------------------------------------------------------------------
    function Get_Ansi return Boolean is
    begin
       return Ansi_State;
@@ -310,6 +292,86 @@ package body v22.Tio is
    begin
       Put (From_Latin_1 (Money'Image (M)));
    end Put_Line;
+
+
+   ----------------------------------------------------------------------------
+   procedure Set_Ansi (Switch : On_Off)  is
+   begin
+      Ansi_State := (Switch = On);
+   end Set_Ansi;
+
+   ----------------------------------------------------------------------------
+   procedure Set_ANSI_Color (Attribute :  ANSI_Attribute; Foreground : ANSI_Color := White; Background : ANSI_Color := Black) is
+
+      Current_Attribute, Current_Color : String;
+
+      function Put_Color (Color : ANSI_Color) return String is
+         Current_Color : String;
+      begin
+         case Color is
+         when Black =>
+            Current_Color := "0";
+         when Red =>
+            Current_Color := "1";
+         when Green =>
+            Current_Color := "2";
+         when Yellow =>
+            Current_Color := "3";
+         when Blue =>
+            Current_Color := "4";
+         when Magenta =>
+            Current_Color := "5";
+         when Cyan =>
+            Current_Color := "6";
+         when White =>
+            Current_Color := "7";
+         end case;
+         return Current_Color;
+      end Put_Color;
+
+   begin
+
+      case Attribute is
+      when Reset =>
+         Current_Attribute := "0";
+      when Bold =>
+         Current_Attribute := "1";
+      when Faint =>
+         Current_Attribute := "2";
+      when Italic =>
+         Current_Attribute := "3";
+      when Underline =>
+         Current_Attribute := "4";
+      when Slow_Blink =>
+         Current_Attribute := "5";
+      when Fast_Blink =>
+         Current_Attribute := "6";
+      when Reverse_Video =>
+         Current_Attribute := "7";
+      when Erase =>
+         Current_Attribute := "8";
+      when Strikethrough =>
+         Current_Attribute := "9";
+      end case;
+
+      -- ESC[0;30m
+      Tio.Put (ESC & "[" & Current_Attribute & ";3" &
+                           Put_Color (Foreground) & ";4" &
+                           Put_Color (Background) & "m");
+
+   end Set_Ansi_Color;
+
+   ----------------------------------------------------------------------------
+   procedure Set_Cursor (Switch : On_Off) is
+   begin
+      if Tio.Get_Ansi then
+         if Switch = On then
+            ATI.Put (ASCII.ESC & "[?25h");
+         else
+            ATI.Put (ASCII.ESC & "[?25l");
+         end if;
+      end if;
+   end Set_Cursor;
 
    ----------------------------------------------------------------------------
    --  API - Text File

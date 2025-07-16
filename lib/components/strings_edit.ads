@@ -322,7 +322,7 @@ private
    --
    -- GetDigit -- Get one digit
    --
-   --	   Symbol - To be decoded
+   --    Symbol - To be decoded
    --
    -- Returns :
    --

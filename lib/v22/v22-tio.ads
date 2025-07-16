@@ -36,12 +36,21 @@ package v22.Tio is
    --  API - Terminal
    ----------------------------------------------------------------------------
 
-   Max_Row  : constant Natural := 29;
-   Max_Column : constant Natural := 79;
+   --  Max_Row  : constant Natural := 29;
+   --  Max_Column : constant Natural := 79;
+
+   Max_Row  : constant Natural := 99;
+   Max_Column : constant Natural := 299;
 
    subtype Row is Natural range 0 .. Max_Row;
    subtype Column  is Natural range 0 .. Max_Column;
    subtype Integer_64 is Interfaces.Integer_64;
+
+   -- ANSI ISO 6429 standard
+   -- https://www.perpetualpc.net/6429_colors.html
+   -- https://tintin.mudhalla.net/info/ansicolor
+   type ANSI_Color is (Black, Red, Green, Yellow, Blue, Magenta, Cyan, White);
+   type ANSI_Attribute is (Reset, Bold, Faint, Italic, Underline, Slow_Blink, Fast_Blink, Reverse_Video, Erase, Strikethrough);
 
    ----------------------------------------------------------------------------
    --  API
@@ -119,6 +128,9 @@ package v22.Tio is
    --  Print to the console then add a new line.
 
    procedure Set_Ansi (Switch : On_Off);
+   --  Set ANSI state
+
+   procedure Set_ANSI_Color (Attribute :  ANSI_Attribute; Foreground : ANSI_Color := White; Background : ANSI_Color := Black);
    --  Set ANSI state
 
    procedure Set_Cursor (Switch : On_Off);

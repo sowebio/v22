@@ -178,11 +178,11 @@ begin
    --  v22.Tio      x
    --  v22.Uxs   Used throughout the test program
 
-   --TestApi_Cfg.Run;
-   --TestApi_Msg.Run;
-   --TestApi_Sql.Run;
-   --TestApi_Sys.Run (Package_Test);
-   --TestApi_Tio.Run;
+   TestApi_Cfg.Run;
+   TestApi_Msg.Run;
+   TestApi_Sql.Run;
+   TestApi_Sys.Run (Package_Test);
+   TestApi_Tio.Run;
 
    ----------------------------------------------------------------------------
    --  Test zone
@@ -347,6 +347,8 @@ begin
      Raise_Exception;   --  < Uncomment for trigger exception test     /!!\
    -- ----------------------------------------------------------------/-!!-\---
    end if;
+
+   Finalize;
 
 exception
 

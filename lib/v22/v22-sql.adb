@@ -184,7 +184,7 @@ package body v22.Sql is
          if DBT.Brand = Sql.MySQL then
             Result := Sql.Get_Config (DBT.DBM, Parameter);
          elsif DBT.Brand = Sql.SQLite then
-            Result := Sql.Get_Config (DBT.DBM, Parameter);
+            Result := Sql.Get_Config (DBT.DBS, Parameter);
          else
             Msg.Error ("Sql.Get_Config > Properties not found for " & Sql.Get_Database_Main);
          end if;
